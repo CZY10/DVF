@@ -3,7 +3,7 @@ import { Message, MessageBox } from 'element-ui'
 // import token from "@/utils/auth";
 
 const service = axios.create({
-    baseURL:'api',   // api的base_url  自动加在url前面
+    baseURL: process.env.VUE_APP_BASE_API,   // api的base_url  自动加在url前面
     timeout:5000, //请求超时时间
 })
 

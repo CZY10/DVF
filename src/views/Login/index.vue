@@ -62,13 +62,13 @@
                                     </el-form-item>
                                     <el-form-item prop="verificationCode">
                                         <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
-                                            <el-button slot="append" @click="handlerSend" :style="{'color':(isDisabled? '#999999':'#2489F3')}" :disabled="isDisabled" type="text">
+                                            <el-button slot="append" @click="handlerSend('mobilelogin')" :style="{'color':(isDisabled? '#999999':'#2489F3')}" :disabled="isDisabled" type="text">
                                                 {{ verificationCodeText }}
                                             </el-button>
                                         </el-input>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-button class="submit_btn" :class="{ 'disabled_opacity':ruleForm.phone == '' || ruleForm.verificationCode == ''}" :disabled="ruleForm.phone == '' || ruleForm.verificationCode == ''" @click="submitForm('ruleForm')" round>提交</el-button>
+                                        <el-button class="submit_btn" :class="{ 'disabled_opacity':phoneError || codeError}" :disabled="phoneError || codeError" @click="submitForm('ruleForm')" round>提交</el-button><!--ruleForm.phone == '' || ruleForm.verificationCode == ''-->
                                     </el-form-item>
                                 </el-form>
                                 <p class="privacy_agreement">登录平台即代表同意<a href="">服务条款</a>及<a href="">用户隐私协议</a></p>
@@ -81,19 +81,19 @@
 
                     <div class="tabs" v-else>
                         <h3 style="padding-bottom: 17px">请绑定手机号</h3>
-                        <el-form :model="bindPhoneRuleForm" :rules="bindPhoneRules" ref="bindPhoneRuleForm" class="demo-ruleForm">
+                        <el-form :model="ruleForm" :rules="bindPhoneRules" ref="bindPhoneRuleForm" class="demo-ruleForm">
                             <el-form-item prop="phone">
-                                <el-input v-model="bindPhoneRuleForm.phone" placeholder="请输入手机号码"
+                                <el-input v-model="ruleForm.phone" placeholder="请输入手机号码"
                                           autocomplete="off"></el-input>
                             </el-form-item>
                             <el-form-item prop="verificationCode">
-                                <el-input v-model="bindPhoneRuleForm.verificationCode" placeholder="请输入验证码">
-                                    <el-button slot="append" @click="handlerSend" :style="{'color':(isDisabled? '#999999':'#2489F3')}" :disabled="isDisabled" type="text">
+                                <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                                    <el-button slot="append" @click="handlerSend('register')" :style="{'color':(isDisabled? '#999999':'#2489F3')}" :disabled="isDisabled" type="text">
                                         {{ verificationCodeText }}</el-button>
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button class="submit_btn" :class="{ 'disabled_opacity':bindPhoneRuleForm.phone == '' || bindPhoneRuleForm.verificationCode == ''}" :disabled="bindPhoneRuleForm.phone == '' || bindPhoneRuleForm.verificationCode == ''" @click="submitForm('bindPhoneRuleForm')" round>提交</el-button>
+                                <el-button class="submit_btn" :class="{ 'disabled_opacity':ruleForm.phone == '' || ruleForm.verificationCode == ''}" :disabled="ruleForm.phone == '' || ruleForm.verificationCode == ''" @click="submitForm('bindPhoneRuleForm')" round>提交</el-button>
                             </el-form-item>
                         </el-form>
                         <p class="privacy_agreement">绑定后即可使用微信扫码登录，更便捷</p>
@@ -109,7 +109,7 @@
 
 <script>
 import {mapMutations} from 'vuex'
-import { getQrcode } from "@/api/index"
+import { getQrcode, smsSend } from "@/api/index"
 // import login from "@/store/modules/login";
 export default {
     name: "login",
@@ -122,23 +122,31 @@ export default {
             if (!regExp.test(value)) {
                 callback(new Error('手机号码格式错误，请输入正确的手机号码！'))
                 this.isDisabled=true;
+                this.phoneError=true;
+
             } else {
                 this.isDisabled=false;
+                this.phoneError=false;
                 callback()
             }
         }
         const validateVerificationCode = (rule, value, callback) => {
             const regExp = /^[0-9]{4}$/;
             if (!regExp.test(value)) {
+                this.codeError=true;
                 callback(new Error('验证码格式错误，请输入正确的验证码！'))
             } else {
+                this.codeError=false;
                 callback()
             }
         }
         return {
+            phoneError:true,
+            codeError:true,
+            isSubmitDisabled:true,
             isRefresh: false,
             qrImg:'',
-            activeName: 'first',
+            activeName: 'second',
             hasBindPhone: true,
             isDisabled:true,
             isBindPhoneDisabled:false,
@@ -147,10 +155,6 @@ export default {
                 color:'#999999'
             },
             ruleForm: {
-                phone: '',
-                verificationCode: '',
-            },
-            bindPhoneRuleForm:{
                 phone: '',
                 verificationCode: '',
             },
@@ -215,24 +219,50 @@ export default {
             // console.log(tab, event);
         },
         //发送验证码
-        handlerSend() {
-            let timeo = 30;
-            let _this = this;
-            let timeStop = setInterval(function (){
-                timeo--;
-                if(timeo > 0){
-                    _this.verificationCodeText = timeo + 's后重新获取'
-                    _this.isDisabled = true;
-                }else {
-                    timeo = 30;
-                    _this.verificationCodeText = '获取验证码'
-                    _this.isDisabled = false;
-                    clearInterval(timeStop);
-                }
-            },1000)
+        handlerSend(even) {
+
+            let params ={
+                mobile: this.ruleForm.phone,
+                event: even
+            }
+            smsSend({
+                mobile: this.ruleForm.phone,
+                event: even
+            })
+                .then((res) => {
+                    if(res.code === 1){
+                        console.log(res)
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.$message.error(err.msg);
+                });
+            // let timeo = 30;
+            // let _this = this;
+            // let timeStop = setInterval(function (){
+            //     timeo--;
+            //     if(timeo > 0){
+            //         _this.verificationCodeText = timeo + 's后重新获取'
+            //         _this.isDisabled = true;
+            //     }else {
+            //         timeo = 30;
+            //         _this.verificationCodeText = '获取验证码'
+            //         _this.isDisabled = false;
+            //         clearInterval(timeStop);
+            //     }
+            // },1000)
         },
         //确认
-        submitForm() {
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    alert('submit!');
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
 
         },
         //刷新二维码

@@ -6,10 +6,11 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
+console.log(process.env.NODE_ENV)
 module.exports = defineConfig({
-  transpileDependencies: true,
+  transpileDependencies: false,
   publicPath: './',//process.env.NODE_ENV === 'development' ? '/' : './',    //'./',/*development,production*/
-  outputDir: 'dist',
+  outputDir: process.env.NODE_ENV === 'development' ? 'test' : 'dist',//'dist',
   assetsDir: 'static',
   lintOnSave: false,
   productionSourceMap: false,
@@ -17,15 +18,25 @@ module.exports = defineConfig({
     host:'localhost',
     port:port,
     open:true,
+    https:false,
     proxy:{
-      '/api':{
+      [process.env.VUE_APP_BASE_API]: { //同济医院地址
+        target: process.env.VUE_APP_BASE_URL,
+        // 如果要代理 websockets
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {   //重写路径，这种是没有我们定义的前缀
+          ['^' + process.env.VUE_APP_BASE_URL]: ''
+        }
+      },
+      /*'/api':{
         target: 'http://testaiapi.blhltd.com/addons/wechatscanlogin/',//后端域名
-        // ws: true,
+        ws: false,
         changeOrigin: true,
         pathRewrite:{ //重新路径
           '^/api':''
         }
-      }
+      }*/
     }
   },
   configureWebpack: {

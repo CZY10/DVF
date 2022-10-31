@@ -25,3 +25,11 @@ export function getQrcode(data){
         data
     })
 }
+//发送验证码
+export function smsSend(data){
+    return request({
+        url:'api/sms/send',
+        method: 'post',
+        data
+    })
+}

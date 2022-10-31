@@ -101,7 +101,7 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    z-index: 999;
+    z-index: 99999;
     >ul{
         max-width: 1200px;
         margin: auto;

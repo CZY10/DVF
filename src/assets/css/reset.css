@@ -1,4 +1,4 @@
-@import url('https://at.alicdn.com/t/c/font_3721021_cs7p0y5zk9n.css?spm=a313x.7781069.1998910419.55&file=font_3721021_cs7p0y5zk9n.css');
+@import url('https://at.alicdn.com/t/c/font_3721021_vhlp8jin16a.css?spm=a313x.7781069.1998910419.55&file=font_3721021_vhlp8jin16a.css');
 
 @font-face {
     font-family: GothamHTF;
@@ -71,4 +71,29 @@ html {
 
 .clearfix {
     *zoom: 1;
+}
+
+.el-dialog__wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.el-dialog{
+    margin-top: 0 !important;
+}
+.el-dialog__header{
+    padding-top: 30px !important;
+    font-size: 16px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: #333333;
+    line-height: 22px;
+    padding-bottom: 0;
+}
+.el-dialog--center .el-dialog__body{
+    padding: 12px 30px 24px;
+}
+.el-dialog__headerbtn .el-dialog__close{
+    color: #333333;
+    font-size: 20px;
 }

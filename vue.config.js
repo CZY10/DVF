@@ -6,11 +6,10 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-console.log(process.env.NODE_ENV)
 module.exports = defineConfig({
   transpileDependencies: false,
-  publicPath: './',//process.env.NODE_ENV === 'development' ? '/' : './',    //'./',/*development,production*/
-  outputDir: process.env.NODE_ENV === 'development' ? 'test' : 'dist',//'dist',
+  publicPath: './',
+  outputDir: process.env.NODE_ENV === 'development' ? 'test' : 'dist',
   assetsDir: 'static',
   lintOnSave: false,
   productionSourceMap: false,

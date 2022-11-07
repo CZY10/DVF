@@ -12,7 +12,7 @@ Vue.prototype.$video = videojs;
 
 Vue.config.productionTip = false
 
-let userInfo = localStorage.getItem('userInfo')
+let userInfo = localStorage.getItem('token')
 console.log(userInfo)
 if (userInfo){
   userInfo = JSON.parse(userInfo);

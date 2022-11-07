@@ -1,23 +1,29 @@
 import axios from "axios";
 import { Message, MessageBox } from 'element-ui'
-// import token from "@/utils/auth";
+import store from "@/store";
+
 
 const service = axios.create({
-    baseURL: process.env.VUE_APP_BASE_API,   // api的base_url  自动加在url前面
+    baseURL: process.env.VUE_APP_BASE_URL,   // api的base_url  自动加在url前面
     timeout:5000, //请求超时时间
 })
-
+let token= '';
 // request拦截器
-// service.interceptors.request.use(config => {
-//     if (token.get()) {
-//         config.headers['token'] = token.get();
-//     }
-//     return config
-// },
-// error => {
-//     console.log(error)
-//     return Promise.reject(error)
-// })
+if(localStorage.getItem('token ')){
+    token= localStorage.getItem('token ');
+}
+
+service.interceptors.request.use(config => {
+    if (token) {
+        config.headers['token'] = token;
+        config.headers['Content-Type'] = 'application/json'
+    }
+    return config
+},
+error => {
+    console.log(error)
+    return Promise.reject(error)
+})
 
 // respone拦截器
 service.interceptors.response.use(
@@ -26,7 +32,7 @@ service.interceptors.response.use(
         const reg = /^0.*0$|^0$/;
         if(res.code !== 1) {
                 Message({
-                    message: res.message,
+                    message: res.msg,
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -42,7 +48,8 @@ service.interceptors.response.use(
             //         cancelButtonText: '取消',
             //         type: 'warning'
             //     }).then(() => {
-            //         token.remove();
+            //         store.commit('clearUserInfo');//删除token
+            //         localStorage.removeItem('userInfo')//删除token
             //         location.reload();
             //     }).catch(()=>{
             //         return
@@ -56,7 +63,7 @@ service.interceptors.response.use(
             //         })
             //     }
             // }
-            return false; /*Promise.reject('error')*/
+            return res; /*Promise.reject('error')*/
         } else {
             return response.data
         }
@@ -71,7 +78,6 @@ service.interceptors.response.use(
         return Promise.reject(error)
     }
 )
-
 export const createAPI = (url, method, data) => {
     const config = {}
     if(method === 'get'){

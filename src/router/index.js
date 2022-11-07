@@ -81,10 +81,12 @@ VueRouter.prototype.push = function push(location) {
 }
 
 import store from '../store/index'
+
 //路由拦截
 router.beforeEach((to, from, next) => {
+    localStorage.setItem('loginFromPath',from.path)
+    let token = store.state.login.userInfo.token;
     if (to.matched.some(ele => ele.meta.requiresAuth)) {
-        let token = store.state.login.userInfo.token;
         if (token) {
             next()
         } else {

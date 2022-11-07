@@ -1,7 +1,7 @@
 <template>
     <div id="home">
         <div class="banner">
-            <h1>Amazon Influencer <span>买家秀视频服务平台</span> <br> Best Seller <span>第一站</span></h1>
+            <h1>Amazon Influencer 买家秀视频服务第一站</h1>
             <div class="banner_img">
                 <el-row>
                     <img src="../../../assets/images/home_banner.png" alt="">
@@ -104,7 +104,7 @@
 <!--                                        <li>性别：<span>{{ item.talentInformation.gender }}</span></li>-->
 <!--                                        <li>国家：<span>{{ item.talentInformation.country }}</span></li>-->
 <!--                                        <li>兴趣品类：<span>{{ item.talentInformation.category }}</span></li>-->
-<!--                                        <li><el-button class="apply_for_shooting" round>申请拍摄</el-button></li>-->
+<!--                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>-->
 <!--                                    </ul>-->
 
 <!--                                </div>-->
@@ -150,7 +150,7 @@
                                         <li>性别：<span>男性</span></li>
                                         <li>国家：<span>美国</span></li>
                                         <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" round>申请拍摄</el-button></li>
+                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
                                     </ul>
 
                                 </div>
@@ -196,7 +196,7 @@
                                         <li>性别：<span>男性</span></li>
                                         <li>国家：<span>美国</span></li>
                                         <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" round>申请拍摄</el-button></li>
+                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
                                     </ul>
 
                                 </div>
@@ -242,7 +242,7 @@
                                         <li>性别：<span>男性</span></li>
                                         <li>国家：<span>美国</span></li>
                                         <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" round>申请拍摄</el-button></li>
+                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
                                     </ul>
 
                                 </div>
@@ -288,7 +288,7 @@
                                         <li>性别：<span>男性</span></li>
                                         <li>国家：<span>美国</span></li>
                                         <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" round>申请拍摄</el-button></li>
+                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
                                     </ul>
 
                                 </div>
@@ -306,7 +306,7 @@
                                             poster="../../../assets/images/video/poster_video.png"
                                             class="video-js vjs-default-skin vjs-big-play-centered"
                                             controls>
-                                            <source src="../../../assets/images/video/111.mp4" />
+                                            <source src="https://vjs.zencdn.net/v/oceans.mp4" />
                                         </video>
                                     </div>
                                     <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥580</span>
@@ -334,7 +334,7 @@
                                         <li>性别：<span>男性</span></li>
                                         <li>国家：<span>美国</span></li>
                                         <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" round>申请拍摄</el-button></li>
+                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
                                     </ul>
 
                                 </div>
@@ -416,7 +416,7 @@
                     </el-col>
                 </el-row>
             </el-row>
-            <el-row style="text-align: center"><el-button class="apply_for_shooting" round>申请拍摄</el-button></el-row>
+            <el-row style="text-align: center"><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></el-row>
 
             <h2 class="content_title pt160 pb18">我们的优势</h2>
             <p class="content_description pb40">让视频营销成为性价比极高的亚马逊运营手段</p>
@@ -460,10 +460,10 @@
                     </el-col>
                 </el-row>
             </el-row>
-            <el-row style="text-align: center" class="pb160"><el-button class="apply_for_shooting" round>申请拍摄</el-button></el-row>
-
+            <el-row style="text-align: center" class="pb160"><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></el-row>
         </div>
         <Footer></Footer>
+
     </div>
 
 </template>
@@ -481,6 +481,7 @@ export default {
     },
     data() {
         return {
+            dialogVisible:false,
             player: null,
             currentIndex:0,
             currentIndex1:0,
@@ -688,7 +689,9 @@ export default {
         this.player=this.$video('my-player5');
     },
     methods: {
-        playPause(){},
+        handleGoLogin(){
+            this.$router.push('/login')
+        },
         handleClick(tab, event) {
             console.log(tab, event);
         },
@@ -975,7 +978,7 @@ export default {
             color: #FFFFFF;
             line-height: 80px;
             text-align: center;
-            padding-top: 50px;
+            padding-top: 30px;
             span{
                 font-family: GothamHTF;
             }

@@ -20,7 +20,7 @@ import request from "@/utils/request";
 //生成微信二维码
 export function getQrcode(data){
     return request({
-        url:'api/qrcode',
+        url:'/addons/wechatscanlogin/api/qrcode',
         method: 'get',
         data
     })
@@ -28,7 +28,40 @@ export function getQrcode(data){
 //发送验证码
 export function smsSend(data){
     return request({
-        url:'api/sms/send',
+        url:'/api/sms/send',
+        method: 'post',
+        data
+    })
+}
+//短信登录注册
+export function mobileLogin(data){
+    return request({
+        url:'/api/user/mobilelogin',
+        method: 'post',
+        data
+    })
+}
+//绑定手机号
+export function bindPhone(data){
+    return request({
+        url:'/addons/wechatscanlogin/api/register',
+        method: 'post',
+        data
+    })
+}
+
+//检测是否扫码成功
+export function checkQr(data){
+    return request({
+        url:'/addons/wechatscanlogin/api/check',
+        method: 'post',
+        data
+    })
+}
+//检查token是否过期
+export function checkToken(data){
+    return request({
+        url:'/addons/wechatscanlogin/api/check',
         method: 'post',
         data
     })

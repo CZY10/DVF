@@ -11,7 +11,7 @@
             >
                 <el-menu-item index="/"><img src="../../assets/images/login_logo.png" alt=""></el-menu-item>
 
-                <el-menu-item style="float: right;" index="2">联系我们</el-menu-item>
+                <el-menu-item style="float: right;" @click="dialogVisible = true">联系我们</el-menu-item>
                 <el-menu-item style="float: right;" index="3"><a href="">新手指南</a></el-menu-item>
             </el-menu>
         </div>
@@ -27,11 +27,10 @@
                     </div>
                 </el-col>
                 <el-col :span="12" class="right">
-                    <div class="tabs" v-if="hasBindPhone">
+                    <div class="tabs" v-if="!hasBindPhone">
                         <h3>注册/登录</h3>
                         <p class="description">未注册时，首次登录系统将自动为您注册</p>
                         <el-tabs v-model="activeName" @tab-click="handleClick">
-
 
                             <el-tab-pane label="微信扫码" name="first">
                                 <div class="qrcode">
@@ -52,8 +51,6 @@
                                 <p class="privacy_agreement">登录平台即代表同意<a href="">服务条款</a>及<a href="">用户隐私协议</a></p>
                             </el-tab-pane>
 
-
-
                             <el-tab-pane label="验证码" name="second">
                                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                                     <el-form-item prop="phone">
@@ -68,12 +65,11 @@
                                         </el-input>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-button class="submit_btn" :class="{ 'disabled_opacity':phoneError || codeError}" :disabled="phoneError || codeError" @click="submitForm('ruleForm')" round>提交</el-button><!--ruleForm.phone == '' || ruleForm.verificationCode == ''-->
+                                        <el-button class="submit_btn" :class="{ 'disabled_opacity':phoneError || codeError}" :disabled="phoneError || codeError" @click="handleSubmitForm('ruleForm')" round>提交</el-button><!--ruleForm.phone == '' || ruleForm.verificationCode == ''-->
                                     </el-form-item>
                                 </el-form>
                                 <p class="privacy_agreement">登录平台即代表同意<a href="">服务条款</a>及<a href="">用户隐私协议</a></p>
                             </el-tab-pane>
-
 
                         </el-tabs>
                     </div>
@@ -93,7 +89,7 @@
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button class="submit_btn" :class="{ 'disabled_opacity':ruleForm.phone == '' || ruleForm.verificationCode == ''}" :disabled="ruleForm.phone == '' || ruleForm.verificationCode == ''" @click="submitForm('bindPhoneRuleForm')" round>提交</el-button>
+                                <el-button class="submit_btn" :class="{ 'disabled_opacity':phoneError || codeError}" :disabled="phoneError || codeError" @click="handleBindPhone('bindPhoneRuleForm')" round>提交</el-button>
                             </el-form-item>
                         </el-form>
                         <p class="privacy_agreement">绑定后即可使用微信扫码登录，更便捷</p>
@@ -103,20 +99,31 @@
                 </el-col>
             </el-row>
         </div>
+        <el-dialog
+            title="微信咨询"
+            :visible.sync="dialogVisible"
+            center
+            width="320px">
+            <div class="contact_us_box">
+                <span></span><span></span><span></span><span></span>
+                <img src="../../assets/images/contact_us.png" alt="">
+            </div>
+            <div class="contact_us_foot">
+                <p><i class="iconfont icon-phone-call"></i><span>电话：</span>0755-84861340</p>
+                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>support@amztracker.com</p>
+            </div>
+        </el-dialog>
 
     </div>
 </template>
 
 <script>
 import {mapMutations} from 'vuex'
-import { getQrcode, smsSend } from "@/api/index"
+import { getQrcode, smsSend, mobileLogin, bindPhone, checkQr, checkToken } from "@/api/index"
 // import login from "@/store/modules/login";
 export default {
     name: "login",
     data() {
-        /**
-         * 校验手机号
-         */
         const validatePhone = (rule, value, callback) => {
             const regExp = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/
             if (!regExp.test(value)) {
@@ -141,13 +148,14 @@ export default {
             }
         }
         return {
+            dialogVisible:false,
             phoneError:true,
             codeError:true,
             isSubmitDisabled:true,
             isRefresh: false,
             qrImg:'',
-            activeName: 'second',
-            hasBindPhone: true,
+            activeName: 'first',
+            hasBindPhone: false,
             isDisabled:true,
             isBindPhoneDisabled:false,
             verificationCodeText:'获取验证码',
@@ -178,6 +186,8 @@ export default {
                     {validator: validateVerificationCode, trigger: ['blur', 'change']}
                 ]
             },
+            wechatToken:'',
+            fromPath: localStorage.getItem('loginFromPath'),
         }
     },
     created() {
@@ -187,14 +197,17 @@ export default {
         this.handlerGetQrcode();
     },
     methods: {
+        ...mapMutations('login', ["setUserInfo"]),
         //获取微信二维码
         handlerGetQrcode(){
             getQrcode()
                 .then((res) => {
                     if(res.code === 1){
                         this.qrImg = res.data.qrcode_url;
+                        this.wechatToken = res.data.wechat_token;
                         this.isRefresh = false;
-                        this.startCron();
+                        // this.startCron();
+                        this.handleCheckQr();
                     }
                 })
                 .catch((err) => {
@@ -202,29 +215,52 @@ export default {
                     this.$message.error(err.msg);
                 });
         },
-        ...mapMutations('login', ["setUserInfo"]),
-        handleLogin() {
-            let obj = {
-                user: '13691209081',
-                token: '1267524687646fh2dfhjhgsdg'
-            }
-            this.setUserInfo(obj)
-            localStorage.setItem('userInfo', JSON.stringify(obj))
-            this.$router.push('/')
-        },
-        handleSelect() {
+        //检测二维码是否扫码成功
+        handleCheckQr(){
+            var timer=0;
+            let _this = this;
+            let checkQrCode = setInterval(()=>{
+                checkQr({
+                    wechat_token: _this.wechatToken
+                })
+                    .then((res) => {
+                        if(res.code === 0){ //二维码已失效
+                            _this.isRefresh = true;
+                            //清除定时脚本
+                            clearInterval(checkQrCode)
+                        }
+                        if(res.code === 1 && res.data.status === 0){//请等待扫码
+                            timer++;
+                            if(timer>60){
+                                //等待扫码,超过3分钟未扫描，二维码提示已过期
+                                _this.isRefresh = true;
+                                //清除定时脚本
+                                clearInterval(checkQrCode);
+                            }
+                        }else if(res.code === 1 && res.data.status === 1){//扫码成功，请绑定手机号
+                            //渲染绑定手机页面
+                            _this.hasBindPhone = true;
+                            //清除定时脚本
+                            clearInterval(checkQrCode);
+                        }else if(res.code === 1 && res.data.status === 2){//登录成功,即将跳转
+                            clearInterval(checkQrCode);
+                            //跳转到后台
+                            // location.href="<?= Url::toRoute(['dashboard/index']);?>";
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        this.$message.error(err.msg);
+                    });
+            },3000)
 
         },
+
         handleClick(tab, event) {
             // console.log(tab, event);
         },
         //发送验证码
         handlerSend(even) {
-
-            let params ={
-                mobile: this.ruleForm.phone,
-                event: even
-            }
             smsSend({
                 mobile: this.ruleForm.phone,
                 event: even
@@ -238,33 +274,99 @@ export default {
                     console.log(err)
                     this.$message.error(err.msg);
                 });
-            // let timeo = 30;
-            // let _this = this;
-            // let timeStop = setInterval(function (){
-            //     timeo--;
-            //     if(timeo > 0){
-            //         _this.verificationCodeText = timeo + 's后重新获取'
-            //         _this.isDisabled = true;
-            //     }else {
-            //         timeo = 30;
-            //         _this.verificationCodeText = '获取验证码'
-            //         _this.isDisabled = false;
-            //         clearInterval(timeStop);
-            //     }
-            // },1000)
+            let timeo = 30;
+            let _this = this;
+            let timeStop = setInterval(function (){
+                timeo--;
+                if(timeo > 0){
+                    _this.verificationCodeText = timeo + 's后重新获取'
+                    _this.isDisabled = true;
+                }else {
+                    timeo = 30;
+                    _this.verificationCodeText = '获取验证码'
+                    _this.isDisabled = false;
+                    clearInterval(timeStop);
+                }
+            },1000)
         },
-        //确认
-        submitForm(formName) {
+
+        //短信登录注册
+        handleSubmitForm(formName) {
+            let data = {
+                id: 2,
+                username: "17671615315",
+                nickname: "176****5315",
+                mobile: "17671615315",
+                avatar: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgaGVpZ2h0PSIxMDAiIHdpZHRoPSIxMDAiPjxyZWN0IGZpbGw9InJnYigyMjAsMTYwLDIyOSkiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3JlY3Q+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LXNpemU9IjUwIiB0ZXh0LWNvcHk9ImZhc3QiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHRleHQtcmlnaHRzPSJhZG1pbiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPjE8L3RleHQ+PC9zdmc+",
+                score: 0,
+                token: "30058c32-eb3d-44ee-a1dd-1fc4c70608f9",
+                user_id: 2,
+                createtime: 1667028463,
+                expiretime: 1669620463,
+                expires_in: 2591998
+            }
+            this.setUserInfo(data)
+            localStorage.setItem('userInfo', data)
+            localStorage.setItem('token', data.token)
+            this.$router.push(this.fromPath)
+            // this.$refs[formName].validate((valid) => {
+            //     if (valid) {
+            //         mobileLogin({
+            //             mobile: this.ruleForm.phone,
+            //             captcha: this.ruleForm.verificationCode
+            //         })
+            //             .then((res) => {
+            //                 if(res.code === 1){
+            //                     this.setUserInfo(res.data.userinfo)
+            //                     localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
+            //                     localStorage.setItem('token', res.data.userinfo.token)
+            //                     this.$router.push(this.fromPath)
+            //                 }else {
+            //                     // this.$message.error(res.msg);
+            //                 }
+            //             })
+            //             .catch((err) => {
+            //                 console.log(err)
+            //                 // this.$message.error(err.msg);
+            //             });
+            //     } else {
+            //         console.log('error submit!!');
+            //         return false;
+            //     }
+            // });
+
+        },
+
+        //绑定手机号
+        handleBindPhone(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    bindPhone({
+                        mobile: this.ruleForm.phone,
+                        captcha: this.ruleForm.verificationCode,
+                        wechat_token: this.wechatToken,
+                    })
+                        .then((res) => {
+                            if(res.code === 1){
+                                this.setUserInfo(res.data.userinfo)
+                                localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
+                                this.$router.push(this.fromPath)
+                            }else if(res.code === 0 && res.data.status === 0){
+                                // this.$message.error(res.msg);
+                                this.hasBindPhone = false;
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            // this.$message.error(err.msg);
+                        });
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
             });
-
         },
+
         //刷新二维码
         handleRefresh() {
             this.handlerGetQrcode();
@@ -281,6 +383,25 @@ export default {
                     clearInterval(intervalId);
                 }
             },3000)
+        },
+        //已登录状态下不跳转至登录页
+        verifyToken(){
+            let tokenStr = JSON.parse(localStorage.getItem('userinfo')).token
+            if (tokenStr) {
+                checkToken()
+                    .then((res) => {
+                        if(res){
+                            this.$router.push({ path: "/" });
+                        }
+                    })
+                    .catch((err) => {
+                        store.commit('clearUserInfo');//删除token
+                        localStorage.removeItem('userInfo')//删除token
+                        this.$router.push('/login');
+                    });
+            } else {
+                return new Promise.reject(new Error('请登录!'));
+            }
         }
     },
 }

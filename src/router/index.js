@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from "@/views/Layout";
 import Home from "@/views/Layout/Home"
-import Buyershow from "@/views/Layout/Buyershow";
+import Buyershow from "@/views/Layout/Buyershow/index.vue";
 import Manage from "@/views/Layout/Manage";
 import Order from "@/views/Layout/Manage/Order";
 import Payment from "@/views/Layout/Manage/Payment";
@@ -27,7 +27,22 @@ const routes = [
                 name: 'Buyershow',
                 meta: {requiresAuth: false},
                 component: Buyershow,
+                children: [
+                    {
+                        path: '/buyershow',
+                        name: 'Buyershow',
+                        meta: {requiresAuth: false},
+                        component: () => import('@/views/Layout/Buyershow/Buyershow.vue'),
+                    },
+                    {
+                        path: '/homepage/:id',
+                        name: 'Homepage',
+                        meta: {requiresAuth: false},
+                        component: () => import('@/views/Layout/Buyershow/Homepage.vue'),
+                    },
+                ]
             },
+
             {
                 path: '/manage',
                 name: 'manage',

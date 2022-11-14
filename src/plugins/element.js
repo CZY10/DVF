@@ -73,6 +73,8 @@ import {
     Backtop,
     PageHeader,
     CascaderPanel,
+    Drawer,
+    Empty,
     Loading,
     MessageBox,
     Message,
@@ -152,6 +154,8 @@ Vue.use(Calendar);
 Vue.use(Backtop);
 Vue.use(PageHeader);
 Vue.use(CascaderPanel);
+Vue.use(Drawer);
+Vue.use(Empty);
 
 Vue.use(Loading.directive);
 

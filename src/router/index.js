@@ -35,7 +35,7 @@ const routes = [
                         component: () => import('@/views/Layout/Buyershow/Buyershow.vue'),
                     },
                     {
-                        path: '/homepage/:id',
+                        path: '/homepage:id',
                         name: 'Homepage',
                         meta: {requiresAuth: false},
                         component: () => import('@/views/Layout/Buyershow/Homepage.vue'),
@@ -100,7 +100,7 @@ import store from '../store/index'
 //路由拦截
 router.beforeEach((to, from, next) => {
     localStorage.setItem('loginFromPath',from.path)
-    let token = store.state.login.userInfo.token;
+    let token = localStorage.getItem('token');
     if (to.matched.some(ele => ele.meta.requiresAuth)) {
         if (token) {
             next()

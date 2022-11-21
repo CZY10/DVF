@@ -95,17 +95,6 @@ eval("// style-loader: Adds some css to the DOM by adding a <style> tag\n\n// lo
 
 /***/ }),
 
-/***/ "./src/assets/images/people_header.png":
-/*!*********************************************!*\
-  !*** ./src/assets/images/people_header.png ***!
-  \*********************************************/
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-"use strict";
-eval("module.exports = __webpack_require__.p + \"static/img/people_header.402efee7.png\";\n\n//# sourceURL=webpack://videoproject/./src/assets/images/people_header.png?");
-
-/***/ }),
-
 /***/ "./src/assets/images/table_video.png":
 /*!*******************************************!*\
   !*** ./src/assets/images/table_video.png ***!

@@ -10,7 +10,7 @@
                         <h5>NO.123</h5>
                         <span class="category">Amazon Influencer</span>
                         <div class="title">
-                            <span v-for="(item,index) in title" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item }}</span><!--:style="{color: 3*index ? 'red' : 2*index ==0 ? 'green':'blue',background: index++ % 3 ==0 ? 'rgba(245, 100, 34, 0.1000)' : index++ % 2 ==0 ? 'rgba(75, 177, 241, 0.1000)':'rgba(0, 217, 173, 0.1000)'}"-->
+                            <span v-for="(item,index) in title" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item }}</span>
                         </div>
                     </div>
                 </el-col>

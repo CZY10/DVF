@@ -6,6 +6,7 @@ export default {
     },
     mutations:{
         setUserInfo(state,payload){
+            console.log('store',state,payload)
             state.userInfo = payload;
         },
         clearUserInfo(state){

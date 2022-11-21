@@ -73,8 +73,6 @@
 
                         </el-tabs>
                     </div>
-
-
                     <div class="tabs" v-else>
                         <h3 style="padding-bottom: 17px">请绑定手机号</h3>
                         <el-form :model="ruleForm" :rules="bindPhoneRules" ref="bindPhoneRuleForm" class="demo-ruleForm">
@@ -84,7 +82,7 @@
                             </el-form-item>
                             <el-form-item prop="verificationCode">
                                 <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
-                                    <el-button slot="append" @click="handlerSend('register')" :style="{'color':(isDisabled? '#999999':'#2489F3')}" :disabled="isDisabled" type="text">
+                                    <el-button slot="append" @click="handlerSend('mobilelogin')" :style="{'color':(isDisabled? '#999999':'#2489F3')}" :disabled="isDisabled" type="text">
                                         {{ verificationCodeText }}</el-button>
                                 </el-input>
                             </el-form-item>
@@ -94,8 +92,6 @@
                         </el-form>
                         <p class="privacy_agreement">绑定后即可使用微信扫码登录，更便捷</p>
                     </div>
-
-
                 </el-col>
             </el-row>
         </div>
@@ -113,7 +109,6 @@
                 <p><i class="iconfont icon-mail"></i><span>邮箱：</span>support@amztracker.com</p>
             </div>
         </el-dialog>
-
     </div>
 </template>
 
@@ -155,6 +150,7 @@ export default {
             isRefresh: false,
             qrImg:'',
             activeName: 'first',
+            checkQrCode:'',
             hasBindPhone: false,
             isDisabled:true,
             isBindPhoneDisabled:false,
@@ -219,15 +215,15 @@ export default {
         handleCheckQr(){
             var timer=0;
             let _this = this;
-            let checkQrCode = setInterval(()=>{
-                checkQr({
-                    wechat_token: _this.wechatToken
-                })
+            let form = new FormData();
+            form.append('wechat_token',_this.wechatToken)
+            _this.checkQrCode = setInterval(()=>{
+                checkQr(form)
                     .then((res) => {
                         if(res.code === 0){ //二维码已失效
                             _this.isRefresh = true;
                             //清除定时脚本
-                            clearInterval(checkQrCode)
+                            clearInterval(_this.checkQrCode)
                         }
                         if(res.code === 1 && res.data.status === 0){//请等待扫码
                             timer++;
@@ -235,15 +231,19 @@ export default {
                                 //等待扫码,超过3分钟未扫描，二维码提示已过期
                                 _this.isRefresh = true;
                                 //清除定时脚本
-                                clearInterval(checkQrCode);
+                                clearInterval(_this.checkQrCode);
                             }
                         }else if(res.code === 1 && res.data.status === 1){//扫码成功，请绑定手机号
                             //渲染绑定手机页面
                             _this.hasBindPhone = true;
                             //清除定时脚本
-                            clearInterval(checkQrCode);
+                            clearInterval(_this.checkQrCode);
                         }else if(res.code === 1 && res.data.status === 2){//登录成功,即将跳转
-                            clearInterval(checkQrCode);
+                            clearInterval(_this.checkQrCode);
+                            this.setUserInfo(res.data.userinfo)
+                            localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
+                            localStorage.setItem('token', res.data.userinfo.token)
+                            this.$router.push(this.fromPath)
                             //跳转到后台
                             // location.href="<?= Url::toRoute(['dashboard/index']);?>";
                         }
@@ -292,48 +292,32 @@ export default {
 
         //短信登录注册
         handleSubmitForm(formName) {
-            let data = {
-                id: 2,
-                username: "17671615315",
-                nickname: "176****5315",
-                mobile: "17671615315",
-                avatar: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgaGVpZ2h0PSIxMDAiIHdpZHRoPSIxMDAiPjxyZWN0IGZpbGw9InJnYigyMjAsMTYwLDIyOSkiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3JlY3Q+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LXNpemU9IjUwIiB0ZXh0LWNvcHk9ImZhc3QiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHRleHQtcmlnaHRzPSJhZG1pbiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPjE8L3RleHQ+PC9zdmc+",
-                score: 0,
-                token: "30058c32-eb3d-44ee-a1dd-1fc4c70608f9",
-                user_id: 2,
-                createtime: 1667028463,
-                expiretime: 1669620463,
-                expires_in: 2591998
-            }
-            this.setUserInfo(data)
-            localStorage.setItem('userInfo', data)
-            localStorage.setItem('token', data.token)
-            this.$router.push(this.fromPath)
-            // this.$refs[formName].validate((valid) => {
-            //     if (valid) {
-            //         mobileLogin({
-            //             mobile: this.ruleForm.phone,
-            //             captcha: this.ruleForm.verificationCode
-            //         })
-            //             .then((res) => {
-            //                 if(res.code === 1){
-            //                     this.setUserInfo(res.data.userinfo)
-            //                     localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
-            //                     localStorage.setItem('token', res.data.userinfo.token)
-            //                     this.$router.push(this.fromPath)
-            //                 }else {
-            //                     // this.$message.error(res.msg);
-            //                 }
-            //             })
-            //             .catch((err) => {
-            //                 console.log(err)
-            //                 // this.$message.error(err.msg);
-            //             });
-            //     } else {
-            //         console.log('error submit!!');
-            //         return false;
-            //     }
-            // });
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    mobileLogin({
+                        mobile: this.ruleForm.phone,
+                        captcha: this.ruleForm.verificationCode
+                    })
+                        .then((res) => {
+                            if(res.code === 1){
+                                clearInterval(this.checkQrCode);
+                                this.setUserInfo(res.data.userinfo)
+                                localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
+                                localStorage.setItem('token', res.data.userinfo.token)
+                                this.$router.push(this.fromPath)
+                            }else {
+                                // this.$message.error(res.msg);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            // this.$message.error(err.msg);
+                        });
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
 
         },
 
@@ -350,6 +334,7 @@ export default {
                             if(res.code === 1){
                                 this.setUserInfo(res.data.userinfo)
                                 localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
+                                localStorage.setItem('token', res.data.userinfo.token)
                                 this.$router.push(this.fromPath)
                             }else if(res.code === 0 && res.data.status === 0){
                                 // this.$message.error(res.msg);

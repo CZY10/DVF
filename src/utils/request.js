@@ -79,6 +79,7 @@ service.interceptors.response.use(
     }
 )
 export const createAPI = (url, method, data) => {
+
     const config = {}
     if(method === 'get'){
         config.params = data

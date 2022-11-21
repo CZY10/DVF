@@ -15,7 +15,7 @@ Vue.config.productionTip = false
 let userInfo = localStorage.getItem('token')
 console.log(userInfo)
 if (userInfo){
-  userInfo = JSON.parse(userInfo);
+  // userInfo = JSON.parse(userInfo);
   store.commit('login/setUserInfo',userInfo)
 }
 new Vue({

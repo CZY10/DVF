@@ -1,4 +1,4 @@
-@import url('https://at.alicdn.com/t/c/font_3721021_yhe6fx00wc.css?spm=a313x.7781069.1998910419.55&file=font_3721021_yhe6fx00wc.css');
+@import url('https://at.alicdn.com/t/c/font_3721021_ltha7z3dhh.css?spm=a313x.7781069.1998910419.55&file=font_3721021_ltha7z3dhh.css');
 
 @font-face {
     font-family: GothamHTF;
@@ -106,4 +106,8 @@ html {
     font-weight: 600;
     color: #333333;
     line-height: 22px;
+}
+/*按钮禁用样式*/
+.disabled_btn{
+   background: #CCCCCC !important;
 }

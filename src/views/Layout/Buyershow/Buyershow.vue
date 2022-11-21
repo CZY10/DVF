@@ -105,6 +105,9 @@
                                         <img src="../../../assets/images/country.png" style="margin-right: 10px" alt="">
                                         <img src="../../../assets/images/male.png" alt="">
                                     </p>
+                                    <div class="title_style">
+                                        <span v-for="(item,index) in title" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -400,6 +403,7 @@ export default {
     name: "buyershow",
     data(){
         return{
+            title:['家居','电子','服装设计','家居','电子','服装设计','家居','电子','服装设计','家居','电子','服装设计','家居'],
             paymentCompletedDialogVisible: false,
             payDepositDialogVisible:false,
             candidateData:[
@@ -1081,6 +1085,7 @@ export default {
             line-height: 20px;
             margin-left: 12px;
         }
+
     }
     .people_works{
         width: 72px;
@@ -1238,6 +1243,22 @@ export default {
         .people_information_style{
             display: flex;
             align-items: center;
+            .title_style{
+                height: 46px;
+                span{
+                    display: inline-block;
+                    background: rgba(245,100,34,0.1);
+                    border-radius: 2px;
+                    height: 18px;
+                    line-height: 18px;
+                    padding: 0 5px;
+                    margin: 1px;
+                    font-size: 12px;
+                    font-family: PingFangSC-Regular, PingFang SC;
+                    font-weight: 400;
+                    color: #F56422;
+                }
+            }
             .people_img{
                 width: 120px;
                 height: 120px;
@@ -1268,7 +1289,7 @@ export default {
                 border-radius: 9px;
                 padding: 1px 5px;
                 display: inline-block;
-                margin-bottom: 11px;
+                margin-bottom: 7px;
             }
         }
         .people_works{

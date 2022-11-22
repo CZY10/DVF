@@ -1891,25 +1891,20 @@ export default {
             justify-content: center;
             align-items: center;
             margin-top: 24px;
-            .cancel_style{
-                width: 120px;
+            button{
+                padding: 8px 45px;
                 border-radius: 16px;
-                border: 1px solid #EEEEEE;
                 font-size: 14px;
+            }
+            .cancel_style{
+                border: 1px solid #EEEEEE;
                 font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
                 color: #999999;
-                padding: 8px 0;
             }
             .confirm_style{
-                width: 120px;
                 background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
-                border-radius: 16px;
-                font-size: 14px;
                 font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
                 color: #FFFFFF;
-                padding: 8px 0;
             }
         }
 

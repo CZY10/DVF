@@ -111,3 +111,20 @@ html {
 .disabled_btn{
    background: #CCCCCC !important;
 }
+/*table滚动条样式*/
+
+.el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar {
+    width:6px;
+}
+/* 滚动槽 */
+.el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-track {
+    border-radius:10px;
+}
+/* 滚动条滑块 */
+.el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-thumb {
+    border-radius:10px;
+    background:rgba(0,0,0,0.1);
+}
+.el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-thumb:window-inactive {
+    background:#D8D8D8;
+}

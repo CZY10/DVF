@@ -660,20 +660,30 @@ export default {
 .el-table th.el-table__cell>.cell{
     text-align: center;
 }
-.el-input-group--append .el-input__inner{
-    border-radius: 23px;
-    border-right: none;
+
+.buyer_show{
+    .el-input-group__append{
+        border-radius: 23px !important;
+        background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
+        border: none;
+    }
+    .el-radio-button__inner{
+        border: none !important;
+        font-family: PingFangSC-Regular, PingFang SC;
+        color: #666666;
+    }
+    .el-input-group--append .el-input__inner{
+        border: none;
+    }
+    .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+        background: #796CF3;
+        border-color: #796CF3;
+    }
+    .el-checkbox__input.is-checked+.el-checkbox__label{
+        color: #796CF3;
+    }
 }
-.el-input-group__append{
-    border-radius: 23px !important;
-    background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
-    border: none;
-}
-.el-radio-button__inner{
-    border: none !important;
-    font-family: PingFangSC-Regular, PingFang SC;
-    color: #666666;
-}
+
 .el-radio-button__orig-radio:checked+.el-radio-button__inner{
     font-weight: 600;
     color: #333333 !important;

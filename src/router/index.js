@@ -6,7 +6,6 @@ import Buyershow from "@/views/Layout/Buyershow/index.vue";
 import Manage from "@/views/Layout/Manage";
 import Order from "@/views/Layout/Manage/Order";
 import Payment from "@/views/Layout/Manage/Payment";
-import Message from "@/views/Layout/Manage/Message";
 import Personal from "@/views/Layout/Manage/Personal";
 
 Vue.use(VueRouter)
@@ -59,11 +58,6 @@ const routes = [
                         path: 'Payment',
                         name: 'Payment',
                         component: Payment,
-                    },
-                    {
-                        path: 'Message',
-                        name: 'message',
-                        component: Message,
                     },
                     {
                         path: 'personal',

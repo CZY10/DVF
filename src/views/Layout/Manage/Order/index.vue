@@ -3,7 +3,7 @@
         <div class="content">
             <el-form ref="form" class="form_search" size="small" :model="form" label-width="80px">
                 <el-form-item label="订单记录" class="title">
-                    <el-input placeholder="请输入内容" v-model="form.keywords" class="input-with-select">
+                    <el-input placeholder="输入ASIN/订单号" v-model="form.keywords" class="input-with-select">
                         <el-button slot="append" icon="el-icon-search"></el-button>
                     </el-input>
                 </el-form-item>
@@ -82,7 +82,7 @@
                     <template slot-scope="scope">
                         <div>
                             <div v-if="scope.row.status == 0" class="flex_center">
-                                <el-button class="operation_btn payment_btn_style" size="small" round>付定金</el-button>
+                                <el-button class="operation_btn payment_btn_style" size="small" @click="payDepositDialogVisible=true" round>付定金</el-button>
                                 <el-button class="operation_btn" size="small" @click="deleteOrderDialog=true" round>删除</el-button>
                             </div>
                             <div v-else-if="scope.row.status == 1" class="flex_center">
@@ -464,6 +464,36 @@
                 <div style="text-align: center;margin-top: 24px"><el-button type="primary" size="small" @click="handlerSedMeg" style="border: none;padding: 10px 58px;border-radius: 16px;background: #3E7AFF linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);">提交</el-button></div>
             </div>
         </el-dialog>
+        <!--支付定金-->
+        <el-dialog
+            title="请尽快支付定金"
+            :visible.sync="payDepositDialogVisible"
+            width="500px"
+            class="pay_deposit_dialog"
+            center>
+            <div>
+                <el-alert
+                    title="支付定金后，平台将正式为您对接达人。不满意可随时申请退还定金。"
+                    center
+                    style="position: relative"
+                    :closable="false">
+                    <i class="iconfont icon-tips" style="position: absolute;top: 8px;left: 14px;font-size: 18px;color: #796CF3"></i>
+                </el-alert>
+                <h5>¥99.00</h5>
+                <p>定金金额</p>
+                <p>订单号：<span>2022072543SDFDSFWQ</span></p>
+                <ul>
+                    <li>
+                        <div><img src="../../../../assets/images/contact_us.png" alt=""></div>
+                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>
+                    </li>
+                    <li>
+                        <div><img src="../../../../assets/images/contact_us.png" alt=""></div>
+                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>
+                    </li>
+                </ul>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -743,6 +773,7 @@ export default {
             submitDialog:false,
             imgDialog:false,
             feedbackDialog:false,
+            payDepositDialogVisible:false,
             messageData:[],
             uploadFile:[],
             videoForm: {
@@ -1542,6 +1573,28 @@ export default {
         right: 2px;
         bottom: -6px;
     }
+    /*支付定金弹窗*/
+    .pay_deposit_dialog {
+        .el-alert{
+            padding: 7px 0;
+            .el-alert__description{
+                margin: 0;
+            }
+        }
+        .el-alert__icon{
+            color: #796CF3;
+        }
+        .el-alert--info.is-light{
+            background: #F4F2FF;
+            color: #666666;
+        }
+        .el-alert__title{
+            font-size: 12px !important;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400 !important;
+            color: #666666 !important;
+        }
+    }
 }
 
 .hide_upload .el-upload--picture-card {
@@ -2023,6 +2076,64 @@ export default {
                 font-weight: 400;
                 color: #FFFFFF;
                 padding: 8px 0;
+            }
+        }
+    }
+    .pay_deposit_dialog{
+        h5{
+            font-size: 22px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #FF2C4C;
+            line-height: 30px;
+            text-align: center;
+            margin: 18px 0 1px 0;
+        }
+        p{
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #999999;
+            line-height: 20px;
+            text-align: center;
+            margin: 5px 0;
+            span{
+                color: rgba(51, 51, 51, 1);
+            }
+        }
+        ul{
+            border-radius: 10px;
+            border: 2px solid #F4F2FF;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            margin: 15px 35px 16px 35px;
+            li{
+                div{
+                    width: 140px;
+                    height: 140px;
+                    background: #FFFFFF;
+                    border: 1px solid #EEEEEE;
+                    img{
+                        width: 100%;
+                    }
+                }
+                p{
+                    font-size: 14px;
+                    font-family: PingFangSC-Semibold, PingFang SC;
+                    font-weight: 600;
+                    color: #333333;
+                    line-height: 20px;
+                    margin-top: 10px;
+                    margin-bottom: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    i{
+                        font-size: 18px;
+                        margin-right: 6px;
+                    }
+                }
             }
         }
     }

@@ -17,7 +17,6 @@
                 <template slot="title"><span class="user_info_box"><img src="../../assets/images/people_header.png" alt=""></span></template>
                 <el-menu-item index="/manage/order">订单信息</el-menu-item>
                 <el-menu-item index="/manage/payment">支付记录</el-menu-item>
-                <el-menu-item index="/manage/message">消息通知</el-menu-item>
                 <el-menu-item index="/manage/personal">个人资料</el-menu-item>
                 <el-menu-item>退出</el-menu-item>
             </el-submenu>

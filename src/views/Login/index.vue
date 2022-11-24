@@ -45,7 +45,6 @@
                                                 <span>点击刷新</span>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                                 <p class="privacy_agreement">登录平台即代表同意<a href="">服务条款</a>及<a href="">用户隐私协议</a></p>

@@ -43,70 +43,75 @@
                 <h2>查找适合你的拍摄方案</h2>
                 <div style="background: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1));border-radius: 23px;padding: 2px">
                     <div class="search_style">
-                        <el-input placeholder="搜索品类/红人编号/国家" v-model="searchVal" class="input-with-select input_radius">
-                            <el-button slot="append" style="width: 140px;color: #ffffff;font-size: 20px" icon="el-icon-search"></el-button>
+                        <el-input placeholder="搜索品类/红人编号/国家" v-model="keyword" class="input-with-select input_radius">
+                            <el-button slot="append" style="width: 140px;color: #ffffff;font-size: 20px" icon="el-icon-search" @click="handlerSearchList"></el-button>
                         </el-input>
                     </div>
                 </div>
                 <div class="filter_header">
                     <div class="filter_item">
                         <span>达人性别</span>
-                        <el-radio-group v-model="genderRadio">
-                            <el-radio-button label="全部"></el-radio-button>
-                            <el-radio-button label="男性"></el-radio-button>
-                            <el-radio-button label="女性"></el-radio-button>
+                        <el-radio-group v-model="genderValue" @change="handlerSearchList">
+                            <el-radio-button label="">全部</el-radio-button>
+                            <el-radio-button label="male">男性</el-radio-button>
+                            <el-radio-button label="female">女性</el-radio-button>
                         </el-radio-group>
                     </div>
                     <div class="filter_item">
                         <span>产品品类</span>
-                        <el-radio-group v-model="typeRadio">
-                            <el-radio-button v-for="(item,index) in categoryList" :key="index" :label="item"></el-radio-button>
+                        <el-radio-group v-model="categoryValue" @change="handlerSearchList">
+                            <el-radio-button v-for="(item,index) in categoryList" :key="index" :label="item.id">{{item.name}}</el-radio-button>
                         </el-radio-group>
                     </div>
                 </div>
                 <div class="filter_search">
                     <div>
                         <span style="margin-right: 40px">找到{{total}}个</span>
-                        <span>匹配预算<el-input size="small" style="width: 79px;margin: 0 12px" placeholder="" v-model="keywords"></el-input>元</span>
+                        <span>匹配预算<el-input size="small" style="width: 79px;margin: 0 12px" placeholder="" @change="handlerSearchList" v-model="priceValue"></el-input>元</span>
                     </div>
                     <div>
-                        <el-checkbox-group v-model="checkList">
-                            <el-checkbox label="Amazon Influencer"></el-checkbox>
-                            <el-checkbox label="社媒红人"></el-checkbox>
-                            <el-checkbox label="素人"></el-checkbox>
+                        <el-checkbox-group v-model="checkType" @change="handlerSearchList">
+                            <el-checkbox v-for="(item,index) in checkGroup" :key="index" :label="item.id">{{item.name}}</el-checkbox>
                         </el-checkbox-group>
                     </div>
                 </div>
                 <el-table
                     :data="tableData"
                     ref="multipleTable"
+                    v-loading="loading"
+                    v-if="tableData.length!==0"
+                    v-el-table-infinite-scroll="loadTable"
+                    :infinite-scroll-immediate="false"
+                    :infinite-scroll-disabled="disabled"
                     :header-cell-style="{background:'#F6F6F6',color:'#333333',fontWeight: '600'}"
                     size="mini"
+                    :height="800"
                     @selection-change="handleSelectionChange"
                     style="width: 100%;">
                     <el-table-column
                         type="selection"
                         align="center"
-                        width="80">
+                        width="60">
                     </el-table-column>
                     <el-table-column
                         prop="date"
-                        width="300"
+                        width="290"
                         label="创作达人">
                         <template slot-scope="scope">
                             <div class="people_information_style">
                                 <div class="people_img">
-                                    <img src="../../../assets/images/people_header.png" alt="">
+                                    <img :src="scope.row.image" alt="">
                                 </div>
                                 <div>
-                                    <p class="people_nickname">{{ scope.row.nickname }}</p>
-                                    <span class="people_type">Amazon Influencer</span>
+                                    <p class="people_nickname">NO.{{ scope.row.id }}</p>
+                                    <span class="people_type">{{ scope.row.type }}</span>
                                     <p>
-                                        <img src="../../../assets/images/country.png" style="margin-right: 10px" alt="">
-                                        <img src="../../../assets/images/male.png" alt="">
+                                        <img :src="scope.row.country_id.image" style="margin-right: 10px;width: 14px" alt="">
+                                        <img v-if="scope.row.genderdata === 'male'" src="../../../assets/images/male.png" alt="">
+                                        <img v-else src="../../../assets/images/female.png" alt="">
                                     </p>
                                     <div class="title_style">
-                                        <span v-for="(item,index) in title" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item }}</span>
+                                        <span v-for="(item,index) in scope.row.category_ids" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item.name }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +121,7 @@
                         prop="name"
                         label="参考作品"
                         align="center"
-                        width="180">
+                        width="160">
                         <template>
                             <div class="people_works">
                                 <p>共7个</p>
@@ -127,20 +132,22 @@
                     <el-table-column
                         prop="address"
                         label="交付说明">
-                        <template>
+                        <template slot-scope="scope">
                             <div class="upload_description">
                                 <div>
-                                    <p><span>卖点呈现：</span>通常纯展示</p>
-                                    <p><span>拍摄场景：</span>自行发挥</p>
+                                    <p><span>卖点呈现：</span>{{ scope.row.sellingpoint_id }}</p>
+                                    <p><span>拍摄场景：</span>{{ scope.row.scene_id }}</p>
                                 </div>
                                 <div>
-                                    <p><span>视频上传：</span>达人账号上传并关联listing</p>
-                                    <p><span>交付周期：</span>7-14天（样品发货后）</p>
+                                    <p><span>视频上传：</span>{{ scope.row.videoupload_id }}</p>
+                                    <p><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #999999;font-size: 12px">（样品发货后）</span></p>
                                 </div>
                             </div>
                             <el-tooltip placement="top" effect="light">
-                                <div slot="content" style="max-width: 400px">交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...</div>
-                                <div class="other_description">交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...</div>
+                                <div slot="content" style="max-width: 400px">
+                                    {{ scope.row.content }}</div>
+                                <div class="other_description">
+                                    {{ scope.row.content }}</div>
                             </el-tooltip>
                         </template>
                     </el-table-column>
@@ -150,13 +157,12 @@
                         width="150"
                         align="center"
                         label="参考报价">
-                        <template>
-                            <p class="consult_price">￥<span>500-900</span></p>
+                        <template slot-scope="scope">
+                            <p class="consult_price">￥<span>{{ scope.row.lower_price }}-{{ scope.row.highest_price }}</span></p>
                         </template>
                     </el-table-column>
-
                 </el-table>
-                <el-empty :image="require('../../../assets/images/empty_img.png')" description="暂无搜索结果" :image-size="400" v-show="tableData.length==0" style="padding: 80px 0"></el-empty>
+                <el-empty v-else :image="require('../../../assets/images/empty_img.png')" description="暂无搜索结果" :image-size="400"style="padding: 80px 0"></el-empty>
             </div>
         </div>
         <Footer></Footer>
@@ -177,13 +183,13 @@
                             max-height="275"
                             style="width: 100%;">
                             <el-table-column type="index" align="center" label="方案" width="80"></el-table-column>
-                            <el-table-column prop="date" width="340" label="创作达人">
+                            <el-table-column prop="date" width="200" label="创作达人">
                                 <template slot-scope="scope">
                                     <div class="people_information_style">
                                         <div class="people_img">
-                                            <img src="../../../assets/images/people_header.png" alt="">
+                                            <img :src="scope.row.image" alt="">
                                         </div>
-                                        <p class="people_nickname">{{ scope.row.nickname }}</p>
+                                        <p class="people_nickname">NO.{{ scope.row.id }}</p>
                                     </div>
                                 </template>
                             </el-table-column>
@@ -198,22 +204,22 @@
                                 <template slot-scope="scope">
                                     <el-tooltip placement="right" effect="light">
                                         <div slot="content" style="max-width: 400px">
-                                            <p><span>卖点呈现：</span>通常自由发挥呈现</p>
-                                            <p><span>拍摄场景：</span>通常自由发挥</p>
-                                            <p><span>视频上传：</span>达人账号上传并关联listing</p>
-                                            <p><span>交付周期：</span>7-14天 <span style="color: rgba(153, 153, 153, 1);font-size: 12px">（样品收货后）</span></p>
+                                            <p><span>卖点呈现：</span>{{ scope.row.sellingpoint_id }}</p>
+                                            <p><span>拍摄场景：</span>{{ scope.row.scene_id }}</p>
+                                            <p><span>视频上传：</span>{{ scope.row.videoupload_id }}</p>
+                                            <p><span>交付周期：</span>{{ scope.row.leadtime_id }} <span style="color: rgba(153, 153, 153, 1);font-size: 12px">（样品收货后）</span></p>
                                             <p><span>其他说明：</span>{{ scope.row.description1 }}交付说明默认展示两行，鼠标悬停展示全部交付说明默认展示两行，鼠标悬停展示全部</p>
                                         </div>
                                         <div class="other_description">
-                                            <p><span>卖点呈现：</span>{{ scope.row.description1 }}</p>
-                                            <p><span>拍摄场景：</span>{{ scope.row.description2 }}</p>
+                                            <p><span style="color: #999999">卖点呈现：</span>{{ scope.row.sellingpoint_id }}</p>
+                                            <p><span style="color: #999999">拍摄场景：</span>{{ scope.row.scene_id }}</p>
                                         </div>
                                     </el-tooltip>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="price" sortable width="150" align="center" label="参考报价">
                                 <template slot-scope="scope">
-                                    <p class="consult_price">￥<span>{{ scope.row.price }}</span></p>
+                                    <p class="consult_price">￥<span>{{ scope.row.lower_price }}-{{ scope.row.highest_price }}</span></p>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作">
@@ -248,7 +254,7 @@
             center>
             <div>
                 <p>您还没有登录，登录后即可继续操作</p>
-                <el-button type="primary" size="small" @click="centerDialogVisible = false">去登录</el-button>
+                <el-button type="primary" size="small" @click="loginDialogVisible = false;$router.replace('/login')">去登录</el-button>
             </div>
         </el-dialog>
 
@@ -264,7 +270,7 @@
                     <el-form-item label="选择拍摄类型" prop="selectedType">
                         <div style="padding-bottom: 10px">
                             <el-radio-group v-model="videoRuleForm.selectedType" size="small">
-                                <el-radio class="radio_style1" label="1" border>
+                                <el-radio class="radio_style1" label="0" border>
                                     <p class="recommend">推荐</p>
                                     标准化拍摄
                                     <ul>
@@ -275,7 +281,7 @@
                                         <li>重拍需另行收费</li>
                                     </ul>
                                 </el-radio>
-                                <el-radio class="radio_style2" label="2" border>
+                                <el-radio class="radio_style2" label="1" border>
                                     定制化拍摄
                                     <ul>
                                         <li>达人按卖家指定方式及场景拍摄</li>
@@ -294,8 +300,7 @@
                     </el-form-item>
                     <el-form-item label="产品所属品类" prop="category" required>
                         <el-select v-model="videoRuleForm.category" style="width: 100%" placeholder="请选择产品所属品类">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-option v-for="(item,index) in categoryList" :label="item.name" :value="item.id" :key="index"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="产品核心卖点" prop="selling_point">
@@ -334,10 +339,10 @@
                         <ul class="candidate_list">
                             <li v-for="(item,index) in selectedTableData" :key="index">
                                 <div>
-                                    <img :src="item.img" alt="">
+                                    <img :src="item.image" alt="">
                                 </div>
-                                <p>{{item.nickname}}</p>
-                                <span>{{item.price}}</span>
+                                <p>NO.{{item.id}}</p>
+                                <span>￥{{item.lower_price}}-{{item.highest_price}}</span>
                             </li>
                         </ul>
                     </el-form-item>
@@ -399,11 +404,18 @@
 
 <script>
 import Footer from "@/components/Footer";
+import { getCategory, getSearchList, createOrder } from "@/api/index";
+
 export default {
     name: "buyershow",
     data(){
         return{
-            title:['家居','电子','服装设计','家居','电子','服装设计','家居','电子','服装设计','家居','电子','服装设计','家居'],
+            loading: false,
+            disabled: false,
+            pageIndex:0,
+            pageSize:5,
+            totalCount:0,
+            saveDATA:[],
             paymentCompletedDialogVisible: false,
             payDepositDialogVisible:false,
             candidateData:[
@@ -434,13 +446,12 @@ export default {
                 },
             ],
             videoRuleForm: {
-                selectedType:'1',
+                selectedType:'0',
                 product:'',
                 category:'',
                 selling_point:'',
                 demand:'',
                 remarks:'',
-                candidate:'',
             },
             videoRules: {
                 selectedType: [
@@ -464,71 +475,16 @@ export default {
             drawer: false,
             direction: 'btt',
             footerHeight:'',
-            searchVal:'',
-            genderRadio:'全部',
-            typeRadio:'家居1',
-            categoryList:['服装','家居','数码','厨具','美妆','儿童','家电','户外','彩妆','家居','服装','家居','服装','家居','服装','家居','服装','家居','服装','家居',],
+            keyword:'',
+            genderValue:'',
+            categoryValue:'',
+            categoryList:[],
+            checkGroup:[],
             total:105,
+            priceValue:'',
             keywords:'',
-            checkList: [],
-            tableData: [
-                {
-                    id:1,
-                    nickname:'NO.1231',
-                    description1:'通常纯展示',
-                    description2:'自行发挥',
-                    price:'500-900',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    id:2,
-                    nickname:'NO.1232',
-                    description1:'通常纯展示',
-                    description2:'自行发挥',
-                    price:'500-900',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    id:3,
-                    nickname:'NO.1233',
-                    description1:'通常纯展示',
-                    description2:'自行发挥',
-                    price:'500-1900',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    id:4,
-                    nickname:'NO.1234',
-                    description1:'通常纯展示',
-                    description2:'自行发挥',
-                    price:'500-2900',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    id:5,
-                    nickname:'NO.1235',
-                    description1:'通常纯展示',
-                    description2:'自行发挥',
-                    price:'500-3900',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    id:6,
-                    nickname:'NO.1234',
-                    description1:'通常纯展示',
-                    description2:'自行发挥',
-                    price:'500-2900',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    id:7,
-                    nickname:'NO.1235',
-                    description1:'通常纯展示',
-                    description2:'自行发挥',
-                    price:'500-3900',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-            ],
+            checkType: [],
+            tableData: [],
             selectedLength:0,
             selectedTableData:[],
             isShowSelectedPlan: false,
@@ -537,24 +493,113 @@ export default {
     components:{
         Footer,
     },
+    created() {
+        // this.init();
+    },
+    computed: {
+    },
     mounted() {
-        console.log(this.footerHeight)
         this.footerHeight = this.$refs.getheight.offsetHeight + 'px'
+        this.handlerGetCategory('influencer');
+        this.handlerGetCategory('type');
+        this.handlerSearchList();
     },
     methods:{
+        loadTable(){
+            this.handlerSearchList();
+        },
+        //获取搜索分类
+        handlerGetCategory(type){
+            getCategory({type:type})
+                .then((res) => {
+                    if(res.code === 1){
+                        if(type == 'type'){
+                            this.checkGroup = res.data
+                        }else {
+                            this.categoryList = res.data;
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.$message.error(err.msg);
+                });
+        },
+        //搜索列表
+        handlerSearchList(){
+            this.pageIndex ++;
+            if(!localStorage.getItem('token') && this.pageIndex!==1){
+                this.loginDialogVisible = true;
+                return;
+            }
+            this.disabled = true;
+            let data = {
+                keyword: this.keyword,
+                genderdata: this.genderValue,
+                type: this.checkType,
+                price: this.priceValue,
+                category_id: this.categoryValue,
+                page: this.pageIndex,
+                pageSize: this.pageSize,
+            }
+            getSearchList(data)
+                .then((res) => {
+                    if(res.code === 1){
+                        this.disabled = false;
+                        this.loading = false;
+                        if (!res.data.data || res.data.data.length < this.pageSize) {
+                            this.disabled = true
+                        }
+                        if (this.pageIndex === 1) {
+                            this.tableData = res.data.data
+                        } else {
+                            this.tableData = this.tableData.concat(res.data.data)
+                        }
+                        this.totalCount = res.data.totalCount;
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+
+        },
+
         submitForm(formName) {
+            let influencer_id = [];
+            this.selectedTableData.forEach((item,index)=>{
+                influencer_id.push(item.id)
+            })
+            console.log(influencer_id)
+            let data = {
+                shoot: this.videoRuleForm.selectedType,
+                influencer_ids: influencer_id,
+                category_id: this.videoRuleForm.category,
+                custom: this.videoRuleForm.demand,
+                url: this.videoRuleForm.product,
+                sellingpoint: this.videoRuleForm.selling_point,
+                description: this.videoRuleForm.remarks,
+            }
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    createOrder(data)
+                        .then((res) => {
+                            if(res.code === 1){
+                                console.log(res)
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            this.$message.error(err.msg);
+                        });
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
             });
         },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
-        },
+        // resetForm(formName) {
+        //     this.$refs[formName].resetFields();
+        // },
 
         handleSelectionChange(val){
             val.length>0 ? this.isShowSelectedPlan=true:this.isShowSelectedPlan=false;
@@ -599,6 +644,13 @@ export default {
 }
 </script>
 <style lang="less">
+
+#buyer_show{
+    .el-table__body-wrapper .el-table__body{
+        padding-bottom: 20px;
+    }
+}
+
 .el-tooltip__popper.is-dark{
     font-size: 12px !important;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -952,7 +1004,6 @@ export default {
         .candidate_list {
             li{
                 width: 60px;
-                height: 83px;
                 background: #FFFFFF;
                 border-radius: 3px;
                 border: 1px solid #EEEEEE;
@@ -965,6 +1016,7 @@ export default {
                     height: 44px;
                     border-radius: 26px;
                     margin: auto;
+                    overflow: hidden;
                     img{
                         width: 100%;
                     }
@@ -1083,6 +1135,7 @@ export default {
             width: 64px;
             height: 64px;
             border-radius: 35px;
+            overflow: hidden;
             img{
                 width: 100%;
             }
@@ -1255,6 +1308,7 @@ export default {
             align-items: center;
             .title_style{
                 height: 46px;
+                overflow: hidden;
                 span{
                     display: inline-block;
                     background: rgba(245,100,34,0.1);
@@ -1279,6 +1333,7 @@ export default {
                 margin-right: 24px;
                 img{
                     width: 100%;
+                    height: 100%;
                 }
             }
             .people_nickname{

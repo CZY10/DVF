@@ -72,14 +72,12 @@ html {
 .clearfix {
     *zoom: 1;
 }
-
 .el-dialog__wrapper{
-    display: flex;
-    justify-content: center;
+    display: grid;
     align-items: center;
 }
-.el-dialog{
-    margin-top: 0 !important;
+.el-dialog {
+    margin: 0 auto !important;
 }
 .el-dialog__header{
     padding-top: 30px !important;

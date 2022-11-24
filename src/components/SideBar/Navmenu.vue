@@ -22,7 +22,7 @@
             </el-submenu>
             <el-menu-item style="float: right;padding: 0" index="5">
                 <el-badge :value="122" class="item">
-                    <i class="el-icon-bell" style="color: #666666;"></i>
+                    <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
                 </el-badge>
 
             </el-menu-item>

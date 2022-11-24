@@ -113,11 +113,53 @@
                 </div>
             </div>
         </el-dialog>
+        <!--手机绑定成功-->
+        <el-dialog
+            :visible.sync="updatePhoneDialog"
+            width="260px"
+            class="dialog_style"
+            center>
+            <div slot="title">
+                <i style="color: rgba(2, 181, 120, 1);font-size: 20px" class="el-icon-success"></i>
+                手机绑定成功
+            </div>
+            <div>
+                <p>您可使用微信扫码登录了</p>
+                <div class="button_box">
+                    <el-button class="confirm_style">我知道了</el-button>
+                </div>
+            </div>
+        </el-dialog>
+        <!--绑定微信-->
+        <el-dialog
+            title="请用微信扫码进行绑定"
+            :visible.sync="bindWechartDialog"
+            width="328px"
+            class="dialog_style"
+            center>
+            <div>
+                <p class="bind_wechart_description">绑定后即可使用微信扫码登录，更便捷</p>
+                <div class="wechart_box">
+                    <span class="bottom_left"></span>
+                    <span class="bottom_right"></span>
+                    <img src="../../../../assets/images/qr.png" alt="">
+                    <div id="refreshQrcode" v-if="isRefresh" @click="handlerGetQrcode">
+                        <div
+                            style="display: flex;align-items: center;justify-content: center;height: 100%">
+                            <div>
+                                <i class="el-icon-refresh-right" style="display: block;text-align: center"></i>
+                                <span>点击刷新</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import {smsSend} from "@/api";
+import {checkQr, getQrcode, smsSend} from "@/api";
 export default {
     name: "personal",
     data(){
@@ -145,6 +187,11 @@ export default {
             }
         }
         return{
+            bindWechartDialog:false,
+            updatePhoneDialog:false,
+            isRefresh: false,
+            checkQrCode:'',
+            wechatToken:'',
             editPhoneForm:{
                 phone:'',
                 verificationCode:'',
@@ -219,7 +266,63 @@ export default {
             }
         }
     },
+    mounted() {
+        // this.handlerGetQrcode();
+    },
     methods:{
+        //获取微信二维码
+        handlerGetQrcode(){
+            getQrcode()
+                .then((res) => {
+                    if(res.code === 1){
+                        this.qrImg = res.data.qrcode_url;
+                        this.wechatToken = res.data.wechat_token;
+                        this.isRefresh = false;
+                        this.handleCheckQr();
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.$message.error(err.msg);
+                });
+        },
+        //检测二维码是否扫码成功
+        handleCheckQr(){
+            var timer=0;
+            let _this = this;
+            let form = new FormData();
+            form.append('wechat_token',_this.wechatToken)
+            _this.checkQrCode = setInterval(()=>{
+                checkQr(form)
+                    .then((res) => {
+                        if(res.code === 0){ //二维码已失效
+                            _this.isRefresh = true;
+                            //清除定时脚本
+                            clearInterval(_this.checkQrCode)
+                        }
+                        if(res.code === 1 && res.data.status === 0){//请等待扫码
+                            timer++;
+                            if(timer>60){
+                                //等待扫码,超过3分钟未扫描，二维码提示已过期
+                                _this.isRefresh = true;
+                                //清除定时脚本
+                                clearInterval(_this.checkQrCode);
+                            }
+                        }else if(res.code === 1 && res.data.status === 1){//扫码成功，请绑定手机号
+                            //清除定时脚本
+                            clearInterval(_this.checkQrCode);
+                            _this.bindWechartDialog = false;
+                        }else if(res.code === 1 && res.data.status === 2){//登录成功,即将跳转
+                            clearInterval(_this.checkQrCode);
+                            _this.bindWechartDialog = false;
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        this.$message.error(err.msg);
+                    });
+            },3000)
+        },
         uploadAvatarSuccess(file, fileList){
             console.log(file, fileList)
             this.avatarHide = false;
@@ -457,6 +560,7 @@ export default {
         p{
             text-align: center;
             line-height: 24px;
+            color: #666666;
         }
         .button_box{
             display: flex;
@@ -477,6 +581,82 @@ export default {
                 background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
                 font-family: PingFangSC-Regular, PingFang SC;
                 color: #FFFFFF;
+            }
+        }
+        .bind_wechart_description{
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            color: #999999;
+            line-height: 17px;
+            padding-bottom: 22px;
+        }
+        .wechart_box{
+            position: relative;
+            width: 205px;
+            height: 205px;
+            border: 1px solid #EEEEEE;
+            margin: auto;
+            padding: 7px;
+            margin-bottom: 15px;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+            >span{
+                display: block;
+                width: 7px;
+                height: 7px;
+                position: absolute;
+                bottom: -1px;
+            }
+            &:after{
+                position: absolute;
+                top: -1px;
+                left: -1px;
+                content: '';
+                width: 7px;
+                height: 7px;
+                border-left: 1px solid #333333;
+                border-top: 1px solid #333333;
+            }
+            &:before{
+                position: absolute;
+                top: -1px;
+                right: -1px;
+                content: '';
+                width: 7px;
+                height: 7px;
+                border-right: 1px solid #333333;
+                border-top: 1px solid #333333;
+            }
+            .bottom_left{
+                left: 0;
+                border-left: 1px solid #333333;
+                border-bottom: 1px solid #333333;
+            }
+            .bottom_right{
+                right: 0;
+                border-right: 1px solid #333333;
+                border-bottom: 1px solid #333333;
+            }
+            #refreshQrcode {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.9);
+                cursor: pointer;
+
+                i {
+                    font-size: 40px;
+                }
+
+                span {
+                    display: block;
+                    margin-top: 4px;
+                }
+
             }
         }
     }

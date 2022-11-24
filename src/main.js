@@ -7,10 +7,13 @@ import './assets/css/reset.css'
 
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import VuexEsmBrowser from "vuex/dist/vuex.esm.browser";
+import elTableInfiniteScroll from "el-table-infinite-scroll";
+
 Vue.prototype.$video = videojs;
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+
+Vue.use(elTableInfiniteScroll)
 
 let userInfo = localStorage.getItem('token')
 console.log(userInfo)

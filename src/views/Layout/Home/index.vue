@@ -4,7 +4,10 @@
             <h1>Amazon Influencer 买家秀视频服务第一站</h1>
             <div class="banner_img">
                 <el-row>
-                    <img src="../../../assets/images/home_banner.png" alt="">
+<!--                    <img src="../../../assets/images/home_banner.png" alt="">-->
+                    <video width="100%" height="100%" autoplay muted loop>
+                        <source src="../../../assets/images/video/home_banner.mp4" type="video/mp4">
+                    </video>
                 </el-row>
             </div>
         </div>
@@ -679,14 +682,14 @@ export default {
         this.autoPlay('tabPane1');
         this.autoPlay('tabPane2');
         this.autoPlay('tabPane3');
-        // for (var i=0;i<this.videoList.length;i++){
-        //     this.player=this.$video('my-player'+i);
-        // }
-        this.player=this.$video('my-player1');
-        this.player=this.$video('my-player2');
-        this.player=this.$video('my-player3');
-        this.player=this.$video('my-player4');
-        this.player=this.$video('my-player5');
+        for (var i=1;i<this.videoList.length;i++){
+            this.player=this.$video('my-player'+i);
+        }
+        // this.player=this.$video('my-player1');
+        // this.player=this.$video('my-player2');
+        // this.player=this.$video('my-player3');
+        // this.player=this.$video('my-player4');
+        // this.player=this.$video('my-player5');
     },
     methods: {
         handleGoLogin(){
@@ -987,7 +990,7 @@ export default {
             display: flex;
             justify-content: center;
             margin-top: 48px;
-            img{
+            video{
                 width: 100%;
             }
         }

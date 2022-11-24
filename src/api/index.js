@@ -66,3 +66,28 @@ export function checkToken(data){
         data
     })
 }
+/*拍买家秀*/
+//搜索分类
+export function getCategory(data){
+    return request({
+        url:'/api/category/index',
+        method: 'post',
+        data
+    })
+}
+//搜索列表
+export function getSearchList(data){
+    return request({
+        url:'/api/influencer/search',
+        method: 'post',
+        data
+    })
+}
+//提交订单
+export function createOrder(data){
+    return request({
+        url:'/api/order/create',
+        method: 'post',
+        data
+    })
+}

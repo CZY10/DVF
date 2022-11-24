@@ -14,6 +14,7 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
                     </el-date-picker>
+                    <el-button type="text" class="reset_btn">恢复默认 <i class="el-icon-refresh-left"></i></el-button>
                 </el-form-item>
             </el-form>
             <el-table
@@ -71,10 +72,10 @@
                         </el-popover>
                     </template>
                 </el-table-column>
-                <el-table-column prop="hasMessage" label="订单消息">
+                <el-table-column prop="hasMessage" label="达人沟通">
                     <template slot-scope="scope">
                         <el-badge is-dot :hidden="scope.row.hasMessage" class="badge_style">
-                            <i class="el-icon-message" @click="feedbackDialog=true" style="font-size: 20px;cursor: pointer"></i>
+                            <i class="el-icon-chat-dot-round" @click="feedbackDialog=true" style="font-size: 20px;cursor: pointer"></i>
                         </el-badge>
                     </template>
                 </el-table-column>
@@ -1742,6 +1743,15 @@ export default {
     margin-top: 66px;
     background: #F5F7F9;
     padding: 20px 30px 0 30px;
+    .reset_btn{
+        margin-left: 30px;
+        color: #333333;
+        font-size: 14px;
+        i{
+            color: #796CF3;
+            font-size: 16px;
+        }
+    }
     .content{
         background: #FFFFFF;
         border-radius: 0px 4px 4px 0px;

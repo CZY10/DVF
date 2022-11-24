@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Message, MessageBox } from 'element-ui'
 import store from "@/store";
+import config from "../../config";
 
 
 const service = axios.create({
@@ -9,10 +10,10 @@ const service = axios.create({
 })
 let token= '';
 // request拦截器
-if(localStorage.getItem('token ')){
-    token= localStorage.getItem('token ');
+if(localStorage.getItem('token')){
+    token= localStorage.getItem('token');
 }
-
+console.log(token)
 service.interceptors.request.use(config => {
     if (token) {
         config.headers['token'] = token;
@@ -24,7 +25,7 @@ error => {
     console.log(error)
     return Promise.reject(error)
 })
-
+console.log(config,121)
 // respone拦截器
 service.interceptors.response.use(
     response => {
@@ -36,33 +37,34 @@ service.interceptors.response.use(
                     type: 'error',
                     duration: 5 * 1000
                 })
-            // if(res.code == 300 && reg.test(res.errorCode)){
-            //     Message({
-            //         message: '未知错误,请稍后再试或联系管理员!',
-            //         type: 'error',
-            //         duration: 5 * 1000
-            //     })
-            // }else if( res.code == 403) {
-            //     MessageBox.confirm('会话过期，可以取消继续留在该页面，或者重新登录', '确定登出', {
-            //         confirmButtonText: '重新登录',
-            //         cancelButtonText: '取消',
-            //         type: 'warning'
-            //     }).then(() => {
-            //         store.commit('clearUserInfo');//删除token
-            //         localStorage.removeItem('userInfo')//删除token
-            //         location.reload();
-            //     }).catch(()=>{
-            //         return
-            //     })
-            // }else {
-            //     if(res.message || res.msg){
-            //         Message({
-            //             message: res.message || res.msg,
-            //             type: 'error',
-            //             duration: 5 * 1000
-            //         })
-            //     }
-            // }
+            if(res.code == 300 && reg.test(res.errorCode)){
+                Message({
+                    message: '未知错误,请稍后再试或联系管理员!',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            }else if( res.code == 401) {
+                MessageBox.confirm('会话过期，可以取消继续留在该页面，或者重新登录', '确定登出', {
+                    confirmButtonText: '重新登录',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    store.commit('clearUserInfo');//删除token
+                    localStorage.removeItem('userInfo')//删除用户信息
+                    localStorage.removeItem('token ');//删除token
+                    location.reload();
+                }).catch(()=>{
+                    return
+                })
+            }else {
+                if(res.message || res.msg){
+                    Message({
+                        message: res.message || res.msg,
+                        type: 'error',
+                        duration: 5 * 1000
+                    })
+                }
+            }
             return res; /*Promise.reject('error')*/
         } else {
             return response.data

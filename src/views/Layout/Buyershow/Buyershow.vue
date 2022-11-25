@@ -77,19 +77,23 @@
                 </div>
                 <el-table
                     :data="tableData"
+                    stripe
+                    id="searchBar"
                     ref="multipleTable"
                     v-loading="loading"
+                    :row-key="getRowKeys"
                     v-if="tableData.length!==0"
                     v-el-table-infinite-scroll="loadTable"
                     :infinite-scroll-immediate="false"
                     :infinite-scroll-disabled="disabled"
                     :header-cell-style="{background:'#F6F6F6',color:'#333333',fontWeight: '600'}"
                     size="mini"
-                    :height="800"
+                    :height="900"
                     @selection-change="handleSelectionChange"
                     style="width: 100%;">
                     <el-table-column
                         type="selection"
+                        :reserve-selection="true"
                         align="center"
                         width="60">
                     </el-table-column>
@@ -323,9 +327,9 @@
                                 <a href="javascript:;;">示例</a>
                                 <p slot="content">
                                     例：<br/>
-                                    1.Disco modes color changing<br/>
-                                    2.Dance hall projection effect<br/>
-                                    3. 41FT & 15 Disco Bulbs
+                                    1. 介绍包装内容，并开箱展示天线安装、电源适配器连接，手机 APP连接等安装使用步骤；<br/>
+                                    2. 介绍30X光学变焦功能：将摄像机安装在室外，放大并查看远处的景物或动物，以展示摄像机能看清楚很远处的风景；<br/>
+                                    3. 介绍人形跟踪功能：将摄像机安装在室外，为摄像机开启人形跟踪功能，然后人在摄像机的镜头前走动，以展示摄像机的人形跟踪功能。<br/>
                                 </p>
                             </el-tooltip>
                         </div>
@@ -503,8 +507,50 @@ export default {
         this.handlerGetCategory('influencer');
         this.handlerGetCategory('type');
         this.handlerSearchList();
+        window.addEventListener('scroll',this.handleScroll,true)
     },
     methods:{
+        handleScroll() {
+            let scrollTop = window.pageYOffset ||document.documentElement.scrollTop ||document.body.scrollTop; //滑动的距离
+            let heightTop = document.querySelector("#searchBar").offsetTop;
+            console.log(scrollTop,heightTop)
+            if (scrollTop >= heightTop) {
+                //表头到达页面顶部固定表头
+                let top = scrollTop - (heightTop-66);
+                console.log(heightTop)
+                document.getElementsByClassName(
+                    "el-table__header-wrapper"
+                )[0].style.position = "relative";
+                document.getElementsByClassName(
+                    "el-table__header-wrapper"
+                )[0].style.zIndex = "500";
+                document.getElementsByClassName(
+                    "el-table__header-wrapper"
+                )[0].style.top = `${top}px`;
+            } else if (scrollTop == 0) {
+                //表格横向
+                // console.log('横拉')
+                document.getElementsByClassName(
+                    "el-table__header-wrapper"
+                )[0].style.position = "relative";
+                document.getElementsByClassName(
+                    "el-table__header-wrapper"
+                )[0].style.zIndex = "500";
+            } else {
+                document.getElementsByClassName(
+                    "el-table__header-wrapper"
+                )[0].style.position = "";
+                document.getElementsByClassName(
+                    "el-table__header-wrapper"
+                )[0].style.top = "";
+                document.getElementsByClassName(
+                    "el-table__header-wrapper"
+                )[0].style.zIndex = "";
+            }
+        },
+        getRowKeys(row){
+            return row.id;
+        },
         loadTable(){
             this.handlerSearchList();
         },
@@ -584,7 +630,7 @@ export default {
                     createOrder(data)
                         .then((res) => {
                             if(res.code === 1){
-                                console.log(res)
+                                this.videoSubmitDialogVisible = false;
                             }
                         })
                         .catch((err) => {
@@ -640,11 +686,13 @@ export default {
                 this.drawer = false;
             }
         }
-    }
+    },
 }
 </script>
 <style lang="less">
-
+.el-tooltip__popper.is-dark{
+    max-width: 500px;
+}
 #buyer_show{
     .el-table__body-wrapper .el-table__body{
         padding-bottom: 20px;

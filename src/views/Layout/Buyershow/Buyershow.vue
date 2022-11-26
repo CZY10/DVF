@@ -44,14 +44,14 @@
                 <div style="background: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1));border-radius: 23px;padding: 2px">
                     <div class="search_style">
                         <el-input placeholder="搜索品类/红人编号/国家" v-model="keyword" class="input-with-select input_radius">
-                            <el-button slot="append" style="width: 140px;color: #ffffff;font-size: 20px" icon="el-icon-search" @click="handlerSearchList"></el-button>
+                            <el-button slot="append" style="width: 140px;color: #ffffff;font-size: 20px" icon="el-icon-search" @click="handlerSearchList('reset')"></el-button>
                         </el-input>
                     </div>
                 </div>
                 <div class="filter_header">
                     <div class="filter_item">
                         <span>达人性别</span>
-                        <el-radio-group v-model="genderValue" @change="handlerSearchList">
+                        <el-radio-group v-model="genderValue" @change="handlerSearchList('reset')">
                             <el-radio-button label="">全部</el-radio-button>
                             <el-radio-button label="male">男性</el-radio-button>
                             <el-radio-button label="female">女性</el-radio-button>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="filter_item">
                         <span>产品品类</span>
-                        <el-radio-group v-model="categoryValue" @change="handlerSearchList">
+                        <el-radio-group v-model="categoryValue" @change="handlerSearchList('reset')">
                             <el-radio-button v-for="(item,index) in categoryList" :key="index" :label="item.id">{{item.name}}</el-radio-button>
                         </el-radio-group>
                     </div>
@@ -67,10 +67,10 @@
                 <div class="filter_search">
                     <div>
                         <span style="margin-right: 40px">找到{{total}}个</span>
-                        <span>匹配预算<el-input size="small" style="width: 79px;margin: 0 12px" placeholder="" @change="handlerSearchList" v-model="priceValue"></el-input>元</span>
+                        <span>匹配预算<el-input size="small" style="width: 79px;margin: 0 12px" placeholder="" @change="handlerSearchList('reset')" v-model="priceValue"></el-input>元</span>
                     </div>
                     <div>
-                        <el-checkbox-group v-model="checkType" @change="handlerSearchList">
+                        <el-checkbox-group v-model="checkType" @change="handlerSearchList('reset')">
                             <el-checkbox v-for="(item,index) in checkGroup" :key="index" :label="item.id">{{item.name}}</el-checkbox>
                         </el-checkbox-group>
                     </div>
@@ -89,6 +89,7 @@
                     :header-cell-style="{background:'#F6F6F6',color:'#333333',fontWeight: '600'}"
                     size="mini"
                     :height="900"
+                    @sort-change="handlerSort"
                     @selection-change="handleSelectionChange"
                     style="width: 100%;">
                     <el-table-column
@@ -157,7 +158,7 @@
                     </el-table-column>
                     <el-table-column
                         prop="price"
-                        sortable
+                        sortable="custom"
                         width="150"
                         align="center"
                         label="参考报价">
@@ -237,8 +238,8 @@
             </el-drawer>
             <div>
                 <div>
-                    <div class="choice_style">已选择：<span>{{ selectedLength }}</span>个意向方案 <i style="color: rgba(51, 51, 51, 1);font-weight: bold;display: inline-block;width: 30px;height: 30px;line-height: 30px;text-align: center;cursor: pointer" @click="drawer = !drawer" :class="drawer ? 'el-icon-arrow-down' : 'el-icon-arrow-up'"></i></div>
-                    <div><el-button @click="handleSubmitSelectedPlan">提交拍摄需求</el-button></div>
+                    <div class="choice_style">已选择：<span>{{ selectedTableData.length }}</span>个意向方案 <i style="color: rgba(51, 51, 51, 1);font-weight: bold;display: inline-block;width: 30px;height: 30px;line-height: 30px;text-align: center;cursor: pointer" @click="drawer = !drawer" :class="drawer ? 'el-icon-arrow-down' : 'el-icon-arrow-up'"></i></div>
+                    <div><el-button @click="handleSubmitSelectedPlan();clearSubmitForm()">提交拍摄需求</el-button></div>
                 </div>
             </div>
 
@@ -267,6 +268,7 @@
             title="视频拍摄需求"
             :visible.sync="videoSubmitDialogVisible"
             width="702px"
+            :close-on-click-modal="false"
             class="video_dialog"
             center>
             <div>
@@ -360,6 +362,8 @@
             title="请尽快支付定金"
             :visible.sync="payDepositDialogVisible"
             width="500px"
+            @close="handleClose"
+            :close-on-click-modal="false"
             class="pay_deposit_dialog"
             center>
             <div>
@@ -370,16 +374,18 @@
                     :closable="false">
                     <i class="iconfont icon-tips" style="position: absolute;top: 8px;left: 14px;font-size: 18px"></i>
                 </el-alert>
-                <h5>¥99.00</h5>
+                <h5>¥{{ orderData.price }}</h5>
                 <p>定金金额</p>
-                <p>订单号：<span>2022072543SDFDSFWQ</span></p>
+                <p>订单号：<span>{{ orderData.out_trade_no }}</span></p>
                 <ul>
                     <li>
-                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>
+                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>
+<!--                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>-->
                         <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>
                     </li>
                     <li>
-                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>
+<!--                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>-->
+                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>
                         <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>
                     </li>
                 </ul>
@@ -390,6 +396,7 @@
             title="支付完成"
             :visible.sync="paymentCompletedDialogVisible"
             width="360px"
+            :close-on-click-modal="false"
             class="payment_completed_dialog"
             center>
             <div slot="title">
@@ -399,7 +406,7 @@
             <div>
                 <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
                 <div class="button_box">
-                    <el-button>我知道了</el-button>
+                    <el-button @click="paymentCompletedDialogVisible=false">我知道了</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -408,47 +415,25 @@
 
 <script>
 import Footer from "@/components/Footer";
-import { getCategory, getSearchList, createOrder } from "@/api/index";
+import QRCode from 'qrcodejs2'
+import {getCategory, getSearchList, createOrder, payOrder, checkPayment} from "@/api/index";
+import elTableInfiniteScroll from "el-table-infinite-scroll";
 
 export default {
     name: "buyershow",
+    directives: {
+        'el-table-infinite-scroll': elTableInfiniteScroll
+    },
     data(){
         return{
             loading: false,
             disabled: false,
-            pageIndex:0,
-            pageSize:5,
-            totalCount:0,
+            pageIndex:1,
+            pageSize:20,
+            total:0,
             saveDATA:[],
             paymentCompletedDialogVisible: false,
             payDepositDialogVisible:false,
-            candidateData:[
-                {
-                    name:'NO.89',
-                    price:'￥850-950',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    name:'NO.89',
-                    price:'￥850-950',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    name:'NO.89',
-                    price:'￥850-950',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    name:'NO.89',
-                    price:'￥850-950',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-                {
-                    name:'NO.89',
-                    price:'￥850-950',
-                    img:require('../../../assets/images/people_header.png'),
-                },
-            ],
             videoRuleForm: {
                 selectedType:'0',
                 product:'',
@@ -484,75 +469,85 @@ export default {
             categoryValue:'',
             categoryList:[],
             checkGroup:[],
-            total:105,
             priceValue:'',
             keywords:'',
             checkType: [],
             tableData: [],
-            selectedLength:0,
             selectedTableData:[],
             isShowSelectedPlan: false,
+            totalNum:1,
+            selectRow:[],
+            orderData:{},
+            checkPaymentVal:'',
         }
     },
     components:{
         Footer,
-    },
-    created() {
-        // this.init();
-    },
-    computed: {
     },
     mounted() {
         this.footerHeight = this.$refs.getheight.offsetHeight + 'px'
         this.handlerGetCategory('influencer');
         this.handlerGetCategory('type');
         this.handlerSearchList();
+
+    },
+    beforeUpdate(){
         window.addEventListener('scroll',this.handleScroll,true)
     },
     methods:{
+        //排序
+        handlerSort(column){
+            if (!localStorage.getItem('token')){
+                this.$refs.multipleTable.clearSort();
+                this.loginDialogVisible = true;
+                return
+            }else {
+                console.log(column)
+            }
+        },
+        //table头部固定顶部
         handleScroll() {
             let scrollTop = window.pageYOffset ||document.documentElement.scrollTop ||document.body.scrollTop; //滑动的距离
-            let heightTop = document.querySelector("#searchBar").offsetTop;
-            console.log(scrollTop,heightTop)
-            if (scrollTop >= heightTop) {
-                //表头到达页面顶部固定表头
-                let top = scrollTop - (heightTop-66);
-                console.log(heightTop)
-                document.getElementsByClassName(
-                    "el-table__header-wrapper"
-                )[0].style.position = "relative";
-                document.getElementsByClassName(
-                    "el-table__header-wrapper"
-                )[0].style.zIndex = "500";
-                document.getElementsByClassName(
-                    "el-table__header-wrapper"
-                )[0].style.top = `${top}px`;
-            } else if (scrollTop == 0) {
-                //表格横向
-                // console.log('横拉')
-                document.getElementsByClassName(
-                    "el-table__header-wrapper"
-                )[0].style.position = "relative";
-                document.getElementsByClassName(
-                    "el-table__header-wrapper"
-                )[0].style.zIndex = "500";
-            } else {
-                document.getElementsByClassName(
-                    "el-table__header-wrapper"
-                )[0].style.position = "";
-                document.getElementsByClassName(
-                    "el-table__header-wrapper"
-                )[0].style.top = "";
-                document.getElementsByClassName(
-                    "el-table__header-wrapper"
-                )[0].style.zIndex = "";
+            let heightTop;
+            if(document.querySelector("#searchBar")){
+                heightTop = document.querySelector("#searchBar").offsetTop;
+                if (scrollTop >= heightTop) {
+                    //表头到达页面顶部固定表头
+                    let top = scrollTop - (heightTop-66);
+                    document.getElementsByClassName(
+                        "el-table__header-wrapper"
+                    )[0].style.position = "relative";
+                    document.getElementsByClassName(
+                        "el-table__header-wrapper"
+                    )[0].style.zIndex = "500";
+                    document.getElementsByClassName(
+                        "el-table__header-wrapper"
+                    )[0].style.top = `${top}px`;
+                } else if (scrollTop == 0) {
+                    //表格横向
+                    // console.log('横拉')
+                    document.getElementsByClassName(
+                        "el-table__header-wrapper"
+                    )[0].style.position = "relative";
+                    document.getElementsByClassName(
+                        "el-table__header-wrapper"
+                    )[0].style.zIndex = "500";
+                } else {
+                    document.getElementsByClassName(
+                        "el-table__header-wrapper"
+                    )[0].style.position = "";
+                    document.getElementsByClassName(
+                        "el-table__header-wrapper"
+                    )[0].style.top = "";
+                    document.getElementsByClassName(
+                        "el-table__header-wrapper"
+                    )[0].style.zIndex = "";
+                }
             }
+
         },
         getRowKeys(row){
             return row.id;
-        },
-        loadTable(){
-            this.handlerSearchList();
         },
         //获取搜索分类
         handlerGetCategory(type){
@@ -571,14 +566,44 @@ export default {
                     this.$message.error(err.msg);
                 });
         },
-        //搜索列表
-        handlerSearchList(){
-            this.pageIndex ++;
-            if(!localStorage.getItem('token') && this.pageIndex!==1){
-                this.loginDialogVisible = true;
-                return;
+        loadTable(){
+            if(this.pageIndex < this.totalNum){
+                this.pageIndex++;
+                let data = {
+                    keyword: this.keyword,
+                    genderdata: this.genderValue,
+                    type: this.checkType,
+                    price: this.priceValue,
+                    category_id: this.categoryValue,
+                    page: this.pageIndex,
+                    pageSize: this.pageSize,
+                }
+                getSearchList(data)
+                    .then((res) => {
+                        if(res.code === 1){
+
+                            if (this.pageIndex === 1) {
+                                this.tableData = res.data.data;
+                            } else {
+                                this.tableData = this.tableData.concat(res.data.data)
+                            }
+                            this.total = res.data.total;
+                            this.pageIndex = res.data.current_page;
+                            this.totalNum = res.data.last_page;
+                        }
+                    })
+                    .catch((err) => {
+                        this.$message.error(err.msg);
+                    });
             }
-            this.disabled = true;
+        },
+        //搜索列表
+        handlerSearchList(value){
+            if(value == 'reset'){
+                this.pageIndex = 1
+            }else {
+                this.pageIndex = this.pageIndex
+            }
             let data = {
                 keyword: this.keyword,
                 genderdata: this.genderValue,
@@ -591,31 +616,94 @@ export default {
             getSearchList(data)
                 .then((res) => {
                     if(res.code === 1){
-                        this.disabled = false;
-                        this.loading = false;
-                        if (!res.data.data || res.data.data.length < this.pageSize) {
-                            this.disabled = true
-                        }
                         if (this.pageIndex === 1) {
-                            this.tableData = res.data.data
+                            this.tableData = res.data.data;
                         } else {
                             this.tableData = this.tableData.concat(res.data.data)
                         }
-                        this.totalCount = res.data.totalCount;
+                        this.total = res.data.total;
+                        this.pageIndex = res.data.current_page;
+                        this.totalNum = res.data.last_page;
                     }
                 })
                 .catch((err) => {
                     this.$message.error(err.msg);
                 });
-
         },
-
+        //重置提交需求表单
+        clearSubmitForm(){
+            this.videoRuleForm = {
+                selectedType:'0',
+                product:'',
+                category:'',
+                selling_point:'',
+                demand:'',
+                remarks:'',
+            }
+        },
+        //支付定金||尾款
+        handlerPayOrder(order,type){
+            payOrder({
+                order_id: order,
+                type:type
+            })
+                .then((res) => {
+                    if(res.code === 1){
+                        this.orderData = res.data.order;
+                        new QRCode(this.$refs.alipayQrCodeUrl, {
+                            text: res.data.alipay_qrcode,
+                            width: 130,
+                            height: 130,
+                            colorDark: '#000000',
+                            colorLight: '#ffffff',
+                            correctLevel: QRCode.CorrectLevel.H
+                        })
+                        new QRCode(this.$refs.wechatQrCodeUrl, {
+                            text: res.data.wechat_qrcode,
+                            width: 130,
+                            height: 130,
+                            colorDark: '#000000',
+                            colorLight: '#ffffff',
+                            correctLevel: QRCode.CorrectLevel.H
+                        })
+                        this.handlerCheckPayment(res.data.order.out_trade_no);
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
+        //检测是否支付成功
+        handlerCheckPayment(order){
+            let _this = this;
+            _this.checkPaymentVal = setInterval(function (){
+                checkPayment({
+                    out_trade_no:order
+                })
+                    .then((res) => {
+                        if(res.code === 1){
+                            if(res.data.status === 'success'){
+                                _this.payDepositDialogVisible = false;
+                                _this.paymentCompletedDialogVisible = true;
+                                clearInterval(_this.checkPaymentVal);
+                            }
+                        }
+                    })
+                    .catch((err) => {
+                        this.$message.error(err.msg);
+                    });
+            },3000)
+        },
+        //清除定时器
+        handleClose(){
+            clearInterval(this.checkPaymentVal)
+        },
+        //提交拍摄需求
         submitForm(formName) {
             let influencer_id = [];
             this.selectedTableData.forEach((item,index)=>{
                 influencer_id.push(item.id)
             })
-            console.log(influencer_id)
             let data = {
                 shoot: this.videoRuleForm.selectedType,
                 influencer_ids: influencer_id,
@@ -631,6 +719,12 @@ export default {
                         .then((res) => {
                             if(res.code === 1){
                                 this.videoSubmitDialogVisible = false;
+                                this.selectRow.forEach((item)=>{
+                                    this.$refs.multipleTable.toggleRowSelection(item,false);
+                                })
+                                this.selectedTableData = [];
+                                this.payDepositDialogVisible = true;
+                                this.handlerPayOrder(res.data.id,0)
                             }
                         })
                         .catch((err) => {
@@ -643,33 +737,36 @@ export default {
                 }
             });
         },
-        // resetForm(formName) {
-        //     this.$refs[formName].resetFields();
-        // },
 
         handleSelectionChange(val){
-            val.length>0 ? this.isShowSelectedPlan=true:this.isShowSelectedPlan=false;
-            if(val.length>5){
-                this.$message({
-                    message: '每个需求请选择3~5个意向方案',
-                    type: 'warning'
-                });
-                let disabledRow = val.splice(5)
-                this.$refs.multipleTable.toggleRowSelection(disabledRow[0],false);
-                this.selectedTableData = val.splice(0,5);
-                this.selectedLength = this.selectedTableData.length;
-
+            this.selectRow = val;
+            if (!localStorage.getItem('token')){
+                val.forEach((item,index)=>{
+                    this.$refs.multipleTable.toggleRowSelection(item,false);
+                    this.loginDialogVisible = true;
+                    return;
+                })
             }else {
-                this.selectedTableData = val
-                this.selectedLength = val.length;
+                val.length>0 ? this.isShowSelectedPlan=true:this.isShowSelectedPlan=false;
+                if(val.length>5){
+                    this.$message({
+                        message: '每个需求请选择3~5个意向方案',
+                        type: 'warning'
+                    });
+                    this.selectedTableData = val.splice(0,5);
+
+                }else {
+                    this.selectedTableData = val
+                    this.selectedLength = val.length;
+                }
             }
+
         },
         deleteRow(index,id,rows,tab) {
             rows.splice(index, 1);
             this.selectedLength = this.selectedTableData.length;
             for (let key in tab){
                 if(tab[key].id == id){
-                    console.log(tab[key])
                     this.$refs.multipleTable.toggleRowSelection(tab[key],false);
                 }
             }
@@ -928,8 +1025,8 @@ export default {
         margin: 15px 35px 16px 35px;
         li{
             div{
-                width: 140px;
-                height: 140px;
+                width: 128px;
+                height: 128px;
                 background: #FFFFFF;
                 border: 1px solid #EEEEEE;
                 img{

@@ -91,3 +91,27 @@ export function createOrder(data){
         data
     })
 }
+//支付定金/尾款
+export function payOrder(data){
+    return request({
+        url:'/api/pay/order',
+        method: 'post',
+        data
+    })
+}
+//支付状态检测
+export function checkPayment(data){
+    return request({
+        url:'/api/pay/check',
+        method: 'post',
+        data
+    })
+}
+//订单记录列表
+export function orderList(data){
+    return request({
+        url:'/api/order/search',
+        method: 'post',
+        data
+    })
+}

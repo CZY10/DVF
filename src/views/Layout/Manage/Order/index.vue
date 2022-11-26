@@ -24,11 +24,11 @@
                 :height="tableHeight"
                 :header-cell-style="{background:'#F6F6F6'}"
                 style="width: 100%">
-                <el-table-column prop="date" label="创建时间" sortable min-width="100"></el-table-column>
-                <el-table-column prop="order" label="订单号" min-width="110"></el-table-column>
+                <el-table-column prop="createtime" label="创建时间" sortable min-width="100"></el-table-column>
+                <el-table-column prop="id" label="订单号" min-width="110"></el-table-column>
                 <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
                     <template slot-scope="scope">
-                        <p>{{ scope.row.asin}} <a href="" target="_blank"><i class="iconfont icon-fx"></i></a></p>
+                        <p>{{ scope.row.asin}} <a :href="scope.row.url" target="_blank"><i class="iconfont icon-fx"></i></a></p>
                         <el-button class="deatail_btn" type="text" @click="checkVideoDialog=true;">查看详情</el-button>
                     </template>
                 </el-table-column>
@@ -40,8 +40,8 @@
                                 <router-link v-else target="_blank" :to="{path:'/homepage:'+5}"><el-avatar :src="scope.row.avatar"></el-avatar></router-link>
                             </p>
                             <p>
-                                <span v-if="scope.row.nickName==''" style="color: #999999;">--</span>
-                                <span v-else>{{scope.row.nickName}}</span>
+                                <span v-if="scope.row.influencer_id==''||scope.row.influencer_id==null" style="color: #999999;">--</span>
+                                <span v-else>NO.{{scope.row.influencer_id}}</span>
                             </p>
                         </div>
                     </template>
@@ -499,6 +499,7 @@
 </template>
 
 <script>
+import { orderList } from "@/api/index";
 export default {
     name: "order",
     data(){
@@ -513,256 +514,9 @@ export default {
             isHide:false,
             form:{
                 keywords:'',
-                dateValue:'',
+                dateValue:[],
             },
-            tableData:[
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar: require('../../../../assets/images/people_header.png'),
-                    nickName:'NO.123',
-                    price:'¥500.00',
-                    status:0,
-                    hasMessage:true,
-                    stepsList:[
-                        {
-                            title:'付定金',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'付尾款',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'寄送产品',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'上传视频',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'完成',
-                            date:'2022-07-07 15:30',
-                        }
-                    ],
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar:'',
-                    nickName:'NO.123',
-                    price:'',
-                    status:1,
-                    hasMessage:false,
-                    stepsList:[
-                        {
-                            title:'付定金',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'付尾款',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'寄送产品',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'上传视频',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'完成',
-                            date:'2022-07-07 15:30',
-                        }
-                    ],
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar:'',
-                    nickName:'',
-                    price:'¥500.00',
-                    status:2,
-                    hasMessage:false,
-                    stepsList:[
-                        {
-                            title:'付定金',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'付尾款',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'寄送产品',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'上传视频',
-                            date:'2022-07-07 15:30',
-                        },
-                        {
-                            title:'完成',
-                            date:'2022-07-07 15:30',
-                        }
-                    ],
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar:'',
-                    nickName:'NO.123',
-                    price:'¥500.00',
-                    status:4,
-                    hasMessage:true,
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar:'',
-                    nickName:'NO.123',
-                    price:'¥500.00',
-                    status:3,
-                    hasMessage:true,
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar: require('../../../../assets/images/people_header.png'),
-                    nickName:'NO.123',
-                    price:'¥500.00',
-                    status:0,
-                    hasMessage:true,
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar:'',
-                    nickName:'NO.123',
-                    price:'',
-                    status:6,
-                    hasMessage:false,
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar:'',
-                    nickName:'',
-                    price:'¥500.00',
-                    status:2,
-                    hasMessage:false,
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar:'',
-                    nickName:'NO.123',
-                    price:'¥500.00',
-                    status:4,
-                    hasMessage:true,
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    name: '王小虎',
-                    avatar:'',
-                    nickName:'NO.123',
-                    price:'¥500.00',
-                    status:3,
-                    hasMessage:true,
-                    isCompleteComment:true,
-                    commentForm:{
-                        complete: 4,
-                        quality: 3,
-                        cycle: 5,
-                        remarks:'效果很满意，沟通很耐心、细致~',
-                    },
-                },
-            ],
+            tableData:[],
             currentPage:2,
             tableHeight:document.documentElement.clientHeight-235,
             paymentDialog:false,
@@ -923,8 +677,25 @@ export default {
         }
     },
     mounted() {
+        this.getOrderList();
     },
     methods:{
+        //获取订单列表
+        getOrderList(){
+            orderList({
+                keyword:this.form.keywords,
+                date: this.form.dateValue
+            })
+                .then((res) => {
+                    if(res.code === 1){
+                        console.log(res)
+                        this.tableData = res.data.data;
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
         },

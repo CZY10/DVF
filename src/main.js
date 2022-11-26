@@ -16,7 +16,6 @@ Vue.config.productionTip = false;
 Vue.use(elTableInfiniteScroll)
 
 let userInfo = localStorage.getItem('token')
-console.log(userInfo)
 if (userInfo){
   // userInfo = JSON.parse(userInfo);
   store.commit('login/setUserInfo',userInfo)

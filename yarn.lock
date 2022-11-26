@@ -4750,6 +4750,11 @@
   "resolved" "https://registry.npmmirror.com/punycode/-/punycode-2.1.1.tgz"
   "version" "2.1.1"
 
+"qrcodejs2@^0.0.2":
+  "integrity" "sha512-+Y4HA+cb6qUzdgvI3KML8GYpMFwB24dFwzMkS/yXq6hwtUGNUnZQdUnksrV1XGMc2mid5ROw5SAuY9XhI3ValA=="
+  "resolved" "https://registry.npmmirror.com/qrcodejs2/-/qrcodejs2-0.0.2.tgz"
+  "version" "0.0.2"
+
 "qs@6.11.0":
   "integrity" "sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q=="
   "resolved" "https://registry.npmmirror.com/qs/-/qs-6.11.0.tgz"

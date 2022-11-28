@@ -8,6 +8,10 @@ import './assets/css/reset.css'
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
+import VueAwesomeSwiper from "vue-awesome-swiper/dist/ssr";
+import 'swiper/dist/css/swiper.css'
+
+Vue.use(VueAwesomeSwiper)
 
 Vue.prototype.$video = videojs;
 

@@ -128,7 +128,7 @@
                         align="center"
                         width="160">
                         <template>
-                            <div class="people_works">
+                            <div class="people_works" @click="videoPlayDialog =true">
                                 <p>共7个</p>
                                 <img src="../../../assets/images/table_video.png" alt="">
                             </div>
@@ -410,6 +410,74 @@
                 </div>
             </div>
         </el-dialog>
+
+        <!--视频播放-->
+        <el-dialog
+            title="家用投影仪开箱展示视频"
+            :visible.sync="videoPlayDialog"
+            width="896px"
+            :close-on-click-modal="false"
+            class="video_dialog"
+            center>
+            <div>
+                <div></div>
+                <div class="thumb-example">
+                    <!-- swiper1 -->
+                    <swiper class="swiper gallery-top" :options="swiperOptionTop" ref="swiperTop">
+                        <swiper-slide class="slide-1">
+                            <video
+                                ref="video"
+                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                controls>
+                                <source src="https://vjs.zencdn.net/v/oceans.mp4" />
+                            </video>
+                        </swiper-slide>
+                        <swiper-slide class="slide-2">
+                            <video
+                                ref="video"
+                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                controls>
+                                <source :src="require('../../../assets/images/video/video.mp4')" />
+                            </video>
+                        </swiper-slide>
+                        <swiper-slide class="slide-3">
+                            <video
+                                ref="video"
+                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                controls>
+                                <source src="https://vjs.zencdn.net/v/oceans.mp4" />
+                            </video>
+                        </swiper-slide>
+                        <swiper-slide class="slide-4">
+                            <video
+                                ref="video"
+                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                controls>
+                                <source src="https://vjs.zencdn.net/v/oceans.mp4" />
+                            </video>
+                        </swiper-slide>
+                        <swiper-slide class="slide-5">
+                            <video
+                                ref="video"
+                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                controls>
+                                <source src="https://vjs.zencdn.net/v/oceans.mp4" />
+                            </video>
+                        </swiper-slide>
+                    </swiper>
+                    <!-- swiper2 Thumbs -->
+                    <swiper class="swiper gallery-thumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">
+                        <swiper-slide class="slide-1"><img src="../../../assets/images/tab-pane1.png" alt=""></swiper-slide>
+                        <swiper-slide class="slide-2"><img src="../../../assets/images/tab-pane2.png" alt=""></swiper-slide>
+                        <swiper-slide class="slide-3"><img src="../../../assets/images/tab-pane3.png" alt=""></swiper-slide>
+                        <swiper-slide class="slide-4"><img src="../../../assets/images/tab-pane4.png" alt=""></swiper-slide>
+                        <swiper-slide class="slide-5"><img src="../../../assets/images/tab-pane1.png" alt=""></swiper-slide>
+                    </swiper>
+                    <div class="swiper-button-next swiper-button-white" slot="button-next"><i class="el-icon-arrow-right"></i></div>
+                    <div class="swiper-button-prev swiper-button-white" slot="button-prev"><i class="el-icon-arrow-left"></i></div>
+                </div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -418,6 +486,8 @@ import Footer from "@/components/Footer";
 import QRCode from 'qrcodejs2'
 import {getCategory, getSearchList, createOrder, payOrder, checkPayment} from "@/api/index";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
+
 
 export default {
     name: "buyershow",
@@ -426,6 +496,25 @@ export default {
     },
     data(){
         return{
+            swiperOptionTop: {
+                loop: true,
+                loopedSlides: 5, // looped slides should be the same
+                spaceBetween: 10,
+                slidesPerView: 1,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev'
+                }
+            },
+            swiperOptionThumbs: {
+                loop: true,
+                loopedSlides: 5, // looped slides should be the same
+                spaceBetween: 10,
+                centeredSlides: true,
+                slidesPerView: 5,
+                touchRatio: 0.2,
+                slideToClickedSlide: true
+            },
             loading: false,
             disabled: false,
             pageIndex:1,
@@ -479,17 +568,25 @@ export default {
             selectRow:[],
             orderData:{},
             checkPaymentVal:'',
+            videoPlayDialog:false,
         }
     },
     components:{
         Footer,
+        swiper,
+        swiperSlide
     },
     mounted() {
         this.footerHeight = this.$refs.getheight.offsetHeight + 'px'
         this.handlerGetCategory('influencer');
         this.handlerGetCategory('type');
         this.handlerSearchList();
-
+        this.$nextTick(() => {
+            const swiperTop = this.$refs.swiperTop.swiper
+            const swiperThumbs = this.$refs.swiperThumbs.swiper
+            swiperTop.controller.control = swiperThumbs
+            swiperThumbs.controller.control = swiperTop
+        })
     },
     beforeUpdate(){
         window.addEventListener('scroll',this.handleScroll,true)
@@ -567,6 +664,11 @@ export default {
                 });
         },
         loadTable(){
+            this.disabled = true;
+            if(!localStorage.getItem('token')){
+                this.loginDialogVisible = true;
+                return;
+            }
             if(this.pageIndex < this.totalNum){
                 this.pageIndex++;
                 let data = {
@@ -581,7 +683,6 @@ export default {
                 getSearchList(data)
                     .then((res) => {
                         if(res.code === 1){
-
                             if (this.pageIndex === 1) {
                                 this.tableData = res.data.data;
                             } else {
@@ -596,11 +697,20 @@ export default {
                         this.$message.error(err.msg);
                     });
             }
+            this.disabled = false;
         },
         //搜索列表
         handlerSearchList(value){
             if(value == 'reset'){
                 this.pageIndex = 1
+                if(!localStorage.getItem('token')){
+                    this.loginDialogVisible = true;
+                    this.genderValue = '';
+                    this.categoryValue = '';
+                    this.checkType = [];
+                    this.priceValue = '';
+                    return;
+                }
             }else {
                 this.pageIndex = this.pageIndex
             }
@@ -629,6 +739,7 @@ export default {
                 .catch((err) => {
                     this.$message.error(err.msg);
                 });
+            this.disabled = false;
         },
         //重置提交需求表单
         clearSubmitForm(){
@@ -787,10 +898,91 @@ export default {
 }
 </script>
 <style lang="less">
+.swiper-button-next.swiper-button-white, .swiper-container-rtl .swiper-button-prev.swiper-button-white,
+.swiper-button-prev.swiper-button-white, .swiper-container-rtl .swiper-button-next.swiper-button-white{
+    background-image: none;
+}
+.swiper-button-prev, .swiper-button-next{
+    top: auto;
+    bottom: 52px !important;
+    background: rgba(153, 153, 153, 0.7);
+    color: #ffffff;
+    width: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 42px;
+    font-size: 18px;
+}
+.swiper-button-prev, .swiper-container-rtl .swiper-button-next{
+    left: 3px;
+    border-radius: 0 9px 9px 0px;
+}
+.swiper-button-next, .swiper-container-rtl .swiper-button-prev{
+    right: 3px;
+    border-radius: 9px 0 0 9px;
+}
+.thumb-example {
+    position: relative;
+}
+.swiper.gallery-thumbs .swiper-slide{
+    img{
+        width: 100%;
+        height: 100%;
+    }
+}
+.swiper.gallery-top{
+    height: 440px !important;
+    .swiper-slide{
+        border-radius: 20px;
+    }
+}
+.swiper {
+    .swiper-slide {
+        background-size: cover;
+        background-position: center;
+        video{
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &.gallery-top {
+        height: 80%;
+        width: 100%;
+    }
+    &.gallery-thumbs {
+        height: 148px;
+        box-sizing: border-box;
+        padding: 0 1px;
+        margin-top: 24px;
+    }
+    &.gallery-thumbs .swiper-slide {
+        width: 146px !important;
+        height: 146px;
+        opacity: 0.4;
+        margin-right: 24px !important;
+    }
+    &.gallery-thumbs .swiper-slide-active {
+        opacity: 1;
+        background: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1), rgba(251, 150, 139, 1));
+        border-radius: 9px;
+        padding: 1px;
+        overflow: hidden;
+    }
+}
+</style>
+<style lang="less">
 .el-tooltip__popper.is-dark{
     max-width: 500px;
 }
 #buyer_show{
+    .el-table__body-wrapper{
+        //bottom: 32px;
+        //top: 0;
+        overflow: scroll;
+        padding: 0 30px;
+    }
     .el-table__body-wrapper .el-table__body{
         padding-bottom: 20px;
     }

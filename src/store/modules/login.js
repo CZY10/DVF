@@ -2,7 +2,10 @@ export default {
     namespaced:true,
     state:{
         userInfo:{},
-        loginFromPat:''
+        loginFromPat:'',
+        avatar:'',
+        token:'',
+        loginFromPath:'/',
     },
     mutations:{
         setUserInfo(state,payload){
@@ -14,6 +17,15 @@ export default {
                 user:'',
                 token:''
             }
+        },
+        setToken(state,payload){
+            state.token = payload
+        },
+        setAvatar(state,payload){
+            state.avatar = payload
+        },
+        setLoginFromPath(state,payload){
+            state.loginFromPath = payload
         },
     },
     actions:{

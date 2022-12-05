@@ -755,46 +755,7 @@ export default {
     },
 }
 </script>
-<style lang="less">
 
-.video_content {
-    .video-js{
-        height: 380px !important;
-        width: 100% !important;
-    }
-    .vjs-poster{
-        background-size: 100% 100% !important;
-    }
-    .video-js .vjs-big-play-button{
-        height: 80px !important;
-        width: 80px !important;
-        -webkit-border-radius: 50% !important;
-        -moz-border-radius: 50% !important;
-        border-radius: 50% !important;
-        background: white !important;
-        line-height: 76px;
-    }
-    .video-js .vjs-big-play-button .vjs-icon-placeholder:before{
-        color: #333333;
-        font-size: 1.63em !important;
-    }
-    .vjs-big-play-centered .vjs-big-play-button{
-        margin-top: -40px !important;
-    }
-    .vjs-paused .vjs-big-play-button,
-    .vjs-paused.vjs-has-started .vjs-big-play-button {
-        display: block !important;
-    }
-    .video-js .vjs-time-control {
-        display: block !important;
-    }
-    .video-js .vjs-remaining-time {
-        display: none !important;
-    }
-
-}
-
-</style>
 <style lang="less" scoped>
 /*视频按钮样式*/
 .video-content {

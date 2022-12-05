@@ -14,7 +14,7 @@
             <el-menu-item @click="dialogVisible = true">联系我们</el-menu-item>
             <el-menu-item v-if="!isLogin" style="float: right;" index="/login"><el-button class="login_btn" round>登陆/注册</el-button></el-menu-item>
             <el-submenu v-else index="/manage" style="float: right;border-radius: 10px">
-                <template slot="title"><span class="user_info_box"><img src="../../assets/images/people_header.png" alt=""></span></template>
+                <template slot="title"><span class="user_info_box"><img :src="avatar" alt=""></span></template>
                 <el-menu-item index="/manage/order">订单信息</el-menu-item>
                 <el-menu-item index="/manage/payment">支付记录</el-menu-item>
                 <el-menu-item index="/manage/personal">个人资料</el-menu-item>
@@ -53,7 +53,19 @@ export default {
     data(){
         return{
             isLogin:true,
-            dialogVisible: false
+            dialogVisible: false,
+            avatar: localStorage.getItem('avatar'),
+        }
+    },
+    computed:{
+        avatarFn(){
+            return this.$store.state.login.avatar
+        }
+    },
+    watch:{
+        avatarFn(newVal){
+            this.avatar = newVal
+            this.$forceUpdate();// 更新数据
         }
     },
     created() {
@@ -66,10 +78,11 @@ export default {
             console.log(2222222)
         }
 
-        console.log(this.isLogin)
-    },
-    mounted() {
-
+        window.addEventListener('setItem', ()=> {
+            //这里就可以根据具体情况调用或刷新需要的操作
+            this.newVal = localStorage.getItem('avatar'); //获取监听的值
+            console.log(8888,this.newVal)
+        })
     },
     methods: {
         handleSelect(key, keyPath) {
@@ -244,6 +257,7 @@ export default {
         height: 36px;
         border: 1px solid #FFFFFF;
         border-radius: 50%;
+        overflow: hidden;
         img{
             width: 100%;
             height: auto;

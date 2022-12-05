@@ -2,15 +2,17 @@
     <div id="payment">
         <div class="content">
             <el-form ref="form" class="form_search" size="small" :model="form" label-width="80px">
-                <el-form-item label="订单记录" class="title">
+                <el-form-item label="支付记录" class="title">
                     <el-input placeholder="输入ASIN/订单号" v-model="form.keywords" class="input-with-select">
-                        <el-button slot="append" icon="el-icon-search"></el-button>
+                        <el-button slot="append" icon="el-icon-search" @click="currentPage=1;getPaymentList()"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="日期">
                     <el-date-picker
                         v-model="form.dateValue"
                         type="daterange"
+                        value-format="yyyy-MM-dd"
+                        @change="currentPage=1;getPaymentList()"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
                     </el-date-picker>
@@ -23,16 +25,17 @@
                 :height="tableHeight"
                 :header-cell-style="{background:'#F6F6F6'}"
                 style="width: 100%">
-                <el-table-column prop="date" label="支付时间" sortable min-width="100"></el-table-column>
-                <el-table-column prop="order" label="订单号" min-width="110"></el-table-column>
+                <el-table-column prop="paytime" label="支付时间" sortable min-width="100"></el-table-column>
+                <el-table-column prop="order_id" label="订单号" min-width="110"></el-table-column>
+                <el-table-column prop="out_trade_no" label="交易编号" min-width="130"></el-table-column>
                 <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
                     <template slot-scope="scope">
                         <p>{{ scope.row.asin}} <a href="" target="_blank"><i class="iconfont icon-fx" style="font-size: 14px"></i></a></p>
                     </template>
                 </el-table-column>
-                <el-table-column prop="status" label="付款类别">
+                <el-table-column prop="order_type" label="付款类别">
                     <template slot-scope="scope">
-                        {{scope.row.status == 0 ? '定金' : '尾款'}}
+                        {{scope.row.order_type === 0 ? '定金' : scope.row.order_type === 1 ? '尾款' : '全款'}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="price" sortable label="支付金额">
@@ -41,15 +44,18 @@
                         <span v-else>{{scope.row.price}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="status" label="支付方式">
+                <el-table-column prop="type" label="支付方式">
                     <template slot-scope="scope">
-                        <div v-if="scope.row.status === 0" style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-zhifubao" style="color: #02A9F1;font-size: 20px"></i>支付宝</div>
-                        <div v-else style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-weixinzhifu" style="color: #3BCA72;font-size: 20px"></i>微信</div>
+                        <div v-if="scope.row.type === 'alipay'" style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-zhifubao" style="color: #02A9F1;font-size: 20px"></i>支付宝</div>
+                        <div v-if="scope.row.type === 'wechat'" style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-weixinzhifu" style="color: #3BCA72;font-size: 20px"></i>微信</div>
+                        <div v-if="scope.row.type === 'paypal'" style="display: flex;align-items: center;justify-content: center">PayPal</div>
+                        <div v-if="scope.row.type === 'googlepay'" style="display: flex;align-items: center;justify-content: center">GooglePay</div>
+                        <div v-if="scope.row.type === 'stripe'" style="display: flex;align-items: center;justify-content: center">Stripe</div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="status" label="付款结果">
                     <template slot-scope="scope">
-                        {{scope.row.status == 0 ? '成功' : '已退还'}}
+                        {{scope.row.status === 1 ? '已支付': '已退还'}}
                     </template>
                 </el-table-column>
             </el-table>
@@ -59,10 +65,10 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
+                    :page-sizes="[20, 50, 100, 500]"
+                    :page-size="pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="1000">
+                    :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -70,199 +76,66 @@
 </template>
 
 <script>
+import {paymentList} from "@/api";
+
 export default {
     name: "payment",
     data(){
         return{
             form: {
                 keywords:'',
-                dateValue:'',
+                dateValue:[],
             },
-            tableData:[
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:1,
-                },
-                {
-                    date: '2022-07-07 15:30',
-                    order: 'HD20220722HWW7',
-                    asin: 'B08CXHHWW7',
-                    price:'¥500.00',
-                    status:0,
-                },
-            ],
+            tableData:[],
             tableHeight:document.documentElement.clientHeight-235,
-            currentPage:2,
+            currentPage:1,
+            pageSize:20,
+            total:0,
+            pageState:true,
         }
     },
+    mounted() {
+        this.getPaymentList();
+    },
     methods:{
+        getPaymentList(){
+            paymentList({
+                keyword: this.form.keywords,
+                date: this.form.dateValue,
+                pageSize: this.pageSize,
+                currentPage: this.currentPage,
+            })
+                .then((res) => {
+                    if(res.code === 1){
+                        this.pageState = true;
+                        this.tableData = res.data.data;
+                        this.total = res.data.total;
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+            this.pageState = false;
+            this.pageSize = val;
+            this.currentPage = 1;
+            if (this.pageState === false) this.getPaymentList();
         },
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
+            this.currentPage = val;
+            if(this.pageState === true) this.getPaymentList();
         },
     },
 }
 </script>
-
+<style lang="less">
+#payment{
+    .el-table__body-wrapper .el-table__body{
+        margin-bottom: 30px;
+    }
+}
+</style>
 <style lang="less" scoped>
 #payment {
     margin-top: 66px;

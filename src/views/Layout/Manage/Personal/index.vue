@@ -4,21 +4,23 @@
         <div class="content" :style="{height:contentHeight+'px'}">
             <div class="content_row">
                 <div class="avatar" @mouseout="avatarHide=false" @mouseover="avatarHide=true">
-                    <div><img :src="avatarImg" alt=""></div>
+                    <div><img :src="avatar" alt=""></div>
                     <div v-show="avatarHide" class="editor_avatar">
                         <el-upload
-                            action="#"
+                            action="/api/user/avatar"
                             ref="rebateUpload"
                             list-type="picture-card"
                             :on-change="uploadAvatarSuccess"
                             :on-exceed="exceedUpload"
-                            :limit="1"
-                            :auto-upload="false">
+                            :on-success="handleSuccess"
+                            :on-error="handleError"
+                            :headers="handers"
+                            :limit="1">
                             <span>修改头像</span>
                             <div slot="file" slot-scope="{file}">
                                 <img
                                     class="el-upload-list__item-thumbnail"
-                                    :src="file.url" alt=""
+                                    :src="avatar" alt=""
                                 >
                             </div>
                         </el-upload>
@@ -28,16 +30,16 @@
                 <div class="user_info">
                     <p>账号信息</p>
                     <ul>
-                        <li><label>账号</label>18175888288<span>修改</span></li>
+                        <li><label>账号</label>{{ userInfo.mobile }}<span>修改</span></li>
                         <li><label>微信</label>已绑定<span>解绑</span></li>
                     </ul>
                     <p>基础信息<i></i><span style="cursor:pointer;" @click="isEdit=false">编辑</span></p>
                     <el-form ref="form" :model="form" label-position="left" :disabled="isEdit" class="form_box" label-width="76px">
                         <el-form-item label="公司名称">
-                            <el-input size="small" v-model="form.companyName" placeholder="请输入公司名称"></el-input>
+                            <el-input size="small" v-model="userInfo.company" placeholder="请输入公司名称"></el-input>
                         </el-form-item>
                         <el-form-item label="公司规模">
-                            <el-select v-model="form.optionsValue" size="small" placeholder="请选择" style="width: 100%">
+                            <el-select v-model="userInfo.company_size" size="small" placeholder="请选择" style="width: 100%">
                                 <el-option
                                     v-for="item in companySizeOptions"
                                     :key="item.value"
@@ -47,28 +49,13 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="所在地">
-                            <el-select v-model="form.optionsValue" size="small" placeholder="请选择" style="width: 50%">
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <el-select v-model="form.optionsValue" size="small" placeholder="请选择" style="width: 50%;margin-left: 10px">
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
+                            <v-distpicker :disabled="isEdit" @province="getProvince" @city="getCity" @area="getArea"></v-distpicker>
                         </el-form-item>
                         <el-form-item label="职位">
-                            <el-input size="small" v-model="form.companyName" placeholder="请输入职位"></el-input>
+                            <el-input size="small" v-model="userInfo.position" placeholder="请输入职位"></el-input>
                         </el-form-item>
                     </el-form>
-                    <div v-if="!isEdit"><el-button class="save_btn">保存</el-button></div>
+                    <div v-if="!isEdit"><el-button class="save_btn" @click="handleEditUserInfo">保存</el-button></div>
                 </div>
             </div>
         </div>
@@ -159,7 +146,10 @@
 </template>
 
 <script>
-import {checkQr, getQrcode, smsSend} from "@/api";
+import {checkQr, getQrcode, smsSend, userProfile} from "@/api";
+import VDistpicker from 'v-distpicker'
+import {mapMutations} from "vuex";
+
 export default {
     name: "personal",
     data(){
@@ -187,6 +177,8 @@ export default {
             }
         }
         return{
+            handers:{},
+            token:'',
             bindWechartDialog:false,
             updatePhoneDialog:false,
             isRefresh: false,
@@ -204,11 +196,6 @@ export default {
             contentHeight:document.documentElement.clientHeight-250,
             avatarHide: false,
             isEdit:true,
-            form:{
-                companyName:'',
-                optionsValue:'',
-            },
-            avatarImg:require('../../../../assets/images/avatar.png'),
             companySizeOptions:[
                 {
                     value: '1',
@@ -236,24 +223,7 @@ export default {
                 }
 
             ],
-            options: [
-                {
-                    value: '选项1',
-                    label: '黄金糕'
-                }, {
-                    value: '选项2',
-                    label: '双皮奶'
-                }, {
-                    value: '选项3',
-                    label: '蚵仔煎'
-                }, {
-                    value: '选项4',
-                    label: '龙须面'
-                }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }
-            ],
+            form:{},
             editPhoneRules: {
                 phone: [
                     {required: true, message: '请输入手机号码！', trigger: 'blur'},
@@ -263,13 +233,84 @@ export default {
                     {required: true, message: '请输入验证码', trigger: 'blur'},
                     {validator: validateVerificationCode, trigger: ['blur', 'change']}
                 ]
-            }
+            },
+            userInfo: JSON.parse(localStorage.getItem('userInfo')),
+            avatar: localStorage.getItem('avatar'),
+        }
+    },
+    components:{
+        VDistpicker
+    },
+    created() {
+        window.addEventListener('setItem', ()=> {
+            console.log(111)
+            //这里就可以根据具体情况调用或刷新需要的操作
+            this.newVal = localStorage.getItem('avatar'); //获取监听的值
+            console.log(8888,this.newVal)
+        })
+    },
+    computed:{
+        avatarFn(){
+            return this.$store.state.login.avatar
+        }
+    },
+    watch:{
+        avatarFn(newVal){
+            this.avatar = newVal
+            this.$forceUpdate();// 更新数据
         }
     },
     mounted() {
         // this.handlerGetQrcode();
+        console.log(this.userInfo)
+        this.token = localStorage.getItem('token');
+        this.handers = {
+            token: this.token
+        }
     },
     methods:{
+        ...mapMutations('login', ["setAvatar"]),
+        //上传头像成功
+        handleSuccess(response, file, fileList){
+            localStorage.setItem('avatar', response.data.fullurl)
+            this.setAvatar(localStorage.getItem('avatar'));
+        },
+        //上传头像失败
+        handleError(err, file, fileList){
+            console.log('err',err, file, fileList)
+        },
+        getProvince(e){
+            this.userInfo.province = e.value;
+            this.userInfo.city = undefined;
+            this.userInfo.area = undefined;
+        },
+        getCity(e){
+            this.userInfo.city = e.value;
+            this.userInfo.area = undefined;
+        },
+        getArea(e){
+            this.userInfo.area = e.value;
+        },
+        //更新基础信息
+        handleEditUserInfo(){
+            userProfile({
+                company: this.userInfo.company,
+                company_size: this.userInfo.company_size,
+                province: this.userInfo.province,
+                city: this.userInfo.city,
+                area: this.userInfo.area,
+                position: this.userInfo.position,
+            })
+                .then((res) => {
+                    if(res.code === 1){
+                        this.isEdit = true;
+                        this.$message.success('更新成功！');
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
         //获取微信二维码
         handlerGetQrcode(){
             getQrcode()
@@ -324,9 +365,9 @@ export default {
             },3000)
         },
         uploadAvatarSuccess(file, fileList){
-            console.log(file, fileList)
+            console.log(11,file, fileList)
             this.avatarHide = false;
-            this.avatarImg = file.url;
+
         },
         exceedUpload(files, fileList){
             console.log(files, fileList)
@@ -370,6 +411,11 @@ export default {
 </script>
 <style lang="less">
 #personal{
+    .distpicker-address-wrapper select{
+        padding: 5px 10px;
+        height: auto;
+        font-size: 14px;
+    }
     .el-upload--picture-card{
         background: none;
         width: 120px;
@@ -394,7 +440,7 @@ export default {
         }
     }
     .form_box{
-        width: 488px;
+        width: 570px;
         padding-left: 20px;
         .el-form-item__content{
             display: flex;
@@ -498,7 +544,7 @@ export default {
                     }
                     i{
                         display: inline-block;
-                        width: 388px;
+                        width: 470px;
                         height: 1px;
                         background: #eeeeee;
                         margin: 0 12px 4px 12px;

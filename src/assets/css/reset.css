@@ -126,3 +126,42 @@ html {
 .el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-thumb:window-inactive {
     background:#D8D8D8;
 }
+
+
+/*播放按钮*/
+.video-js{
+    background: none !important;
+}
+.video_content .video-js{
+    height: 380px !important;
+    width: 100% !important;
+}
+.video_content .vjs-poster{
+    background-size: 100% 100% !important;
+}
+.video_content .video-js .vjs-big-play-button{
+    height: 80px !important;
+    width: 80px !important;
+    -webkit-border-radius: 50% !important;
+    -moz-border-radius: 50% !important;
+    border-radius: 50% !important;
+    background: white !important;
+    line-height: 76px;
+}
+.video_content .video-js .vjs-big-play-button .vjs-icon-placeholder:before{
+    color: #333333;
+    font-size: 1.63em !important;
+}
+.video_content .vjs-big-play-centered .vjs-big-play-button{
+    margin-top: -40px !important;
+}
+.video_content .vjs-paused .vjs-big-play-button,
+.video_content .vjs-paused.vjs-has-started .vjs-big-play-button {
+    display: block !important;
+}
+.video_content .video-js .vjs-time-control {
+    display: block !important;
+}
+.video_content .video-js .vjs-remaining-time {
+    display: none !important;
+}

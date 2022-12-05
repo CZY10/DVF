@@ -1,70 +1,72 @@
 <template>
     <div id="buyer_show" class="buyer_show">
-        <div class="banner">
-            <h2>服务流程</h2>
-            <div class="service_steps">
-                <div>
-                    <div class="service_item">
-                        <i class="iconfont icon-fa"></i>
-                        <div>
-                            <p>选择3-5款意向方案</p>
-                            <p>提交需求并支付定金</p>
+        <div>
+            <div class="banner">
+                <h2>服务流程</h2>
+                <div class="service_steps">
+                    <div>
+                        <div class="service_item">
+                            <i class="iconfont icon-fa"></i>
+                            <div>
+                                <p>选择3-5款意向方案</p>
+                                <p>提交需求并支付定金</p>
+                            </div>
+                            <i class="iconfont icon-bz" style="color: #ffffff"></i>
                         </div>
-                        <i class="iconfont icon-bz" style="color: #ffffff"></i>
-                    </div>
-                    <div class="service_item">
-                        <i class="iconfont icon-bj"></i>
-                        <div>
-                            <p>等待达人</p>
-                            <p>反馈报价</p>
+                        <div class="service_item">
+                            <i class="iconfont icon-bj"></i>
+                            <div>
+                                <p>等待达人</p>
+                                <p>反馈报价</p>
+                            </div>
+                            <i class="iconfont icon-bz" style="color: #ffffff"></i>
                         </div>
-                        <i class="iconfont icon-bz" style="color: #ffffff"></i>
-                    </div>
-                    <div class="service_item">
-                        <i class="iconfont icon-yp"></i>
-                        <div>
-                            <p>补缴尾款</p>
-                            <p>寄送样品</p>
+                        <div class="service_item">
+                            <i class="iconfont icon-yp"></i>
+                            <div>
+                                <p>补缴尾款</p>
+                                <p>寄送样品</p>
+                            </div>
+                            <i class="iconfont icon-bz" style="color: #ffffff"></i>
                         </div>
-                        <i class="iconfont icon-bz" style="color: #ffffff"></i>
-                    </div>
-                    <div class="service_item">
-                        <i class="iconfont icon-sp"></i>
-                        <div>
-                            <p>上传视频</p>
-                            <p>交付完成</p>
+                        <div class="service_item">
+                            <i class="iconfont icon-sp"></i>
+                            <div>
+                                <p>上传视频</p>
+                                <p>交付完成</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div>
             <div class="content">
-                <h2>查找适合你的拍摄方案</h2>
-                <div style="background: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1));border-radius: 23px;padding: 2px">
-                    <div class="search_style">
-                        <el-input placeholder="搜索品类/红人编号/国家" v-model="keyword" class="input-with-select input_radius">
-                            <el-button slot="append" style="width: 140px;color: #ffffff;font-size: 20px" icon="el-icon-search" @click="handlerSearchList('reset')"></el-button>
-                        </el-input>
+                <div style="max-width: 1200px;margin: auto">
+                    <h2 class="title_box">查找适合你的拍摄方案</h2>
+                    <div style="background: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1));border-radius: 23px;padding: 2px">
+                        <div class="search_style">
+                            <el-input placeholder="搜索品类/红人编号/国家" v-model="keyword" class="input-with-select input_radius">
+                                <el-button slot="append" style="width: 140px;color: #ffffff;font-size: 20px" icon="el-icon-search" @click="handlerSearchList('reset')"></el-button>
+                            </el-input>
+                        </div>
+                    </div>
+                    <div class="filter_header">
+                        <div class="filter_item">
+                            <span>达人性别</span>
+                            <el-radio-group v-model="genderValue" @change="handlerSearchList('reset')">
+                                <el-radio-button label="">全部</el-radio-button>
+                                <el-radio-button label="male">男性</el-radio-button>
+                                <el-radio-button label="female">女性</el-radio-button>
+                            </el-radio-group>
+                        </div>
+                        <div class="filter_item">
+                            <span>产品品类</span>
+                            <el-radio-group v-model="categoryValue" @change="handlerSearchList('reset')">
+                                <el-radio-button v-for="(item,index) in categoryList" :key="index" :label="item.id">{{item.name}}</el-radio-button>
+                            </el-radio-group>
+                        </div>
                     </div>
                 </div>
-                <div class="filter_header">
-                    <div class="filter_item">
-                        <span>达人性别</span>
-                        <el-radio-group v-model="genderValue" @change="handlerSearchList('reset')">
-                            <el-radio-button label="">全部</el-radio-button>
-                            <el-radio-button label="male">男性</el-radio-button>
-                            <el-radio-button label="female">女性</el-radio-button>
-                        </el-radio-group>
-                    </div>
-                    <div class="filter_item">
-                        <span>产品品类</span>
-                        <el-radio-group v-model="categoryValue" @change="handlerSearchList('reset')">
-                            <el-radio-button v-for="(item,index) in categoryList" :key="index" :label="item.id">{{item.name}}</el-radio-button>
-                        </el-radio-group>
-                    </div>
-                </div>
-                <div class="filter_search">
+                <div class="filter_search" id="filter_search">
                     <div>
                         <span style="margin-right: 40px">找到{{total}}个</span>
                         <span>匹配预算<el-input size="small" style="width: 79px;margin: 0 12px" placeholder="" @change="handlerSearchList('reset')" v-model="priceValue"></el-input>元</span>
@@ -75,6 +77,7 @@
                         </el-checkbox-group>
                     </div>
                 </div>
+
                 <el-table
                     :data="tableData"
                     stripe
@@ -88,7 +91,7 @@
                     :infinite-scroll-disabled="disabled"
                     :header-cell-style="{background:'#F6F6F6',color:'#333333',fontWeight: '600'}"
                     size="mini"
-                    :height="900"
+                    :height="1000"
                     @sort-change="handlerSort"
                     @selection-change="handleSelectionChange"
                     style="width: 100%;">
@@ -127,9 +130,9 @@
                         label="参考作品"
                         align="center"
                         width="160">
-                        <template>
-                            <div class="people_works" @click="videoPlayDialog =true">
-                                <p>共7个</p>
+                        <template slot-scope="scope">
+                            <div class="people_works" @click="handleShowVideo(scope)" :style="{cursor: scope.row.videos.length!=0? 'pointer': 'auto'}">
+                                <p>共{{scope.row.videos.length}}个</p>
                                 <img src="../../../assets/images/table_video.png" alt="">
                             </div>
                         </template>
@@ -168,9 +171,12 @@
                     </el-table-column>
                 </el-table>
                 <el-empty v-else :image="require('../../../assets/images/empty_img.png')" description="暂无搜索结果" :image-size="400"style="padding: 80px 0"></el-empty>
+
+
             </div>
         </div>
         <Footer></Footer>
+
         <div ref="getheight" v-show="isShowSelectedPlan" class="foot_box">
             <el-drawer
                 :show-close="false"
@@ -413,65 +419,36 @@
 
         <!--视频播放-->
         <el-dialog
-            title="家用投影仪开箱展示视频"
+            :title="this.videoData.name"
             :visible.sync="videoPlayDialog"
             width="896px"
             :close-on-click-modal="false"
-            class="video_dialog"
+            class="video_dialog video_player"
+            @close="handleVideoClose"
             center>
-            <div>
-                <div></div>
+            <div style="padding-top: 0">
                 <div class="thumb-example">
                     <!-- swiper1 -->
                     <swiper class="swiper gallery-top" :options="swiperOptionTop" ref="swiperTop">
-                        <swiper-slide class="slide-1">
-                            <video
-                                ref="video"
-                                class="video-js vjs-default-skin vjs-big-play-centered"
-                                controls>
-                                <source src="https://vjs.zencdn.net/v/oceans.mp4" />
-                            </video>
-                        </swiper-slide>
-                        <swiper-slide class="slide-2">
-                            <video
-                                ref="video"
-                                class="video-js vjs-default-skin vjs-big-play-centered"
-                                controls>
-                                <source :src="require('../../../assets/images/video/video.mp4')" />
-                            </video>
-                        </swiper-slide>
-                        <swiper-slide class="slide-3">
-                            <video
-                                ref="video"
-                                class="video-js vjs-default-skin vjs-big-play-centered"
-                                controls>
-                                <source src="https://vjs.zencdn.net/v/oceans.mp4" />
-                            </video>
-                        </swiper-slide>
-                        <swiper-slide class="slide-4">
-                            <video
-                                ref="video"
-                                class="video-js vjs-default-skin vjs-big-play-centered"
-                                controls>
-                                <source src="https://vjs.zencdn.net/v/oceans.mp4" />
-                            </video>
-                        </swiper-slide>
-                        <swiper-slide class="slide-5">
-                            <video
-                                ref="video"
-                                class="video-js vjs-default-skin vjs-big-play-centered"
-                                controls>
-                                <source src="https://vjs.zencdn.net/v/oceans.mp4" />
-                            </video>
+                        <swiper-slide v-for="(item,index) in this.videoData" :key="index" style="position: relative;padding-top: 42px" :class="'slide-'+index+1">
+                            <h4 style="width:100%;text-align:center;position: absolute;top: -2px;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99">{{item.desc}}</h4>
+                            <div class="video_content">
+                                <video
+                                    :id="'my-player'+ ++index"
+                                    ref="video"
+                                    poster="../../../assets/images/video/poster_video.png"
+                                    class="video-js vjs-default-skin vjs-big-play-centered"
+                                    controls>
+                                    <source :src="localhost + item.file" />
+                                </video>
+                            </div>
                         </swiper-slide>
                     </swiper>
                     <!-- swiper2 Thumbs -->
-                    <swiper class="swiper gallery-thumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">
-                        <swiper-slide class="slide-1"><img src="../../../assets/images/tab-pane1.png" alt=""></swiper-slide>
-                        <swiper-slide class="slide-2"><img src="../../../assets/images/tab-pane2.png" alt=""></swiper-slide>
-                        <swiper-slide class="slide-3"><img src="../../../assets/images/tab-pane3.png" alt=""></swiper-slide>
-                        <swiper-slide class="slide-4"><img src="../../../assets/images/tab-pane4.png" alt=""></swiper-slide>
-                        <swiper-slide class="slide-5"><img src="../../../assets/images/tab-pane1.png" alt=""></swiper-slide>
+                    <swiper class="swiper gallery-thumbs" id="swiperThumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">
+                        <swiper-slide v-for="(item,index) in this.videoData" :key="index" :class="'slide-'+ ++index">
+                            <img src="../../../assets/images/tab-pane1.png" alt="">
+                        </swiper-slide>
                     </swiper>
                     <div class="swiper-button-next swiper-button-white" slot="button-next"><i class="el-icon-arrow-right"></i></div>
                     <div class="swiper-button-prev swiper-button-white" slot="button-prev"><i class="el-icon-arrow-left"></i></div>
@@ -497,7 +474,7 @@ export default {
     data(){
         return{
             swiperOptionTop: {
-                loop: true,
+                loop: false,
                 loopedSlides: 5, // looped slides should be the same
                 spaceBetween: 10,
                 slidesPerView: 1,
@@ -507,13 +484,14 @@ export default {
                 }
             },
             swiperOptionThumbs: {
-                loop: true,
+                loop: false,
                 loopedSlides: 5, // looped slides should be the same
-                spaceBetween: 10,
+                spaceBetween: 24,
                 centeredSlides: true,
+                centeredSlidesBounds:true,
                 slidesPerView: 5,
                 touchRatio: 0.2,
-                slideToClickedSlide: true
+                slideToClickedSlide: true,
             },
             loading: false,
             disabled: false,
@@ -569,6 +547,9 @@ export default {
             orderData:{},
             checkPaymentVal:'',
             videoPlayDialog:false,
+            videoData:[],
+            player: null,
+            localhost:process.env.VUE_APP_BASE_URL,
         }
     },
     components:{
@@ -581,17 +562,33 @@ export default {
         this.handlerGetCategory('influencer');
         this.handlerGetCategory('type');
         this.handlerSearchList();
-        this.$nextTick(() => {
-            const swiperTop = this.$refs.swiperTop.swiper
-            const swiperThumbs = this.$refs.swiperThumbs.swiper
-            swiperTop.controller.control = swiperThumbs
-            swiperThumbs.controller.control = swiperTop
-        })
+        // this.$nextTick(() => {
+        //     const swiperTop = this.$refs.swiperTop.swiper
+        //     const swiperThumbs = this.$refs.swiperThumbs.swiper
+        //     swiperTop.controller.control = swiperThumbs
+        //     swiperThumbs.controller.control = swiperTop
+        // })
     },
     beforeUpdate(){
         window.addEventListener('scroll',this.handleScroll,true)
     },
     methods:{
+        /*播放视频*/
+        handleShowVideo(scope){
+            if(scope.row.videos.length > 0){
+                this.videoData= scope.row.videos;
+                this.videoPlayDialog =true;
+                setTimeout(()=>{
+                    this.$nextTick(() => {
+                        const swiperTop = this.$refs.swiperTop.swiper
+                        const swiperThumbs = this.$refs.swiperThumbs.swiper
+                        swiperTop.controller.control = swiperThumbs
+                        swiperThumbs.controller.control = swiperTop
+                    })
+                },100);
+            }
+
+        },
         //排序
         handlerSort(column){
             if (!localStorage.getItem('token')){
@@ -610,7 +607,17 @@ export default {
                 heightTop = document.querySelector("#searchBar").offsetTop;
                 if (scrollTop >= heightTop) {
                     //表头到达页面顶部固定表头
-                    let top = scrollTop - (heightTop-66);
+                    let top = scrollTop - (heightTop-166);
+                    document.getElementsByClassName(
+                        "filter_search"
+                    )[0].style.position = "relative";
+                    document.getElementsByClassName(
+                        "filter_search"
+                    )[0].style.zIndex = "500";
+                    document.getElementsByClassName(
+                        "filter_search"
+                    )[0].style.top = `${top-35}px`;
+
                     document.getElementsByClassName(
                         "el-table__header-wrapper"
                     )[0].style.position = "relative";
@@ -619,9 +626,17 @@ export default {
                     )[0].style.zIndex = "500";
                     document.getElementsByClassName(
                         "el-table__header-wrapper"
-                    )[0].style.top = `${top}px`;
+                    )[0].style.top = `${top-35}px`;
+
                 } else if (scrollTop == 0) {
                     //表格横向
+                    document.getElementsByClassName(
+                        "filter_search"
+                    )[0].style.position = "relative";
+                    document.getElementsByClassName(
+                        "filter_search"
+                    )[0].style.zIndex = "500";
+
                     // console.log('横拉')
                     document.getElementsByClassName(
                         "el-table__header-wrapper"
@@ -630,6 +645,16 @@ export default {
                         "el-table__header-wrapper"
                     )[0].style.zIndex = "500";
                 } else {
+                    document.getElementsByClassName(
+                        "filter_search"
+                    )[0].style.position = "";
+                    document.getElementsByClassName(
+                        "filter_search"
+                    )[0].style.zIndex = "";
+                    document.getElementsByClassName(
+                        "filter_search"
+                    )[0].style.top = "";
+
                     document.getElementsByClassName(
                         "el-table__header-wrapper"
                     )[0].style.position = "";
@@ -645,6 +670,10 @@ export default {
         },
         getRowKeys(row){
             return row.id;
+        },
+        //关闭视频弹窗
+        handleVideoClose(){
+            this.videoData = [];
         },
         //获取搜索分类
         handlerGetCategory(type){
@@ -807,7 +836,9 @@ export default {
         },
         //清除定时器
         handleClose(){
-            clearInterval(this.checkPaymentVal)
+            clearInterval(this.checkPaymentVal);
+            this.$refs.alipayQrCodeUrl.innerHTML='';
+            this.$refs.wechatQrCodeUrl.innerHTML='';
         },
         //提交拍摄需求
         submitForm(formName) {
@@ -898,6 +929,11 @@ export default {
 }
 </script>
 <style lang="less">
+.video_player{
+    .el-dialog--center .el-dialog__body{
+        padding-top: 0 !important;
+    }
+}
 .swiper-button-next.swiper-button-white, .swiper-container-rtl .swiper-button-prev.swiper-button-white,
 .swiper-button-prev.swiper-button-white, .swiper-container-rtl .swiper-button-next.swiper-button-white{
     background-image: none;
@@ -960,8 +996,37 @@ export default {
     &.gallery-thumbs .swiper-slide {
         width: 146px !important;
         height: 146px;
-        opacity: 0.4;
-        margin-right: 24px !important;
+        position: relative;
+        &:after{
+            position: absolute;
+            content: '';
+            left: 1px;
+            top: 1px;
+            right: 1px;
+            bottom: 1px;
+            background: rgba(0,0,0,0.4);
+            z-index: 9;
+            border-radius: 4px;
+        }
+        &:before{
+            font-family: element-icons;
+            position: absolute;
+            content: '\e791';
+            width: 28px;
+            height: 28px;
+            font-size: 24px;
+            background: #FFFFFF;
+            box-shadow: 0px 6px 10px 0px rgba(0,0,0,0.07);
+            border: 2px solid #FFFFFF;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            display: flex;
+            z-index: 99;
+            justify-content: center;
+            align-items: center;
+            transform: translate(-50%,-50%);
+        }
     }
     &.gallery-thumbs .swiper-slide-active {
         opacity: 1;
@@ -969,6 +1034,15 @@ export default {
         border-radius: 9px;
         padding: 1px;
         overflow: hidden;
+        &:after{
+            background: none;
+        }
+        &:before{
+            content: '';
+            background: none;
+            box-shadow: none;
+            border: none;
+        }
     }
 }
 </style>
@@ -1626,15 +1700,15 @@ export default {
         }
         .filter_search{
             display: flex;
+            background: #ffffff;
             justify-content: space-between;
             align-items: center;
-            margin-top: 20px;
             font-size: 14px;
+            padding: 20px 0;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #666666;
             line-height: 24px;
-            margin-bottom: 20px;
             span:first-child{
                 color: #333333;
                 font-weight: 600;
@@ -1698,9 +1772,29 @@ export default {
             display: block;
             width: 140px;
             height: 94px;
-            border-radius: 4px;
-            border: 1px solid;
+            background: #7B7A7A;
+            box-shadow: 0px 6px 10px 0px rgba(0,0,0,0.07);
+            border-radius: 8px;
+            overflow: hidden;
             position: relative;
+            &:before{
+                font-family:element-icons;
+                position: absolute;
+                content: '\e791';
+                width: 28px;
+                height: 28px;
+                font-size: 24px;
+                background: #FFFFFF;
+                box-shadow: 0px 6px 10px 0px rgba(0,0,0,0.07);
+                border: 2px solid #FFFFFF;
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transform: translate(-50%,-50%);
+            }
             img{
                 width: 100%;
             }

@@ -34,18 +34,21 @@ service.interceptors.response.use(
                 Message({
                     message: res.msg,
                     type: 'error',
+                    offset:100,
                     duration: 5 * 1000
                 })
             if(res.code == 300 && reg.test(res.errorCode)){
                 Message({
                     message: '未知错误,请稍后再试或联系管理员!',
                     type: 'error',
+                    offset:100,
                     duration: 5 * 1000
                 })
             }else if( res.code == 401) {
                 MessageBox.confirm('会话过期，可以取消继续留在该页面，或者重新登录', '确定登出', {
                     confirmButtonText: '重新登录',
                     cancelButtonText: '取消',
+                    offset:100,
                     type: 'warning'
                 }).then(() => {
                     store.commit('clearUserInfo');//删除token
@@ -55,14 +58,6 @@ service.interceptors.response.use(
                 }).catch(()=>{
                     return
                 })
-            }else {
-                if(res.message || res.msg){
-                    Message({
-                        message: res.message || res.msg,
-                        type: 'error',
-                        duration: 10 * 1000
-                    })
-                }
             }
             return res; /*Promise.reject('error')*/
         } else {
@@ -74,6 +69,7 @@ service.interceptors.response.use(
         /*Message({
             message: error.message || error.msg,
             type: 'error',
+             offset:100,
             duration: 5 * 1000
         })*/
         // return Promise.reject(error)

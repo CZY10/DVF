@@ -115,3 +115,52 @@ export function orderList(data){
         data
     })
 }
+//支付记录列表
+export function paymentList(data){
+    return request({
+        url:'/api/pay/search',
+        method: 'post',
+        data
+    })
+}
+//订单删除
+export function orderDelete(data){
+    return request({
+        url:'/api/order/delete',
+        method: 'post',
+        data
+    })
+}
+//退定金
+export function returnFrontMoney(data){
+    return request({
+        url:'/api/order/refunddeposit',
+        method: 'post',
+        data
+    })
+}
+//去评价
+export function commentCreate(data){
+    return request({
+        url:'/api/comment/create',
+        method: 'post',
+        data
+    })
+}
+//更新用户信息
+export function userProfile(data){
+    return request({
+        url:'/api/user/profile',
+        method: 'post',
+        data
+    })
+}
+//更新头像
+export function userAvatar(data){
+    return request({
+        url:'/api/user/avatar',
+        method: 'post',
+        data
+    })
+}
+

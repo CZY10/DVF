@@ -192,7 +192,7 @@ export default {
         this.handlerGetQrcode();
     },
     methods: {
-        ...mapMutations('login', ["setUserInfo"]),
+        ...mapMutations('login', ["setUserInfo","setToken","setAvatar"]),
         //获取微信二维码
         handlerGetQrcode(){
             getQrcode()
@@ -239,9 +239,13 @@ export default {
                             clearInterval(_this.checkQrCode);
                         }else if(res.code === 1 && res.data.status === 2){//登录成功,即将跳转
                             clearInterval(_this.checkQrCode);
-                            this.setUserInfo(res.data.userinfo)
-                            localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
-                            localStorage.setItem('token', res.data.userinfo.token)
+
+                            localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
+                            localStorage.setItem('token', res.data.userinfo.token);
+                            localStorage.setItem('avatar', res.data.userinfo.avatar);
+                            this.setUserInfo(localStorage.getItem('userInfo'));
+                            this.setToken(localStorage.getItem('token'));
+                            this.setAvatar(localStorage.getItem('avatar'));
                             this.$router.push(this.fromPath)
                             //跳转到后台
                             // location.href="<?= Url::toRoute(['dashboard/index']);?>";
@@ -301,8 +305,12 @@ export default {
                             if(res.code === 1){
                                 clearInterval(this.checkQrCode);
                                 this.setUserInfo(res.data.userinfo)
-                                localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
-                                localStorage.setItem('token', res.data.userinfo.token)
+                                localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
+                                localStorage.setItem('token', res.data.userinfo.token);
+                                localStorage.setItem('avatar', res.data.userinfo.avatar);
+                                this.setUserInfo(localStorage.getItem('userInfo'));
+                                this.setToken(localStorage.getItem('token'));
+                                this.setAvatar(localStorage.getItem('avatar'));
                                 this.$router.push(this.fromPath)
                             }else {
                                 // this.$message.error(res.msg);
@@ -332,8 +340,12 @@ export default {
                         .then((res) => {
                             if(res.code === 1){
                                 this.setUserInfo(res.data.userinfo)
-                                localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo))
-                                localStorage.setItem('token', res.data.userinfo.token)
+                                localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
+                                localStorage.setItem('token', res.data.userinfo.token);
+                                localStorage.setItem('avatar', res.data.userinfo.avatar);
+                                this.setUserInfo(localStorage.getItem('userInfo'));
+                                this.setToken(localStorage.getItem('token'));
+                                this.setAvatar(localStorage.getItem('avatar'));
                                 this.$router.push(this.fromPath)
                             }else if(res.code === 0 && res.data.status === 0){
                                 // this.$message.error(res.msg);

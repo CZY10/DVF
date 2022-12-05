@@ -4,17 +4,19 @@
             <el-form ref="form" class="form_search" size="small" :model="form" label-width="80px">
                 <el-form-item label="订单记录" class="title">
                     <el-input placeholder="输入ASIN/订单号" v-model="form.keywords" class="input-with-select">
-                        <el-button slot="append" icon="el-icon-search"></el-button>
+                        <el-button slot="append" icon="el-icon-search" @click="currentPage=1;getOrderList()"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="日期">
                     <el-date-picker
                         v-model="form.dateValue"
                         type="daterange"
+                        value-format="yyyy-MM-dd"
+                        @change="currentPage=1;getOrderList()"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
                     </el-date-picker>
-                    <el-button type="text" class="reset_btn">恢复默认 <i class="el-icon-refresh-left"></i></el-button>
+                    <el-button type="text" class="reset_btn" @click="clearOrderList">恢复默认 <i class="el-icon-refresh-left"></i></el-button>
                 </el-form-item>
             </el-form>
             <el-table
@@ -37,7 +39,7 @@
                         <div class="avatar_box">
                             <p>
                                 <el-avatar v-if="scope.row.avatar==''" icon="el-icon-user-solid"></el-avatar>
-                                <router-link v-else target="_blank" :to="{path:'/homepage:'+5}"><el-avatar :src="scope.row.avatar"></el-avatar></router-link>
+                                <router-link v-else target="_blank" :to="{path:'/homepage:'+5}"><el-avatar v-if="scope.row.influencer" :src="localhost + scope.row.influencer.image"></el-avatar></router-link>
                             </p>
                             <p>
                                 <span v-if="scope.row.influencer_id==''||scope.row.influencer_id==null" style="color: #999999;">--</span>
@@ -59,15 +61,15 @@
                             width="185"
                             trigger="hover">
                             <div solt="content" style="padding: 15px 15px 0 15px">
-                                <el-steps direction="vertical" :active="scope.row.status">
-                                    <el-step v-for="(item,index) in scope.row.stepsList" :key="index" :title="item.title" :description="item.date"><span></span></el-step>
+                                <el-steps direction="vertical" :active="scope.row.status+1">
+                                    <el-step v-for="(item,index) in stepsList" :key="index" :title="item.title" :description="item.date"><span></span></el-step>
                                 </el-steps>
                             </div>
-                            <span slot="reference" class="status_style" :style="{color:scope.row.status == 0 ? '#FF000C' : scope.row.status == 1 ? '#FF000C' : scope.row.status == 2 ? '#FF000C' : scope.row.status == 3 ? '#00D9AD' : '#333333'}">
+                            <span slot="reference" class="status_style" :style="{color:scope.row.status == 0 ? '#FF000C' : scope.row.status == 1 ? '#FF000C' : scope.row.status == 2 ? '#FF000C' : scope.row.status == 4 ? '#00D9AD' : '#333333'}">
                                 <i
-                                    :style="{background:scope.row.status == 0 ? '#FF000C' : scope.row.status == 1 ? '#FF000C' : scope.row.status == 2 ? '#FF000C' : scope.row.status == 3 ? '#00D9AD' : '#333333'}"
+                                    :style="{background:scope.row.status == 0 ? '#FF000C' : scope.row.status == 1 ? '#FF000C' : scope.row.status == 2 ? '#FF000C' : scope.row.status == 4 ? '#00D9AD' : '#333333'}"
                                 ></i>
-                                {{scope.row.status == 0 ? '待付定金' : scope.row.status == 1 ? '待付尾款' : scope.row.status == 2 ? '待寄送样品' : scope.row.status == 3 ? '已完成' : scope.row.status == 4 ? '已退定金' : '待上传视频'}}
+                                {{scope.row.status == 0 ? '待付定金' : scope.row.status == 1 ? '待付尾款' : scope.row.status == 2 ? '待寄送样品' : scope.row.status == 3 ? '待上传视频' : scope.row.status == 4 ? '已完成' : scope.row.status == 5 ? '已退定金' : '已退尾款频'}}
                             </span>
                         </el-popover>
                     </template>
@@ -83,12 +85,12 @@
                     <template slot-scope="scope">
                         <div>
                             <div v-if="scope.row.status == 0" class="flex_center">
-                                <el-button class="operation_btn payment_btn_style" size="small" @click="payDepositDialogVisible=true" round>付定金</el-button>
-                                <el-button class="operation_btn" size="small" @click="deleteOrderDialog=true" round>删除</el-button>
+                                <el-button class="operation_btn payment_btn_style" size="small" @click="orderId = scope.row.id;handlePaymentOrder(0)" round>付定金</el-button>
+                                <el-button class="operation_btn" size="small" @click="deleteOrderDialog=true;orderId = scope.row.id" round>删除</el-button>
                             </div>
                             <div v-else-if="scope.row.status == 1" class="flex_center">
-                                <el-button class="operation_btn payment_btn_style" size="small" @click="paymentDialog=true" round>付尾款</el-button>
-                                <el-button class="operation_btn" size="small" @click="returnDepositDialog=true" round>退定金</el-button>
+                                <el-button class="operation_btn payment_btn_style" size="small" @click="orderId = scope.row.id;handlePaymentOrder(1)" round>付尾款</el-button>
+                                <el-button class="operation_btn" size="small" @click="orderId = scope.row.id;returnDepositDialog=true" round>退定金</el-button>
                             </div>
                             <div v-else-if="scope.row.status == 2" class="flex_center">
                                 <el-tooltip  class="item" effect="dark"  placement="bottom">
@@ -102,11 +104,14 @@
                             </div>
                             <div v-else-if="scope.row.status == 4" class="flex_center">
                                 <el-button class="operation_btn payment_btn_style" size="small" round>查看视频</el-button>
-                                <el-button class="operation_btn" size="small" round @click="scope.row.isCompleteComment ? completeCommentDialog=true : toCommentDialog=true;completeCommentList = scope.row.commentForm">去评价</el-button>
+<!--                                <el-button class="operation_btn" size="small" round @click="scope.row.isCompleteComment ? completeCommentDialog=true : toCommentDialog=true;completeCommentList = scope.row.commentForm">去评价</el-button>-->
+                                <el-button  v-if="scope.row.comment"class="operation_btn" size="small" round @click="completeCommentDialog=true;completeCommentList=scope.row.comment">已评价</el-button>
+                                <el-button v-else class="operation_btn" size="small" round @click="toCommentDialog=true;orderId = scope.row.id">去评价</el-button>
+
                             </div>
-                            <div v-else class="flex_center">
+                            <div v-else-if="scope.row.status == 5" class="flex_center">
                                 <div class="normal_style">/</div>
-                                <el-button class="operation_btn" size="small" @click="deleteOrderDialog=true" round>删除</el-button>
+                                <el-button class="operation_btn" size="small" @click="deleteOrderDialog=true;orderId = scope.row.id" round>删除</el-button>
                             </div>
                         </div>
 
@@ -119,10 +124,10 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
+                    :page-sizes="[20, 50, 100, 500]"
+                    :page-size="pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="1000">
+                    :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -130,6 +135,9 @@
         <el-dialog
             title="请尽快支付尾款"
             :visible.sync="paymentDialog"
+            v-if="paymentDialog"
+            @close="handleClose"
+            :close-on-click-modal="false"
             center
             width="500px">
             <el-alert
@@ -140,16 +148,16 @@
                 <i class="iconfont icon-tips" style="position: absolute;top: 9px;left: 14px;font-size: 18px;color: #776CF3"></i>
             </el-alert>
             <div class="payment_content">
-                <h4>¥401.00</h4>
+                <h4>¥{{ orderData.price }}</h4>
                 <p>尾款金额</p>
-                <p>订单号：<span>HD20220722HWW7</span></p>
+                <p>订单号：<span>{{ orderData.out_trade_no }}</span></p>
                 <ul>
                     <li>
-                        <div><img src="../../../../assets/images/contact_us.png" alt=""></div>
-                        <p><i class="iconfont icon-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>
+                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>
+                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>
                     </li>
                     <li>
-                        <div><img src="../../../../assets/images/contact_us.png" alt=""></div>
+                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>
                         <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>
                     </li>
                 </ul>
@@ -160,14 +168,15 @@
             title="是否申请退还定金？"
             :visible.sync="returnDepositDialog"
             width="388px"
+            :close-on-click-modal="false"
             class="return_deposit_dialog"
             center>
             <div style="padding-top: 10px">
                 <p>退还定金后，我们将不再为您匹配达人</p>
                 <p>如不满意达人或需<b>变更需求</b>，您可联系客服处理</p>
                 <div class="button_box">
-                    <el-button class="cancel_style">取消</el-button>
-                    <el-button class="confirm_style">确认</el-button>
+                    <el-button class="cancel_style" @click="returnDepositDialog=false">取消</el-button>
+                    <el-button class="confirm_style" @click="handleReturnFrontMoney">确认</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -176,13 +185,14 @@
             title="是否删除该订单记录？"
             :visible.sync="deleteOrderDialog"
             width="300px"
+            :close-on-click-modal="false"
             class="return_deposit_dialog"
             center>
             <div style="padding-top: 10px">
                 <p>删除后将不可恢复</p>
                 <div class="button_box">
-                    <el-button class="cancel_style">取消</el-button>
-                    <el-button class="confirm_style">确认</el-button>
+                    <el-button class="cancel_style" @click="deleteOrderDialog=false">取消</el-button>
+                    <el-button class="confirm_style" @click="handleRemoveOrder">确认</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -191,19 +201,23 @@
             title="您对本次服务满意吗？"
             :visible.sync="toCommentDialog"
             width="460px"
+            :close-on-click-modal="false"
             class="to_comment_dialog"
             center>
             <div>
                 <p class="description">您的真实评价反馈，将极大地帮助我们改善产品体验及服务质量</p>
                 <el-form :model="ruleCommentForm" :rules="commentRules" ref="ruleCommentForm" size="mini" label-position="left" label-width="100px" class="comment_form">
                     <el-form-item label="需求达成度" prop="complete">
-                        <el-rate v-model="ruleCommentForm.complete" :colors="colors"></el-rate>
+                        <el-rate v-model="ruleCommentForm.complete" @change="ruleCommentForm.complete===0?completeError=true:completeError=false" :colors="colors"></el-rate>
+                        <div v-if="completeError" class="form_error">请对需求达成度进行评价</div>
                     </el-form-item>
                     <el-form-item label="视频质量" prop="quality">
-                        <el-rate v-model="ruleCommentForm.quality" :colors="colors"></el-rate>
+                        <el-rate v-model="ruleCommentForm.quality" @change="ruleCommentForm.quality===0?qualityError=true:qualityError=false" :colors="colors"></el-rate>
+                        <div v-if="qualityError" class="form_error">请对视频质量进行评价</div>
                     </el-form-item>
                     <el-form-item label="交付周期" prop="cycle">
-                        <el-rate v-model="ruleCommentForm.cycle" :colors="colors"></el-rate>
+                        <el-rate v-model="ruleCommentForm.cycle" @change="ruleCommentForm.cycle===0?cycleError=true:cycleError=false" :colors="colors"></el-rate>
+                        <div v-if="cycleError" class="form_error">请对交付周期进行评价</div>
                     </el-form-item>
                     <el-form-item label="留言反馈（非必填）" style="display: block;" class="form_item_block">
                         <el-input
@@ -215,7 +229,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item class="form_item_block" style="margin-bottom: 0">
-                        <el-button @click="commentSubmitForm('ruleCommentForm')">提交</el-button>
+                        <el-button @click="commentSubmitForm('ruleCommentForm')" style="margin: auto;display: block;color:#ffffff;padding: 9px 57px;background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);border-radius: 16px;">提交</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -225,18 +239,19 @@
             title="我的评价"
             :visible.sync="completeCommentDialog"
             width="460px"
+            :close-on-click-modal="false"
             class="to_comment_dialog"
             center>
             <div>
                 <el-form size="mini" label-position="left" disabled label-width="100px" style="margin-top: 10px" class="comment_form">
                     <el-form-item label="需求达成度">
-                        <el-rate v-model="completeCommentList.complete" :colors="colors"></el-rate>
+                        <el-rate v-model="completeCommentList.satisfaction" :colors="colors"></el-rate>
                     </el-form-item>
                     <el-form-item label="视频质量">
                         <el-rate v-model="completeCommentList.quality" :colors="colors"></el-rate>
                     </el-form-item>
                     <el-form-item label="交付周期">
-                        <el-rate v-model="completeCommentList.cycle" :colors="colors"></el-rate>
+                        <el-rate v-model="completeCommentList.period" :colors="colors"></el-rate>
                     </el-form-item>
                     <el-form-item label="留言反馈（非必填）" style="display: block;margin-bottom: 0" class="form_item_block">
                         <el-input
@@ -244,7 +259,7 @@
                             style="display: block"
                             :rows="3"
                             placeholder="请填写您的真实服务感受或建议"
-                            v-model="completeCommentList.remarks">
+                            v-model="completeCommentList.content">
                         </el-input>
                     </el-form-item>
                 </el-form>
@@ -255,6 +270,7 @@
             title="视频拍摄需求"
             :visible.sync="checkVideoDialog"
             width="702px"
+            :close-on-click-modal="false"
             class="video_dialog"
             center>
             <div>
@@ -329,6 +345,7 @@
             :visible.sync="submitDialog"
             width="622px"
             class="submit_dialog"
+            :close-on-click-modal="false"
             center>
             <div>
                 <el-form size="small" label-position="left" :model="sampleForm" :rules="sampleFormRules" ref="videoRules" label-width="115px" class="submit_form">
@@ -386,7 +403,7 @@
             </div>
         </el-dialog>
         <!--查看大图-->
-        <el-dialog :visible.sync="imgDialog">
+        <el-dialog :visible.sync="imgDialog" :close-on-click-modal="false">
             <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
         <!--联系客服-->
@@ -468,8 +485,11 @@
         <!--支付定金-->
         <el-dialog
             title="请尽快支付定金"
+            @close="handleClose"
             :visible.sync="payDepositDialogVisible"
+            v-if="payDepositDialogVisible"
             width="500px"
+            :close-on-click-modal="false"
             class="pay_deposit_dialog"
             center>
             <div>
@@ -480,29 +500,56 @@
                     :closable="false">
                     <i class="iconfont icon-tips" style="position: absolute;top: 8px;left: 14px;font-size: 18px;color: #796CF3"></i>
                 </el-alert>
-                <h5>¥99.00</h5>
+                <h5>¥{{ orderData.price }}</h5>
                 <p>定金金额</p>
-                <p>订单号：<span>2022072543SDFDSFWQ</span></p>
+                <p>订单号：<span>{{ orderData.out_trade_no }}</span></p>
                 <ul>
                     <li>
-                        <div><img src="../../../../assets/images/contact_us.png" alt=""></div>
+                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>
+                        <!--                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>-->
                         <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>
                     </li>
                     <li>
-                        <div><img src="../../../../assets/images/contact_us.png" alt=""></div>
+                        <!--                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>-->
+                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>
                         <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>
                     </li>
                 </ul>
+            </div>
+        </el-dialog>
+        <!--支付完成-->
+        <el-dialog
+            title="支付完成"
+            :visible.sync="paymentCompletedDialogVisible"
+            width="360px"
+            :close-on-click-modal="false"
+            class="payment_completed_dialog"
+            center>
+            <div slot="title">
+                <i style="color: rgba(2, 181, 120, 1);font-size: 20px" class="el-icon-success"></i>
+                支付完成
+            </div>
+            <div>
+                <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
+                <div class="button_box">
+                    <el-button @click="paymentCompletedDialogVisible=false">我知道了</el-button>
+                </div>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { orderList } from "@/api/index";
+import {orderList, orderDelete, payOrder, checkPayment, returnFrontMoney, commentCreate} from "@/api/index";
+import QRCode from "qrcodejs2";
 export default {
     name: "order",
     data(){
+        var checkComplete = (rule, value, callback) => {
+            if (value === 0) {
+                return callback(new Error('请对需求达成度进行评价'));
+            }
+        };
         let validateImage = (rule, value, callback) => { //验证器
             if (!this.checkImgSuccess) {     //为true代表图片在  false报错
                 callback(new Error('请上传图片'));
@@ -517,7 +564,7 @@ export default {
                 dateValue:[],
             },
             tableData:[],
-            currentPage:2,
+            currentPage:1,
             tableHeight:document.documentElement.clientHeight-235,
             paymentDialog:false,
             returnDepositDialog:false,
@@ -531,6 +578,20 @@ export default {
             payDepositDialogVisible:false,
             messageData:[],
             uploadFile:[],
+            stepsList:[
+                {
+                    title: '步骤一',
+                    date:'2022-02-14'
+                },
+                {
+                    title: '步骤二',
+                    date:'2022-02-14'
+                },
+                {
+                    title: '步骤三',
+                    date:'2022-02-14'
+                }
+            ],
             videoForm: {
                 selectedType:'1',
                 product:'https://www.amztrackers.com/index_ch.php',
@@ -577,16 +638,13 @@ export default {
                 remarks:'',
             },
             commentRules: {
-                complete: [
-                    { required: true, message: '请对需求达成度进行评价', trigger: 'change' }
-                ],
-                quality: [
-                    { required: true, message: '请对视频质量进行评价', trigger: 'change' }
-                ],
-                cycle: [
-                    { required: true, message: '请对交付周期进行评价', trigger: 'change' }
-                ]
+                complete:[{required: true, message: '请对需求达成度进行评价', trigger: 'change'}],
+                quality:[{required: true, message: '请对需求达成度进行评价', trigger: 'change'}],
+                cycle:[{required: true, message: '请对交付周期进行评价', trigger: 'change'}],
             },
+            completeError:false,
+            qualityError:false,
+            cycleError:false,
             colors: ['#796CF3', '#796CF3', '#796CF3'],
             sampleForm:{
                 type:'FBA',
@@ -674,44 +732,229 @@ export default {
                 feedback_images:[]
             },
             timerSwitch:0, // 定时器开关，默认关闭
+            localhost:process.env.VUE_APP_BASE_URL,
+            total:0,
+            pageSize: 20,
+            pageNumber:1,
+            pageState: true,
+            orderId:'',
+            paymentCompletedDialogVisible:false,
+            orderData:{},
+            checkPaymentVal:'',
         }
     },
     mounted() {
         this.getOrderList();
+    },
+    computed:{
+      query(){
+          return [this.payDepositDialogVisible,this.paymentDialog]
+      }
+    },
+    watch:{
+        query:{
+            handler(val){
+                if(val[0] === false && val[1]===false){
+                    setTimeout(()=>{
+                        clearInterval(this.checkPaymentVal);
+                    },5000)
+
+                    console.log(this.checkPaymentVal)
+                }
+            }
+        }
     },
     methods:{
         //获取订单列表
         getOrderList(){
             orderList({
                 keyword:this.form.keywords,
-                date: this.form.dateValue
+                date: this.form.dateValue,
+                pageSize: this.pageSize,
+                currentPage: this.currentPage,
             })
                 .then((res) => {
                     if(res.code === 1){
-                        console.log(res)
+                        // console.log(res)
+                        this.pageState = true;
                         this.tableData = res.data.data;
+                        this.total = res.data.total;
                     }
                 })
                 .catch((err) => {
                     this.$message.error(err.msg);
                 });
         },
+        //初始化列表
+        clearOrderList(){
+            this.form.keywords = '';
+            this.form.dateValue = [];
+            this.currentPage = 1;
+            this.getOrderList();
+        },
+
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+            this.pageState = false;
+            this.pageSize = val;
+            this.currentPage = 1;
+            if (this.pageState === false) this.getOrderList();
         },
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
+            this.currentPage = val;
+            if(this.pageState === true) this.getOrderList();
         },
-        //评价
-        commentSubmitForm(formName){
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    alert('submit!');
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
+        //删除订单
+        handleRemoveOrder(){
+            // console.log(111,this.orderId)
+            orderDelete({order_id:this.orderId})
+                .then((res)=>{
+                    if(res.code === 1){
+                        this.$message.success('删除成功！');
+                        this.deleteOrderDialog = false;
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
+        //支付定金/尾款
+        handlePaymentOrder(type){
+            type===0 ? this.payDepositDialogVisible=true:this.paymentDialog=true
+            payOrder({
+                order_id: this.orderId,
+                type:type
+            })
+                .then((res) => {
+                    if(res.code === 1){
+                        this.orderData = res.data.order;
+                        if(this.$refs.alipayQrCodeUrl){
+                            new QRCode(this.$refs.alipayQrCodeUrl, {
+                                text: res.data.alipay_qrcode,
+                                width: 130,
+                                height: 130,
+                                colorDark: '#000000',
+                                colorLight: '#ffffff',
+                                correctLevel: QRCode.CorrectLevel.H
+                            })
+                        }
+                        if(this.$refs.wechatQrCodeUrl){
+                            new QRCode(this.$refs.wechatQrCodeUrl, {
+                                text: res.data.wechat_qrcode,
+                                width: 130,
+                                height: 130,
+                                colorDark: '#000000',
+                                colorLight: '#ffffff',
+                                correctLevel: QRCode.CorrectLevel.H
+                            })
+                        }
+                        this.handlerCheckPayment(res.data.order.out_trade_no);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.$message.error(err.msg);
+                });
+        },
+        //检测是否支付成功
+        handlerCheckPayment(order){
+            let _this = this;
+            _this.checkPaymentVal = setInterval(function (){
+                console.log(111)
+                checkPayment({
+                    out_trade_no:order
+                })
+                    .then((res) => {
+                        if(res.code === 1){
+                            if(res.data.status === 'success'){
+                                _this.payDepositDialogVisible = false;
+                                _this.paymentCompletedDialogVisible = true;
+                                clearInterval(_this.checkPaymentVal);
+                            }
+                        }
+                    })
+                    .catch((err) => {
+                        this.$message.error(err.msg);
+                    });
+            },3000)
+        },
+        //清除定时器
+        handleClose(){
+            clearInterval(this.checkPaymentVal);
+            // this.$refs.alipayQrCodeUrl.innerHTML='';
+            // this.$refs.wechatQrCodeUrl.innerHTML='';
+        },
+        //退定金
+        handleReturnFrontMoney(){
+            returnFrontMoney({
+                order_id: this.orderId
+            })
+                .then((res)=>{
+                    if(res.code === 1){
+                        this.returnDepositDialog = false;
+                        this.$message({
+                            message: '退还定金成功！',
+                            offset: '50%',
+                            type:'success'
+                        });
+                    }
+                })
+                .catch((err)=>{
+                    this.$message({
+                        message: '退还定金失败！',
+                        offset: '50%',
+                        type:'error',
+                    });
+                })
+        },
+        //去评价
+        commentSubmitForm(){
+
+            this.ruleCommentForm.complete===0 ? this.completeError = true :  this.completeError = false;
+            this.ruleCommentForm.cycle===0 ? this.cycleError = true :  this.cycleError = false;
+            this.ruleCommentForm.quality===0 ? this.qualityError = true :  this.qualityError = false;
+
+            if(this.ruleCommentForm.complete!==0 && this.ruleCommentForm.cycle!==0 && this.ruleCommentForm.quality !==0){
+                commentCreate({
+                    order_id: this.orderId,
+                    satisfaction: this.ruleCommentForm.complete,
+                    quality: this.ruleCommentForm.quality,
+                    period: this.ruleCommentForm.cycle,
+                    content: this.ruleCommentForm.remarks
+                })
+                    .then((res)=>{
+                        if(res.code === 1){
+                            this.toCommentDialog = false;
+                            this.$message({
+                                message: '评价成功！',
+                                offset: '50%',
+                                type:'success',
+                            });
+                            this.ruleCommentForm.complete=0;
+                            this.ruleCommentForm.quality=0;
+                            this.ruleCommentForm.cycle=0;
+                        }
+                    })
+                    .catch((err)=>{
+                        this.toCommentDialog = false;
+                        this.$message({
+                            message: '评价失败！',
+                            offset: '50%',
+                            type:'error'
+                        });
+                    })
+
+                // this.$refs[formName].validate((valid) => {
+                //     if (valid) {
+                //         alert('submit!');
+                //     } else {
+                //         console.log('error submit!!');
+                //         return false;
+                //     }
+                // });
+            }else {
+                return
+            }
+
         },
         //上传
         uploadSuccess(res, file) {
@@ -954,6 +1197,16 @@ export default {
 </script>
 <style lang="less">
 #order{
+    .form_error{
+        position: absolute;
+        top: 12px;
+        font-size: 12px;
+        left: -5px;
+        color: #f56c6c;
+    }
+    .el-table__body-wrapper .el-table__body{
+        margin-bottom: 30px;
+    }
     .el-upload-list--picture-card .el-upload-list__item .el-icon-close{
         display: block;
         width: 20px;
@@ -1626,8 +1879,8 @@ export default {
             margin: 15px 35px 16px 35px;
             li{
                 div{
-                    width: 140px;
-                    height: 140px;
+                    width: 128px;
+                    height: 128px;
                     background: #FFFFFF;
                     border: 1px solid #EEEEEE;
                     img{
@@ -1886,8 +2139,8 @@ export default {
             margin: 15px 35px 16px 35px;
             li{
                 div{
-                    width: 140px;
-                    height: 140px;
+                    width: 128px;
+                    height: 128px;
                     background: #FFFFFF;
                     border: 1px solid #EEEEEE;
                     img{

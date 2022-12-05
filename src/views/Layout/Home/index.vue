@@ -3,8 +3,7 @@
         <div class="banner">
             <h1>Amazon Influencer 买家秀视频服务第一站</h1>
             <div class="banner_img">
-                <el-row>
-<!--                    <img src="../../../assets/images/home_banner.png" alt="">-->
+                <el-row style="border-radius: 20px;overflow: hidden">
                     <video width="100%" height="100%" autoplay muted loop>
                         <source src="../../../assets/images/video/home_banner.mp4" type="video/mp4">
                     </video>
@@ -937,7 +936,7 @@ export default {
         position: relative;
         h1{
             font-size: 50px;
-            font-family: Montreal-Bold, Montreal;
+            font-family: GothamHTF;
             font-weight: bold;
             color: #FFFFFF;
             line-height: 80px;

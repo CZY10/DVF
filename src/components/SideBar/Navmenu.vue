@@ -18,7 +18,7 @@
                 <el-menu-item index="/manage/order">订单信息</el-menu-item>
                 <el-menu-item index="/manage/payment">支付记录</el-menu-item>
                 <el-menu-item index="/manage/personal">个人资料</el-menu-item>
-                <el-menu-item>退出</el-menu-item>
+                <el-menu-item @click="handlerLogOut">退出</el-menu-item>
             </el-submenu>
             <el-menu-item style="float: right;padding: 0" index="5">
                 <el-badge :value="122" class="item">
@@ -87,6 +87,14 @@ export default {
     methods: {
         handleSelect(key, keyPath) {
             console.log(key, keyPath);
+        },
+        //退出登录
+        handlerLogOut(){
+            this.$confirm('您真的要退出本次登录吗？','退出登录')
+                .then(()=>{
+                    this.$store.commit('login/clearUserInfo')
+                    window.location.href = '/#/login'
+                })
         }
     }
 }

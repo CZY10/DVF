@@ -89,12 +89,11 @@ VueRouter.prototype.push = function push(location) {
     return originalPush.call(this, location).catch(err => err)
 }
 
-import store from '../store/index'
-
 //路由拦截
 router.beforeEach((to, from, next) => {
     localStorage.setItem('loginFromPath',from.path)
     let token = localStorage.getItem('token');
+
     if (to.matched.some(ele => ele.meta.requiresAuth)) {
         if (token) {
             next()

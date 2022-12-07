@@ -19,10 +19,10 @@ Vue.config.productionTip = false;
 
 Vue.use(elTableInfiniteScroll)
 
-let userInfo = localStorage.getItem('token')
-if (userInfo){
-  // userInfo = JSON.parse(userInfo);
-  store.commit('login/setUserInfo',userInfo)
+let token = localStorage.getItem('token')
+if (token){
+  store.commit('login/setToken',token)
+  store.commit('login/setUserInfo',localStorage.getItem('userInfo'))
 }
 Vue.prototype.resetSetItem = function (key, newVal) {
   if (key === 'avatar') {

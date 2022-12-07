@@ -10,12 +10,9 @@
                             action="/api/user/avatar"
                             ref="rebateUpload"
                             list-type="picture-card"
-                            :on-change="uploadAvatarSuccess"
-                            :on-exceed="exceedUpload"
                             :on-success="handleSuccess"
                             :on-error="handleError"
-                            :headers="handers"
-                            :limit="1">
+                            :headers="{token: token}">
                             <span>修改头像</span>
                             <div slot="file" slot-scope="{file}">
                                 <img
@@ -30,8 +27,9 @@
                 <div class="user_info">
                     <p>账号信息</p>
                     <ul>
-                        <li><label>账号</label>{{ userInfo.mobile }}<span>修改</span></li>
-                        <li><label>微信</label>已绑定<span>解绑</span></li>
+                        <li><label>账号</label>{{ userInfo.mobile }}<span @click="editPhoneDialog=true;">修改</span></li>
+                        <li v-if="userInfo.isbind===1"><label>微信</label>已绑定<span @click="unbindWeChatDialog = true">解绑</span></li>
+                        <li v-else><label>微信</label>未绑定<span @click="bindWechartDialog = true;handlerGetQrCode()">绑定</span></li>
                     </ul>
                     <p>基础信息<i></i><span style="cursor:pointer;" @click="isEdit=false">编辑</span></p>
                     <el-form ref="form" :model="form" label-position="left" :disabled="isEdit" class="form_box" label-width="76px">
@@ -49,7 +47,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="所在地">
-                            <v-distpicker :disabled="isEdit" @province="getProvince" @city="getCity" @area="getArea"></v-distpicker>
+                            <v-distpicker :disabled="isEdit" :province="userInfo.province_code" :city="userInfo.city_code" :area="userInfo.area_code" @province="getProvince" @city="getCity" @area="getArea"></v-distpicker>
                         </el-form-item>
                         <el-form-item label="职位">
                             <el-input size="small" v-model="userInfo.position" placeholder="请输入职位"></el-input>
@@ -63,21 +61,23 @@
         <el-dialog
             title="解绑微信"
             :visible.sync="unbindWeChatDialog"
+            :close-on-click-modal="false"
             width="300px"
             class="dialog_style"
             center>
             <div style="padding-top: 10px">
                 <p>解绑后，将不再支持微信扫码登录</p>
                 <div class="button_box">
-                    <el-button class="cancel_style">取消</el-button>
-                    <el-button class="confirm_style">确认</el-button>
+                    <el-button class="cancel_style" @click="unbindWeChatDialog=false">取消</el-button>
+                    <el-button class="confirm_style" @click="handleUnBindWeChat">确认</el-button>
                 </div>
             </div>
         </el-dialog>
-        <!--解绑微信-->
+        <!--修改手机号-->
         <el-dialog
             title="修改手机号"
             :visible.sync="editPhoneDialog"
+            :close-on-click-modal="false"
             width="388px"
             class="dialog_style"
             center>
@@ -96,13 +96,14 @@
                     </el-form-item>
                 </el-form>
                 <div class="button_box">
-                    <el-button class="confirm_style">确认</el-button>
+                    <el-button class="confirm_style" @click="handleUpdateMobile">确认</el-button>
                 </div>
             </div>
         </el-dialog>
         <!--手机绑定成功-->
         <el-dialog
             :visible.sync="updatePhoneDialog"
+            :close-on-click-modal="false"
             width="260px"
             class="dialog_style"
             center>
@@ -119,18 +120,20 @@
         </el-dialog>
         <!--绑定微信-->
         <el-dialog
+            :close-on-click-modal="false"
             title="请用微信扫码进行绑定"
             :visible.sync="bindWechartDialog"
             width="328px"
             class="dialog_style"
+            @close="handleClose"
             center>
             <div>
                 <p class="bind_wechart_description">绑定后即可使用微信扫码登录，更便捷</p>
                 <div class="wechart_box">
                     <span class="bottom_left"></span>
                     <span class="bottom_right"></span>
-                    <img src="../../../../assets/images/qr.png" alt="">
-                    <div id="refreshQrcode" v-if="isRefresh" @click="handlerGetQrcode">
+                    <img :src="qrImg" alt="">
+                    <div id="refreshQrcode" v-if="isRefresh" @click="handlerGetQrCode">
                         <div
                             style="display: flex;align-items: center;justify-content: center;height: 100%">
                             <div>
@@ -146,7 +149,7 @@
 </template>
 
 <script>
-import {checkQr, getQrcode, smsSend, userProfile} from "@/api";
+import {checkQr, getQrcode, getUserInfo, smsSend, userProfile, updateMobile, unBindWechat} from "@/api";
 import VDistpicker from 'v-distpicker'
 import {mapMutations} from "vuex";
 
@@ -177,7 +180,6 @@ export default {
             }
         }
         return{
-            handers:{},
             token:'',
             bindWechartDialog:false,
             updatePhoneDialog:false,
@@ -234,20 +236,13 @@ export default {
                     {validator: validateVerificationCode, trigger: ['blur', 'change']}
                 ]
             },
-            userInfo: JSON.parse(localStorage.getItem('userInfo')),
+            userInfo: {},
             avatar: localStorage.getItem('avatar'),
+            qrImg:require('../../../../assets/images/qr.png'),
         }
     },
     components:{
         VDistpicker
-    },
-    created() {
-        window.addEventListener('setItem', ()=> {
-            console.log(111)
-            //这里就可以根据具体情况调用或刷新需要的操作
-            this.newVal = localStorage.getItem('avatar'); //获取监听的值
-            console.log(8888,this.newVal)
-        })
     },
     computed:{
         avatarFn(){
@@ -261,15 +256,25 @@ export default {
         }
     },
     mounted() {
-        // this.handlerGetQrcode();
-        console.log(this.userInfo)
         this.token = localStorage.getItem('token');
-        this.handers = {
-            token: this.token
-        }
+        this.getUserInfo()
     },
     methods:{
-        ...mapMutations('login', ["setAvatar"]),
+        ...mapMutations('login', ["setAvatar", "setUserInfo"]),
+        //获取用户信息
+        getUserInfo(){
+            getUserInfo()
+                .then((res) => {
+                    if(res.code === 1){
+                        this.userInfo = res.data;
+                        localStorage.setItem('userInfo', JSON.stringify(res.data));
+                        this.setUserInfo(JSON.stringify(res.data));
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
         //上传头像成功
         handleSuccess(response, file, fileList){
             localStorage.setItem('avatar', response.data.fullurl)
@@ -278,18 +283,28 @@ export default {
         //上传头像失败
         handleError(err, file, fileList){
             console.log('err',err, file, fileList)
+            this.$message.error('上传头像失败！')
         },
         getProvince(e){
+            console.log(e)
             this.userInfo.province = e.value;
+            this.userInfo.province_code = e.code;
             this.userInfo.city = undefined;
+            this.userInfo.city_code = undefined;
             this.userInfo.area = undefined;
+            this.userInfo.area_code = undefined;
         },
         getCity(e){
+            console.log(e)
             this.userInfo.city = e.value;
+            this.userInfo.city_code = e.code;
             this.userInfo.area = undefined;
+            this.userInfo.area_code = undefined;
         },
         getArea(e){
+            console.log(e)
             this.userInfo.area = e.value;
+            this.userInfo.area_code = e.code;
         },
         //更新基础信息
         handleEditUserInfo(){
@@ -299,31 +314,19 @@ export default {
                 province: this.userInfo.province,
                 city: this.userInfo.city,
                 area: this.userInfo.area,
+                province_code: this.userInfo.province_code,
+                city_code: this.userInfo.city_code,
+                area_code: this.userInfo.area_code,
                 position: this.userInfo.position,
             })
                 .then((res) => {
                     if(res.code === 1){
                         this.isEdit = true;
                         this.$message.success('更新成功！');
+                        this.getUserInfo()
                     }
                 })
                 .catch((err) => {
-                    this.$message.error(err.msg);
-                });
-        },
-        //获取微信二维码
-        handlerGetQrcode(){
-            getQrcode()
-                .then((res) => {
-                    if(res.code === 1){
-                        this.qrImg = res.data.qrcode_url;
-                        this.wechatToken = res.data.wechat_token;
-                        this.isRefresh = false;
-                        this.handleCheckQr();
-                    }
-                })
-                .catch((err) => {
-                    console.log(err)
                     this.$message.error(err.msg);
                 });
         },
@@ -364,29 +367,17 @@ export default {
                     });
             },3000)
         },
-        uploadAvatarSuccess(file, fileList){
-            console.log(11,file, fileList)
-            this.avatarHide = false;
-
-        },
-        exceedUpload(files, fileList){
-            console.log(files, fileList)
-            this.$set(fileList[0], 'raw', files[0]);
-            this.$set(fileList[0], 'name', files[0].name);
-            this.$refs['rebateUpload'].clearFiles();//清除文件
-            this.$refs['rebateUpload'].handleStart(files[0]);//选择文件后的赋值方法
+        //清除定时器
+        handleClose(){
+            clearInterval(this.checkQrCode);
         },
         //发送验证码
         handlerSend(even) {
             smsSend({
                 mobile: this.editPhoneForm.phone,
-                event: 'mobilelogin'
+                event: 'changemobile'
             })
-                .then((res) => {
-                    if(res.code === 1){
-                        console.log(res)
-                    }
-                })
+                .then((res) => {})
                 .catch((err) => {
                     console.log(err)
                     this.$message.error(err.msg);
@@ -406,11 +397,61 @@ export default {
                 }
             },1000)
         },
+        //修改手机号
+        handleUpdateMobile(){
+            updateMobile({
+                mobile:this.editPhoneForm.phone,
+                captcha:this.editPhoneForm.verificationCode,
+                event:'changemobile',
+            })
+                .then((res) => {
+                    if(res.code === 1){
+                        this.$message.success('修改成功！')
+                        this.editPhoneDialog = false;
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
+        //解绑微信
+        handleUnBindWeChat(){
+            unBindWechat()
+                .then((res) => {
+                    if(res.code === 1){
+                        this.$message.success('微信解绑成功！')
+                        this.unbindWeChatDialog = false;
+                        this.getUserInfo();
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
+        //微信二维码生成
+        handlerGetQrCode(){
+            getQrcode()
+                .then((res) => {
+                    if(res.code === 1){
+                        this.qrImg = res.data.qrcode_url;
+                        this.wechatToken = res.data.wechat_token;
+                        this.isRefresh = false;
+                        this.handleCheckQr();
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.$message.error(err.msg);
+                });
+        }
     }
 }
 </script>
 <style lang="less">
 #personal{
+    select:disabled{
+        background-color: #F5F7FA;
+    }
     .distpicker-address-wrapper select{
         padding: 5px 10px;
         height: auto;
@@ -583,7 +624,8 @@ export default {
                         font-weight: 400;
                         color: #796CF3;
                         line-height: 20px;
-                        margin-left: 10px;
+                        padding: 0 10px;
+                        cursor: pointer;
                     }
                 }
                 .save_btn{
@@ -638,11 +680,11 @@ export default {
         }
         .wechart_box{
             position: relative;
-            width: 205px;
-            height: 205px;
+            width: 220px;
+            height: 220px;
             border: 1px solid #EEEEEE;
             margin: auto;
-            padding: 7px;
+            //padding: 7px;
             margin-bottom: 15px;
             img{
                 width: 100%;

@@ -239,16 +239,13 @@ export default {
                             clearInterval(_this.checkQrCode);
                         }else if(res.code === 1 && res.data.status === 2){//登录成功,即将跳转
                             clearInterval(_this.checkQrCode);
-
                             localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
                             localStorage.setItem('token', res.data.userinfo.token);
                             localStorage.setItem('avatar', res.data.userinfo.avatar);
-                            this.setUserInfo(localStorage.getItem('userInfo'));
-                            this.setToken(localStorage.getItem('token'));
-                            this.setAvatar(localStorage.getItem('avatar'));
+                            this.setUserInfo(JSON.stringify(res.data.userinfo));
+                            this.setToken(res.data.userinfo.token);
+                            this.setAvatar(res.data.userinfo.avatar);
                             this.$router.push(this.fromPath)
-                            //跳转到后台
-                            // location.href="<?= Url::toRoute(['dashboard/index']);?>";
                         }
                     })
                     .catch((err) => {
@@ -258,9 +255,12 @@ export default {
             },3000)
 
         },
-
-        handleClick(tab, event) {
-            // console.log(tab, event);
+        handleClick(tab) {
+            if(tab.index == 0){
+                this.handleCheckQr();
+            }else {
+                clearInterval(this.checkQrCode);
+            }
         },
         //发送验证码
         handlerSend(even) {
@@ -303,17 +303,15 @@ export default {
                     })
                         .then((res) => {
                             if(res.code === 1){
+                                console.log(2353246,this.checkQrCode)
                                 clearInterval(this.checkQrCode);
-                                this.setUserInfo(res.data.userinfo)
                                 localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
                                 localStorage.setItem('token', res.data.userinfo.token);
                                 localStorage.setItem('avatar', res.data.userinfo.avatar);
-                                this.setUserInfo(localStorage.getItem('userInfo'));
-                                this.setToken(localStorage.getItem('token'));
-                                this.setAvatar(localStorage.getItem('avatar'));
+                                this.setUserInfo(JSON.stringify(res.data.userinfo));
+                                this.setToken(res.data.userinfo.token);
+                                this.setAvatar(res.data.userinfo.avatar);
                                 this.$router.push(this.fromPath)
-                            }else {
-                                // this.$message.error(res.msg);
                             }
                         })
                         .catch((err) => {
@@ -339,14 +337,16 @@ export default {
                     })
                         .then((res) => {
                             if(res.code === 1){
-                                this.setUserInfo(res.data.userinfo)
+                                console.log(this.fromPath)
+                                clearInterval(this.checkQrCode);
                                 localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
                                 localStorage.setItem('token', res.data.userinfo.token);
                                 localStorage.setItem('avatar', res.data.userinfo.avatar);
-                                this.setUserInfo(localStorage.getItem('userInfo'));
-                                this.setToken(localStorage.getItem('token'));
-                                this.setAvatar(localStorage.getItem('avatar'));
+                                this.setUserInfo(JSON.stringify(res.data.userinfo));
+                                this.setToken(res.data.userinfo.token);
+                                this.setAvatar(res.data.userinfo.avatar);
                                 this.$router.push(this.fromPath)
+
                             }else if(res.code === 0 && res.data.status === 0){
                                 // this.$message.error(res.msg);
                                 this.hasBindPhone = false;

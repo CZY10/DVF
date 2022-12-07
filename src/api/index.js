@@ -163,4 +163,28 @@ export function userAvatar(data){
         data
     })
 }
+//获取用户信息
+export function getUserInfo(data){
+    return request({
+        url:'/api/user/index',
+        method: 'post',
+        data
+    })
+}
+//修改手机号
+export function updateMobile(data){
+    return request({
+        url:'/api/user/changemobile',
+        method: 'post',
+        data
+    })
+}
+//后台解绑微信
+export function unBindWechat(data){
+    return request({
+        url:'/addons/wechatscanlogin/api/unbind',
+        method: 'post',
+        data
+    })
+}
 

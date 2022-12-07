@@ -2,21 +2,21 @@ export default {
     namespaced:true,
     state:{
         userInfo:{},
-        loginFromPat:'',
         avatar:'',
         token:'',
         loginFromPath:'/',
     },
     mutations:{
         setUserInfo(state,payload){
-            console.log('store',state,payload)
             state.userInfo = payload;
         },
         clearUserInfo(state){
-            state.userInfo={
-                user:'',
-                token:''
-            }
+            state.userInfo = {};
+            state.token = '';
+            state.avatar = '';
+            localStorage.removeItem('userInfo');
+            localStorage.removeItem('token');
+            localStorage.removeItem('avatar');
         },
         setToken(state,payload){
             state.token = payload

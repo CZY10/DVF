@@ -8,17 +8,11 @@ const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_URL,   // api的base_url  自动加在url前面
     timeout:10000, //请求超时时间
 })
-let token= '';
-// request拦截器
-if(localStorage.getItem('token')){
-    token= localStorage.getItem('token');
-}
 
+// request拦截器
 service.interceptors.request.use(config => {
-    if (token) {
-        config.headers['token'] = token;
+        config.headers['token'] = store.state["login"].token;
         config.headers['Content-Type'] = 'application/json'
-    }
     return config
 },
 error => {

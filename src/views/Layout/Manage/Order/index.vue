@@ -76,8 +76,8 @@
                 </el-table-column>
                 <el-table-column prop="hasMessage" label="达人沟通">
                     <template slot-scope="scope">
-                        <el-badge is-dot :hidden="scope.row.hasMessage" class="badge_style">
-                            <i class="el-icon-chat-dot-round" @click="feedbackDialog=true" style="font-size: 20px;cursor: pointer"></i>
+                        <el-badge is-dot :hidden="scope.row.message === 0 ? true : false" class="badge_style">
+                            <i class="el-icon-chat-dot-round" @click="orderId = scope.row.id;handleChatFn();" style="font-size: 20px;cursor: pointer"></i>
                         </el-badge>
                     </template>
                 </el-table-column>
@@ -95,7 +95,7 @@
                             <div v-else-if="scope.row.status == 2" class="flex_center">
                                 <el-tooltip  class="item" effect="dark"  placement="bottom">
                                     <div slot="content" style="max-width: 200px;line-height: 20px;padding: 3px 5px 0 5px;">若未收到样品寄送地址，请检查消息反馈或联系工作人员！</div>
-                                    <el-button class="payment_btn_style" size="small" @click="submitDialog=true;" round>提交寄送信息</el-button>
+                                    <el-button class="payment_btn_style" size="small" @click="submitDialog=true;orderId = scope.row.id;handlerClearSubmit()" round>提交寄送信息</el-button>
                                 </el-tooltip>
                             </div>
                             <div v-else-if="scope.row.status == 3" class="flex_center">
@@ -103,11 +103,9 @@
                                 <div class="normal_style">/</div>
                             </div>
                             <div v-else-if="scope.row.status == 4" class="flex_center">
-                                <el-button class="operation_btn payment_btn_style" size="small" round>查看视频</el-button>
-<!--                                <el-button class="operation_btn" size="small" round @click="scope.row.isCompleteComment ? completeCommentDialog=true : toCommentDialog=true;completeCommentList = scope.row.commentForm">去评价</el-button>-->
-                                <el-button  v-if="scope.row.comment"class="operation_btn" size="small" round @click="completeCommentDialog=true;completeCommentList=scope.row.comment">已评价</el-button>
+                                <a :href="scope.row.attachfile" target="_blank" style="text-decoration: none;color: #776CF3;border: 1px solid #776CF3;font-size: 12px;font-size: 12px;padding: 3px 16px;border-radius: 16px;margin-right: 10px">查看视频</a>
+                                <el-button  v-if="scope.row.comment===0"class="operation_btn" size="small" round @click="completeCommentDialog=true;completeCommentList=scope.row.comments">已评价</el-button>
                                 <el-button v-else class="operation_btn" size="small" round @click="toCommentDialog=true;orderId = scope.row.id">去评价</el-button>
-
                             </div>
                             <div v-else-if="scope.row.status == 5" class="flex_center">
                                 <div class="normal_style">/</div>
@@ -351,48 +349,50 @@
                 <el-form size="small" label-position="left" :model="sampleForm" :rules="sampleFormRules" ref="videoRules" label-width="115px" class="submit_form">
                     <el-form-item label="样品物流方式" prop="type">
                         <el-radio-group v-model="sampleForm.type" @change="checkSubmit('videoRules')">
-                            <el-radio label="FBA"></el-radio>
-                            <el-radio label="FBM"></el-radio>
+                            <el-radio label="fba">FBA</el-radio>
+                            <el-radio label="fbm">FBM</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="预计到达日期" prop="date">
-                        <el-date-picker type="date" placeholder="选择日期" :clearable="false" v-model="sampleForm.date" @change="checkSubmit('videoRules')" style="width: 100%;"></el-date-picker>
+                        <el-date-picker type="date" placeholder="选择日期" format="yyyy-MM-d" value-format="yyyy-MM-dd" :clearable="false" v-model="sampleForm.date" @change="checkSubmit('videoRules')" style="width: 100%;"></el-date-picker>
                     </el-form-item>
-                    <el-form-item v-show="sampleForm.type === 'FBA'" label="上传物流截图" prop="file">
-                        <el-checkbox-group v-model="sampleForm.file" v-show="false"></el-checkbox-group>
-                        <el-upload
-                            ref="upload"
-                            :class="{hide_upload:isHide}"
-                            action="#"
-                            :on-change="changeUpload"
-                            list-type="picture-card"
-                            :on-success="uploadSuccess"
-                            :before-upload="beforeUpload"
-                            :auto-upload="false">
-                            <i slot="default" class="el-icon-plus"></i>
-                            <div slot="file" slot-scope="{file}">
-                                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-                                <span class="el-upload-list__item-actions">
-                                    <span class="el-upload-list__item-preview check_preview" @click="handlePictureCardPreview(file)">
-                                        <i class="el-icon-zoom-in" style="color: #333333;font-size: 18px"></i>
+                    <div v-show="sampleForm.type === 'fba'">
+                        <el-form-item label="上传物流截图" key="file" prop="file">
+                            <el-checkbox-group v-model="sampleForm.file" v-show="false"></el-checkbox-group>
+                            <el-upload
+                                ref="upload"
+                                :class="{hide_upload:isHide}"
+                                action="/api/common/upload"
+                                :on-change="changeUpload"
+                                list-type="picture-card"
+                                :on-success="uploadSuccess"
+                                :headers="{token: token}"
+                                :before-upload="beforeUpload">
+                                <i slot="default" class="el-icon-plus"></i>
+                                <div slot="file" slot-scope="{file}">
+                                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+                                    <span class="el-upload-list__item-actions">
+                                        <span class="el-upload-list__item-preview check_preview" @click="handlePictureCardPreview(file)">
+                                            <i class="el-icon-zoom-in" style="color: #333333;font-size: 18px"></i>
+                                        </span>
+                                        <span v-if="!sampleForm.disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
+                                          <i class="el-icon-close" style="color: #ffffff"></i>
+                                        </span>
                                     </span>
-                                    <span v-if="!sampleForm.disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                                      <i class="el-icon-close" style="color: #ffffff"></i>
-                                    </span>
+                                </div>
+                            </el-upload>
+                            <p class="description"><b>注：</b>为方便尽快开展视频制作，上传的截图需包含：<span>产品信息（型号、尺寸、颜色等）、预计到达时间、收件人及收货地址</span>等信息。</p>
+                        </el-form-item>
+                        <el-form-item label="">
+                            <div class="demo_img">
+                                <img src="../../../../assets/images/screenshot.jpg" alt="">
+                                <span class="el-upload-list__item-preview upload_preview" @click="checkViewImg">
+                                    <i class="el-icon-zoom-in"></i>
                                 </span>
                             </div>
-                        </el-upload>
-                        <p class="description"><b>注：</b>为方便尽快开展视频制作，上传的截图需包含：<span>产品信息（型号、尺寸、颜色等）、预计到达时间、收件人及收货地址</span>等信息。</p>
-                    </el-form-item>
-                    <el-form-item v-show="sampleForm.type === 'FBA'" label="">
-                        <div class="demo_img">
-                            <img src="../../../../assets/images/buyer_show_tab1.png" alt="">
-                            <span class="el-upload-list__item-preview upload_preview" @click="checkViewImg">
-                                <i class="el-icon-zoom-in"></i>
-                            </span>
-                        </div>
-                    </el-form-item>
-                    <el-form-item v-if="sampleForm.type === 'FBM'" label="物流单号" prop="order">
+                        </el-form-item>
+                    </div>
+                    <el-form-item v-show="sampleForm.type === 'fbm'" label="物流单号" key="order" prop="order">
                         <el-input type="text" v-model="sampleForm.order" @keyup.native="checkSubmit('videoRules')" @blur="checkSubmit('videoRules')" @change="checkSubmit('videoRules')"></el-input>
                         <p class="description">如：1Z998F32032699533</p>
                     </el-form-item>
@@ -403,14 +403,17 @@
             </div>
         </el-dialog>
         <!--查看大图-->
-        <el-dialog :visible.sync="imgDialog" :close-on-click-modal="false">
-            <img width="100%" :src="dialogImageUrl" alt="">
+        <el-dialog :visible.sync="imgDialog" class="viewDialog" :close-on-click-modal="false">
+            <div class="viewImg">
+                <img :src="dialogImageUrl" id="viewImg" alt="">
+            </div>
         </el-dialog>
-        <!--联系客服-->
+        <!--联系拍摄顾问-->
         <el-dialog
             title="联系拍摄顾问"
             :visible.sync="feedbackDialog"
             width="700px"
+            :close-on-click-modal="false"
             class="feedback_modal"
             center>
             <div>
@@ -418,22 +421,22 @@
                     <div v-if="chartData.length>0" class="chat-message-body" id="chatForm">
                         <div  dis-hover v-for="(item,index) in chartData" :key="index" class="message-card">
                             <div :class="item.type == 0?'message-row-right': 'message-row-left'">
-                                <img :src="item.type == 0? require('../../../../assets/images/contact_us.png') : require('../../../../assets/images/people_header.png')" height="32" width="32" >
+                                <img :src="item.type == 0? avatar : require('../../../../assets/images/gani.png')" height="32" width="32" >
                                 <div class="message-content">
                                     <div :style="item.type == 0?'text-align:right;display: flex;flex-direction:row-reverse':''">
-                                        {{item.nickName}}
-                                        <span class="message-time">{{item.feedback_time}}</span>
+                                       {{item.type == 0 ? '我' : 'Gani-拍摄顾问'}}
+                                        <span class="message-time">{{item.createtime}}</span>
                                     </div>
-                                    <div class="message-body" v-show="item.feedback != ''">
-                                        {{item.feedback}}
+                                    <div class="message-body" v-show="item.content !== ''">
+                                        {{item.content}}
                                     </div>
-                                    <div class="feedback_images_list" v-show="item.feedback_images.length>0">
+                                    <div class="feedback_images_list" v-show="item.images.length>0">
                                         <div>
-                                            <div class="item_img" v-for="item in item.feedback_images">
+                                            <div class="item_img" v-for="item in item.images">
                                                 <template>
-                                                    <img :src="item.url" fit="cover" width="100%" height="100%" />
+                                                    <img :src="item" fit="cover" width="100%" height="100%" />
                                                     <div class="demo-upload-list-cover">
-                                                        <i type="ios-eye-outline" @click="handleImgView(item)"></i>
+                                                        <i class="el-icon-zoom-in" @click="handleImgView(item)"></i>
                                                     </div>
                                                 </template>
                                             </div>
@@ -458,15 +461,16 @@
                 <div class="title">(非必选）上传图片 <span>(支持jpg/png不超过5M)</span></div>
                 <div>
                     <el-upload
-                        action="#"
+                        action="/api/common/upload"
                         ref="chartUpload"
                         class="chart_upload"
                         list-type="picture-card"
-                        :on-change="handleUploadSuccess"
-                        :before-upload="beforeUpload"
-                        :auto-upload="false">
+                        :on-success="handleUploadSuccess"
+                        :on-error="handleUploadError"
+                        :headers="{token: token}"
+                        :before-upload="beforeUpload">
                         <i slot="default" class="el-icon-plus"></i>
-                        <div slot="file" slot-scope="{file}">
+                        <div slot="file" slot-scope="{file}" style="height: inherit;">
                             <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
                             <span class="el-upload-list__item-actions">
                                 <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
@@ -540,23 +544,26 @@
 </template>
 
 <script>
-import {orderList, orderDelete, payOrder, checkPayment, returnFrontMoney, commentCreate} from "@/api/index";
+import {orderList, orderDelete, payOrder, checkPayment, returnFrontMoney, commentCreate, createTransport, getChatList, createChat} from "@/api/index";
 import QRCode from "qrcodejs2";
 export default {
     name: "order",
     data(){
-        var checkComplete = (rule, value, callback) => {
-            if (value === 0) {
-                return callback(new Error('请对需求达成度进行评价'));
+        const validateSelect = (rule, value, callback) => {
+            if(this.sampleForm.type !== 'fba' ){
+                if(rule.field === 'order' && this.sampleForm.type && !value){
+                    callback(new Error(rule.message))
+                }else {
+                    callback()
+                }
+            }else {
+                if(rule.field === 'file' && this.sampleForm.type && !value){
+                    callback(new Error(rule.message))
+                }else {
+                    callback()
+                }
             }
-        };
-        let validateImage = (rule, value, callback) => { //验证器
-            if (!this.checkImgSuccess) {     //为true代表图片在  false报错
-                callback(new Error('请上传图片'));
-            } else {
-                callback();
-            }
-        };
+        }
         return {
             isHide:false,
             form:{
@@ -647,7 +654,7 @@ export default {
             cycleError:false,
             colors: ['#796CF3', '#796CF3', '#796CF3'],
             sampleForm:{
-                type:'FBA',
+                type:'fba',
                 file:'',
                 date:'',
                 order:'',
@@ -658,13 +665,13 @@ export default {
                     { required: true, message: '请选择活动资源', trigger: 'change' }
                 ],
                 date: [
-                    { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                    { type: 'string', required: true, message: '请选择日期', trigger: 'change' }
                 ],
                 file:[
-                    { required: true, message: '请上传物流截图', trigger: 'change' },
+                    { required: true, validator:validateSelect, message: '请上传物流截图', trigger: 'change' },
                 ],
                 order:[
-                    { required: true, message: '请输入物流单号', trigger: 'change' }
+                    { required: true, validator:validateSelect, message: '请输入物流单号', trigger: 'change' }
                 ]
             },
             checkImgSuccess:true,
@@ -675,51 +682,7 @@ export default {
             chatVisible:this.value,
             loading:false,
             defualtAvatar:require('../../../../assets/images/people_header.png'), // 后端没有返回头像默认头像，注意：需要用require请求方式才能动态访问本地文件
-            chartData:[
-                {
-                    feedback: "13542135",
-                    feedback_images: [],
-                    feedback_time: "2022-11-10 02:23:51",
-                    id: "125",
-                    out_trade_no: "2022110301414264712",
-                    type: "0",
-                    nickName:'李四',
-                },
-                {
-                    feedback: "235345",
-                    feedback_images: [
-                        {
-                            url: "https://vipon-test.nyc3.digitaloceanspaces.com/images/547071bba204e7f2fd7ec761aba2f4c5808818eb60e208.jpg"
-                        }
-                    ],
-                    feedback_time: "2022-11-10 02:23:59",
-                    id: "126",
-                    out_trade_no: "2022110301414264712",
-                    type: "0",
-                    nickName:'李四',
-                },{
-                    feedback: "2535",
-                    feedback_images: [],
-                    feedback_time: "2022-11-10 02:24:24",
-                    id: "127",
-                    out_trade_no: "2022110301414264712",
-                    type: "1",
-                    nickName:'张三',
-                },
-                {
-                    feedback: "235346",
-                    feedback_images: [
-                        {
-                            url: "https://vipon-test.nyc3.digitaloceanspaces.com/images/547071bba204e7f2fd7ec761aba2f4c5808818eb60e208.jpg"
-                        }
-                    ],
-                    feedback_time: "2022-11-10 02:24:48",
-                    id: "128",
-                    out_trade_no: "2022110301414264712",
-                    type: "1",
-                    nickName:'张三',
-                }
-            ],
+            chartData:[],
             distincData:[], // 消息去重数组
             offsetMax:0, // 最大偏移位，记录当前获取的最大id，往后的定时轮询数据时每次只获取比这个id大的数据
             offsetMin:0,//  // 最小偏移位，记录当前获取的最小id，往上滑动时每次只获取比这小id大的数据
@@ -741,10 +704,14 @@ export default {
             paymentCompletedDialogVisible:false,
             orderData:{},
             checkPaymentVal:'',
+            token:'',
+            avatar:'',
         }
     },
     mounted() {
         this.getOrderList();
+        this.token = localStorage.getItem('token');
+        this.avatar = localStorage.getItem('avatar')
     },
     computed:{
       query(){
@@ -758,8 +725,6 @@ export default {
                     setTimeout(()=>{
                         clearInterval(this.checkPaymentVal);
                     },5000)
-
-                    console.log(this.checkPaymentVal)
                 }
             }
         }
@@ -775,7 +740,6 @@ export default {
             })
                 .then((res) => {
                     if(res.code === 1){
-                        // console.log(res)
                         this.pageState = true;
                         this.tableData = res.data.data;
                         this.total = res.data.total;
@@ -792,7 +756,7 @@ export default {
             this.currentPage = 1;
             this.getOrderList();
         },
-
+        //分页
         handleSizeChange(val) {
             this.pageState = false;
             this.pageSize = val;
@@ -805,7 +769,6 @@ export default {
         },
         //删除订单
         handleRemoveOrder(){
-            // console.log(111,this.orderId)
             orderDelete({order_id:this.orderId})
                 .then((res)=>{
                     if(res.code === 1){
@@ -851,7 +814,6 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    console.log(err)
                     this.$message.error(err.msg);
                 });
         },
@@ -859,7 +821,6 @@ export default {
         handlerCheckPayment(order){
             let _this = this;
             _this.checkPaymentVal = setInterval(function (){
-                console.log(111)
                 checkPayment({
                     out_trade_no:order
                 })
@@ -880,8 +841,6 @@ export default {
         //清除定时器
         handleClose(){
             clearInterval(this.checkPaymentVal);
-            // this.$refs.alipayQrCodeUrl.innerHTML='';
-            // this.$refs.wechatQrCodeUrl.innerHTML='';
         },
         //退定金
         handleReturnFrontMoney(){
@@ -891,28 +850,18 @@ export default {
                 .then((res)=>{
                     if(res.code === 1){
                         this.returnDepositDialog = false;
-                        this.$message({
-                            message: '退还定金成功！',
-                            offset: '50%',
-                            type:'success'
-                        });
+                        this.$message.success('退还定金成功！');
                     }
                 })
                 .catch((err)=>{
-                    this.$message({
-                        message: '退还定金失败！',
-                        offset: '50%',
-                        type:'error',
-                    });
+                    this.$message.error(err.message);
                 })
         },
         //去评价
         commentSubmitForm(){
-
             this.ruleCommentForm.complete===0 ? this.completeError = true :  this.completeError = false;
             this.ruleCommentForm.cycle===0 ? this.cycleError = true :  this.cycleError = false;
             this.ruleCommentForm.quality===0 ? this.qualityError = true :  this.qualityError = false;
-
             if(this.ruleCommentForm.complete!==0 && this.ruleCommentForm.cycle!==0 && this.ruleCommentForm.quality !==0){
                 commentCreate({
                     order_id: this.orderId,
@@ -924,11 +873,7 @@ export default {
                     .then((res)=>{
                         if(res.code === 1){
                             this.toCommentDialog = false;
-                            this.$message({
-                                message: '评价成功！',
-                                offset: '50%',
-                                type:'success',
-                            });
+                            this.$message.success('评价成功！');
                             this.ruleCommentForm.complete=0;
                             this.ruleCommentForm.quality=0;
                             this.ruleCommentForm.cycle=0;
@@ -936,21 +881,8 @@ export default {
                     })
                     .catch((err)=>{
                         this.toCommentDialog = false;
-                        this.$message({
-                            message: '评价失败！',
-                            offset: '50%',
-                            type:'error'
-                        });
+                        this.$message.error('评价失败！')
                     })
-
-                // this.$refs[formName].validate((valid) => {
-                //     if (valid) {
-                //         alert('submit!');
-                //     } else {
-                //         console.log('error submit!!');
-                //         return false;
-                //     }
-                // });
             }else {
                 return
             }
@@ -958,13 +890,13 @@ export default {
         },
         //上传
         uploadSuccess(res, file) {
-            // file.length>1 ? this.isHide = false:this.isHide=true;
-            console.log('succ',res, file)
-            // this.dialogImageUrl = URL.createObjectURL(file.raw);
-            // this.isHide = true;
-            // this.$forceUpdate();
-            // this.$refs.upload.clearValidate()  //上传成功清除校验
-            // this.checkImgSuccess = true;
+            this.sampleForm.file = res.data.fullurl;
+            this.sampleForm.file !== ''? this.isHide = true : this.isHide = false;
+            if(this.sampleForm.type === '' || this.sampleForm.date === '' || this.sampleForm.file === ''){
+                this.isDisabled = true;
+            }else {
+                this.isDisabled = false;
+            }
         },
         beforeUpload(file) {
             const isFileType = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -993,34 +925,56 @@ export default {
             this.imgDialog = true;
         },
         changeUpload(file, fileList){
-            console.log('change',file,fileList)
             fileList.length>1 ? this.isHide = false:this.isHide=true;
-            this.sampleForm.file = file.url
-            if(this.sampleForm.type === '' || this.sampleForm.date === '' || this.sampleForm.file === ''){
-                this.isDisabled = true;
-            }else {
-                this.isDisabled = false;
-            }
         },
         checkViewImg(){
-            this.dialogImageUrl = require('../../../../assets/images/buyer_show_tab1.png')
+            this.dialogImageUrl = require('../../../../assets/images/screenshot.jpg')
             this.imgDialog = true;
+        },
+        handlerClearSubmit(){
+            this.sampleForm={
+                type:'fba',
+                file:'',
+                date:'',
+                order:'',
+                disabled: false
+            }
+            this.isDisabled = true;
+            if(this.$refs.upload){
+                this.$refs.upload.clearFiles();
+                this.isHide=true;
+            }
+            this.isHide = false
         },
         //提交样品寄送信息
         submitForm(formName){
-            console.log(11,this.sampleForm)
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    createTransport({
+                        order_id: this.orderId,
+                        transport_type: this.sampleForm.type,
+                        transport_number: this.sampleForm.order,
+                        transportimage:this.sampleForm.file,
+                        transporttime:this.sampleForm.date,
+                    })
+                        .then((res)=>{
+                            if(res.code === 1){
+                                this.submitDialog = false;
+                                this.$message.success('样品寄送信息提交成功!');
+                            }
+                        })
+                        .catch((err)=>{
+                            this.submitDialog = false;
+                            this.$message.error(err.message)
+                        })
                 } else {
-                    console.log('error submit!!');
+                    this.$message.warning('请先填写提交信息！')
                     return false;
                 }
             });
         },
         //检测提交按钮是否禁用
         checkSubmit(formName){
-            console.log(this.sampleForm)
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.isDisabled = false;
@@ -1029,167 +983,98 @@ export default {
                 }
             });
         },
-        /*联系客服*/
-        // loadMsg(){ // 窗体打开默认加载一页数据，窗体什么周期中值运行一次
-        //     let that = this;
-        //     this.searchForm.offsetMax = this.offsetMax;
-        //     listMsg(this.searchForm).then(res=>{
-        //         if (res.code == 200) {
-        //             res.data.forEach(e => {
-        //                 // 标记最大偏移位
-        //                 if(that.offsetMax < e.msgId){
-        //                     that.offsetMax = e.msgId;
-        //                 }
-        //                 e.content = JSON.parse(e.content);
-        //                 that.chartData.unshift(e)
-        //                 that.distincData.push(e.msgId);
-        //                 // 标记最大偏移位，后端返回数据是逆序，所以最后一条id最新
-        //                 that.offsetMin = e.msgId;
-        //             });
-        //             // 数据加载完成，滚动条滚动到窗体底部
-        //             this.scrollToBottom();
-        //         }
-        //     });
-        // },
-        show(){ // 打开窗体初始化数据
-            // 初始化数据
-            this.chartData =[];
-            this.distincData =[];
-            this.offsetMax = 0;
-            this.offsetMin = 0;
-            this.searchForm.pageNumber = 1;
-            this.searchForm.pageSize = 20;
-            this.chatForm ={
-                content:"",
-                msg:""
-            };
-            // this.loadMsg();
-            this.chatVisible = true;
-            // 开启定时器
-            this.timerSwitch = 1;
-            // this.reloadData();
+        handleChatFn(){
+            this.feedbackDialog=true;
+            this.chatForm.feedback='';
+            if(this.chatForm.feedback_images.length>0){
+                this.chatForm.feedback_images=[];
+                this.$refs.chartUpload.clearFiles();
+            }
+            this.handlerGetChatList();
         },
-        handlerSedMeg(){ // 发送消息
-            console.log(11,this.chatForm.feedback_images)
-            if(!this.chatForm.feedback){
-                this.$message.error('不能发送空白信息');
-                // this.$Message.warning("不能发送空白信息");
+
+        //获取聊天列表
+        handlerGetChatList(){
+            getChatList({
+                order_id: this.orderId
+            })
+                .then((res)=>{
+                    if(res.code === 1){
+                        this.chartData = res.data;
+                        if(this.chartData.length>0){
+                            this.scrollToBottom();
+                        }
+                    }
+                })
+                .catch((err)=>{
+                    this.$message.error(err.message)
+                })
+        },
+        // show(){ // 打开窗体初始化数据
+        //     // 初始化数据
+        //     this.chartData =[];
+        //     this.distincData =[];
+        //     this.offsetMax = 0;
+        //     this.offsetMin = 0;
+        //     this.searchForm.pageNumber = 1;
+        //     this.searchForm.pageSize = 20;
+        //     this.chatForm ={
+        //         content:"",
+        //         msg:""
+        //     };
+        //     // this.loadMsg();
+        //     this.chatVisible = true;
+        //     // 开启定时器
+        //     this.timerSwitch = 1;
+        //     // this.reloadData();
+        // },
+        // 发送消息
+        handlerSedMeg(){
+            if(this.chatForm.feedback == '' && this.chatForm.feedback_images.length == 0){
+                this.$message.warning('不能发送空白信息');
                 return;
             }
-            this.chatForm = {
-                feedback: this.chatForm.feedback,
-                type:'0',
-                feedback_images:this.chatForm.feedback_images,
-            }
-            console.log(this.chatForm)
-            this.chartData.push(this.chatForm);
-            // this.chatForm.feedback = '';
-            this.scrollToBottom();
-
-            // sendOrderMsg(this.chatForm).then(res=>{
-            //     if (res.code == 200) {
-            //         res.data.content = JSON.parse(res.data.content);
-            //         this.data.push(res.data)
-            //         this.chatForm.msg="";
-            //         this.distincData.push(res.data.msgId);
-            //         this.scrollToBottom();
-            //         // 发送信息只返回当前一条，此时可能对方已经发送信息，所以不修改偏移量
-            //     }
-            // });
+            createChat({
+                order_id: this.orderId,
+                content: this.chatForm.feedback,
+                images: this.chatForm.feedback_images
+            })
+                .then((res)=>{
+                    if(res.code === 1){
+                        this.chartData.push(res.data);
+                        this.scrollToBottom();
+                        this.chatForm.feedback='';
+                        this.chatForm.feedback_images=[];
+                        this.$refs.chartUpload.clearFiles();
+                    }
+                })
+                .catch((err)=>{
+                    this.$message.error(err.message)
+                })
         },
         scrollToBottom(){ // 滚动到窗体底部
             this.$nextTick(()=>{
                 let chatForm = document.getElementById("chatForm");
                 chatForm.scrollTop = chatForm.scrollHeight;
             });
+
         },
-        // 滚动到最上方，取历史数据，根据分页参数取。不用修改偏移标记位，但是需要判重
-        // scroll(){
-        //     let chatForm = document.getElementById("chatForm");
-        //     let scrollTop = chatForm.scrollTop;
-        //     if(scrollTop == 0){
-        //         this.loading =true;
-        //         let that = this;
-        //         this.searchForm.offsetMin = this.offsetMin;
-        //         this.searchForm.offsetMax = "";
-        //         listMsgByOrder(this.searchForm).then(res=>{
-        //             this.loading =false;
-        //             if (res.code == 200) {
-        //                 res.data.forEach(e => {
-        //                     if(that.distincData.indexOf(e.msgId) <0){
-        //                         e.content = JSON.parse(e.content);
-        //                         that.chartData.unshift(e);
-        //                         that.distincData.push(e.msgId);
-        //                         // 修改最小偏移位
-        //                         if(that.offsetMin > e.msgId){
-        //                             that.offsetMin = e.msgId;
-        //                         }
-        //                     }
-        //                 });
-        //             }
-        //         });
-        //     }
-        // },
-        // reloadData(){
-        //     // 判断定时器开关是否开启，如果开启，则执行定时器
-        //     if(this.timerSwitch){
-        //         setTimeout(() => {
-        //             let params = {};
-        //             params.pageNumber = 1;
-        //             params.pageSize = 20;
-        //             params.offsetMax = this.offsetMax;
-        //             let that = this;
-        //             listMsgByOrder(params).then(res=>{
-        //                 if (res.code == 200) {
-        //                     res.data.forEach(e => {
-        //                         // 修改最大偏移位，放到校验重复之前，防止当前发送信息已经放入消息列表，但是偏移值没该的情况
-        //                         if(that.offsetMax < e.msgId){
-        //                             that.offsetMax = e.msgId;
-        //                         }
-        //                         if(that.distincData.indexOf(e.msgId) <0){
-        //                             e.content = JSON.parse(e.content);
-        //                             that.data.push(e)
-        //                             that.distincData.push(e.msgId);
-        //                             // 收到新消息，判断高度，如果当前滚动条高度距底部小于100，则动滑到底部
-        //                             let chatForm = document.getElementById("chatForm");
-        //                             let gap = chatForm.scrollHeight - chatForm.scrollTop;
-        //                             if(gap >0 && gap < 400){
-        //                                 this.scrollToBottom();
-        //                             }
-        //                         }
-        //                     });
-        //                     that.reloadData();
-        //                 }
-        //             });
-        //         },1000*2);
-        //     }
-        // },
-        // cancel(){ // 关闭窗体需要把提示任务开关一起关闭调
-        //     this.chatVisible = false;
-        //     this.timerSwitch = 0;
-        // },
         handleChartRemove(file){
             const index = this.$refs.chartUpload.uploadFiles.findIndex(e=>e.uid === file.uid);
             this.$refs.chartUpload.uploadFiles.splice(index,1);
-            // this.isHide = false;
             this.sampleForm.file = '';
 
         },
         handleUploadSuccess(res, file){
-            this.chatForm.feedback_images = [];
-            console.log(res,file)
-            let dataObj = {}
-            file.forEach((item,index) => {
-                this.chatForm.feedback_images.push(item)
-            })
-            console.log(this.chatForm.feedback_images)
-            // this.feedback_images = file;
-            // this.imageUrl = URL.createObjectURL(file.raw);
+            this.chatForm.feedback_images.push(res.data.url)
+        },
+        handleUploadError(err){
+            this.$message.error(err.message)
         },
         /*查看上传文件*/
         handleImgView (file) {
-            this.imgFile = file.url
-            this.imgVisible = true;
+            this.dialogImageUrl = file
+            this.imgDialog = true;
         },
 
     }
@@ -1197,6 +1082,16 @@ export default {
 </script>
 <style lang="less">
 #order{
+    .viewDialog .el-dialog{
+        width: auto;
+    }
+    .viewImg img{
+        display: block;
+        width: 100%;
+    }
+    .el-upload-list__item{
+        transition: none;
+    }
     .form_error{
         position: absolute;
         top: 12px;
@@ -1544,12 +1439,25 @@ export default {
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
     }
+    .feedback_images_list .item_img .demo-upload-list-cover{
+        display: none;
+    }
     .feedback_images_list .item_img:hover .demo-upload-list-cover{
         display: block;
     }
     .feedback_images_list .demo-upload-list-cover{
         line-height: 90px;
         text-align: center;
+        top: 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,.5);
+        cursor: pointer;
+        i{
+            color: #ffffff;
+        }
     }
     .feedback_modal textarea.ivu-input{
         height: 100px;

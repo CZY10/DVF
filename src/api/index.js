@@ -91,6 +91,14 @@ export function createOrder(data){
         data
     })
 }
+//提交寄送信息
+export function createTransport(data){
+    return request({
+        url:'/api/order/transport',
+        method: 'post',
+        data
+    })
+}
 //支付定金/尾款
 export function payOrder(data){
     return request({
@@ -183,6 +191,22 @@ export function updateMobile(data){
 export function unBindWechat(data){
     return request({
         url:'/addons/wechatscanlogin/api/unbind',
+        method: 'post',
+        data
+    })
+}
+//获取聊天列表
+export function getChatList(data){
+    return request({
+        url:'/api/chat/index',
+        method: 'post',
+        data
+    })
+}
+//获取聊天列表
+export function createChat(data){
+    return request({
+        url:'/api/chat/create',
         method: 'post',
         data
     })

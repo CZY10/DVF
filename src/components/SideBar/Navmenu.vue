@@ -1,37 +1,42 @@
 <template>
-    <div class="header">
-        <el-menu
-            :default-active="$route.path"
-            class="el-menu-demo"
-            router
-            mode="horizontal"
-            active-text-color="#333333"
-            text-color="#666666"
-            @select="handleSelect">
-            <a href="" style="display: flex;justify-content: center;align-items: center"><img src="../../assets/images/logo.png" alt=""></a>
-            <el-menu-item index="/">首页</el-menu-item>
-            <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
-            <el-menu-item @click="dialogVisible = true">联系我们</el-menu-item>
-            <el-menu-item v-if="!isLogin" style="float: right;" index="/login"><el-button class="login_btn" round>登陆/注册</el-button></el-menu-item>
-            <el-submenu v-else index="/manage" style="float: right;border-radius: 10px">
-                <template slot="title"><span class="user_info_box"><img :src="avatar" alt=""></span></template>
-                <el-menu-item index="/manage/order">订单信息</el-menu-item>
-                <el-menu-item index="/manage/payment">支付记录</el-menu-item>
-                <el-menu-item index="/manage/personal">个人资料</el-menu-item>
-                <el-menu-item @click="handlerLogOut">退出</el-menu-item>
-            </el-submenu>
-            <el-menu-item style="float: right;padding: 0" index="5">
-                <el-badge :value="122" class="item">
-                    <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
-                </el-badge>
+    <div>
+        <div class="header">
+            <el-menu
+                :default-active="$route.path"
+                class="el-menu-demo"
+                router
+                mode="horizontal"
+                active-text-color="#333333"
+                text-color="#666666"
+                @select="handleSelect">
+                <a href="" style="display: flex;justify-content: center;align-items: center"><img src="../../assets/images/logo.png" alt=""></a>
+                <el-menu-item index="/">首页</el-menu-item>
+                <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
+                <el-menu-item @click="dialogVisible = true">联系我们</el-menu-item>
+                <el-menu-item v-if="!isLogin" style="float: right;" index="/login"><el-button class="login_btn" round>登陆/注册</el-button></el-menu-item>
+                <el-submenu v-else index="/manage" style="float: right;border-radius: 10px">
+                    <template slot="title"><span class="user_info_box"><img :src="avatar" alt=""></span></template>
+                    <el-menu-item index="/manage/order">订单信息</el-menu-item>
+                    <el-menu-item index="/manage/payment">支付记录</el-menu-item>
+                    <el-menu-item index="/manage/personal">个人资料</el-menu-item>
+                    <el-menu-item @click="handlerLogOut">退出</el-menu-item>
+                </el-submenu>
+                <el-menu-item style="float: right;padding: 0" index="5">
+                    <el-badge :value="122" class="item">
+                        <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
+                    </el-badge>
 
-            </el-menu-item>
-            <el-menu-item style="float: right;" index="4"><a href="">新手指南</a></el-menu-item>
-        </el-menu>
+                </el-menu-item>
+                <el-menu-item style="float: right;"><a href="https://peseeazfwl.feishu.cn/wiki/wikcnMyh2Kpl0beLaynqfWT3Vuc" target="_blank">新手指南</a></el-menu-item>
+            </el-menu>
+
+
+        </div>
         <el-dialog
             title="微信咨询"
             :visible.sync="dialogVisible"
             center
+            class="weChatDialog"
             width="320px">
             <div class="contact_us_box">
                 <span></span><span></span><span></span><span></span>
@@ -43,6 +48,7 @@
             </div>
         </el-dialog>
     </div>
+
 </template>
 
 <script>
@@ -71,17 +77,14 @@ export default {
     created() {
         let token = localStorage.getItem('token')
         if (token){
-            console.log(111111)
             this.isLogin = true;
         }else {
             this.isLogin = false;
-            console.log(2222222)
         }
 
         window.addEventListener('setItem', ()=> {
             //这里就可以根据具体情况调用或刷新需要的操作
-            this.newVal = localStorage.getItem('avatar'); //获取监听的值
-            console.log(8888,this.newVal)
+            this.avatar = localStorage.getItem('avatar'); //获取监听的值
         })
     },
     methods: {
@@ -101,6 +104,7 @@ export default {
 </script>
 
 <style lang="less">
+
 .el-menu-demo .el-badge__content.is-fixed{
     top: 18px;
     right: 18px;
@@ -258,7 +262,7 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    z-index: 999;
+    z-index: 99;
     .user_info_box{
         display: inline-flex;
         width: 36px;

@@ -890,21 +890,21 @@ export default {
     left: 30px;
     top: 48px;
     bottom: 48px;
-    z-index: 99;
+    z-index: 19;
     transition: all 0.5s;
 }
 .tab_pane3{
     left: 70px;
     top: 25px;
     bottom: 25px;
-    z-index: 999;
+    z-index: 29;
     transition: all 0.5s;
 }
 .tab_pane4{
     left: 128px;
     top: 0;
     bottom: 0;
-    z-index: 9999;
+    z-index: 39;
     transition: all 0.5s;
 }
 .el-tabs__nav{

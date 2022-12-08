@@ -114,7 +114,7 @@
 <script>
 import {mapMutations} from 'vuex'
 import { getQrcode, smsSend, mobileLogin, bindPhone, checkQr, checkToken } from "@/api/index"
-// import login from "@/store/modules/login";
+import login from "@/store/modules/login";
 export default {
     name: "login",
     data() {
@@ -190,6 +190,7 @@ export default {
     },
     mounted() {
         this.handlerGetQrcode();
+        this.verifyToken();
     },
     methods: {
         ...mapMutations('login', ["setUserInfo","setToken","setAvatar"]),
@@ -382,21 +383,25 @@ export default {
         },
         //已登录状态下不跳转至登录页
         verifyToken(){
-            let tokenStr = JSON.parse(localStorage.getItem('userinfo')).token
+            let tokenStr = login.state.token;
+            console.log(tokenStr)
             if (tokenStr) {
-                checkToken()
-                    .then((res) => {
-                        if(res){
-                            this.$router.push({ path: "/" });
-                        }
-                    })
-                    .catch((err) => {
-                        store.commit('clearUserInfo');//删除token
-                        localStorage.removeItem('userInfo')//删除token
-                        this.$router.push('/login');
-                    });
+                console.log(111)
+                this.$router.push({ path: "/" });
+                // checkToken()
+                //     .then((res) => {
+                //         if(res){
+                //             this.$router.push({ path: "/" });
+                //         }
+                //     })
+                //     .catch((err) => {
+                //         store.commit('clearUserInfo');//删除token
+                //         localStorage.removeItem('userInfo')//删除token
+                //         this.$router.push('/login');
+                //     });
             } else {
-                return new Promise.reject(new Error('请登录!'));
+                console.log(222)
+                this.$message.error('请登录!')
             }
         }
     },

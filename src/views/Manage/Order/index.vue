@@ -385,7 +385,7 @@
                         </el-form-item>
                         <el-form-item label="">
                             <div class="demo_img">
-                                <img src="../../../../assets/images/screenshot.jpg" alt="">
+                                <img src="../../../assets/images/screenshot.jpg" alt="">
                                 <span class="el-upload-list__item-preview upload_preview" @click="checkViewImg">
                                     <i class="el-icon-zoom-in"></i>
                                 </span>
@@ -421,7 +421,7 @@
                     <div v-if="chartData.length>0" class="chat-message-body" id="chatForm">
                         <div  dis-hover v-for="(item,index) in chartData" :key="index" class="message-card">
                             <div :class="item.type == 0?'message-row-right': 'message-row-left'">
-                                <img :src="item.type == 0? avatar : require('../../../../assets/images/gani.png')" height="32" width="32" >
+                                <img :src="item.type == 0? avatar : require('../../../assets/images/gani.png')" height="32" width="32" >
                                 <div class="message-content">
                                     <div :style="item.type == 0?'text-align:right;display: flex;flex-direction:row-reverse':''">
                                        {{item.type == 0 ? '我' : 'Gani-拍摄顾问'}}
@@ -447,7 +447,7 @@
                             </div>
                         </div>
                     </div>
-                    <el-empty v-else style="border-top: 1px solid #eeeeee" description="暂无消息" :image="require('../../../../assets/images/chart_empty.png')"></el-empty>
+                    <el-empty v-else style="border-top: 1px solid #eeeeee" description="暂无消息" :image="require('../../../assets/images/chart_empty.png')"></el-empty>
                     <el-input
                         v-model="chatForm.feedback"
                         type="textarea"
@@ -544,7 +544,7 @@
 </template>
 
 <script>
-import {orderList, orderDelete, payOrder, checkPayment, returnFrontMoney, commentCreate, createTransport, getChatList, createChat} from "@/api/index";
+import {orderList, orderDelete, payOrder, checkPayment, returnFrontMoney, commentCreate, createTransport, getChatList, createChat} from "@/api";
 import QRCode from "qrcodejs2";
 export default {
     name: "order",
@@ -616,7 +616,7 @@ export default {
                         description1:'通常纯展示',
                         description2:'自行发挥',
                         price:'500-900',
-                        img:require('../../../../assets/images/people_header.png'),
+                        img:require('../../../assets/images/people_header.png'),
                     },
                     {
                         id:2,
@@ -624,7 +624,7 @@ export default {
                         description1:'通常纯展示',
                         description2:'自行发挥',
                         price:'500-900',
-                        img:require('../../../../assets/images/people_header.png'),
+                        img:require('../../../assets/images/people_header.png'),
                     },
                     {
                         id:3,
@@ -632,7 +632,7 @@ export default {
                         description1:'通常纯展示',
                         description2:'自行发挥',
                         price:'500-1900',
-                        img:require('../../../../assets/images/people_header.png'),
+                        img:require('../../../assets/images/people_header.png'),
                     },
                 ],
             },
@@ -681,7 +681,7 @@ export default {
             //聊天
             chatVisible:this.value,
             loading:false,
-            defualtAvatar:require('../../../../assets/images/people_header.png'), // 后端没有返回头像默认头像，注意：需要用require请求方式才能动态访问本地文件
+            defualtAvatar:require('../../../assets/images/people_header.png'), // 后端没有返回头像默认头像，注意：需要用require请求方式才能动态访问本地文件
             chartData:[],
             distincData:[], // 消息去重数组
             offsetMax:0, // 最大偏移位，记录当前获取的最大id，往后的定时轮询数据时每次只获取比这个id大的数据
@@ -928,7 +928,7 @@ export default {
             fileList.length>1 ? this.isHide = false:this.isHide=true;
         },
         checkViewImg(){
-            this.dialogImageUrl = require('../../../../assets/images/screenshot.jpg')
+            this.dialogImageUrl = require('../../../assets/images/screenshot.jpg')
             this.imgDialog = true;
         },
         handlerClearSubmit(){
@@ -1584,7 +1584,7 @@ export default {
 .radio_style1 .el-radio__input.is-checked .el-radio__inner{
     border: 1px solid rgba(121, 108, 243, 1) !important;
     background: rgba(121, 108, 243, 1) !important;
-    background-image: url("../../../../assets/images/radio_style1_bg.png");
+    background-image: url("../../../assets/images/radio_style1_bg.png");
 }
 .radio_style1.is-bordered.is-checked{
     border: 2px solid rgba(121, 108, 243, 1) !important;
@@ -1898,7 +1898,7 @@ export default {
                 border: 1px solid rgba(131,96,255,1);
                 position: relative;
                 &:before{
-                    content: url("../../../../assets/images/radio_style1_bg.png");
+                    content: url("../../../assets/images/radio_style1_bg.png");
                     width: 60px;
                     height: 48px;
                     display: block;
@@ -1941,7 +1941,7 @@ export default {
                 &:before{
                     width: 60px;
                     height: 60px;
-                    content: url("../../../../assets/images/radio_style2_bg.png");
+                    content: url("../../../assets/images/radio_style2_bg.png");
                     display: block;
                     position: absolute;
                     right: 12px;

@@ -238,7 +238,7 @@ export default {
             },
             userInfo: {},
             avatar: localStorage.getItem('avatar'),
-            qrImg:require('../../../../assets/images/qr.png'),
+            qrImg:require('../../../assets/images/qr.png'),
         }
     },
     components:{

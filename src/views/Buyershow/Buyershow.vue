@@ -115,8 +115,8 @@
                                     <span class="people_type">{{ scope.row.type }}</span>
                                     <p>
                                         <img :src="scope.row.country_id.image" style="margin-right: 10px;width: 14px" alt="">
-                                        <img v-if="scope.row.genderdata === 'male'" src="../../../assets/images/male.png" alt="">
-                                        <img v-else src="../../../assets/images/female.png" alt="">
+                                        <img v-if="scope.row.genderdata === 'male'" src="../../assets/images/male.png" alt="">
+                                        <img v-else src="../../assets/images/female.png" alt="">
                                     </p>
                                     <div class="title_style">
                                         <span v-for="(item,index) in scope.row.category_ids" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item.name }}</span>
@@ -133,7 +133,7 @@
                         <template slot-scope="scope">
                             <div class="people_works" @click="handleShowVideo(scope)" :style="{cursor: scope.row.videos.length!=0? 'pointer': 'auto'}">
                                 <p>共{{scope.row.videos.length}}个</p>
-                                <img src="../../../assets/images/table_video.png" alt="">
+                                <img src="../../assets/images/table_video.png" alt="">
                             </div>
                         </template>
                     </el-table-column>
@@ -170,7 +170,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-empty v-else :image="require('../../../assets/images/empty_img.png')" description="暂无搜索结果" :image-size="400"style="padding: 80px 0"></el-empty>
+                <el-empty v-else :image="require('../../assets/images/empty_img.png')" description="暂无搜索结果" :image-size="400" style="padding: 80px 0"></el-empty>
 
 
             </div>
@@ -207,7 +207,7 @@
                             <el-table-column prop="name" label="以往作品" align="center" width="180">
                                 <template slot-scope="scope">
                                     <div class="people_works">
-                                        <img src="../../../assets/images/table_video.png" alt="">
+                                        <img src="../../assets/images/table_video.png" alt="">
                                     </div>
                                 </template>
                             </el-table-column>
@@ -436,7 +436,7 @@
                                 <video
                                     :id="'my-player'+ ++index"
                                     ref="video"
-                                    poster="../../../assets/images/video/poster_video.png"
+                                    poster="../../assets/images/video/poster_video.png"
                                     class="video-js vjs-default-skin vjs-big-play-centered"
                                     controls>
                                     <source :src="localhost + item.file" />
@@ -447,7 +447,7 @@
                     <!-- swiper2 Thumbs -->
                     <swiper class="swiper gallery-thumbs" id="swiperThumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">
                         <swiper-slide v-for="(item,index) in this.videoData" :key="index" :class="'slide-'+ ++index">
-                            <img src="../../../assets/images/tab-pane1.png" alt="">
+                            <img src="../../assets/images/tab-pane1.png" alt="">
                         </swiper-slide>
                     </swiper>
                     <div class="swiper-button-next swiper-button-white" slot="button-next"><i class="el-icon-arrow-right"></i></div>
@@ -461,7 +461,7 @@
 <script>
 import Footer from "@/components/Footer";
 import QRCode from 'qrcodejs2'
-import {getCategory, getSearchList, createOrder, payOrder, checkPayment} from "@/api/index";
+import {getCategory, getSearchList, createOrder, payOrder, checkPayment} from "@/api";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
@@ -1226,7 +1226,7 @@ export default {
 .radio_style1 .el-radio__input.is-checked .el-radio__inner{
     border: 1px solid rgba(121, 108, 243, 1) !important;
     background: rgba(121, 108, 243, 1) !important;
-    background-image: url("../../../assets/images/radio_style1_bg.png");
+    background-image: url("../../assets/images/radio_style1_bg.png");
 }
 .radio_style1.is-bordered.is-checked{
     border: 2px solid rgba(121, 108, 243, 1) !important;
@@ -1346,7 +1346,7 @@ export default {
             border: 1px solid rgba(131,96,255,1);
             position: relative;
             &:before{
-                content: url("../../../assets/images/radio_style1_bg.png");
+                content: url("../../assets/images/radio_style1_bg.png");
                 width: 60px;
                 height: 48px;
                 display: block;
@@ -1389,7 +1389,7 @@ export default {
             &:before{
                 width: 60px;
                 height: 60px;
-                content: url("../../../assets/images/radio_style2_bg.png");
+                content: url("../../assets/images/radio_style2_bg.png");
                 display: block;
                 position: absolute;
                 right: 12px;

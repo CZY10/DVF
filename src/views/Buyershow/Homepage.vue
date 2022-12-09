@@ -5,7 +5,7 @@
                 <el-col :span="9" style="padding-left: 0">
                     <div class="homepage_header">
                         <div class="head_img">
-                            <img src="../../../assets/images/people_header.png" alt="">
+                            <img src="../../assets/images/people_header.png" alt="">
                         </div>
                         <h5>NO.123</h5>
                         <span class="category">Amazon Influencer</span>
@@ -68,59 +68,59 @@ export default {
             productList:[
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 },
                 {
                     title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../../assets/images/table_video.png')
+                    img:require('../../assets/images/table_video.png')
                 }
             ]
         }

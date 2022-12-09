@@ -5,7 +5,7 @@
             <div class="banner_img">
                 <el-row style="border-radius: 20px;overflow: hidden">
                     <video width="100%" height="100%" autoplay muted loop>
-                        <source src="../../../assets/images/video/home_banner.mp4" type="video/mp4">
+                        <source src="../../assets/images/video/home_banner.mp4" type="video/mp4">
                     </video>
                 </el-row>
             </div>
@@ -15,10 +15,10 @@
             <el-row style="max-width: 1200px;margin: auto;display: flex;align-items: center;" :gutter="50">
                 <el-col :span="15">
                     <div class="tabs_content" @mouseover="mouseover('tabPane1')" @mouseout="mouseout('tabPane1')">
-                        <div :class="{tab_pane1:currentIndex == 0,tab_pane2:currentIndex == 1,tab_pane3:currentIndex == 2,tab_pane4:currentIndex == 3}"><img src="../../../assets/images/tab-pane4.png" alt=""></div>
-                        <div :class="{tab_pane2:currentIndex == 0,tab_pane3:currentIndex == 1,tab_pane4:currentIndex == 2,tab_pane1:currentIndex == 3}"><img src="../../../assets/images/tab-pane3.png" alt=""></div>
-                        <div :class="{tab_pane3:currentIndex == 0,tab_pane4:currentIndex == 1,tab_pane1:currentIndex == 2,tab_pane2:currentIndex == 3}"><img src="../../../assets/images/tab-pane2.png" alt=""></div>
-                        <div :class="{tab_pane4:currentIndex == 0,tab_pane1:currentIndex == 1,tab_pane2:currentIndex == 2,tab_pane3:currentIndex == 3}"><img src="../../../assets/images/tab-pane1.png" alt=""></div>
+                        <div :class="{tab_pane1:currentIndex == 0,tab_pane2:currentIndex == 1,tab_pane3:currentIndex == 2,tab_pane4:currentIndex == 3}"><img src="../../assets/images/tab-pane4.png" alt=""></div>
+                        <div :class="{tab_pane2:currentIndex == 0,tab_pane3:currentIndex == 1,tab_pane4:currentIndex == 2,tab_pane1:currentIndex == 3}"><img src="../../assets/images/tab-pane3.png" alt=""></div>
+                        <div :class="{tab_pane3:currentIndex == 0,tab_pane4:currentIndex == 1,tab_pane1:currentIndex == 2,tab_pane2:currentIndex == 3}"><img src="../../assets/images/tab-pane2.png" alt=""></div>
+                        <div :class="{tab_pane4:currentIndex == 0,tab_pane1:currentIndex == 1,tab_pane2:currentIndex == 2,tab_pane3:currentIndex == 3}"><img src="../../assets/images/tab-pane1.png" alt=""></div>
                     </div>
                 </el-col>
                 <el-col :span="9">
@@ -48,10 +48,10 @@
                 </el-col>
                 <el-col :span="15">
                     <div class="tabs_content1" @mouseover="mouseover('tabPane2')" @mouseout="mouseout('tabPane2')">
-                        <div v-show="currentIndex1 == 0"><img src="../../../assets/images/buyer_show_tab1.png" alt=""></div>
-                        <div v-show="currentIndex1 == 1"><img src="../../../assets/images/buyer_show_tab2.png" alt=""></div>
-                        <div v-show="currentIndex1 == 2"><img src="../../../assets/images/buyer_show_tab3.png" alt=""></div>
-                        <div v-show="currentIndex1 == 3"><img src="../../../assets/images/buyer_show_tab4.png" alt=""></div>
+                        <div v-show="currentIndex1 == 0"><img src="../../assets/images/buyer_show_tab1.png" alt=""></div>
+                        <div v-show="currentIndex1 == 1"><img src="../../assets/images/buyer_show_tab2.png" alt=""></div>
+                        <div v-show="currentIndex1 == 2"><img src="../../assets/images/buyer_show_tab3.png" alt=""></div>
+                        <div v-show="currentIndex1 == 3"><img src="../../assets/images/buyer_show_tab4.png" alt=""></div>
                     </div>
                 </el-col>
             </el-row>
@@ -121,7 +121,7 @@
                                         <video
                                             id="my-player1"
                                             ref="video"
-                                            poster="../../../assets/images/video/poster_video.png"
+                                            poster="../../assets/images/video/poster_video.png"
                                             class="video-js vjs-default-skin vjs-big-play-centered"
                                             controls>
                                             <source src="https://vjs.zencdn.net/v/oceans.mp4" />
@@ -145,7 +145,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <div class="video_text">
-                                    <div><img src="../../../assets/images/buyer_header1.png" alt=""></div>
+                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
                                     <ul>
                                         <li>创作者：<span>NO.123  </span></li>
                                         <li>达人类型：<span>Amazon Influencer</span></li>
@@ -167,10 +167,10 @@
                                         <video
                                             id="my-player2"
                                             ref="video"
-                                            poster="../../../assets/images/video/poster_video.png"
+                                            poster="../../assets/images/video/poster_video.png"
                                             class="video-js vjs-default-skin vjs-big-play-centered"
                                             controls>
-                                            <source src="../../../assets/images/video/video.mp4" />
+                                            <source src="../../assets/images/video/video.mp4" />
                                         </video>
                                     </div>
                                     <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥580</span>
@@ -191,7 +191,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <div class="video_text">
-                                    <div><img src="../../../assets/images/buyer_header1.png" alt=""></div>
+                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
                                     <ul>
                                         <li>创作者：<span>NO.123  </span></li>
                                         <li>达人类型：<span>Amazon Influencer</span></li>
@@ -213,10 +213,10 @@
                                         <video
                                             id="my-player3"
                                             ref="video"
-                                            poster="../../../assets/images/video/poster_video.png"
+                                            poster="../../assets/images/video/poster_video.png"
                                             class="video-js vjs-default-skin vjs-big-play-centered"
                                             controls>
-                                            <source src="../../../assets/images/video/222.mp4" />
+                                            <source src="../../assets/images/video/222.mp4" />
                                         </video>
                                     </div>
                                     <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥580</span>
@@ -237,7 +237,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <div class="video_text">
-                                    <div><img src="../../../assets/images/buyer_header1.png" alt=""></div>
+                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
                                     <ul>
                                         <li>创作者：<span>NO.123  </span></li>
                                         <li>达人类型：<span>Amazon Influencer</span></li>
@@ -259,7 +259,7 @@
                                         <video
                                             id="my-player4"
                                             ref="video"
-                                            poster="../../../assets/images/video/poster_video.png"
+                                            poster="../../assets/images/video/poster_video.png"
                                             class="video-js vjs-default-skin vjs-big-play-centered"
                                             controls>
                                             <source src="https://vjs.zencdn.net/v/oceans.mp4" />
@@ -283,7 +283,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <div class="video_text">
-                                    <div><img src="../../../assets/images/buyer_header1.png" alt=""></div>
+                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
                                     <ul>
                                         <li>创作者：<span>NO.123  </span></li>
                                         <li>达人类型：<span>Amazon Influencer</span></li>
@@ -305,7 +305,7 @@
                                         <video
                                             id="my-player5"
                                             ref="video"
-                                            poster="../../../assets/images/video/poster_video.png"
+                                            poster="../../assets/images/video/poster_video.png"
                                             class="video-js vjs-default-skin vjs-big-play-centered"
                                             controls>
                                             <source src="https://vjs.zencdn.net/v/oceans.mp4" />
@@ -329,7 +329,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <div class="video_text">
-                                    <div><img src="../../../assets/images/buyer_header1.png" alt=""></div>
+                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
                                     <ul>
                                         <li>创作者：<span>NO.123  </span></li>
                                         <li>达人类型：<span>Amazon Influencer</span></li>
@@ -353,7 +353,7 @@
                     <el-col :span="12">
                         <el-row class="services_flex">
                             <el-col :span="4" style="max-width: 80px;padding-right: 20px">
-                                <img src="../../../assets/images/services1.png" alt="">
+                                <img src="../../assets/images/services1.png" alt="">
                             </el-col>
                             <el-col :span="20">
                                 <p class="services_header">匹配最佳创作达人</p>
@@ -364,7 +364,7 @@
                     <el-col :span="12">
                         <el-row class="services_flex">
                             <el-col :span="4" style="max-width: 80px;padding-right: 20px">
-                                <img src="../../../assets/images/services2.png" alt="">
+                                <img src="../../assets/images/services2.png" alt="">
                             </el-col>
                             <el-col :span="20">
                                 <p class="services_header">专业视频拍摄方案</p>
@@ -375,7 +375,7 @@
                     <el-col :span="12">
                         <el-row class="services_flex">
                             <el-col :span="4" style="max-width: 80px;padding-right: 20px">
-                                <img src="../../../assets/images/services3.png" alt="">
+                                <img src="../../assets/images/services3.png" alt="">
                             </el-col>
                             <el-col :span="20">
                                 <p class="services_header">高效对接反馈</p>
@@ -386,7 +386,7 @@
                     <el-col :span="12">
                         <el-row class="services_flex">
                             <el-col :span="4" style="max-width: 80px;padding-right: 20px">
-                                <img src="../../../assets/images/services4.png" alt="">
+                                <img src="../../assets/images/services4.png" alt="">
                             </el-col>
                             <el-col :span="20">
                                 <p class="services_header">保障交易安全</p>
@@ -397,7 +397,7 @@
                     <el-col :span="12">
                         <el-row class="services_flex">
                             <el-col :span="4" style="max-width: 80px;padding-right: 20px">
-                                <img src="../../../assets/images/services5.png" alt="">
+                                <img src="../../assets/images/services5.png" alt="">
                             </el-col>
                             <el-col :span="20">
                                 <p class="services_header">严控视频质量</p>
@@ -408,7 +408,7 @@
                     <el-col :span="12">
                         <el-row class="services_flex">
                             <el-col :span="4" style="max-width: 80px;padding-right: 20px">
-                                <img src="../../../assets/images/services6.png" alt="">
+                                <img src="../../assets/images/services6.png" alt="">
                             </el-col>
                             <el-col :span="20">
                                 <p class="services_header">提供安心售后</p>
@@ -427,7 +427,7 @@
                     <el-col :span="6">
                         <div class="advantage_item">
                             <div class="advantage_img" style="background: #FFA76C">
-                                <img src="../../../assets/images/advantage1.png" alt="">
+                                <img src="../../assets/images/advantage1.png" alt="">
                             </div>
                             <p class="advantage_title">本土达人 签约合作</p>
                             <p class="advantage_description">签约本土优质达人，视频质量高，内容真实，贴合海外群体</p>
@@ -436,7 +436,7 @@
                     <el-col :span="6">
                         <div class="advantage_item">
                             <div class="advantage_img" style="background: #F782F9">
-                                <img src="../../../assets/images/advantage2.png" alt="">
+                                <img src="../../assets/images/advantage2.png" alt="">
                             </div>
                             <p class="advantage_title">一手报价 质量更好</p>
                             <p class="advantage_description">平台直接对接签约达人，价格远低于同行，且质量更有保障</p>
@@ -445,7 +445,7 @@
                     <el-col :span="6">
                         <div class="advantage_item">
                             <div class="advantage_img" style="background: #8360FF">
-                                <img src="../../../assets/images/advantage3.png" alt="">
+                                <img src="../../assets/images/advantage3.png" alt="">
                             </div>
                             <p class="advantage_title">一个视频 多处可用</p>
                             <p class="advantage_description">交付原创视频，二次剪辑可上传到主图视频、A+视频、QA视频等</p>
@@ -454,7 +454,7 @@
                     <el-col :span="6">
                         <div class="advantage_item">
                             <div class="advantage_img" style="background: #00D9AD">
-                                <img src="../../../assets/images/advantage4.png" alt="">
+                                <img src="../../assets/images/advantage4.png" alt="">
                             </div>
                             <p class="advantage_title">高效交付 省心省力</p>
                             <p class="advantage_description">专业海外服务团队对接需求，确认服务后通常7-14日即可交付</p>

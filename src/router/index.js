@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from "@/views/Layout";
 import Home from "@/views/Home"
-import Buyershow from "@/views/Buyershow/index.vue";
+import BuyershowManage from "@/views/BuyershowManage/index.vue";
 import Manage from "@/views/Manage";
 import Order from "@/views/Manage/Order";
 import Payment from "@/views/Manage/Payment";
@@ -22,22 +22,22 @@ const routes = [
                 component: Home,
             },
             {
-                path: '/buyershow',
-                name: 'Buyershow',
+                path: '/buyershowManage',
+                name: 'buyershowManage',
                 meta: {requiresAuth: false},
-                component: Buyershow,
+                component: BuyershowManage,
                 children: [
                     {
                         path: '/buyershow',
-                        name: 'Buyershow',
+                        name: 'buyershow',
                         meta: {requiresAuth: false},
-                        component: () => import('@/views/Buyershow/Buyershow.vue'),
+                        component: () => import('@/views/BuyershowManage/Buyershow.vue'),
                     },
                     {
                         path: '/homepage:id',
-                        name: 'Homepage',
+                        name: 'homepage',
                         meta: {requiresAuth: false},
-                        component: () => import('@/views/Buyershow/Homepage.vue'),
+                        component: () => import('@/views/BuyershowManage/Homepage.vue'),
                     },
                 ]
             },
@@ -55,8 +55,8 @@ const routes = [
                         component: Order,
                     },
                     {
-                        path: 'Payment',
-                        name: 'Payment',
+                        path: 'payment',
+                        name: 'payment',
                         component: Payment,
                     },
                     {
@@ -75,6 +75,13 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '@/views/Login')
+    },
+    {
+        path: "*",
+        component: () => import("@/views/404"),
+        meta:{
+            title: '页面走丢了'
+        }
     },
 
 ]

@@ -21,7 +21,7 @@
                     <el-menu-item index="/manage/personal">个人资料</el-menu-item>
                     <el-menu-item @click="handlerLogOut">退出</el-menu-item>
                 </el-submenu>
-                <el-menu-item style="float: right;padding: 0" index="5">
+                <el-menu-item style="float: right;padding: 0" index="/">
                     <el-badge :value="122" class="item">
                         <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
                     </el-badge>

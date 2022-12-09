@@ -418,8 +418,8 @@
             center>
             <div>
                 <div class="chat">
-                    <div v-if="chartData.length>0" class="chat-message-body" id="chatForm">
-                        <div  dis-hover v-for="(item,index) in chartData" :key="index" class="message-card">
+                    <div v-if="chatData.length>0" class="chat-message-body" id="chatForm">
+                        <div  dis-hover v-for="(item,index) in chatData" :key="index" class="message-card">
                             <div :class="item.type == 0?'message-row-right': 'message-row-left'">
                                 <img :src="item.type == 0? avatar : require('../../../assets/images/gani.png')" height="32" width="32" >
                                 <div class="message-content">
@@ -447,7 +447,7 @@
                             </div>
                         </div>
                     </div>
-                    <el-empty v-else style="border-top: 1px solid #eeeeee" description="暂无消息" :image="require('../../../assets/images/chart_empty.png')"></el-empty>
+                    <el-empty v-else style="border-top: 1px solid #eeeeee" description="暂无消息" :image="require('../../../assets/images/chat_empty.png')"></el-empty>
                     <el-input
                         v-model="chatForm.feedback"
                         type="textarea"
@@ -462,8 +462,8 @@
                 <div>
                     <el-upload
                         action="/api/common/upload"
-                        ref="chartUpload"
-                        class="chart_upload"
+                        ref="chatUpload"
+                        class="chat_upload"
                         list-type="picture-card"
                         :on-success="handleUploadSuccess"
                         :on-error="handleUploadError"
@@ -476,7 +476,7 @@
                                 <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
                                   <i class="el-icon-zoom-in"></i>
                                 </span>
-                                <span class="el-upload-list__item-delete" @click="handleChartRemove(file)">
+                                <span class="el-upload-list__item-delete" @click="handleChatRemove(file)">
                                     <i class="el-icon-delete"></i>
                                 </span>
                             </span>
@@ -682,7 +682,7 @@ export default {
             chatVisible:this.value,
             loading:false,
             defualtAvatar:require('../../../assets/images/people_header.png'), // 后端没有返回头像默认头像，注意：需要用require请求方式才能动态访问本地文件
-            chartData:[],
+            chatData:[],
             distincData:[], // 消息去重数组
             offsetMax:0, // 最大偏移位，记录当前获取的最大id，往后的定时轮询数据时每次只获取比这个id大的数据
             offsetMin:0,//  // 最小偏移位，记录当前获取的最小id，往上滑动时每次只获取比这小id大的数据
@@ -988,7 +988,7 @@ export default {
             this.chatForm.feedback='';
             if(this.chatForm.feedback_images.length>0){
                 this.chatForm.feedback_images=[];
-                this.$refs.chartUpload.clearFiles();
+                this.$refs.chatUpload.clearFiles();
             }
             this.handlerGetChatList();
         },
@@ -1000,8 +1000,8 @@ export default {
             })
                 .then((res)=>{
                     if(res.code === 1){
-                        this.chartData = res.data;
-                        if(this.chartData.length>0){
+                        this.chatData = res.data;
+                        if(this.chatData.length>0){
                             this.scrollToBottom();
                         }
                     }
@@ -1012,7 +1012,7 @@ export default {
         },
         // show(){ // 打开窗体初始化数据
         //     // 初始化数据
-        //     this.chartData =[];
+        //     this.chatData =[];
         //     this.distincData =[];
         //     this.offsetMax = 0;
         //     this.offsetMin = 0;
@@ -1041,11 +1041,11 @@ export default {
             })
                 .then((res)=>{
                     if(res.code === 1){
-                        this.chartData.push(res.data);
+                        this.chatData.push(res.data);
                         this.scrollToBottom();
                         this.chatForm.feedback='';
                         this.chatForm.feedback_images=[];
-                        this.$refs.chartUpload.clearFiles();
+                        this.$refs.chatUpload.clearFiles();
                     }
                 })
                 .catch((err)=>{
@@ -1059,9 +1059,9 @@ export default {
             });
 
         },
-        handleChartRemove(file){
-            const index = this.$refs.chartUpload.uploadFiles.findIndex(e=>e.uid === file.uid);
-            this.$refs.chartUpload.uploadFiles.splice(index,1);
+        handleChatRemove(file){
+            const index = this.$refs.chatUpload.uploadFiles.findIndex(e=>e.uid === file.uid);
+            this.$refs.chatUpload.uploadFiles.splice(index,1);
             this.sampleForm.file = '';
 
         },
@@ -1485,23 +1485,23 @@ export default {
         font-family: PingFangSC-Regular, PingFang SC;
         line-height: 17px;
     }
-    .chart_upload .el-upload--picture-card{
+    .chat_upload .el-upload--picture-card{
         width: 62px;
         height: 60px;
         line-height: 60px;
     }
-    .chart_upload .el-upload-list--picture-card .el-upload-list__item{
+    .chat_upload .el-upload-list--picture-card .el-upload-list__item{
         width: 62px;
         height: 60px;
     }
-    .chart_upload i{
+    .chat_upload i{
         font-size: 14px;
     }
-    .chart_upload .el-upload-list--picture-card .el-upload-list__item-actions .el-upload-list__item-delete{
+    .chat_upload .el-upload-list--picture-card .el-upload-list__item-actions .el-upload-list__item-delete{
         top: -10px;
         right: 2px;
     }
-    .chart_upload .el-upload-list--picture-card .el-upload-list__item-actions .el-upload-list__item-preview{
+    .chat_upload .el-upload-list--picture-card .el-upload-list__item-actions .el-upload-list__item-preview{
         position: absolute;
         right: 2px;
         bottom: -6px;

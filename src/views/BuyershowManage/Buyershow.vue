@@ -84,6 +84,7 @@
                     id="searchBar"
                     ref="multipleTable"
                     v-loading="loading"
+                    @cell-click="cellClick"
                     :row-key="getRowKeys"
                     v-if="tableData.length!==0"
                     v-el-table-infinite-scroll="loadTable"
@@ -102,7 +103,7 @@
                         width="60">
                     </el-table-column>
                     <el-table-column
-                        prop="date"
+                        prop="information"
                         width="290"
                         label="创作达人">
                         <template slot-scope="scope">
@@ -588,6 +589,14 @@ export default {
                 },100);
             }
 
+        },
+        cellClick(row, column, cell, event){
+            if(column.property === 'information'){
+                let pathInfo = this.$router.resolve({
+                    path:'/homepage:' + row.id,
+                })
+                window.open(pathInfo.href, '_blank');
+            }
         },
         //排序
         handlerSort(column){

@@ -29,7 +29,7 @@
                     <ul>
                         <li><label>账号</label>{{ userInfo.mobile }}<span @click="editPhoneDialog=true;">修改</span></li>
                         <li v-if="userInfo.isbind===1"><label>微信</label>已绑定<span @click="unbindWeChatDialog = true">解绑</span></li>
-                        <li v-else><label>微信</label>未绑定<span @click="bindWechartDialog = true;handlerGetQrCode()">绑定</span></li>
+                        <li v-else><label>微信</label>未绑定<span @click="bindWechatDialog = true;handlerGetQrCode()">绑定</span></li>
                     </ul>
                     <p>基础信息<i></i><span style="cursor:pointer;" @click="isEdit=false">编辑</span></p>
                     <el-form ref="form" :model="form" label-position="left" :disabled="isEdit" class="form_box" label-width="76px">
@@ -122,14 +122,14 @@
         <el-dialog
             :close-on-click-modal="false"
             title="请用微信扫码进行绑定"
-            :visible.sync="bindWechartDialog"
+            :visible.sync="bindWechatDialog"
             width="328px"
             class="dialog_style"
             @close="handleClose"
             center>
             <div>
-                <p class="bind_wechart_description">绑定后即可使用微信扫码登录，更便捷</p>
-                <div class="wechart_box">
+                <p class="bind_wechat_description">绑定后即可使用微信扫码登录，更便捷</p>
+                <div class="wechat_box">
                     <span class="bottom_left"></span>
                     <span class="bottom_right"></span>
                     <img :src="qrImg" alt="">
@@ -181,7 +181,7 @@ export default {
         }
         return{
             token:'',
-            bindWechartDialog:false,
+            bindWechatDialog:false,
             updatePhoneDialog:false,
             isRefresh: false,
             checkQrCode:'',
@@ -355,10 +355,10 @@ export default {
                         }else if(res.code === 1 && res.data.status === 1){//扫码成功，请绑定手机号
                             //清除定时脚本
                             clearInterval(_this.checkQrCode);
-                            _this.bindWechartDialog = false;
+                            _this.bindWechatDialog = false;
                         }else if(res.code === 1 && res.data.status === 2){//登录成功,即将跳转
                             clearInterval(_this.checkQrCode);
-                            _this.bindWechartDialog = false;
+                            _this.bindWechatDialog = false;
                         }
                     })
                     .catch((err) => {
@@ -671,14 +671,14 @@ export default {
                 color: #FFFFFF;
             }
         }
-        .bind_wechart_description{
+        .bind_wechat_description{
             font-size: 12px;
             font-family: PingFangSC-Regular, PingFang SC;
             color: #999999;
             line-height: 17px;
             padding-bottom: 22px;
         }
-        .wechart_box{
+        .wechat_box{
             position: relative;
             width: 220px;
             height: 220px;

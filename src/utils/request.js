@@ -2,6 +2,7 @@ import axios from "axios";
 import { Message, MessageBox } from 'element-ui'
 import store from "@/store";
 import config from "../../config";
+import {refreshToken} from "@/api";
 
 
 const service = axios.create({
@@ -11,7 +12,7 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-        config.headers['token'] = store.state["login"].token;
+        config.headers['token'] = localStorage.getItem('token')
         config.headers['Content-Type'] = 'application/json'
     return config
 },
@@ -38,20 +39,6 @@ service.interceptors.response.use(
                     offset:100,
                     duration: 5 * 1000
                 })
-            }else if( res.code == 401) {
-                MessageBox.confirm('会话过期，可以取消继续留在该页面，或者重新登录', '确定登出', {
-                    confirmButtonText: '重新登录',
-                    cancelButtonText: '取消',
-                    offset:100,
-                    type: 'warning'
-                }).then(() => {
-                    store.commit('clearUserInfo');//删除token
-                    localStorage.removeItem('userInfo')//删除用户信息
-                    localStorage.removeItem('token ');//删除token
-                    location.reload();
-                }).catch(()=>{
-                    return
-                })
             }
             return res; /*Promise.reject('error')*/
         } else {
@@ -59,7 +46,29 @@ service.interceptors.response.use(
         }
     },
     error => {
+        let _this = this;
+        if(error.response.data.code === 401){
+            MessageBox.confirm('会话过期，可以取消继续留在该页面，或者重新登录', '确定登出', {
+                confirmButtonText: '重新登录',
+                cancelButtonText: '取消',
+                offset:100,
+                type: 'warning',
+                callback(val){
+                    if(val === 'confirm'){
+                        store.commit('login/clearUserInfo');
+                        localStorage.removeItem('userInfo')//删除用户信息
+                        localStorage.removeItem('token ');//删除token
+                        localStorage.removeItem('avatar')//删除用户信息
+                        window.location.href= '/#/login'
+                    }else {
+                        return
+                    }
+                }
+            })
+        }
         console.log('err' + error) // for debug
+
+
         /*Message({
             message: error.message || error.msg,
             type: 'error',

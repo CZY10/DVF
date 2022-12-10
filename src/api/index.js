@@ -164,7 +164,7 @@ export function userProfile(data){
     })
 }
 //更新头像
-export function userAvatar(data){
+export function updateAvatar(data){
     return request({
         url:'/api/user/avatar',
         method: 'post',
@@ -207,6 +207,22 @@ export function getChatList(data){
 export function createChat(data){
     return request({
         url:'/api/chat/create',
+        method: 'post',
+        data
+    })
+}
+//刷新Token
+export function refreshToken(data){
+    return request({
+        url:'/api/token/refresh',
+        method: 'post',
+        data
+    })
+}
+//获取消息条数
+export function chatCount(data){
+    return request({
+        url:'/api/chat/count',
         method: 'post',
         data
     })

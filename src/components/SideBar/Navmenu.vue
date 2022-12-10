@@ -21,8 +21,8 @@
                     <el-menu-item index="/manage/personal">个人资料</el-menu-item>
                     <el-menu-item @click="handlerLogOut">退出</el-menu-item>
                 </el-submenu>
-                <el-menu-item style="float: right;padding: 0" index="/">
-                    <el-badge :value="122" class="item">
+                <el-menu-item style="float: right;padding: 0" index="/manage/order" @click="changeIsMessage">
+                    <el-badge :value="messageCount > 0 ? messageCount : false" class="item">
                         <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
                     </el-badge>
 
@@ -53,6 +53,8 @@
 
 <script>
 import store from "@/store";
+import {mapMutations} from "vuex";
+import { chatCount } from '../../api/index'
 
 export default {
     name: "NavMenu",
@@ -61,17 +63,31 @@ export default {
             isLogin:true,
             dialogVisible: false,
             avatar: localStorage.getItem('avatar'),
+            messageCount: 0,
         }
     },
     computed:{
         avatarFn(){
             return this.$store.state.login.avatar
+        },
+        messageFn(){
+            return this.$store.state.order.message
         }
     },
     watch:{
         avatarFn(newVal){
             this.avatar = newVal
             this.$forceUpdate();// 更新数据
+        },
+        messageFn(newVal){
+            if(newVal === 1){
+               this.messageCount--;
+                this.setMessage(this.messageCount)
+            }
+            else {
+                this.messageCount;
+                this.setMessage(this.messageCount)
+            }
         }
     },
     created() {
@@ -87,9 +103,25 @@ export default {
             this.avatar = localStorage.getItem('avatar'); //获取监听的值
         })
     },
+    mounted() {
+        this.getMessage();
+    },
     methods: {
+        ...mapMutations('order', ["setIsMessage","setMessage"]),
+        //获取消息条数
+        getMessage(){
+            chatCount()
+                .then((res)=>{
+                    this.messageCount = res.data.count;
+                    this.setMessage(this.messageCount);
+                })
+                .catch()
+        },
         handleSelect(key, keyPath) {
             console.log(key, keyPath);
+        },
+        changeIsMessage(){
+            this.setIsMessage(1)
         },
         //退出登录
         handlerLogOut(){

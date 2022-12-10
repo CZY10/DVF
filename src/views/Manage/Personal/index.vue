@@ -7,12 +7,12 @@
                     <div><img :src="avatar" alt=""></div>
                     <div v-show="avatarHide" class="editor_avatar">
                         <el-upload
-                            action="/api/user/avatar"
+                            :action="localhost + '/api/user/avatar'"
                             ref="rebateUpload"
+                            :headers="{token:token}"
                             list-type="picture-card"
                             :on-success="handleSuccess"
-                            :on-error="handleError"
-                            :headers="{token: token}">
+                            :on-error="handleError">
                             <span>修改头像</span>
                             <div slot="file" slot-scope="{file}">
                                 <img
@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import {checkQr, getQrcode, getUserInfo, smsSend, userProfile, updateMobile, unBindWechat} from "@/api";
+import {checkQr, getQrcode, getUserInfo, smsSend, userProfile, updateMobile, unBindWechat, updateAvatar} from "@/api";
 import VDistpicker from 'v-distpicker'
 import {mapMutations} from "vuex";
 
@@ -180,6 +180,7 @@ export default {
             }
         }
         return{
+            localhost:process.env.VUE_APP_BASE_URL,
             token:'',
             bindWechatDialog:false,
             updatePhoneDialog:false,
@@ -282,11 +283,9 @@ export default {
         },
         //上传头像失败
         handleError(err, file, fileList){
-            console.log('err',err, file, fileList)
             this.$message.error('上传头像失败！')
         },
         getProvince(e){
-            console.log(e)
             this.userInfo.province = e.value;
             this.userInfo.province_code = e.code;
             this.userInfo.city = undefined;
@@ -295,14 +294,12 @@ export default {
             this.userInfo.area_code = undefined;
         },
         getCity(e){
-            console.log(e)
             this.userInfo.city = e.value;
             this.userInfo.city_code = e.code;
             this.userInfo.area = undefined;
             this.userInfo.area_code = undefined;
         },
         getArea(e){
-            console.log(e)
             this.userInfo.area = e.value;
             this.userInfo.area_code = e.code;
         },

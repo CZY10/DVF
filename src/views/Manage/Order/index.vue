@@ -4,7 +4,7 @@
             <el-form ref="form" class="form_search" size="small" :model="form" label-width="80px">
                 <el-form-item label="订单记录" class="title">
                     <el-input placeholder="输入ASIN/订单号" v-model="form.keywords" class="input-with-select">
-                        <el-button slot="append" icon="el-icon-search" @click="currentPage=1;getOrderList()"></el-button>
+                        <el-button slot="append" icon="el-icon-search" @click="currentPage=1;isMessage= 0;getOrderList()"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="日期">
@@ -12,7 +12,7 @@
                         v-model="form.dateValue"
                         type="daterange"
                         value-format="yyyy-MM-dd"
-                        @change="currentPage=1;getOrderList()"
+                        @change="currentPage=1;isMessage= 0;getOrderList()"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
                     </el-date-picker>
@@ -76,9 +76,10 @@
                 </el-table-column>
                 <el-table-column prop="hasMessage" label="达人沟通">
                     <template slot-scope="scope">
-                        <el-badge is-dot :hidden="scope.row.message === 0 ? true : false" class="badge_style">
-                            <i class="el-icon-chat-dot-round" @click="orderId = scope.row.id;handleChatFn();" style="font-size: 20px;cursor: pointer"></i>
+                        <el-badge is-dot :hidden="scope.row.message === 0 ? true : false" @click.native="orderId = scope.row.id;message = scope.row.message;scope.row.message = 0;handleChatFn(scope);" class="badge_style">
+                            <i class="el-icon-chat-dot-round" style="font-size: 20px;cursor: pointer"></i>
                         </el-badge>
+
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="200">
@@ -362,7 +363,7 @@
                             <el-upload
                                 ref="upload"
                                 :class="{hide_upload:isHide}"
-                                action="/api/common/upload"
+                                :action="localhost + '/api/common/upload'"
                                 :on-change="changeUpload"
                                 list-type="picture-card"
                                 :on-success="uploadSuccess"
@@ -461,7 +462,7 @@
                 <div class="title">(非必选）上传图片 <span>(支持jpg/png不超过5M)</span></div>
                 <div>
                     <el-upload
-                        action="/api/common/upload"
+                        :action="localhost + '/api/common/upload'"
                         ref="chatUpload"
                         class="chat_upload"
                         list-type="picture-card"
@@ -546,6 +547,7 @@
 <script>
 import {orderList, orderDelete, payOrder, checkPayment, returnFrontMoney, commentCreate, createTransport, getChatList, createChat} from "@/api";
 import QRCode from "qrcodejs2";
+import {mapMutations} from "vuex";
 export default {
     name: "order",
     data(){
@@ -706,17 +708,22 @@ export default {
             checkPaymentVal:'',
             token:'',
             avatar:'',
+            isMessage: this.$store.state.order.isMessage,
+            message: 0,
         }
     },
     mounted() {
         this.getOrderList();
         this.token = localStorage.getItem('token');
-        this.avatar = localStorage.getItem('avatar')
+        this.avatar = localStorage.getItem('avatar');
     },
     computed:{
-      query(){
+        query(){
           return [this.payDepositDialogVisible,this.paymentDialog]
-      }
+        },
+        isMessageFn(){
+            return this.$store.state.order.isMessage
+        }
     },
     watch:{
         query:{
@@ -727,9 +734,16 @@ export default {
                     },5000)
                 }
             }
+        },
+        isMessageFn(newVal){
+            if(newVal == 1){
+                this.isMessage = newVal;
+                this.getOrderList();
+            }
         }
     },
     methods:{
+        ...mapMutations('order', ["setIsMessage","setMessage"]),
         //获取订单列表
         getOrderList(){
             orderList({
@@ -737,12 +751,14 @@ export default {
                 date: this.form.dateValue,
                 pageSize: this.pageSize,
                 currentPage: this.currentPage,
+                message: this.isMessage,
             })
                 .then((res) => {
                     if(res.code === 1){
                         this.pageState = true;
                         this.tableData = res.data.data;
                         this.total = res.data.total;
+                        this.setIsMessage(0)
                     }
                 })
                 .catch((err) => {
@@ -754,6 +770,7 @@ export default {
             this.form.keywords = '';
             this.form.dateValue = [];
             this.currentPage = 1;
+            this.isMessage= 0;
             this.getOrderList();
         },
         //分页
@@ -761,10 +778,12 @@ export default {
             this.pageState = false;
             this.pageSize = val;
             this.currentPage = 1;
+            this.isMessage= 0;
             if (this.pageState === false) this.getOrderList();
         },
         handleCurrentChange(val) {
             this.currentPage = val;
+            this.isMessage= 0;
             if(this.pageState === true) this.getOrderList();
         },
         //删除订单
@@ -984,6 +1003,7 @@ export default {
             });
         },
         handleChatFn(){
+            this.setMessage(this.message)
             this.feedbackDialog=true;
             this.chatForm.feedback='';
             if(this.chatForm.feedback_images.length>0){

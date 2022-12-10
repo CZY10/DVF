@@ -9,8 +9,14 @@
 export default {
     name: 'app',
     components: {},
+    data(){
+        return{
+        }
+    },
     created() {
         // console.log(this.$router.path)
+    },
+    methods:{
     }
 }
 </script>

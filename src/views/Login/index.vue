@@ -113,7 +113,7 @@
 
 <script>
 import {mapMutations} from 'vuex'
-import { getQrcode, smsSend, mobileLogin, bindPhone, checkQr, checkToken } from "@/api/index"
+import {getQrcode, smsSend, mobileLogin, bindPhone, checkQr,} from "@/api/index"
 import login from "@/store/modules/login";
 export default {
     name: "login",
@@ -193,7 +193,7 @@ export default {
         this.verifyToken();
     },
     methods: {
-        ...mapMutations('login', ["setUserInfo","setToken","setAvatar"]),
+        ...mapMutations('login', ["setUserInfo","setToken","setAvatar","setExpiretime"]),
         //获取微信二维码
         handlerGetQrcode(){
             getQrcode()
@@ -243,10 +243,15 @@ export default {
                             localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
                             localStorage.setItem('token', res.data.userinfo.token);
                             localStorage.setItem('avatar', res.data.userinfo.avatar);
+                            localStorage.setItem('expiretime', res.data.userinfo.expiretime);
+                            this.setExpiretime(res.data.userinfo.expiretime);
                             this.setUserInfo(JSON.stringify(res.data.userinfo));
                             this.setToken(res.data.userinfo.token);
+
                             this.setAvatar(res.data.userinfo.avatar);
+
                             this.$router.push(this.fromPath)
+
                         }
                     })
                     .catch((err) => {
@@ -304,11 +309,12 @@ export default {
                     })
                         .then((res) => {
                             if(res.code === 1){
-                                console.log(2353246,this.checkQrCode)
                                 clearInterval(this.checkQrCode);
                                 localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
                                 localStorage.setItem('token', res.data.userinfo.token);
                                 localStorage.setItem('avatar', res.data.userinfo.avatar);
+                                localStorage.setItem('expiretime', res.data.userinfo.expiretime);
+                                this.setExpiretime(res.data.userinfo.expiretime);
                                 this.setUserInfo(JSON.stringify(res.data.userinfo));
                                 this.setToken(res.data.userinfo.token);
                                 this.setAvatar(res.data.userinfo.avatar);
@@ -338,11 +344,12 @@ export default {
                     })
                         .then((res) => {
                             if(res.code === 1){
-                                console.log(this.fromPath)
                                 clearInterval(this.checkQrCode);
                                 localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
                                 localStorage.setItem('token', res.data.userinfo.token);
                                 localStorage.setItem('avatar', res.data.userinfo.avatar);
+                                localStorage.setItem('expiretime', res.data.userinfo.expiretime);
+                                this.setExpiretime(res.data.userinfo.expiretime);
                                 this.setUserInfo(JSON.stringify(res.data.userinfo));
                                 this.setToken(res.data.userinfo.token);
                                 this.setAvatar(res.data.userinfo.avatar);
@@ -384,23 +391,9 @@ export default {
         //已登录状态下不跳转至登录页
         verifyToken(){
             let tokenStr = login.state.token;
-            console.log(tokenStr)
             if (tokenStr) {
-                console.log(111)
                 this.$router.push({ path: "/" });
-                // checkToken()
-                //     .then((res) => {
-                //         if(res){
-                //             this.$router.push({ path: "/" });
-                //         }
-                //     })
-                //     .catch((err) => {
-                //         store.commit('clearUserInfo');//删除token
-                //         localStorage.removeItem('userInfo')//删除token
-                //         this.$router.push('/login');
-                //     });
             } else {
-                console.log(222)
                 this.$message.error('请登录!')
             }
         }

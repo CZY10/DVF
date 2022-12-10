@@ -5,6 +5,7 @@ export default {
         avatar:'',
         token:'',
         loginFromPath:'/',
+        expiretime:'',
     },
     mutations:{
         setUserInfo(state,payload){
@@ -14,9 +15,13 @@ export default {
             state.userInfo = {};
             state.token = '';
             state.avatar = '';
+            state.expiretime = '';
             localStorage.removeItem('userInfo');
             localStorage.removeItem('token');
             localStorage.removeItem('avatar');
+        },
+        setExpiretime(state,payload){
+            state.expiretime = payload
         },
         setToken(state,payload){
             state.token = payload

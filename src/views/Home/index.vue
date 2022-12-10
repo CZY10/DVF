@@ -63,7 +63,7 @@
                     <li v-for="(item,index) in shootingPlanTabList" :key="index" @click="currentIndex2 = index" :class="{active2:currentIndex2 == index}">
                         {{item.title}}
                     </li>
-                    <a class="see_more" href="">更多+</a>
+                    <a class="see_more" href="/#/buyershow">更多+</a>
                 </ul>
 
                 <div class="tabs_content1" @mouseover="mouseover('tabPane3')" @mouseout="mouseout('tabPane3')">
@@ -692,7 +692,11 @@ export default {
     },
     methods: {
         handleGoLogin(){
-            this.$router.push('/login')
+            if(this.$store.state.login.token){
+                this.$router.push('/buyershow');
+            }else {
+                this.$router.push('/login');
+            }
         },
         handleClick(tab, event) {
             console.log(tab, event);

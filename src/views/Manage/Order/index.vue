@@ -536,7 +536,7 @@
             </div>
             <div>
                 <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
-                <div class="button_box">
+                <div class="button_box know_btn">
                     <el-button @click="paymentCompletedDialogVisible=false">我知道了</el-button>
                 </div>
             </div>
@@ -1102,6 +1102,21 @@ export default {
 </script>
 <style lang="less">
 #order{
+    .know_btn{
+        padding-top: 28px;
+        button{
+            display: block;
+            margin: auto;
+            background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
+            border-radius: 16px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #FFFFFF;
+            line-height: 20px;
+            padding: 5px 41px;
+        }
+    }
     .viewDialog .el-dialog{
         width: auto;
     }

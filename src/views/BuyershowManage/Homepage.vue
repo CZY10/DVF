@@ -7,35 +7,35 @@
                         <div class="head_img">
                             <img src="../../assets/images/people_header.png" alt="">
                         </div>
-                        <h5>NO.123</h5>
-                        <span class="category">Amazon Influencer</span>
+                        <h5>NO.{{ userInfo.id }}</h5>
+                        <span class="category">{{ userInfo.type }}</span>
                         <div class="title">
-                            <span v-for="(item,index) in title" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item }}</span>
+                            <span v-for="(item,index) in userInfo.category_ids" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item.name }}</span>
                         </div>
                     </div>
                 </el-col>
                 <el-col :span="15" style="padding-right: 0">
                     <el-card class="box_card basic_information_card" style="margin-bottom: 20px">
                         <h4>基本资料</h4>
-                        <div>年龄：<span style="margin-right: 40px">45岁</span>性别：<span>男</span></div>
+                        <div>年龄：<span style="margin-right: 40px">{{userInfo.age}}岁</span>性别：<span>{{ userInfo.genderdata === 'male' ? '男' : '女' }}</span></div>
                         <div>国家：<span>美国</span></div>
-                        <div style="display: flex;align-items: center">社交平台：<i></i><i></i><i></i></div>
-                        <div>个人简介<p>TK、YouTube上有个人账号，粉丝约200万，可带宠物出镜，作品讲解细致、生动。TK、YouTube上有个人账号，粉丝约200万，可带宠物出镜，作品讲解细致、生动。</p></div>
+                        <div style="display: flex;align-items: center">社交平台：<i v-for="(item,index) in userInfo.platform"><img :src="item.image" alt=""></i></div>
+                        <div>个人简介<p :title="userInfo.signature">{{ userInfo.signature }}</p></div>
                     </el-card>
                     <el-card class="box_card basic_information_card">
                         <h4>交付说明</h4>
                         <el-row style="padding-bottom: 0">
                             <el-col :span="12" style="padding-bottom: 0">
-                                <div>卖点呈现：<span>通常纯展示</span></div>
-                                <div>视频上传：<span>达人账号上传并关联listing</span></div>
+                                <div>卖点呈现：<span>{{ userInfo.sellingpoint_id }}</span></div>
+                                <div>视频上传：<span>{{ userInfo.videoupload_id }}</span></div>
                             </el-col>
                             <el-col :span="12" style="padding-bottom: 0">
-                                <div>拍摄场景：<span>通常自行发挥</span></div>
-                                <div>交付周期：<span>通常7-14天</span><b>（样品收货后）</b></div>
+                                <div>拍摄场景：<span>{{ userInfo.scene_id }}</span></div>
+                                <div>交付周期：<span>{{ userInfo.leadtime_id }}</span><b>（样品收货后）</b></div>
                             </el-col>
                         </el-row>
-                        <div>视频时长：<span>通常60-80s</span></div>
-                        <div>其他说明<p>交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...交付说明默认展示两行，鼠标悬停展示全部...</p></div>
+                        <div>视频时长：<span>通常{{ userInfo.minvideo }}-{{ userInfo.maxvideo }}s</span></div>
+                        <div>其他说明<p :title="userInfo.content">{{ userInfo.content }}</p></div>
                     </el-card>
                 </el-col>
             </el-row>
@@ -44,9 +44,18 @@
             </el-card>
             <div class="product_box">
                <div style="max-width: 1200px;margin: auto">
-                   <div class="product_item" v-for="(item,index) in productList" :key="index">
-                       <img :src="item.img" alt="">
-                       <p>{{ item.title }}</p>
+                   <div class="product_item" v-for="(item,index) in userInfo.videos" :key="index">
+                       <div class="product_item_video">
+                           <video
+                               :id="'my-player'+ ++index"
+                               ref="video"
+                               poster="../../assets/images/video/poster_video.png"
+                               class="video-js vjs-default-skin vjs-big-play-centered"
+                               controls>
+                               <source :src="localhost + item.file" />
+                           </video>
+                       </div>
+                       <p :title="item.desc">{{ item.desc }}</p>
                    </div>
                </div>
             </div>
@@ -57,6 +66,7 @@
 
 <script>
 import Footer from "@/components/Footer";
+import {influencerDetail} from "@/api";
 export default {
     name: "homepage",
     components:{
@@ -65,65 +75,33 @@ export default {
     data(){
         return{
             title:['家居','电子','服装设计','家居','电子','服装设计','家居','电子','服装设计','家居','电子','服装设计','家居'],
-            productList:[
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                },
-                {
-                    title:'家用投影仪开箱展示视频家用投影仪开箱展示视频',
-                    img:require('../../assets/images/table_video.png')
-                }
-            ]
+            id:'',
+            userInfo:{},
+            localhost:process.env.VUE_APP_BASE_URL,
         }
+    },
+    mounted() {
+
+        this.id = window.location.href.substr(window.location.href.lastIndexOf(':')+1);
+        this.getInfluencerDetail()
+    },
+    methods:{
+        getInfluencerDetail(){
+            influencerDetail({
+                id: this.id
+            })
+                .then((res)=>{
+                    console.log(res)
+                    if(res.code ===1){
+                        this.userInfo = res.data;
+                        console.log(this.userInfo)
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        }
+
     }
 }
 </script>
@@ -131,7 +109,6 @@ export default {
 <style lang="less" scoped>
 .flex{
     display: flex;
-
 }
 #homepage{
     margin-top: 66px;
@@ -191,7 +168,9 @@ export default {
                 margin-top: 23px;
             }
             .title{
-                margin: 20px 74px 0 74px;
+                margin: 18px 74px 2px 74px;
+                height: 80px;
+                overflow: hidden;
                 span{
                     padding: 0px 5px;
                     margin: 2px;
@@ -239,7 +218,14 @@ export default {
                 p{
                     font-size: 14px;
                     color: #333333;
+                    height: 38px;
                     padding-top: 8px;
+                    word-break: break-all;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2; /* 这里是超出几行省略 */
+                    overflow: hidden;
                 }
                 span{
                     font-size: 14px;
@@ -252,6 +238,11 @@ export default {
                     border: 1px solid #EEEEEE;
                     border-radius: 50%;
                     margin: 0 5px;
+                    overflow: hidden;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
                 b{
                     font-size: 12px;
@@ -293,8 +284,13 @@ export default {
                 border: 1px solid #EEEEEE;
                 float: left;
                 margin: 7px 7px;
-                img{
-                    width: 100%;
+                overflow: hidden;
+                .product_item_video{
+                    video{
+                        width: 100%;
+                        height: 133px;
+                        object-fit: cover;
+                    }
                 }
                 p{
                     font-size: 12px;
@@ -302,7 +298,14 @@ export default {
                     font-weight: 400;
                     color: #333333;
                     line-height: 19px;
-                    padding: 14px 12px;
+                    margin: 14px 12px;
+                    word-break: break-all;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2; /* 这里是超出几行省略 */
+                    overflow: hidden;
+                    height: 38px;
                 }
             }
         }

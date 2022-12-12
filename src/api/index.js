@@ -58,14 +58,7 @@ export function checkQr(data){
         data
     })
 }
-//检查token是否过期
-export function checkToken(data){
-    return request({
-        url:'/addons/wechatscanlogin/api/check',
-        method: 'post',
-        data
-    })
-}
+
 /*拍买家秀*/
 //搜索分类
 export function getCategory(data){
@@ -163,14 +156,6 @@ export function userProfile(data){
         data
     })
 }
-//更新头像
-export function updateAvatar(data){
-    return request({
-        url:'/api/user/avatar',
-        method: 'post',
-        data
-    })
-}
 //获取用户信息
 export function getUserInfo(data){
     return request({
@@ -227,4 +212,33 @@ export function chatCount(data){
         data
     })
 }
-
+//获取消息条数
+export function getConfig(data){
+    return request({
+        url:'/api/config/index',
+        method: 'post',
+        data
+    })
+}
+//后台绑定微信
+export function bindWechat(){
+    return request({
+        url:'/addons/wechatscanlogin/api/bind',
+        method: 'post',
+    })
+}
+//后台绑定微信检测是否绑定成功
+export function checkBindWechat(){
+    return request({
+        url:'/addons/wechatscanlogin/api/checkbind',
+        method: 'post',
+    })
+}
+//达人详情
+export function influencerDetail(data){
+    return request({
+        url:'/api/influencer/index',
+        method: 'post',
+        data
+    })
+}

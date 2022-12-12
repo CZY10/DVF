@@ -9,7 +9,7 @@
                 active-text-color="#333333"
                 text-color="#666666"
                 @select="handleSelect">
-                <a href="" style="display: flex;justify-content: center;align-items: center"><img src="../../assets/images/logo.png" alt=""></a>
+                <a href="" style="display: flex;justify-content: center;align-items: center"><img :src="logoImg" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
                 <el-menu-item @click="dialogVisible = true">联系我们</el-menu-item>
@@ -22,15 +22,13 @@
                     <el-menu-item @click="handlerLogOut">退出</el-menu-item>
                 </el-submenu>
                 <el-menu-item style="float: right;padding: 0" index="/manage/order" @click="changeIsMessage">
-                    <el-badge :value="messageCount > 0 ? messageCount : false" class="item">
+                    <el-badge :value="messageCount" :hidden="messageCount==0" class="item">
                         <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
                     </el-badge>
 
                 </el-menu-item>
                 <el-menu-item style="float: right;"><a href="https://peseeazfwl.feishu.cn/wiki/wikcnMyh2Kpl0beLaynqfWT3Vuc" target="_blank">新手指南</a></el-menu-item>
             </el-menu>
-
-
         </div>
         <el-dialog
             title="微信咨询"
@@ -64,6 +62,7 @@ export default {
             dialogVisible: false,
             avatar: localStorage.getItem('avatar'),
             messageCount: 0,
+            logoImg:require('../../assets/images/logo.png')
         }
     },
     computed:{
@@ -105,6 +104,7 @@ export default {
     },
     mounted() {
         this.getMessage();
+        this.logoImg = localStorage.getItem('logo')
     },
     methods: {
         ...mapMutations('order', ["setIsMessage","setMessage"]),

@@ -402,6 +402,7 @@
         <el-dialog
             title="支付完成"
             :visible.sync="paymentCompletedDialogVisible"
+            :before-close="handlePaymentCompletedClose"
             width="360px"
             :close-on-click-modal="false"
             class="payment_completed_dialog"
@@ -413,7 +414,7 @@
             <div>
                 <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
                 <div class="button_box">
-                    <el-button @click="paymentCompletedDialogVisible=false">我知道了</el-button>
+                    <el-button @click="paymentCompletedDialogVisible=false;handlePaymentCompletedClose()">我知道了</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -500,7 +501,7 @@ export default {
             pageSize:20,
             total:0,
             saveDATA:[],
-            paymentCompletedDialogVisible: false,
+            paymentCompletedDialogVisible: true,
             payDepositDialogVisible:false,
             videoRuleForm: {
                 selectedType:'0',
@@ -574,6 +575,10 @@ export default {
         window.addEventListener('scroll',this.handleScroll,true)
     },
     methods:{
+        /*关闭支付完成页面并跳转至订单信息页面*/
+        handlePaymentCompletedClose(){
+            window.open('/#/manage/order', '_blank');
+        },
         /*播放视频*/
         handleShowVideo(scope){
             if(scope.row.videos.length > 0){

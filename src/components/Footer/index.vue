@@ -3,39 +3,62 @@
         <el-row :gutter="54" style="max-width: 1200px;margin: auto;">
             <el-col :span="5" style="padding-left: 0">
                 <div style="max-width: 50px;margin: auto">
-                    <img src="../../assets/images/logo_footer.png" alt="">
+                    <img :src="formData.logo" alt="">
                 </div>
-                <p style="text-align: center;margin-top: 10px">亚马逊视频营销服务平台</p>
+                <p style="text-align: center;margin-top: 10px">{{ formData.name }}</p>
             </el-col>
             <el-col :span="8">
                 <p class="title">关于我们</p>
-                <p>签约本土优质达人，视频质量高，内容真实，贴合海外群体，平台直接对接签约达人，价格远低于同行，且质量更有保障</p>
+                <p>{{ formData.about }}</p>
             </el-col>
             <el-col :span="6">
                 <p class="title">联系我们</p>
-                <p><span>联系我们</span>0755-84861340</p>
-                <p><span>邮箱地址</span>support@amztracker.com</p>
+                <p><span>联系我们</span>{{ formData.phone }}</p>
+                <p><span>邮箱地址</span>{{ formData.email }}</p>
             </el-col>
             <el-col :span="5" style="padding-right: 0">
                 <el-col :span="12" style="padding: 0">
-                    <div class="qr_code"><img src="" alt=""></div>
+                    <div class="qr_code"><img :src="formData.wechat" alt=""></div>
                     <p style="text-align: center;margin-top: 8px">微信咨询</p>
                 </el-col>
                 <el-col :span="12" style="padding: 0">
-                    <div class="qr_code"><img src="" alt=""></div>
+                    <div class="qr_code"><img :src="formData.chat" alt=""></div>
                     <p style="text-align: center;margin-top: 8px">公众号</p>
                 </el-col>
             </el-col>
         </el-row>
         <el-row style="max-width: 1200px;margin: auto;">
-            <p class="keep_on_record">© 2021. 百佬汇跨境电商（深圳）有限公司版权所有 粤ICP备16035415号</p>
+            <p class="keep_on_record">© 2021. {{ formData.companyname }}版权所有 {{ formData.beian }}</p>
         </el-row>
     </div>
 </template>
 
 <script>
+import {getConfig} from '@/api'
 export default {
-    name: "index"
+    name: "index",
+    data(){
+        return{
+            formData:{}
+        }
+    },
+    mounted() {
+        this.getContent()
+    },
+    methods:{
+        getContent(){
+            getConfig()
+                .then((res)=>{
+                    if(res.code === 1){
+                        this.formData = res.data;
+                        localStorage.setItem('logo',res.data.logo)
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        }
+    }
 }
 </script>
 

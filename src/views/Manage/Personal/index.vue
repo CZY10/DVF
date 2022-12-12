@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import {checkQr, getQrcode, getUserInfo, smsSend, userProfile, updateMobile, unBindWechat, updateAvatar} from "@/api";
+import { getUserInfo, smsSend, userProfile, updateMobile, unBindWechat, bindWechat,checkBindWechat} from "@/api";
 import VDistpicker from 'v-distpicker'
 import {mapMutations} from "vuex";
 
@@ -239,7 +239,7 @@ export default {
             },
             userInfo: {},
             avatar: localStorage.getItem('avatar'),
-            qrImg:require('../../../assets/images/qr.png'),
+            qrImg:'',
         }
     },
     components:{
@@ -334,7 +334,7 @@ export default {
             let form = new FormData();
             form.append('wechat_token',_this.wechatToken)
             _this.checkQrCode = setInterval(()=>{
-                checkQr(form)
+                checkBindWechat(form)
                     .then((res) => {
                         if(res.code === 0){ //二维码已失效
                             _this.isRefresh = true;
@@ -425,9 +425,9 @@ export default {
                     this.$message.error(err.msg);
                 });
         },
-        //微信二维码生成
+        //绑定微信
         handlerGetQrCode(){
-            getQrcode()
+            bindWechat()
                 .then((res) => {
                     if(res.code === 1){
                         this.qrImg = res.data.qrcode_url;

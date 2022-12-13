@@ -501,7 +501,7 @@ export default {
             pageSize:20,
             total:0,
             saveDATA:[],
-            paymentCompletedDialogVisible: true,
+            paymentCompletedDialogVisible: false,
             payDepositDialogVisible:false,
             videoRuleForm: {
                 selectedType:'0',

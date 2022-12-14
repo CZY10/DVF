@@ -130,6 +130,7 @@ export default {
                     this.$store.commit('login/clearUserInfo')
                     window.location.href = '/#/login'
                 })
+                .catch((err)=>{})
         }
     }
 }

@@ -60,285 +60,54 @@
             <h2 class="content_title pt160 pb40">拍摄方案</h2>
             <el-row class="shooting_plan" style="max-width: 1200px;margin: auto;" :gutter="40">
                 <ul class="tabs_header2 pb46">
-                    <li v-for="(item,index) in shootingPlanTabList" :key="index" @click="currentIndex2 = index" :class="{active2:currentIndex2 == index}">
-                        {{item.title}}
+                    <li v-for="(item,index) in shootPlanTabList.category" :key="index" @click="currentIndex2 = index" :class="{active2:currentIndex2 == index}">
+                        {{item.name}}
                     </li>
                     <a class="see_more" href="/#/buyershow">更多+</a>
                 </ul>
 
                 <div class="tabs_content1" @mouseover="mouseover('tabPane3')" @mouseout="mouseout('tabPane3')">
-<!--                    <div v-for="(item,index) in videoList" :key="index" v-show="currentIndex2 == index">-->
-<!--                        <el-row :gutter="30">-->
-<!--                            <el-col :span="16">-->
-<!--                                <div class="video_content">-->
-<!--                                    <div style="display: flex;justify-content: center">-->
-<!--                                        <video-->
-<!--                                            :id="'my-player'+index"-->
-<!--                                            ref="video"-->
+                    <div v-for="(item,index) in shootPlanTabList.items" :key="index" v-show="currentIndex2 == index">
+                        <el-row :gutter="30">
+                            <el-col :span="16">
+                                <div class="video_content">
+                                    <div style="display: flex;justify-content: center">
+                                        <video
+                                            :id="'my-player'+index"
+                                            ref="video"
+                                            class="video-js vjs-default-skin vjs-big-play-centered"
+                                            controls>
+                                            <source :src="item.file" />
 <!--                                            poster="../../../assets/images/video/poster_video.png"-->
-<!--                                            class="video-js vjs-default-skin vjs-big-play-centered"-->
-<!--                                            controls>-->
-<!--                                            <source :src="item.src" />-->
-<!--                                        </video>-->
-<!--                                    </div>-->
-<!--                                    <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥{{item.price}}</span>-->
-<!--                                        交付周期：<span style="color: #fff">{{item.date}}</span>-->
-<!--                                        <span style="font-size: 12px;float: right">{{item.description}}</span>-->
-<!--                                    </div>-->
-<!--                                    <el-row class="params2">-->
-<!--                                        <el-col :span="12">-->
-<!--                                            <p>卖点展示：<span>{{item.params.item1}}</span></p>-->
-<!--                                            <p>视频时长：<span>{{item.params.item2}}</span></p>-->
-<!--                                        </el-col>-->
-<!--                                        <el-col :span="12">-->
-<!--                                            <p>拍摄场景：<span>{{item.params.item3}}</span></p>-->
-<!--                                            <p>视频上传：<span>{{item.params.item4}}</span></p>-->
-<!--                                        </el-col>-->
-<!--                                    </el-row>-->
-<!--                                </div>-->
-<!--                            </el-col>-->
-<!--                            <el-col :span="8">-->
-<!--                                <div class="video_text">-->
-<!--                                    <div><img src="../../../assets/images/buyer_header1.png" alt=""></div>-->
-<!--                                    <ul>-->
-<!--                                        <li>创作者：<span>{{ item.talentInformation.name }}</span></li>-->
-<!--                                        <li>达人类型：<span>{{ item.talentInformation.type }}</span></li>-->
-<!--                                        <li>性别：<span>{{ item.talentInformation.gender }}</span></li>-->
-<!--                                        <li>国家：<span>{{ item.talentInformation.country }}</span></li>-->
-<!--                                        <li>兴趣品类：<span>{{ item.talentInformation.category }}</span></li>-->
-<!--                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>-->
-<!--                                    </ul>-->
-
-<!--                                </div>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                    </div>-->
-                    <div v-show="currentIndex2 == 0">
-                        <el-row :gutter="30">
-                            <el-col :span="16">
-                                <div class="video_content">
-                                    <div style="display: flex;justify-content: center">
-                                        <video
-                                            id="my-player1"
-                                            ref="video"
-                                            poster="../../assets/images/video/poster_video.png"
-                                            class="video-js vjs-default-skin vjs-big-play-centered"
-                                            controls>
-                                            <source src="https://vjs.zencdn.net/v/oceans.mp4" />
                                         </video>
                                     </div>
-                                    <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥580</span>
-                                        交付周期：<span style="color: #fff">7-14天</span>
-                                        <span style="font-size: 12px;float: right">家用投影仪开箱展示视频</span>
+                                    <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥{{item.lower_price}}</span>
+                                        交付周期：<span style="color: #fff">{{item.leadtime_id}}</span>
+                                        <span style="font-size: 12px;float: right">{{item.description}}</span>
                                     </div>
                                     <el-row class="params2">
                                         <el-col :span="12">
-                                            <p>卖点展示：<span>纯展示</span></p>
-                                            <p>视频时长：<span>60-80s</span></p>
+                                            <p>卖点展示：<span>{{item.sellingpoint_id}}</span></p>
+                                            <p>视频时长：<span>{{item.minvideo}}-{{item.maxvideo}}s</span></p>
                                         </el-col>
                                         <el-col :span="12">
-                                            <p>拍摄场景：<span>达人自行发挥</span></p>
-                                            <p>视频上传：<span>达人账号上传并关联listing</span></p>
+                                            <p>拍摄场景：<span>{{item.scene_id}}</span></p>
+                                            <p>视频上传：<span>{{item.videoupload_id}}</span></p>
                                         </el-col>
                                     </el-row>
                                 </div>
                             </el-col>
                             <el-col :span="8">
                                 <div class="video_text">
-                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
+                                    <div class="img_box"><img :src="item.image" alt=""></div>
                                     <ul>
-                                        <li>创作者：<span>NO.123  </span></li>
-                                        <li>达人类型：<span>Amazon Influencer</span></li>
-                                        <li>性别：<span>男性</span></li>
-                                        <li>国家：<span>美国</span></li>
-                                        <li>兴趣品类：<span>服装、电子、家居</span></li>
+                                        <li>创作者：<span style="color: #FBC07A">NO.{{ item.id }}</span></li>
+                                        <li>达人类型：<span>{{ item.type }}</span></li>
+                                        <li>性别：<span>{{ item.genderdata === "male" ? '男' : '女' }}</span></li>
+                                        <li>国家：<span>{{ item.country_id.name }}</span></li>
+                                        <li style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis">兴趣品类：<span v-for="i in item.category_ids">{{ i.name }}、</span></li>
                                         <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
                                     </ul>
-
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                    <div v-show="currentIndex2 == 1">
-                        <el-row :gutter="30">
-                            <el-col :span="16">
-                                <div class="video_content">
-                                    <div style="display: flex;justify-content: center">
-                                        <video
-                                            id="my-player2"
-                                            ref="video"
-                                            poster="../../assets/images/video/poster_video.png"
-                                            class="video-js vjs-default-skin vjs-big-play-centered"
-                                            controls>
-                                            <source src="../../assets/images/video/video.mp4" />
-                                        </video>
-                                    </div>
-                                    <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥580</span>
-                                        交付周期：<span style="color: #fff">7-14天</span>
-                                        <span style="font-size: 12px;float: right">家用投影仪开箱展示视频</span>
-                                    </div>
-                                    <el-row class="params2">
-                                        <el-col :span="12">
-                                            <p>卖点展示：<span>纯展示</span></p>
-                                            <p>视频时长：<span>60-80s</span></p>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <p>拍摄场景：<span>达人自行发挥</span></p>
-                                            <p>视频上传：<span>达人账号上传并关联listing</span></p>
-                                        </el-col>
-                                    </el-row>
-                                </div>
-                            </el-col>
-                            <el-col :span="8">
-                                <div class="video_text">
-                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
-                                    <ul>
-                                        <li>创作者：<span>NO.123  </span></li>
-                                        <li>达人类型：<span>Amazon Influencer</span></li>
-                                        <li>性别：<span>男性</span></li>
-                                        <li>国家：<span>美国</span></li>
-                                        <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
-                                    </ul>
-
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                    <div v-show="currentIndex2 ==2">
-                        <el-row :gutter="30">
-                            <el-col :span="16">
-                                <div class="video_content">
-                                    <div style="display: flex;justify-content: center">
-                                        <video
-                                            id="my-player3"
-                                            ref="video"
-                                            poster="../../assets/images/video/poster_video.png"
-                                            class="video-js vjs-default-skin vjs-big-play-centered"
-                                            controls>
-                                            <source src="../../assets/images/video/222.mp4" />
-                                        </video>
-                                    </div>
-                                    <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥580</span>
-                                        交付周期：<span style="color: #fff">7-14天</span>
-                                        <span style="font-size: 12px;float: right">家用投影仪开箱展示视频</span>
-                                    </div>
-                                    <el-row class="params2">
-                                        <el-col :span="12">
-                                            <p>卖点展示：<span>纯展示</span></p>
-                                            <p>视频时长：<span>60-80s</span></p>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <p>拍摄场景：<span>达人自行发挥</span></p>
-                                            <p>视频上传：<span>达人账号上传并关联listing</span></p>
-                                        </el-col>
-                                    </el-row>
-                                </div>
-                            </el-col>
-                            <el-col :span="8">
-                                <div class="video_text">
-                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
-                                    <ul>
-                                        <li>创作者：<span>NO.123  </span></li>
-                                        <li>达人类型：<span>Amazon Influencer</span></li>
-                                        <li>性别：<span>男性</span></li>
-                                        <li>国家：<span>美国</span></li>
-                                        <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
-                                    </ul>
-
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                    <div v-show="currentIndex2 == 3">
-                        <el-row :gutter="30">
-                            <el-col :span="16">
-                                <div class="video_content">
-                                    <div style="display: flex;justify-content: center">
-                                        <video
-                                            id="my-player4"
-                                            ref="video"
-                                            poster="../../assets/images/video/poster_video.png"
-                                            class="video-js vjs-default-skin vjs-big-play-centered"
-                                            controls>
-                                            <source src="https://vjs.zencdn.net/v/oceans.mp4" />
-                                        </video>
-                                    </div>
-                                    <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥580</span>
-                                        交付周期：<span style="color: #fff">7-14天</span>
-                                        <span style="font-size: 12px;float: right">家用投影仪开箱展示视频</span>
-                                    </div>
-                                    <el-row class="params2">
-                                        <el-col :span="12">
-                                            <p>卖点展示：<span>纯展示</span></p>
-                                            <p>视频时长：<span>60-80s</span></p>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <p>拍摄场景：<span>达人自行发挥</span></p>
-                                            <p>视频上传：<span>达人账号上传并关联listing</span></p>
-                                        </el-col>
-                                    </el-row>
-                                </div>
-                            </el-col>
-                            <el-col :span="8">
-                                <div class="video_text">
-                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
-                                    <ul>
-                                        <li>创作者：<span>NO.123  </span></li>
-                                        <li>达人类型：<span>Amazon Influencer</span></li>
-                                        <li>性别：<span>男性</span></li>
-                                        <li>国家：<span>美国</span></li>
-                                        <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
-                                    </ul>
-
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                    <div v-show="currentIndex2 == 4">
-                        <el-row :gutter="30">
-                            <el-col :span="16">
-                                <div class="video_content">
-                                    <div style="display: flex;justify-content: center">
-                                        <video
-                                            id="my-player5"
-                                            ref="video"
-                                            poster="../../assets/images/video/poster_video.png"
-                                            class="video-js vjs-default-skin vjs-big-play-centered"
-                                            controls>
-                                            <source src="https://vjs.zencdn.net/v/oceans.mp4" />
-                                        </video>
-                                    </div>
-                                    <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥580</span>
-                                        交付周期：<span style="color: #fff">7-14天</span>
-                                        <span style="font-size: 12px;float: right">家用投影仪开箱展示视频</span>
-                                    </div>
-                                    <el-row class="params2">
-                                        <el-col :span="12">
-                                            <p>卖点展示：<span>纯展示</span></p>
-                                            <p>视频时长：<span>60-80s</span></p>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <p>拍摄场景：<span>达人自行发挥</span></p>
-                                            <p>视频上传：<span>达人账号上传并关联listing</span></p>
-                                        </el-col>
-                                    </el-row>
-                                </div>
-                            </el-col>
-                            <el-col :span="8">
-                                <div class="video_text">
-                                    <div><img src="../../assets/images/buyer_header1.png" alt=""></div>
-                                    <ul>
-                                        <li>创作者：<span>NO.123  </span></li>
-                                        <li>达人类型：<span>Amazon Influencer</span></li>
-                                        <li>性别：<span>男性</span></li>
-                                        <li>国家：<span>美国</span></li>
-                                        <li>兴趣品类：<span>服装、电子、家居</span></li>
-                                        <li><el-button class="apply_for_shooting" @click="handleGoLogin" round>申请拍摄</el-button></li>
-                                    </ul>
-
                                 </div>
                             </el-col>
                         </el-row>
@@ -472,7 +241,7 @@
 
 <script>
 
-import {getQrcode} from "@/api";
+import {getQrcode, takePlanList} from "@/api";
 import {mapMutations} from "vuex";
 import Footer from "@/components/Footer";
 
@@ -539,110 +308,6 @@ export default {
                     color:'#00D9AD',
                 },
             ],
-            shootingPlanTabList:[
-                {title: '服装'},
-                {title: '数码'},
-                {title: '家居'},
-                {title: '儿童'},
-                {title: '宠物'},
-            ],
-            videoList:[
-                {
-                    src: 'https://vjs.zencdn.net/v/oceans.mp4',
-                    price:'500-900',
-                    date:'7-14天',
-                    description:'家用投影仪开箱展示视频',
-                    params:{
-                        item1:'纯展示',
-                        item2:'60-80s',
-                        item3:'达人自行发挥',
-                        item4:'达人账号上传并关联listing',
-                    },
-                    talentInformation:{
-                        name: 'NO.123',
-                        type: 'Amazon Influencer',
-                        gender: '男性',
-                        country: '美国',
-                        category: '服装、电子、家居',
-                    }
-                },
-                {
-                    src: '/static/media/video.b9066892.mp4',
-                    price:'500-900',
-                    date:'7-14天',
-                    description:'家用投影仪开箱展示视频',
-                    params:{
-                        item1:'纯展示',
-                        item2:'60-80s',
-                        item3:'达人自行发挥',
-                        item4:'达人账号上传并关联listing',
-                    },
-                    talentInformation:{
-                        name: 'NO.123',
-                        type: 'Amazon Influencer',
-                        gender: '男性',
-                        country: '美国',
-                        category: '服装、电子、家居',
-                    }
-                },
-                {
-                    src: '/static/media/222.347df256.mp4',
-                    price:'500-900',
-                    date:'7-14天',
-                    description:'家用投影仪开箱展示视频',
-                    params:{
-                        item1:'纯展示',
-                        item2:'60-80s',
-                        item3:'达人自行发挥',
-                        item4:'达人账号上传并关联listing',
-                    },
-                    talentInformation:{
-                        name: 'NO.123',
-                        type: 'Amazon Influencer',
-                        gender: '男性',
-                        country: '美国',
-                        category: '服装、电子、家居',
-                    }
-                },
-                {
-                    src: 'https://vjs.zencdn.net/v/oceans.mp4',
-                    price:'500-900',
-                    date:'7-14天',
-                    description:'家用投影仪开箱展示视频',
-                    params:{
-                        item1:'纯展示',
-                        item2:'60-80s',
-                        item3:'达人自行发挥',
-                        item4:'达人账号上传并关联listing',
-                    },
-                    talentInformation:{
-                        name: 'NO.123',
-                        type: 'Amazon Influencer',
-                        gender: '男性',
-                        country: '美国',
-                        category: '服装、电子、家居',
-                    }
-                },
-                {
-                    src: '/static/media/111.e885d4c1.mp4',
-                    price:'500-900',
-                    date:'7-14天',
-                    description:'家用投影仪开箱展示视频',
-                    params:{
-                        item1:'纯展示',
-                        item2:'60-80s',
-                        item3:'达人自行发挥',
-                        item4:'达人账号上传并关联listing',
-                    },
-                    talentInformation:{
-                        name: 'NO.123',
-                        type: 'Amazon Influencer',
-                        gender: '男性',
-                        country: '美国',
-                        category: '服装、电子、家居',
-                    }
-                }
-            ],
             serviceslist:[
                 {
                     title:'匹配最佳创作达人',
@@ -672,6 +337,10 @@ export default {
             autoPlayInter1:'',
             autoPlayInter2:'',
             autoPlayInter3:'',
+            shootPlanTabList:{
+                category:[],
+                items:[],
+            },
         }
     },
     created(){
@@ -681,16 +350,22 @@ export default {
         this.autoPlay('tabPane1');
         this.autoPlay('tabPane2');
         this.autoPlay('tabPane3');
-        for (var i=1;i<this.videoList.length;i++){
+        for (var i=1;i<this.shootPlanTabList.items.length;i++){
             this.player=this.$video('my-player'+i);
         }
-        // this.player=this.$video('my-player1');
-        // this.player=this.$video('my-player2');
-        // this.player=this.$video('my-player3');
-        // this.player=this.$video('my-player4');
-        // this.player=this.$video('my-player5');
+        this.handleTakePlanList();
     },
     methods: {
+        //获取拍摄方案
+        handleTakePlanList(){
+            takePlanList()
+                .then((res)=>{
+                    this.shootPlanTabList = res.data
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        },
         handleGoLogin(){
             if(this.$store.state.login.token){
                 this.$router.push('/buyershow');
@@ -725,14 +400,13 @@ export default {
                 },3000)
             }else if(tabs == 'tabPane3'){
                 this.autoPlayInter3 = setInterval(function (){
-                    if(_this.currentIndex2 == _this.shootingPlanTabList.length-1){
+                    if(_this.currentIndex2 == _this.shootPlanTabList.category.length-1){
                         _this.currentIndex2=0;
                     }else {
                         _this.currentIndex2+=1;
                     }
                 },3000)
             }
-
         },
         mouseover(tabs){
             if(tabs == 'tabPane1'){
@@ -1246,9 +920,17 @@ export default {
                 border-radius:20px;
                 backdrop-filter: blur(10px);
                 position: relative;
-                padding: 14px;
+                padding-bottom: 14px;
                 z-index: 0;
                 overflow: hidden;
+                .img_box{
+                    height: 268px;
+                    width: 100%;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
                 &::after {
                     content: '';
                     position: absolute;

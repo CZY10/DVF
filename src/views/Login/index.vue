@@ -309,6 +309,9 @@ export default {
                     })
                         .then((res) => {
                             if(res.code === 1){
+                                if(res.data.type == 'register'){
+                                    this.$message.success(res.msg)
+                                }
                                 clearInterval(this.checkQrCode);
                                 localStorage.setItem('userInfo', JSON.stringify(res.data.userinfo));
                                 localStorage.setItem('token', res.data.userinfo.token);

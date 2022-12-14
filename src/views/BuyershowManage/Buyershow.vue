@@ -552,6 +552,8 @@ export default {
             videoData:[],
             player: null,
             localhost:process.env.VUE_APP_BASE_URL,
+            order: '',
+            orderType: '',
         }
     },
     components:{
@@ -610,7 +612,9 @@ export default {
                 this.loginDialogVisible = true;
                 return
             }else {
-                console.log(column)
+                column.order == 'ascending' ? this.orderType='asc' : this.orderType='desc';
+                column.order == 'ascending'? this.order = 'lower_price' : this.order = 'highest_price';
+                this.handlerSearchList();
             }
         },
         //table头部固定顶部
@@ -765,6 +769,8 @@ export default {
                 category_id: this.categoryValue,
                 page: this.pageIndex,
                 pageSize: this.pageSize,
+                order: this.order,
+                orderType:this.orderType
             }
             getSearchList(data)
                 .then((res) => {

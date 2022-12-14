@@ -135,6 +135,7 @@ html {
 .video_content .video-js{
     height: 380px !important;
     width: 100% !important;
+    object-fit: cover;
 }
 .video_content .vjs-poster{
     background-size: 100% 100% !important;

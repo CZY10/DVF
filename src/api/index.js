@@ -242,3 +242,11 @@ export function influencerDetail(data){
         data
     })
 }
+//拍摄方案
+export function takePlanList(data){
+    return request({
+        url:'/api/home/index',
+        method: 'post',
+        data
+    })
+}

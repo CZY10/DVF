@@ -25,8 +25,9 @@
                 size="medium"
                 :height="tableHeight"
                 :header-cell-style="{background:'#F6F6F6'}"
+                @sort-change="handlerSort"
                 style="width: 100%">
-                <el-table-column prop="createtime" label="创建时间" sortable min-width="100"></el-table-column>
+                <el-table-column prop="createtime" label="创建时间" sortable="custom" min-width="100"></el-table-column>
                 <el-table-column prop="id" label="订单号" min-width="110"></el-table-column>
                 <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
                     <template slot-scope="scope">
@@ -90,8 +91,12 @@
                                 <el-button class="operation_btn" size="small" @click="deleteOrderDialog=true;orderId = scope.row.id" round>删除</el-button>
                             </div>
                             <div v-else-if="scope.row.status == 1" class="flex_center">
-                                <el-button class="operation_btn payment_btn_style" size="small" @click="orderId = scope.row.id;handlePaymentOrder(1)" round>付尾款</el-button>
-                                <el-button class="operation_btn" size="small" @click="orderId = scope.row.id;returnDepositDialog=true" round>退定金</el-button>
+
+                                <el-button class="operation_btn payment_btn_style" v-if="scope.row.status ===1 && scope.row.influencer_id != null" size="small" @click="orderId = scope.row.id;handlePaymentOrder(1)" round>付尾款</el-button>
+                                <div class="normal_style" v-else>/</div>
+                                <div class="normal_style" v-if="scope.row.apply_refund_deposit == 1" style="font-size: 12px;color: #C0C4CC;border-radius: 16px;border: 1px solid #EBEEF5;height: 32px;line-height: 30px;margin-right: 0;margin-left: 10px">已申请退定</div>
+                                <el-button class="operation_btn" v-else size="small" @click="orderId = scope.row.id;returnDepositDialog=true" round>退定金</el-button>
+
                             </div>
                             <div v-else-if="scope.row.status == 2" class="flex_center">
                                 <el-tooltip  class="item" effect="dark"  placement="bottom">
@@ -105,7 +110,7 @@
                             </div>
                             <div v-else-if="scope.row.status == 4" class="flex_center">
                                 <a :href="scope.row.attachfile" target="_blank" style="text-decoration: none;color: #776CF3;border: 1px solid #776CF3;font-size: 12px;font-size: 12px;padding: 3px 16px;border-radius: 16px;margin-right: 10px">查看视频</a>
-                                <el-button  v-if="scope.row.comment===0"class="operation_btn" size="small" round @click="completeCommentDialog=true;completeCommentList=scope.row.comments">已评价</el-button>
+                                <el-button  v-if="scope.row.comment===1"class="operation_btn" size="small" round @click="handleComments(scope)">已评价</el-button>
                                 <el-button v-else class="operation_btn" size="small" round @click="toCommentDialog=true;orderId = scope.row.id">去评价</el-button>
                             </div>
                             <div v-else-if="scope.row.status == 5" class="flex_center">
@@ -527,6 +532,7 @@
             title="支付完成"
             :visible.sync="paymentCompletedDialogVisible"
             width="360px"
+            @close="getOrderList"
             :close-on-click-modal="false"
             class="payment_completed_dialog"
             center>
@@ -537,7 +543,7 @@
             <div>
                 <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
                 <div class="button_box know_btn">
-                    <el-button @click="paymentCompletedDialogVisible=false">我知道了</el-button>
+                    <el-button @click="paymentCompletedDialogVisible=false;getOrderList()">我知道了</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -639,7 +645,12 @@ export default {
                 ],
             },
             dialogImageUrl: '',
-            completeCommentList:{},
+            completeCommentList:{
+                satisfaction:null,
+                quality:null,
+                period:null,
+                content:'',
+            },
             ruleCommentForm:{
                 complete: null,
                 quality: null,
@@ -710,6 +721,8 @@ export default {
             avatar:'',
             isMessage: this.$store.state.order.isMessage,
             message: 0,
+            order:'',
+            orderType:'',
         }
     },
     mounted() {
@@ -744,14 +757,26 @@ export default {
     },
     methods:{
         ...mapMutations('order', ["setIsMessage","setMessage"]),
+        handleComments(content){
+            this.completeCommentDialog=true;
+            if (content.row.comments !=null) this.completeCommentList=content.row.comments
+        },
+        //排序
+        handlerSort(column){
+            column.order == 'ascending'? this.orderType='asc' : this.orderType='desc';
+            this.order = column.prop;
+            this.getOrderList();
+        },
         //获取订单列表
         getOrderList(){
             orderList({
                 keyword:this.form.keywords,
                 date: this.form.dateValue,
                 pageSize: this.pageSize,
-                currentPage: this.currentPage,
+                page: this.currentPage,
                 message: this.isMessage,
+                order: this.order,
+                orderType: this.orderType,
             })
                 .then((res) => {
                     if(res.code === 1){
@@ -793,6 +818,7 @@ export default {
                     if(res.code === 1){
                         this.$message.success('删除成功！');
                         this.deleteOrderDialog = false;
+                        this.getOrderList();
                     }
                 })
                 .catch((err) => {
@@ -847,13 +873,14 @@ export default {
                         if(res.code === 1){
                             if(res.data.status === 'success'){
                                 _this.payDepositDialogVisible = false;
+                                _this.paymentDialog = false;
                                 _this.paymentCompletedDialogVisible = true;
                                 clearInterval(_this.checkPaymentVal);
                             }
                         }
                     })
                     .catch((err) => {
-                        this.$message.error(err.msg);
+                        this.$message.error(err.message);
                     });
             },3000)
         },
@@ -870,6 +897,7 @@ export default {
                     if(res.code === 1){
                         this.returnDepositDialog = false;
                         this.$message.success('退还定金成功！');
+                        this.getOrderList();
                     }
                 })
                 .catch((err)=>{
@@ -896,6 +924,7 @@ export default {
                             this.ruleCommentForm.complete=0;
                             this.ruleCommentForm.quality=0;
                             this.ruleCommentForm.cycle=0;
+                            this.getOrderList();
                         }
                     })
                     .catch((err)=>{
@@ -980,6 +1009,7 @@ export default {
                             if(res.code === 1){
                                 this.submitDialog = false;
                                 this.$message.success('样品寄送信息提交成功!');
+                                this.getOrderList();
                             }
                         })
                         .catch((err)=>{

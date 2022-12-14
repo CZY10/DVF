@@ -23,19 +23,20 @@
                 class="payment_table"
                 size="medium"
                 :height="tableHeight"
+                @sort-change="handlerSort"
                 :header-cell-style="{background:'#F6F6F6'}"
                 style="width: 100%">
-                <el-table-column prop="paytime" label="支付时间" sortable min-width="100"></el-table-column>
+                <el-table-column prop="paytime" label="支付时间" sortable min-width="120"></el-table-column>
                 <el-table-column prop="order_id" label="订单号" min-width="110"></el-table-column>
                 <el-table-column prop="out_trade_no" label="交易编号" min-width="130"></el-table-column>
                 <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
                     <template slot-scope="scope">
-                        <p>{{ scope.row.asin}} <a href="" target="_blank"><i class="iconfont icon-fx" style="font-size: 14px"></i></a></p>
+                        <p>{{ scope.row.asin}} <a :href="scope.row.url" target="_blank"><i class="iconfont icon-fx" style="font-size: 14px"></i></a></p>
                     </template>
                 </el-table-column>
                 <el-table-column prop="order_type" label="付款类别">
                     <template slot-scope="scope">
-                        {{scope.row.order_type === 0 ? '定金' : scope.row.order_type === 1 ? '尾款' : '全款'}}
+                        {{scope.row.order_type == 0 ? '定金' : scope.row.order_type == 1 ? '尾款' : '全款'}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="price" sortable label="支付金额">
@@ -92,18 +93,28 @@ export default {
             pageSize:20,
             total:0,
             pageState:true,
+            order: '',
+            orderType: ''
         }
     },
     mounted() {
         this.getPaymentList();
     },
     methods:{
+        //排序
+        handlerSort(column){
+            column.order == 'ascending' ? this.orderType='asc' : this.orderType='desc';
+            this.order = column.prop;
+            this.getPaymentList();
+        },
         getPaymentList(){
             paymentList({
                 keyword: this.form.keywords,
                 date: this.form.dateValue,
                 pageSize: this.pageSize,
-                currentPage: this.currentPage,
+                page: this.currentPage,
+                order: this.order,
+                orderType: this.orderType
             })
                 .then((res) => {
                     if(res.code === 1){

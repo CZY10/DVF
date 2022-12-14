@@ -5,7 +5,7 @@
                 <el-col :span="9" style="padding-left: 0">
                     <div class="homepage_header">
                         <div class="head_img">
-                            <img src="../../assets/images/people_header.png" alt="">
+                            <img :src="userInfo.image" alt="">
                         </div>
                         <h5>NO.{{ userInfo.id }}</h5>
                         <span class="category">{{ userInfo.type }}</span>
@@ -49,7 +49,7 @@
                            <video
                                :id="'my-player'+ ++index"
                                ref="video"
-                               poster="../../assets/images/video/poster_video.png"
+                               :poster="item.coverimage"
                                class="video-js vjs-default-skin vjs-big-play-centered"
                                controls>
                                <source :src="localhost + item.file" />
@@ -125,9 +125,12 @@ export default {
             padding-bottom: 28px;
             text-align: center;
             .head_img{
+                width: 320px;
+                height: 320px;
                 margin: 20px 50px;
                 border: 6px solid #FFFFFF;
                 border-radius: 50%;
+                overflow: hidden;
                 img{
                     width: 100%;
                     height: auto;
@@ -168,7 +171,7 @@ export default {
                 margin-top: 23px;
             }
             .title{
-                margin: 18px 74px 2px 74px;
+                margin: 20px 74px 6px 74px;
                 height: 80px;
                 overflow: hidden;
                 span{

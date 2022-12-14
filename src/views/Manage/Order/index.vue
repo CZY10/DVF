@@ -32,7 +32,7 @@
                 <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
                     <template slot-scope="scope">
                         <p>{{ scope.row.asin}} <a :href="scope.row.url" target="_blank"><i class="iconfont icon-fx"></i></a></p>
-                        <el-button class="deatail_btn" type="text" @click="checkVideoDialog=true;">查看详情</el-button>
+                        <el-button class="deatail_btn" type="text" @click="checkVideoDialog=true;videoForm = scope.row;">查看详情</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column prop="nickName" label="接单达人">
@@ -281,8 +281,8 @@
                 <el-form size="small" label-position="left" disabled :model="videoForm" ref="videoRules" label-width="125px" class="video_ruleForm">
                     <el-form-item label="选择拍摄类型">
                         <div>
-                            <el-radio-group v-model="videoForm.selectedType" size="small">
-                                <el-radio class="radio_style1" label="1" border>
+                            <el-radio-group v-model="videoForm.shoot" size="small">
+                                <el-radio class="radio_style1" label="0" border>
                                     <p class="recommend">推荐</p>
                                     标准化拍摄
                                     <ul>
@@ -293,7 +293,7 @@
                                         <li>重拍需另行收费</li>
                                     </ul>
                                 </el-radio>
-                                <el-radio class="radio_style2" label="2" border>
+                                <el-radio class="radio_style2" label="1" border>
                                     定制化拍摄
                                     <ul>
                                         <li>达人按卖家指定方式及场景拍摄</li>
@@ -308,24 +308,24 @@
                     </el-form-item>
                     <el-form-item label="产品亚马逊链接">
                         <p style="background: #F5F7FA;border: 1px solid #E4E7ED;border-radius: 4px">
-                            <a :href="videoForm.link" style="color: #C0C4CC;padding-left: 15px;text-decoration: none" target="_blank">{{ videoForm.product }}</a>
+                            <a :href="videoForm.url" style="color: #C0C4CC;padding-left: 15px;text-decoration: none" target="_blank">{{ videoForm.url }}</a>
                         </p>
 <!--                        <el-input v-model="videoForm.product" placeholder="请输入产品亚马逊链接"></el-input>-->
                     </el-form-item>
                     <el-form-item label="产品所属品类">
-                        <el-select v-model="videoForm.category" style="width: 100%" placeholder="请选择产品所属品类">
+                        <el-select v-model="videoForm.category_id" style="width: 100%" placeholder="请选择产品所属品类">
                             <el-option label="区域一" value="shanghai"></el-option>
                             <el-option label="区域二" value="beijing"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="产品核心卖点">
-                        <el-input type="textarea" placeholder="请输入产品核心卖点" v-model="videoForm.selling_point"></el-input>
+                        <el-input type="textarea" placeholder="请输入产品核心卖点" v-model="videoForm.sellingpoint"></el-input>
                     </el-form-item>
-                    <el-form-item label="定制需求">
-                        <el-input type="textarea" placeholder="请输入您的拍摄需求" v-model="videoForm.demand"></el-input>
+                    <el-form-item label="定制需求" v-if="videoForm.shoot == 1">
+                        <el-input type="textarea" placeholder="请输入您的拍摄需求" v-model="videoForm.custom"></el-input>
                     </el-form-item>
                     <el-form-item label="备注（非必填）">
-                        <el-input type="textarea" placeholder="不超过60字，如对达人性别、肤色，小孩或宠物出镜有要求，可备注" v-model="videoForm.remarks"></el-input>
+                        <el-input type="textarea" placeholder="不超过60字，如对达人性别、肤色，小孩或宠物出镜有要求，可备注" v-model="videoForm.description"></el-input>
                     </el-form-item>
                     <el-form-item label="候选达人" style="border-top: 1px solid #eeeeee;padding-top: 14px">
                         <ul class="candidate_list">
@@ -607,43 +607,7 @@ export default {
                     date:'2022-02-14'
                 }
             ],
-            videoForm: {
-                selectedType:'1',
-                product:'https://www.amztrackers.com/index_ch.php',
-                category:'服装',
-                selling_point:'1.Disco modes color changing\n' +
-                    '2.Dance hall projection effect',
-                demand:'需场外拍摄',
-                remarks:'希望优先匹配30~40岁居家类女性达人',
-                link:'https://www.amazon.com/dp/B078RTCRGM/ref=va_live_carousel?pf_rd_r=GTAZDYNF1S1B93527K3S&pf_rd_p=93a12f85-1a5e-426c-9596-f07ee890efcf&pf_rd_m=ATVPDKIKX0DER&pf_rd_t=HighVelocityEvent&pf_rd_i=deals_1_desktop&pf_rd_s=slot-13&linkCode=ilv&tag=a032fbf9-20&ascsubtag=Deals_Mini_Stream_Follow_Below_221118064636&asc_contentid=amzn1.amazonlive.broadcast.893ce69e-f40d-4f4c-b124-6864c41786e2&pd_rd_i=B078RTCRGM&th=1&psc=1',
-                candidate:'',
-                selectedTableData:[
-                    {
-                        id:1,
-                        nickname:'NO.1231',
-                        description1:'通常纯展示',
-                        description2:'自行发挥',
-                        price:'500-900',
-                        img:require('../../../assets/images/people_header.png'),
-                    },
-                    {
-                        id:2,
-                        nickname:'NO.1232',
-                        description1:'通常纯展示',
-                        description2:'自行发挥',
-                        price:'500-900',
-                        img:require('../../../assets/images/people_header.png'),
-                    },
-                    {
-                        id:3,
-                        nickname:'NO.1233',
-                        description1:'通常纯展示',
-                        description2:'自行发挥',
-                        price:'500-1900',
-                        img:require('../../../assets/images/people_header.png'),
-                    },
-                ],
-            },
+            videoForm: {},
             dialogImageUrl: '',
             completeCommentList:{
                 satisfaction:null,

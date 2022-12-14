@@ -44,7 +44,7 @@
                     <h2 class="title_box">查找适合你的拍摄方案</h2>
                     <div style="background: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1));border-radius: 23px;padding: 2px">
                         <div class="search_style">
-                            <el-input placeholder="搜索品类/红人编号/国家" v-model="keyword" class="input-with-select input_radius">
+                            <el-input placeholder="搜索品类/红人编号" v-model="keyword" class="input-with-select input_radius">
                                 <el-button slot="append" style="width: 140px;color: #ffffff;font-size: 20px" icon="el-icon-search" @click="handlerSearchList('reset')"></el-button>
                             </el-input>
                         </div>
@@ -119,22 +119,24 @@
                                         <img v-if="scope.row.genderdata === 'male'" src="../../assets/images/male.png" alt="">
                                         <img v-else src="../../assets/images/female.png" alt="">
                                     </p>
-                                    <div class="title_style">
-                                        <span v-for="(item,index) in scope.row.category_ids" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item.name }}</span>
-                                    </div>
+                                    <el-tooltip placement="bottom" :content="scope.row.categorys" effect="light">
+                                        <div class="title_style">
+                                            <span v-for="(item,index) in scope.row.category_ids" :style="{color: index % 3 ==0 ? '#4BB1F1' : index % 2 == 0 ? '#F56422 !important':'#00D9AD',background: index % 3 == 0 ? 'rgba(75,177,241,0.1)' : index % 2 == 0 ? 'rgba(245,100,34,0.1) !important':'rgba(0,217,173,0.1)'}" :key="index">{{ item.name }}</span>
+                                        </div>
+                                    </el-tooltip>
                                 </div>
                             </div>
                         </template>
                     </el-table-column>
                     <el-table-column
                         prop="name"
-                        label="参考作品"
+                        label="以往作品"
                         align="center"
                         width="160">
                         <template slot-scope="scope">
-                            <div class="people_works" @click="handleShowVideo(scope)" :style="{cursor: scope.row.videos.length!=0? 'pointer': 'auto'}">
+                            <div class="people_works" style="height: 94px" @click="handleShowVideo(scope)" :style="{cursor: scope.row.videos.length!=0? 'pointer': 'auto'}">
                                 <p>共{{scope.row.videos.length}}个</p>
-                                <img src="../../assets/images/table_video.png" alt="">
+                                <img v-if="scope.row.videos.length>0" :src="localhost + scope.row.videos[0].coverimage" alt="">
                             </div>
                         </template>
                     </el-table-column>
@@ -220,7 +222,7 @@
                                             <p><span>拍摄场景：</span>{{ scope.row.scene_id }}</p>
                                             <p><span>视频上传：</span>{{ scope.row.videoupload_id }}</p>
                                             <p><span>交付周期：</span>{{ scope.row.leadtime_id }} <span style="color: rgba(153, 153, 153, 1);font-size: 12px">（样品收货后）</span></p>
-                                            <p><span>其他说明：</span>{{ scope.row.description1 }}交付说明默认展示两行，鼠标悬停展示全部交付说明默认展示两行，鼠标悬停展示全部</p>
+                                            <p><span>其他说明：</span>{{ scope.row.content }}</p>
                                         </div>
                                         <div class="other_description">
                                             <p><span style="color: #999999">卖点呈现：</span>{{ scope.row.sellingpoint_id }}</p>
@@ -229,7 +231,7 @@
                                     </el-tooltip>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="price" sortable width="150" align="center" label="参考报价">
+                            <el-table-column prop="lower_price" width="150" align="center" label="参考报价">
                                 <template slot-scope="scope">
                                     <p class="consult_price">￥<span>{{ scope.row.lower_price }}-{{ scope.row.highest_price }}</span></p>
                                 </template>
@@ -251,7 +253,7 @@
             </div>
 
         </div>
-        <el-backtop style="background: #000827;width: 46px;height: 46px;">
+        <el-backtop style="background: #000827;width: 46px;height: 46px;bottom: 70px">
             <div>
                 <i class="iconfont icon-fhdb" style="color: #ffffff;font-size: 25px"></i>
             </div>
@@ -330,7 +332,7 @@
                         </div>
                         <el-input type="textarea" placeholder="请输入产品核心卖点" v-model="videoRuleForm.selling_point"></el-input>
                     </el-form-item>
-                    <el-form-item label="定制需求" prop="demand">
+                    <el-form-item label="定制需求" v-if="videoRuleForm.selectedType == 1" prop="demand">
                         <div class="description">请具体说明您的拍摄需求
                             <el-tooltip class="item" effect="dark" placement="right">
                                 <a href="javascript:;;">示例</a>
@@ -433,12 +435,12 @@
                     <!-- swiper1 -->
                     <swiper class="swiper gallery-top" :options="swiperOptionTop" ref="swiperTop">
                         <swiper-slide v-for="(item,index) in this.videoData" :key="index" style="position: relative;padding-top: 42px" :class="'slide-'+index+1">
-                            <h4 style="width:100%;text-align:center;position: absolute;top: -2px;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99">{{item.desc}}</h4>
+                            <h4 :title="item.desc" style="width:100%;text-align:center;position: absolute;top: -2px;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{item.desc}}</h4>
                             <div class="video_content">
                                 <video
                                     :id="'my-player'+ ++index"
                                     ref="video"
-                                    poster="../../assets/images/video/poster_video.png"
+                                    :poster="localhost + item.coverimage"
                                     class="video-js vjs-default-skin vjs-big-play-centered"
                                     controls>
                                     <source :src="localhost + item.file" />
@@ -449,7 +451,7 @@
                     <!-- swiper2 Thumbs -->
                     <swiper class="swiper gallery-thumbs" id="swiperThumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">
                         <swiper-slide v-for="(item,index) in this.videoData" :key="index" :class="'slide-'+ ++index">
-                            <img src="../../assets/images/tab-pane1.png" alt="">
+                            <img :src="localhost + item.coverimage" alt="">
                         </swiper-slide>
                     </swiper>
                     <div class="swiper-button-next swiper-button-white" slot="button-next"><i class="el-icon-arrow-right"></i></div>
@@ -585,6 +587,7 @@ export default {
         handleShowVideo(scope){
             if(scope.row.videos.length > 0){
                 this.videoData= scope.row.videos;
+                console.log(this.videoData)
                 this.videoPlayDialog =true;
                 setTimeout(()=>{
                     this.$nextTick(() => {
@@ -925,7 +928,11 @@ export default {
 
         },
         deleteRow(index,id,rows,tab) {
+
             rows.splice(index, 1);
+            if(rows.length == 0){
+                this.drawer = false;
+            }
             this.selectedLength = this.selectedTableData.length;
             for (let key in tab){
                 if(tab[key].id == id){
@@ -1759,7 +1766,6 @@ export default {
                 height: 120px;
                 border-radius: 50%;
                 overflow: hidden;
-                border: 1px solid;
                 flex-shrink:0;
                 margin-right: 24px;
                 img{
@@ -1817,6 +1823,7 @@ export default {
             }
             img{
                 width: 100%;
+                height: 100%;
             }
             p{
                 position: absolute;

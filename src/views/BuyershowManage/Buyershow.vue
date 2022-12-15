@@ -165,7 +165,7 @@
                     <el-table-column
                         prop="price"
                         sortable="custom"
-                        width="150"
+                        width="160"
                         align="center"
                         label="参考报价">
                         <template slot-scope="scope">

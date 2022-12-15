@@ -314,8 +314,7 @@
                     </el-form-item>
                     <el-form-item label="产品所属品类">
                         <el-select v-model="videoForm.category_id" style="width: 100%" placeholder="请选择产品所属品类">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-option v-for="(item,index) in categoryList" :label="item.name" :value="item.id" :key="index"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="产品核心卖点">
@@ -561,7 +560,7 @@ import {
     createTransport,
     getChatList,
     createChat,
-    orderDetail
+    orderDetail, getCategory
 } from "@/api";
 import QRCode from "qrcodejs2";
 import {mapMutations} from "vuex";
@@ -584,6 +583,7 @@ export default {
             }
         }
         return {
+            categoryList:[],
             isHide:false,
             form:{
                 keywords:'',
@@ -704,6 +704,7 @@ export default {
         this.getOrderList();
         this.token = localStorage.getItem('token');
         this.avatar = localStorage.getItem('avatar');
+        this.handlerGetCategory();
     },
     computed:{
         query(){
@@ -732,6 +733,20 @@ export default {
     },
     methods:{
         ...mapMutations('order', ["setIsMessage","setMessage"]),
+        //获取搜索分类
+        handlerGetCategory(){
+            getCategory({type:'influencer'})
+                .then((res) => {
+                    if(res.code === 1){
+                        this.categoryList = res.data;
+                        console.log(222,this.categoryList)
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.$message.error(err.msg);
+                });
+        },
         handleCheckOrderDetail(column){
             orderDetail({
                 order_id: column.id

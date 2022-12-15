@@ -32,7 +32,7 @@
                 <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
                     <template slot-scope="scope">
                         <p>{{ scope.row.asin}} <a :href="scope.row.url" target="_blank"><i class="iconfont icon-fx"></i></a></p>
-                        <el-button class="deatail_btn" type="text" @click="checkVideoDialog=true;videoForm = scope.row;">查看详情</el-button>
+                        <el-button class="deatail_btn" type="text" @click="handleCheckOrderDetail(scope.row)">查看详情</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column prop="nickName" label="接单达人">
@@ -330,12 +330,12 @@
                     <el-form-item label="候选达人" style="border-top: 1px solid #eeeeee;padding-top: 14px">
                         <ul class="candidate_list">
                             <router-link target="_blank" :to="{path:'/homepage:'+5}">
-                                <li v-for="(item,index) in videoForm.selectedTableData" :key="index">
+                                <li v-for="(item,index) in videoForm.influencers" :key="index">
                                     <div>
-                                        <img :src="item.img" alt="">
+                                        <img :src="item.image" alt="">
                                     </div>
-                                    <p>{{item.nickname}}</p>
-                                    <span>{{item.price}}</span>
+                                    <p>NO.{{item.id}}</p>
+                                    <span>￥{{item.lower_price}}-{{item.highest_price}}</span>
                                 </li>
                             </router-link>
                         </ul>
@@ -551,7 +551,18 @@
 </template>
 
 <script>
-import {orderList, orderDelete, payOrder, checkPayment, returnFrontMoney, commentCreate, createTransport, getChatList, createChat} from "@/api";
+import {
+    orderList,
+    orderDelete,
+    payOrder,
+    checkPayment,
+    returnFrontMoney,
+    commentCreate,
+    createTransport,
+    getChatList,
+    createChat,
+    orderDetail
+} from "@/api";
 import QRCode from "qrcodejs2";
 import {mapMutations} from "vuex";
 export default {
@@ -721,6 +732,20 @@ export default {
     },
     methods:{
         ...mapMutations('order', ["setIsMessage","setMessage"]),
+        handleCheckOrderDetail(column){
+            orderDetail({
+                order_id: column.id
+            })
+                .then((res)=>{
+                    if(res.code ==1){
+                        this.videoForm = res.data;
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+            this.checkVideoDialog=true;
+        },
         handleComments(content){
             this.completeCommentDialog=true;
             if (content.row.comments !=null) this.completeCommentList=content.row.comments
@@ -1993,6 +2018,7 @@ export default {
                         height: 44px;
                         border-radius: 26px;
                         margin: auto;
+                        overflow: hidden;
                         img{
                             width: 100%;
                         }

@@ -28,7 +28,7 @@
             </el-col>
         </el-row>
         <el-row style="max-width: 1200px;margin: auto;">
-            <p class="keep_on_record">© 2021. {{ formData.companyname }}版权所有 {{ formData.beian }}</p>
+            <p class="keep_on_record">© 2022. {{ formData.companyname }}版权所有 <a href="https://beian.miit.gov.cn/" target="_blank">{{ formData.beian }}</a></p>
         </el-row>
     </div>
 </template>
@@ -108,6 +108,10 @@ export default {
         color: #CCD0D7;
         line-height: 20px;
         padding: 48px 0 20px 0;
+        a{
+            color: #CCD0D7;
+            text-decoration: none;
+        }
     }
 }
 </style>

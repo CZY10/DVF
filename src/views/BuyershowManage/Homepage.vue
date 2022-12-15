@@ -49,7 +49,7 @@
                            <video
                                :id="'my-player'+ ++index"
                                ref="video"
-                               :poster="item.coverimage"
+                               :poster="localhost + item.coverimage"
                                class="video-js vjs-default-skin vjs-big-play-centered"
                                controls>
                                <source :src="localhost + item.file" />
@@ -133,7 +133,8 @@ export default {
                 overflow: hidden;
                 img{
                     width: 100%;
-                    height: auto;
+                    height: 100%;
+                    object-fit: cover;
                 }
             }
             h5{

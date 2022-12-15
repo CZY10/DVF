@@ -210,7 +210,7 @@
                             <el-table-column prop="name" label="以往作品" align="center" width="180">
                                 <template slot-scope="scope">
                                     <div class="people_works">
-                                        <img src="../../assets/images/table_video.png" alt="">
+                                        <img :src="localhost + scope.row.videos[0].coverimage" alt="">
                                     </div>
                                 </template>
                             </el-table-column>
@@ -416,7 +416,7 @@
             <div>
                 <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
                 <div class="button_box">
-                    <el-button @click="paymentCompletedDialogVisible=false;handlePaymentCompletedClose()">我知道了</el-button>
+                    <el-button @click="handlePaymentCompletedClose">我知道了</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -556,6 +556,7 @@ export default {
             localhost:process.env.VUE_APP_BASE_URL,
             order: '',
             orderType: '',
+            isSelectTab:[],
         }
     },
     components:{
@@ -581,13 +582,13 @@ export default {
     methods:{
         /*关闭支付完成页面并跳转至订单信息页面*/
         handlePaymentCompletedClose(){
+            this.paymentCompletedDialogVisible=false;
             window.open('/#/manage/order', '_blank');
         },
         /*播放视频*/
         handleShowVideo(scope){
             if(scope.row.videos.length > 0){
                 this.videoData= scope.row.videos;
-                console.log(this.videoData)
                 this.videoPlayDialog =true;
                 setTimeout(()=>{
                     this.$nextTick(() => {
@@ -615,6 +616,7 @@ export default {
                 this.loginDialogVisible = true;
                 return
             }else {
+                this.pageIndex = 1
                 column.order == 'ascending' ? this.orderType='asc' : this.orderType='desc';
                 column.order == 'ascending'? this.order = 'lower_price' : this.order = 'highest_price';
                 this.handlerSearchList();
@@ -786,6 +788,21 @@ export default {
                         this.total = res.data.total;
                         this.pageIndex = res.data.current_page;
                         this.totalNum = res.data.last_page;
+                        let arr = [];
+                        setTimeout(()=>{
+                            this.tableData.forEach((item)=>{
+                                this.selectedTableData.forEach((row,index)=>{
+                                    if(item.id == row.id){
+                                        arr.push(item);
+                                    }
+                                })
+                            })
+                            if(arr){
+                                arr.forEach((row)=>{
+                                    this.$refs.multipleTable.toggleRowSelection(row,true);
+                                })
+                            }
+                        },100)
                     }
                 })
                 .catch((err) => {
@@ -866,6 +883,7 @@ export default {
         //提交拍摄需求
         submitForm(formName) {
             let influencer_id = [];
+            console.log(this.selectedTableData)
             this.selectedTableData.forEach((item,index)=>{
                 influencer_id.push(item.id)
             })
@@ -893,7 +911,6 @@ export default {
                             }
                         })
                         .catch((err) => {
-                            console.log(err)
                             this.$message.error(err.msg);
                         });
                 } else {
@@ -914,11 +931,15 @@ export default {
             }else {
                 val.length>0 ? this.isShowSelectedPlan=true:this.isShowSelectedPlan=false;
                 if(val.length>5){
-                    this.$message({
-                        message: '每个需求请选择3~5个意向方案',
-                        type: 'warning'
-                    });
                     this.selectedTableData = val.splice(0,5);
+                    val.splice(0,5).forEach((item,index)=>{
+                        this.$refs.multipleTable.toggleRowSelection(item,false);
+                        this.$message({
+                            message: '每个需求请选择3~5个意向方案',
+                            type: 'warning'
+                        });
+                        return;
+                    })
 
                 }else {
                     this.selectedTableData = val
@@ -1576,6 +1597,8 @@ export default {
             overflow: hidden;
             img{
                 width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
         }
         .people_nickname{
@@ -1594,6 +1617,8 @@ export default {
         margin: auto;
         img{
             width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     }
     .upload_description p{
@@ -1771,6 +1796,7 @@ export default {
                 img{
                     width: 100%;
                     height: 100%;
+                    object-fit: cover;
                 }
             }
             .people_nickname{
@@ -1824,6 +1850,7 @@ export default {
             img{
                 width: 100%;
                 height: 100%;
+                object-fit: cover;
             }
             p{
                 position: absolute;

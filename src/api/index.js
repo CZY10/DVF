@@ -250,3 +250,11 @@ export function takePlanList(data){
         data
     })
 }
+//订单详情
+export function orderDetail(data){
+    return request({
+        url:'/api/order/detail',
+        method: 'post',
+        data
+    })
+}

@@ -310,7 +310,7 @@
                         <p style="background: #F5F7FA;border: 1px solid #E4E7ED;border-radius: 4px">
                             <a :href="videoForm.url" style="color: #C0C4CC;padding-left: 15px;text-decoration: none" target="_blank">{{ videoForm.url }}</a>
                         </p>
-<!--                        <el-input v-model="videoForm.product" placeholder="请输入产品亚马逊链接"></el-input>-->
+<!--                        <el-input v-model="videoForm.url" placeholder="请输入产品亚马逊链接"></el-input>-->
                     </el-form-item>
                     <el-form-item label="产品所属品类">
                         <el-select v-model="videoForm.category_id" style="width: 100%" placeholder="请选择产品所属品类">
@@ -2019,13 +2019,13 @@ export default {
             }
             .candidate_list {
                 li{
-                    width: 60px;
+                    width: 80px;
                     height: 83px;
                     background: #FFFFFF;
                     border-radius: 3px;
                     border: 1px solid #EEEEEE;
                     text-align: center;
-                    padding: 12px;
+                    padding: 11px 4px;
                     float: left;
                     margin-right: 8px;
                     div{

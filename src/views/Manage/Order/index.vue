@@ -39,8 +39,8 @@
                     <template slot-scope="scope">
                         <div class="avatar_box">
                             <p>
-                                <el-avatar v-if="scope.row.avatar==''" icon="el-icon-user-solid"></el-avatar>
-                                <router-link v-else target="_blank" :to="{path:'/homepage:'+5}"><el-avatar v-if="scope.row.influencer" :src="localhost + scope.row.influencer.image"></el-avatar></router-link>
+                                <el-avatar v-if="scope.row.influencer_id==''||scope.row.influencer_id==null" icon="el-icon-user-solid"></el-avatar>
+                                <router-link v-else target="_blank" :to="{path:'/homepage:'+scope.row.influencer_id}"><el-avatar v-if="scope.row.influencer" :src="localhost + scope.row.influencer.image"></el-avatar></router-link>
                             </p>
                             <p>
                                 <span v-if="scope.row.influencer_id==''||scope.row.influencer_id==null" style="color: #999999;">--</span>
@@ -328,8 +328,8 @@
                     </el-form-item>
                     <el-form-item label="候选达人" style="border-top: 1px solid #eeeeee;padding-top: 14px">
                         <ul class="candidate_list">
-                            <router-link target="_blank" :to="{path:'/homepage:'+5}">
-                                <li v-for="(item,index) in videoForm.influencers" :key="index">
+                            <router-link v-for="(item,index) in videoForm.influencers" :key="index" target="_blank" :to="{path:'/homepage:'+item.id}">
+                                <li>
                                     <div>
                                         <img :src="item.image" alt="">
                                     </div>
@@ -739,11 +739,9 @@ export default {
                 .then((res) => {
                     if(res.code === 1){
                         this.categoryList = res.data;
-                        console.log(222,this.categoryList)
                     }
                 })
                 .catch((err) => {
-                    console.log(err)
                     this.$message.error(err.msg);
                 });
         },
@@ -2056,9 +2054,9 @@ export default {
                         line-height: 17px;
                         text-align: center;
                     }
-                    &:last-child{
-                        margin-right: 0;
-                    }
+                }
+                a:last-child li{
+                    margin-right: 0;
                 }
             }
         }

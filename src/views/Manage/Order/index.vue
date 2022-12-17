@@ -898,7 +898,7 @@ export default {
                 .then((res)=>{
                     if(res.code === 1){
                         this.returnDepositDialog = false;
-                        this.$message.success('退还定金成功！');
+                        this.$message.success('申请成功！');
                         this.getOrderList();
                     }
                 })

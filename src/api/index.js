@@ -258,3 +258,11 @@ export function orderDetail(data){
         data
     })
 }
+//订单步骤
+export function orderStep(data){
+    return request({
+        url:'/api/order/step',
+        method: 'post',
+        data
+    })
+}

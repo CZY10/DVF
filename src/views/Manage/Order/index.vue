@@ -60,10 +60,12 @@
                         <el-popover
                             placement="bottom"
                             width="185"
+                            @hide="stepsList = []"
+                            @show="handleShowFn(scope.row)"
                             trigger="hover">
                             <div solt="content" style="padding: 15px 15px 0 15px">
                                 <el-steps direction="vertical" :active="scope.row.status+1">
-                                    <el-step v-for="(item,index) in stepsList" :key="index" :title="item.title" :description="item.date"><span></span></el-step>
+                                    <el-step v-for="(item,index) in stepsList" :key="index" :title="item.name" :description="item.createtime"><span></span></el-step>
                                 </el-steps>
                             </div>
                             <span slot="reference" class="status_style" :style="{color:scope.row.status == 0 ? '#FF000C' : scope.row.status == 1 ? '#FF000C' : scope.row.status == 2 ? '#FF000C' : scope.row.status == 4 ? '#00D9AD' : '#333333'}">
@@ -560,7 +562,9 @@ import {
     createTransport,
     getChatList,
     createChat,
-    orderDetail, getCategory
+    orderDetail,
+    getCategory,
+    orderStep
 } from "@/api";
 import QRCode from "qrcodejs2";
 import {mapMutations} from "vuex";
@@ -605,18 +609,19 @@ export default {
             messageData:[],
             uploadFile:[],
             stepsList:[
-                {
-                    title: '步骤一',
-                    date:'2022-02-14'
-                },
-                {
-                    title: '步骤二',
-                    date:'2022-02-14'
-                },
-                {
-                    title: '步骤三',
-                    date:'2022-02-14'
-                }
+            //     {
+            //         title: '步骤一',
+            //         date:'2022-02-14'
+            //     },
+            //     {
+            //         title: '步骤二',
+            //         date:'2022-02-14'
+            //     },
+            //     {
+            //         title: '步骤三',
+            //         date:'2022-02-14'
+            //     }
+            //
             ],
             videoForm: {},
             dialogImageUrl: '',
@@ -733,6 +738,19 @@ export default {
     },
     methods:{
         ...mapMutations('order', ["setIsMessage","setMessage"]),
+        handleShowFn(row){
+            orderStep({
+                order_id:row.id
+            })
+                .then((res)=>{
+                    if(res.code === 1){
+                        this.stepsList = res.data
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        },
         //获取搜索分类
         handlerGetCategory(){
             getCategory({type:'influencer'})

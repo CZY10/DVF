@@ -91,10 +91,8 @@ export default {
                 id: this.id
             })
                 .then((res)=>{
-                    console.log(res)
                     if(res.code ===1){
                         this.userInfo = res.data;
-                        console.log(this.userInfo)
                     }
                 })
                 .catch((err)=>{

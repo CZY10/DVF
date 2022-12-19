@@ -67,6 +67,7 @@ export default {
     background: rgba(0, 8, 39, 1);
     border-top: 1px solid rgba(255, 255, 255, 0.2200);
     padding-top: 50px;
+    margin-top: 60px;
     img{
         width: 100%;
     }

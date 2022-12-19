@@ -498,7 +498,6 @@
         </el-dialog>
     </div>
 </template>
-
 <script>
 import Footer from "@/components/Footer";
 import QRCode from 'qrcodejs2'
@@ -506,12 +505,10 @@ import {getCategory, getSearchList, createOrder, payOrder, checkPayment} from "@
 import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
+
 let vm = null;
 export default {
     name: "buyershow",
-    directives: {
-        'el-table-infinite-scroll': elTableInfiniteScroll
-    },
     data(){
         return{
             swiperOptionThumbs: {
@@ -597,7 +594,6 @@ export default {
             localhost:process.env.VUE_APP_BASE_URL,
             order: '',
             orderType: '',
-            isSelectTab:[],
         }
     },
     components:{
@@ -605,23 +601,19 @@ export default {
         swiper,
         swiperSlide
     },
+    created() {
+        vm = this;
+    },
     mounted() {
         this.footerHeight = this.$refs.getheight.offsetHeight + 'px'
         this.handlerGetCategory('influencer');
         this.handlerGetCategory('type');
         this.handlerSearchList();
-        // this.$nextTick(() => {
-        //     const swiperTop = this.$refs.swiperTop.swiper
-        //     const swiperThumbs = this.$refs.swiperThumbs.swiper
-        //     swiperTop.controller.control = swiperThumbs
-        //     swiperThumbs.controller.control = swiperTop
-        // })
+        this.setSwiper(0);
+
     },
     beforeUpdate(){
         window.addEventListener('scroll',this.handleScroll,true)
-    },
-    created() {
-        vm = this;
     },
     methods:{
         setSwiper(data){
@@ -944,7 +936,6 @@ export default {
         //提交拍摄需求
         submitForm(formName) {
             let influencer_id = [];
-            console.log(this.selectedTableData)
             this.selectedTableData.forEach((item,index)=>{
                 influencer_id.push(item.id)
             })
@@ -1188,6 +1179,7 @@ export default {
         }
     }
 }
+
 </style>
 <style lang="less">
 .el-tooltip__popper.is-dark{

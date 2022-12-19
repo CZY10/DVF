@@ -1511,7 +1511,7 @@ export default {
                 text-align: center;
                 padding: 12px 5px;
                 float: left;
-                margin-right: 8px;
+                margin-right: 7px;
                 div{
                     width: 44px;
                     height: 44px;

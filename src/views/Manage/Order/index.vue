@@ -64,8 +64,8 @@
                             @show="handleShowFn(scope.row)"
                             trigger="hover">
                             <div solt="content" style="padding: 15px 15px 0 15px">
-                                <el-steps direction="vertical" :active="scope.row.status+1">
-                                    <el-step v-for="(item,index) in stepsList" :key="index" :title="item.name" :description="item.createtime"><span></span></el-step>
+                                <el-steps direction="vertical" :active="stepsList.current">
+                                    <el-step v-for="(item,index) in stepsList.items" :key="index" :title="item.name" :description="item.createtime"><span></span></el-step>
                                 </el-steps>
                             </div>
                             <span slot="reference" class="status_style" :style="{color:scope.row.status == 0 ? '#FF000C' : scope.row.status == 1 ? '#FF000C' : scope.row.status == 2 ? '#FF000C' : scope.row.status == 4 ? '#00D9AD' : '#333333'}">
@@ -608,21 +608,7 @@ export default {
             payDepositDialogVisible:false,
             messageData:[],
             uploadFile:[],
-            stepsList:[
-            //     {
-            //         title: '步骤一',
-            //         date:'2022-02-14'
-            //     },
-            //     {
-            //         title: '步骤二',
-            //         date:'2022-02-14'
-            //     },
-            //     {
-            //         title: '步骤三',
-            //         date:'2022-02-14'
-            //     }
-            //
-            ],
+            stepsList: {},
             videoForm: {},
             dialogImageUrl: '',
             completeCommentList:{
@@ -744,7 +730,7 @@ export default {
             })
                 .then((res)=>{
                     if(res.code === 1){
-                        this.stepsList = res.data
+                        this.stepsList = res.data;
                     }
                 })
                 .catch((err)=>{

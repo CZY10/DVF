@@ -46,14 +46,8 @@
                <div style="max-width: 1200px;margin: auto">
                    <div class="product_item" v-for="(item,index) in userInfo.videos" :key="index">
                        <div class="product_item_video">
-                           <video
-                               :id="'my-player'+ ++index"
-                               ref="video"
-                               :poster="localhost + item.coverimage"
-                               class="video-js vjs-default-skin vjs-big-play-centered"
-                               controls>
-                               <source :src="localhost + item.file" />
-                           </video>
+                           <img :src="localhost + item.coverimage" alt="">
+                           <i class="el-icon-caret-right" @click="handlePlayVideo(item)"></i>
                        </div>
                        <p :title="item.desc">{{ item.desc }}</p>
                    </div>
@@ -61,7 +55,23 @@
             </div>
         </div>
         <Footer></Footer>
+        <!--查看大图-->
+        <el-dialog :visible.sync="videoDialog" class="video_dialog" @close="handleClose" width="1060px" :close-on-click-modal="false">
+            <h2>家用投影仪开箱展示视频家用投影仪开箱展示视频</h2>
+            <div class="videoView">
+               <video
+                   id="my-player"
+                   ref="video"
+                   :poster="localhost + videoData.coverimage"
+                   class="video-js vjs-default-skin vjs-big-play-centered"
+                   controls>
+                   <source :src="localhost + videoData.file" />
+               </video>
+            </div>
+        </el-dialog>
     </div>
+
+
 </template>
 
 <script>
@@ -74,6 +84,8 @@ export default {
     },
     data(){
         return{
+            videoDialog:false,
+            videoData:{},
             title:['家居','电子','服装设计','家居','电子','服装设计','家居','电子','服装设计','家居','电子','服装设计','家居'],
             id:'',
             userInfo:{},
@@ -81,11 +93,20 @@ export default {
         }
     },
     mounted() {
-
         this.id = window.location.href.substr(window.location.href.lastIndexOf(':')+1);
         this.getInfluencerDetail()
     },
     methods:{
+        //关闭视频
+        handleClose(){
+            // document.getElementById('my-player').pause();
+            console.log(this.videoData)
+        },
+        //播放视频
+        handlePlayVideo(data){
+            this.videoData = data;
+            this.videoDialog = true;
+        },
         getInfluencerDetail(){
             influencerDetail({
                 id: this.id
@@ -103,7 +124,14 @@ export default {
     }
 }
 </script>
-
+<style lang="less" >
+.video_dialog{
+    .el-dialog__body{
+        padding: 30px;
+        padding-top: 0 !important;
+    }
+}
+</style>
 <style lang="less" scoped>
 .flex{
     display: flex;
@@ -288,10 +316,29 @@ export default {
                 margin: 7px 7px;
                 overflow: hidden;
                 .product_item_video{
-                    video{
+                    position: relative;
+                    img{
                         width: 100%;
                         height: 133px;
                         object-fit: cover;
+                    }
+                    i{
+                        position: absolute;
+                        width: 46px;
+                        height: 46px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        background: #ffffff;
+                        left: 50%;
+                        top: 50%;
+                        margin-top: -23px;
+                        margin-left: -23px;
+                        color: #333333;
+                        display: flex;
+                        font-size: 30px;
+                        justify-content: center;
+                        align-items: center;
+                        cursor: pointer;
                     }
                 }
                 p{
@@ -312,6 +359,25 @@ export default {
             }
         }
 
+    }
+    .video_dialog{
+        h2{
+            font-size: 16px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333333;
+            line-height: 22px;
+            text-align: center;
+            margin-bottom: 22px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        video{
+            width: 100%;
+            height: 567px;
+            object-fit: cover;
+        }
     }
 
 }

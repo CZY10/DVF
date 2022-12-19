@@ -255,7 +255,6 @@ export default {
                         }
                     })
                     .catch((err) => {
-                        console.log(err)
                         this.$message.error(err.msg);
                     });
             },3000)
@@ -275,12 +274,8 @@ export default {
                 event: even
             })
                 .then((res) => {
-                    if(res.code === 1){
-                        console.log(res)
-                    }
                 })
                 .catch((err) => {
-                    console.log(err)
                     this.$message.error(err.msg);
                 });
             let timeo = 30;

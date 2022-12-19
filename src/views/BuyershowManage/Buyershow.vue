@@ -208,7 +208,7 @@
                             </el-table-column>
                             <el-table-column prop="name" label="以往作品" align="center" width="180">
                                 <template slot-scope="scope">
-                                    <div class="people_works">
+                                    <div class="people_works" @click="handleShowVideo(scope)">
                                         <img :src="scope.row.videos.length>0 ? localhost + scope.row.videos[0].coverimage : ''" alt="">
                                     </div>
                                 </template>
@@ -423,43 +423,6 @@
         </el-dialog>
 
         <!--视频播放-->
-<!--        <el-dialog-->
-<!--            :title="this.videoData.name"-->
-<!--            :visible.sync="videoPlayDialog"-->
-<!--            width="896px"-->
-<!--            :close-on-click-modal="false"-->
-<!--            class="video_dialog video_player"-->
-<!--            @close="handleVideoClose"-->
-<!--            center>-->
-<!--            <div style="padding-top: 0">-->
-<!--                <div class="thumb-example">-->
-<!--                    &lt;!&ndash; swiper1 &ndash;&gt;-->
-<!--                    <swiper class="swiper gallery-top" :options="swiperOptionTop" ref="swiperTop">-->
-<!--                        <swiper-slide v-for="(item,index) in this.videoData" :key="index" style="position: relative;padding-top: 42px" :class="'slide-'+index+1">-->
-<!--                            <h4 :title="item.desc" style="width:100%;text-align:center;position: absolute;top: -2px;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{item.desc}}</h4>-->
-<!--                            <div class="video_content">-->
-<!--                                <video-->
-<!--                                    :id="'my-player'+ ++index"-->
-<!--                                    ref="video"-->
-<!--                                    :poster="localhost + item.coverimage"-->
-<!--                                    class="video-js vjs-default-skin vjs-big-play-centered"-->
-<!--                                    controls>-->
-<!--                                    <source :src="localhost + item.file" />-->
-<!--                                </video>-->
-<!--                            </div>-->
-<!--                        </swiper-slide>-->
-<!--                    </swiper>-->
-<!--                    &lt;!&ndash; swiper2 Thumbs &ndash;&gt;-->
-<!--                    <swiper class="swiper gallery-thumbs" id="swiperThumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">-->
-<!--                        <swiper-slide v-for="(item,index) in this.videoData" :key="index" :class="'slide-'+ ++index">-->
-<!--                            <img :src="localhost + item.coverimage" alt="">-->
-<!--                        </swiper-slide>-->
-<!--                    </swiper>-->
-<!--                    <div class="swiper-button-next swiper-button-white" slot="button-next"><i class="el-icon-arrow-right"></i></div>-->
-<!--                    <div class="swiper-button-prev swiper-button-white" slot="button-prev"><i class="el-icon-arrow-left"></i></div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </el-dialog>-->
         <el-dialog
             :title="this.videoData.name"
             :visible.sync="videoPlayDialog"
@@ -642,15 +605,8 @@ export default {
         handleShowVideo(scope){
             if(scope.row.videos.length > 0){
                 this.videoData= scope.row.videos;
+                this.drawer = false;
                 this.videoPlayDialog =true;
-                // setTimeout(()=>{
-                //     this.$nextTick(() => {
-                //         const swiperTop = this.$refs.swiperTop.swiper
-                //         const swiperThumbs = this.$refs.swiperThumbs.swiper
-                //         swiperTop.controller.control = swiperThumbs
-                //         swiperThumbs.controller.control = swiperTop
-                //     })
-                // },100);
             }
 
         },
@@ -764,7 +720,6 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    console.log(err)
                     this.$message.error(err.msg);
                 });
         },
@@ -1703,10 +1658,27 @@ export default {
         width: 72px;
         height: 48px;
         margin: auto;
+        position: relative;
         img{
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        &:after{
+            font-family: element-icons;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            content: '\e791';
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            margin-left: -7px;
+            margin-top: -7px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
     .upload_description p{

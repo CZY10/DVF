@@ -59,13 +59,13 @@
                     <template slot-scope="scope">
                         <el-popover
                             placement="bottom"
-                            width="185"
+                            width="200"
                             @hide="stepsList = []"
                             @show="handleShowFn(scope.row)"
                             trigger="hover">
-                            <div solt="content" style="padding: 15px 15px 0 15px">
+                            <div solt="content" style="padding: 15px 15px 0 15px;">
                                 <el-steps direction="vertical" :active="stepsList.current">
-                                    <el-step v-for="(item,index) in stepsList.items" :key="index" :title="item.name" :description="item.createtime"><span></span></el-step>
+                                    <el-step v-for="(item,index) in stepsList.items" icon="el-icon-success" :key="index" :title="item.name" :description="item.createtime"><span></span></el-step>
                                 </el-steps>
                             </div>
                             <span slot="reference" class="status_style" :style="{color:scope.row.status == 0 ? '#FF000C' : scope.row.status == 1 ? '#FF000C' : scope.row.status == 2 ? '#FF000C' : scope.row.status == 4 ? '#00D9AD' : '#333333'}">

@@ -90,6 +90,7 @@ export default {
             id:'',
             userInfo:{},
             localhost:process.env.VUE_APP_BASE_URL,
+            player: null,
         }
     },
     mounted() {
@@ -106,6 +107,7 @@ export default {
         handlePlayVideo(data){
             this.videoData = data;
             this.videoDialog = true;
+            this.player=this.$video('my-player');
         },
         getInfluencerDetail(){
             influencerDetail({

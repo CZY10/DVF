@@ -80,7 +80,6 @@
 
                 <el-table
                     :data="tableData"
-                    stripe
                     id="searchBar"
                     ref="multipleTable"
                     v-loading="loading"
@@ -210,7 +209,7 @@
                             <el-table-column prop="name" label="以往作品" align="center" width="180">
                                 <template slot-scope="scope">
                                     <div class="people_works">
-                                        <img :src="localhost + scope.row.videos[0].coverimage" alt="">
+                                        <img :src="scope.row.videos.length>0 ? localhost + scope.row.videos[0].coverimage : ''" alt="">
                                     </div>
                                 </template>
                             </el-table-column>
@@ -352,13 +351,15 @@
                     </el-form-item>
                     <el-form-item label="候选达人" style="border-top: 1px solid #eeeeee;padding-top: 14px">
                         <ul class="candidate_list">
-                            <li v-for="(item,index) in selectedTableData" :key="index">
-                                <div>
-                                    <img :src="item.image" alt="">
-                                </div>
-                                <p>NO.{{item.id}}</p>
-                                <span>￥{{item.lower_price}}-{{item.highest_price}}</span>
-                            </li>
+                            <router-link v-for="(item,index) in selectedTableData" :key="index" target="_blank" :to="{path:'/homepage:'+item.id}">
+                                <li>
+                                    <div>
+                                        <img :src="item.image" alt="">
+                                    </div>
+                                    <p>NO.{{item.id}}</p>
+                                    <span>￥{{item.lower_price}}-{{item.highest_price}}</span>
+                                </li>
+                            </router-link>
                         </ul>
                     </el-form-item>
                 </el-form>
@@ -422,6 +423,43 @@
         </el-dialog>
 
         <!--视频播放-->
+<!--        <el-dialog-->
+<!--            :title="this.videoData.name"-->
+<!--            :visible.sync="videoPlayDialog"-->
+<!--            width="896px"-->
+<!--            :close-on-click-modal="false"-->
+<!--            class="video_dialog video_player"-->
+<!--            @close="handleVideoClose"-->
+<!--            center>-->
+<!--            <div style="padding-top: 0">-->
+<!--                <div class="thumb-example">-->
+<!--                    &lt;!&ndash; swiper1 &ndash;&gt;-->
+<!--                    <swiper class="swiper gallery-top" :options="swiperOptionTop" ref="swiperTop">-->
+<!--                        <swiper-slide v-for="(item,index) in this.videoData" :key="index" style="position: relative;padding-top: 42px" :class="'slide-'+index+1">-->
+<!--                            <h4 :title="item.desc" style="width:100%;text-align:center;position: absolute;top: -2px;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{item.desc}}</h4>-->
+<!--                            <div class="video_content">-->
+<!--                                <video-->
+<!--                                    :id="'my-player'+ ++index"-->
+<!--                                    ref="video"-->
+<!--                                    :poster="localhost + item.coverimage"-->
+<!--                                    class="video-js vjs-default-skin vjs-big-play-centered"-->
+<!--                                    controls>-->
+<!--                                    <source :src="localhost + item.file" />-->
+<!--                                </video>-->
+<!--                            </div>-->
+<!--                        </swiper-slide>-->
+<!--                    </swiper>-->
+<!--                    &lt;!&ndash; swiper2 Thumbs &ndash;&gt;-->
+<!--                    <swiper class="swiper gallery-thumbs" id="swiperThumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">-->
+<!--                        <swiper-slide v-for="(item,index) in this.videoData" :key="index" :class="'slide-'+ ++index">-->
+<!--                            <img :src="localhost + item.coverimage" alt="">-->
+<!--                        </swiper-slide>-->
+<!--                    </swiper>-->
+<!--                    <div class="swiper-button-next swiper-button-white" slot="button-next"><i class="el-icon-arrow-right"></i></div>-->
+<!--                    <div class="swiper-button-prev swiper-button-white" slot="button-prev"><i class="el-icon-arrow-left"></i></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </el-dialog>-->
         <el-dialog
             :title="this.videoData.name"
             :visible.sync="videoPlayDialog"
@@ -432,10 +470,9 @@
             center>
             <div style="padding-top: 0">
                 <div class="thumb-example">
-                    <!-- swiper1 -->
-                    <swiper class="swiper gallery-top" :options="swiperOptionTop" ref="swiperTop">
-                        <swiper-slide v-for="(item,index) in this.videoData" :key="index" style="position: relative;padding-top: 42px" :class="'slide-'+index+1">
-                            <h4 :title="item.desc" style="width:100%;text-align:center;position: absolute;top: -2px;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{item.desc}}</h4>
+                    <ul ref="swiperList" class="swiper_list">
+                        <li v-for="(item,index) in this.videoData" v-show="swiperIndex == index" :key="index">
+                            <h4 :title="item.desc" style="width:100%;text-align:center;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;margin-bottom: 22px">{{item.desc}}</h4>
                             <div class="video_content">
                                 <video
                                     :id="'my-player'+ ++index"
@@ -446,16 +483,16 @@
                                     <source :src="localhost + item.file" />
                                 </video>
                             </div>
-                        </swiper-slide>
-                    </swiper>
+                        </li>
+                    </ul>
                     <!-- swiper2 Thumbs -->
                     <swiper class="swiper gallery-thumbs" id="swiperThumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">
                         <swiper-slide v-for="(item,index) in this.videoData" :key="index" :class="'slide-'+ ++index">
                             <img :src="localhost + item.coverimage" alt="">
                         </swiper-slide>
                     </swiper>
-                    <div class="swiper-button-next swiper-button-white" slot="button-next"><i class="el-icon-arrow-right"></i></div>
-                    <div class="swiper-button-prev swiper-button-white" slot="button-prev"><i class="el-icon-arrow-left"></i></div>
+                    <div class="swiper-button-next swiper-button-white" @click="handleClickSwiperNextButton" slot="button-next"><i class="el-icon-arrow-right"></i></div>
+                    <div class="swiper-button-prev swiper-button-white" @click="handleClickSwiperPreButton" slot="button-prev"><i class="el-icon-arrow-left"></i></div>
                 </div>
             </div>
         </el-dialog>
@@ -469,7 +506,7 @@ import {getCategory, getSearchList, createOrder, payOrder, checkPayment} from "@
 import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
-
+let vm = null;
 export default {
     name: "buyershow",
     directives: {
@@ -477,26 +514,30 @@ export default {
     },
     data(){
         return{
-            swiperOptionTop: {
-                loop: false,
-                loopedSlides: 5, // looped slides should be the same
-                spaceBetween: 10,
-                slidesPerView: 1,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev'
-                }
-            },
             swiperOptionThumbs: {
-                loop: false,
+                // loop: true,
                 loopedSlides: 5, // looped slides should be the same
                 spaceBetween: 24,
                 centeredSlides: true,
-                centeredSlidesBounds:true,
-                slidesPerView: 5,
+                slidesPerView: 'auto',
                 touchRatio: 0.2,
                 slideToClickedSlide: true,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev'
+                },
+                watchSlidesVisibility: true,//防止不可点击
+                on: {
+                    click: function () {
+                        setTimeout(()=>{
+                            vm.setSwiper(this.activeIndex)
+                        },200)
+
+                    }
+                }
+
             },
+            swiperIndex:0,
             loading: false,
             disabled: false,
             pageIndex:1,
@@ -579,7 +620,27 @@ export default {
     beforeUpdate(){
         window.addEventListener('scroll',this.handleScroll,true)
     },
+    created() {
+        vm = this;
+    },
     methods:{
+        setSwiper(data){
+            this.swiperIndex = data
+        },
+        handleClickSwiperNextButton(){
+            if(this.swiperIndex == this.videoData.length-1){
+                this.swiperIndex = this.videoData.length-1
+            }else {
+                this.swiperIndex++
+            }
+        },
+        handleClickSwiperPreButton(){
+            if(this.swiperIndex == 0){
+                this.swiperIndex = 0
+            }else {
+                this.swiperIndex--
+            }
+        },
         /*关闭支付完成页面并跳转至订单信息页面*/
         handlePaymentCompletedClose(){
             this.paymentCompletedDialogVisible=false;
@@ -590,14 +651,14 @@ export default {
             if(scope.row.videos.length > 0){
                 this.videoData= scope.row.videos;
                 this.videoPlayDialog =true;
-                setTimeout(()=>{
-                    this.$nextTick(() => {
-                        const swiperTop = this.$refs.swiperTop.swiper
-                        const swiperThumbs = this.$refs.swiperThumbs.swiper
-                        swiperTop.controller.control = swiperThumbs
-                        swiperThumbs.controller.control = swiperTop
-                    })
-                },100);
+                // setTimeout(()=>{
+                //     this.$nextTick(() => {
+                //         const swiperTop = this.$refs.swiperTop.swiper
+                //         const swiperThumbs = this.$refs.swiperThumbs.swiper
+                //         swiperTop.controller.control = swiperThumbs
+                //         swiperThumbs.controller.control = swiperTop
+                //     })
+                // },100);
             }
 
         },
@@ -982,13 +1043,44 @@ export default {
         padding-top: 0 !important;
     }
 }
+.el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+}
+
+
+.swiper.gallery-thumbs .swiper-container-android .swiper-slide, .swiper-wrapper{
+    position: relative;
+    left: -343px;
+}
+.swiper_list {
+    width: 100%;
+    height: 518px;
+    overflow: hidden;
+    li {
+        width: 100%;
+        float: left;
+        height: 100%;
+        .video_content{
+            height: 474px;
+            width: 100%;
+        }
+    }
+}
+
+.video_content .video-js{
+    height: 474px !important;
+}
 .swiper-button-next.swiper-button-white, .swiper-container-rtl .swiper-button-prev.swiper-button-white,
 .swiper-button-prev.swiper-button-white, .swiper-container-rtl .swiper-button-next.swiper-button-white{
     background-image: none;
 }
 .swiper-button-prev, .swiper-button-next{
     top: auto;
-    bottom: 52px !important;
+    bottom: 21px !important;
     background: rgba(153, 153, 153, 0.7);
     color: #ffffff;
     width: 21px;
@@ -1013,6 +1105,7 @@ export default {
     img{
         width: 100%;
         height: 100%;
+        object-fit: cover;
     }
 }
 .swiper.gallery-top{
@@ -1036,15 +1129,17 @@ export default {
         width: 100%;
     }
     &.gallery-thumbs {
-        height: 148px;
+        height: 84px;
         box-sizing: border-box;
         padding: 0 1px;
         margin-top: 24px;
     }
     &.gallery-thumbs .swiper-slide {
-        width: 146px !important;
-        height: 146px;
+        width: 147px !important;
+        height: 84px;
         position: relative;
+        border-radius: 10px;
+        overflow: hidden;
         &:after{
             position: absolute;
             content: '';
@@ -1462,12 +1557,12 @@ export default {
         }
         .candidate_list {
             li{
-                width: 60px;
+                width: 76px;
                 background: #FFFFFF;
                 border-radius: 3px;
                 border: 1px solid #EEEEEE;
                 text-align: center;
-                padding: 12px;
+                padding: 12px 5px;
                 float: left;
                 margin-right: 8px;
                 div{
@@ -1478,6 +1573,7 @@ export default {
                     overflow: hidden;
                     img{
                         width: 100%;
+                        height: 100%;
                     }
                 }
                 p{
@@ -1498,7 +1594,7 @@ export default {
                     line-height: 17px;
                     text-align: center;
                 }
-                &:last-child{
+                &:last-child li{
                     margin-right: 0;
                 }
             }

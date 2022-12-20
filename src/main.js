@@ -10,11 +10,10 @@ import "video.js/dist/video-js.css";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { refreshToken } from '../src/api/index';
 import {mapMutations} from "vuex";
-import 'swiper/dist/css/swiper.css'
+// import 'swiper/dist/css/swiper.css'
 
 
 Vue.prototype.$video = videojs;
-
 Vue.config.productionTip = false;
 
 Vue.use(elTableInfiniteScroll)

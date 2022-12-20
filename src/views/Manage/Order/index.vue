@@ -58,7 +58,7 @@
                 <el-table-column prop="status" label="订单状态">
                     <template slot-scope="scope">
                         <el-popover
-                            placement="bottom"
+                            placement="right"
                             width="200"
                             @hide="stepsList = []"
                             @show="handleShowFn(scope.row)"
@@ -120,7 +120,6 @@
                                 <el-button class="operation_btn" size="small" @click="deleteOrderDialog=true;orderId = scope.row.id" round>删除</el-button>
                             </div>
                         </div>
-
                     </template>
                 </el-table-column>
             </el-table>
@@ -1137,6 +1136,21 @@ export default {
 }
 </script>
 <style lang="less">
+.el-step__head.is-process,
+.el-step__title.is-process{
+    color: #C0C4CC !important;
+}
+.el-step__head.is-finish .el-step__line{
+    background: #02B578 !important;
+}
+.el-step__head.is-wait .el-icon-success:before,
+.el-step__head.is-process .el-icon-success:before{
+    font-family: "iconfont" !important;
+    content: "\e666"
+}
+.el-step__icon-inner[class*=el-icon]:not(.is-status){
+    font-size: 18px !important;
+}
 #order{
     .know_btn{
         padding-top: 28px;
@@ -1663,6 +1677,9 @@ export default {
 /*步骤条样式*/
 .el-step.is-vertical .el-step__title{
     font-size: 14px;
+    font-weight: 600 !important;
+    padding-bottom: 6px !important;
+    font-family: PingFangSC-Semibold, PingFang SC;
 }
 .el-step__head.is-finish{
     color: #02B578 !important;
@@ -1672,7 +1689,7 @@ export default {
     font-size: 14px;
     font-family: PingFangSC-Semibold, PingFang SC;
     font-weight: 600;
-    color: #02B578 !important;
+    color: #333333 !important;
     line-height: 20px;
 }
 .el-step__description.is-finish{

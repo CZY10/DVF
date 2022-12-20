@@ -437,12 +437,23 @@
                         <li v-for="(item,index) in this.videoData" v-show="swiperIndex == index" :key="index">
                             <h4 :title="item.desc" style="width:100%;text-align:center;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;margin-bottom: 22px">{{item.desc}}</h4>
                             <div class="video_content">
+<!--                                <video-->
+<!--                                    :id="'my-player'+ ++index"-->
+<!--                                    ref="video"-->
+<!--                                    :poster="localhost + item.coverimage"-->
+<!--                                    class="video-js vjs-default-skin vjs-big-play-centered"-->
+<!--                                    controls>-->
+<!--                                    <source :src="localhost + item.file" />-->
+<!--                                </video>-->
                                 <video
-                                    :id="'my-player'+ ++index"
-                                    ref="video"
+                                    :id="'my-video'+index+1"
+                                    ref="videoPlayerRef"
+                                    class="video-js"
+                                    controls
+                                    preload="auto"
                                     :poster="localhost + item.coverimage"
-                                    class="video-js vjs-default-skin vjs-big-play-centered"
-                                    controls>
+                                    data-setup="{}"
+                                >
                                     <source :src="localhost + item.file" />
                                 </video>
                             </div>
@@ -466,7 +477,9 @@ import Footer from "@/components/Footer";
 import QRCode from 'qrcodejs2'
 import {getCategory, getSearchList, createOrder, payOrder, checkPayment} from "@/api";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import 'swiper/css/swiper.min.css'
+import videojs from "video.js";
 
 
 let vm = null;
@@ -561,8 +574,8 @@ export default {
     },
     components:{
         Footer,
-        swiper,
-        swiperSlide
+        Swiper,
+        SwiperSlide
     },
     created() {
         vm = this;
@@ -608,6 +621,25 @@ export default {
                 this.drawer = false;
                 this.videoPlayDialog =true;
             }
+            let _this = this;
+            _this.$nextTick(() => {
+                this.videoData.forEach((item,index)=>{
+                    this.videoPlayers = videojs('my-video'+index+1, {
+                        controls: true, //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
+                        autoplay: false, //自动播放属性,
+                        muted: false, // 静音播放
+                        preload: 'auto', //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
+                        fluid: true
+                    }, function onPlayerReady() {
+                        // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
+                        this.on('ended', function() {
+                            // videojs.log('Awww...over so soon?!');
+                        });
+                    });
+                })
+
+
+            })
 
         },
         cellClick(row, column, cell, event){
@@ -739,6 +771,8 @@ export default {
                     category_id: this.categoryValue,
                     page: this.pageIndex,
                     pageSize: this.pageSize,
+                    order: this.order,
+                    orderType:this.orderType
                 }
                 getSearchList(data)
                     .then((res) => {
@@ -984,6 +1018,25 @@ export default {
 }
 </script>
 <style lang="less">
+#buyer_show{
+    .video-js .vjs-tech{
+        object-fit: cover;
+    }
+    .my-video11-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
+        padding-top: 0;
+    }
+    .video-js .vjs-big-play-button{
+        left: 50%;
+        top: 50%;
+        margin-left: -50px;
+        margin-top: -50px;
+        width: 100px !important;
+        height: 100px !important;
+        font-size: 38px;
+        line-height: 96px;
+    }
+}
+
 .video_player{
     .el-dialog--center .el-dialog__body{
         padding-top: 0 !important;
@@ -1024,7 +1077,8 @@ export default {
 .swiper-button-prev.swiper-button-white, .swiper-container-rtl .swiper-button-next.swiper-button-white{
     background-image: none;
 }
-.swiper-button-prev, .swiper-button-next{
+.swiper-button-prev, .swiper-button-next,
+.swiper-button-next, .swiper-button-prev{
     top: auto;
     bottom: 21px !important;
     background: rgba(153, 153, 153, 0.7);
@@ -1037,7 +1091,7 @@ export default {
     font-size: 18px;
 }
 .swiper-button-prev, .swiper-container-rtl .swiper-button-next{
-    left: 3px;
+    left: 1px;
     border-radius: 0 9px 9px 0px;
 }
 .swiper-button-next, .swiper-container-rtl .swiper-button-prev{

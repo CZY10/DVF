@@ -1,7 +1,7 @@
 const path = require('path')
 const { defineConfig } = require('@vue/cli-service')
 const port = process.env.port || process.env.npm_config_port || 8080
-
+const webpack = require('webpack')
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -40,6 +40,11 @@ module.exports = defineConfig({
   },
   configureWebpack: {
     plugins: [
+        new webpack.ProvidePlugin({
+          $:"jquery",
+          jQuery:'jquery',
+          'windows.jQuery':'jquery',
+        })
       // 开启 BundleAnalyzerPlugin
       // new BundleAnalyzerPlugin(),
     ],

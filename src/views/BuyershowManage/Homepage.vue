@@ -57,16 +57,28 @@
         <Footer></Footer>
         <!--查看大图-->
         <el-dialog :visible.sync="videoDialog" class="video_dialog" @close="handleClose" width="1060px" :close-on-click-modal="false">
-            <h2>家用投影仪开箱展示视频家用投影仪开箱展示视频</h2>
+            <h2>{{ videoData.desc }}</h2>
             <div class="videoView">
-               <video
-                   id="my-player"
-                   ref="video"
-                   :poster="localhost + videoData.coverimage"
-                   class="video-js vjs-default-skin vjs-big-play-centered"
-                   controls>
-                   <source :src="localhost + videoData.file" />
-               </video>
+<!--               <video-->
+<!--                   id="my-player"-->
+<!--                   ref="video"-->
+<!--                   :poster="localhost + videoData.coverimage"-->
+<!--                   controls>-->
+<!--                   <source :src="localhost + videoData.file" />-->
+<!--               </video>-->
+                <video
+                    id="my-video"
+                    ref="videoPlayerRef"
+                    class="video-js"
+                    controls
+                    preload="auto"
+                    width="640"
+                    height="264"
+                    :poster="localhost + videoData.coverimage"
+                    data-setup="{}"
+                >
+                    <source :src="localhost + videoData.file" type="video/mp4" />
+                </video>
             </div>
         </el-dialog>
     </div>
@@ -77,6 +89,7 @@
 <script>
 import Footer from "@/components/Footer";
 import {influencerDetail} from "@/api";
+import videojs from "video.js";
 export default {
     name: "homepage",
     components:{
@@ -91,23 +104,54 @@ export default {
             userInfo:{},
             localhost:process.env.VUE_APP_BASE_URL,
             player: null,
+            videoPlayerOption: {
+                controls: true, //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
+                autoplay: true, //自动播放属性,
+                muted: false, // 静音播放
+                preload: 'auto', //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
+                fluid: true
+            },
+            videoPlayers:null,
         }
     },
     mounted() {
         this.id = window.location.href.substr(window.location.href.lastIndexOf(':')+1);
-        this.getInfluencerDetail()
+        this.getInfluencerDetail();
     },
     methods:{
         //关闭视频
         handleClose(){
             // document.getElementById('my-player').pause();
-            console.log(this.videoData)
+            if(this.videoPlayers != null){
+                this.videoPlayerOption.autoplay = false
+                this.videoPlayers.pause();
+                this.videoPlayers.dispose();
+                this.videoPlayers = null;
+            }
         },
         //播放视频
         handlePlayVideo(data){
-            this.videoData = data;
-            this.videoDialog = true;
-            this.player=this.$video('my-player');
+            let _this = this;
+            _this.videoData = data;
+            _this.videoDialog = true;
+            let poster = this.localhost + data.coverimage;
+            let src = this.localhost + data.file;
+            $(".videoView").html('<video id="my-video" ref="videoPlayerRef" class="video-js" controls preload="auto" width="640" height="264" poster="'+poster+'" data-setup="{}" ><source src="'+src+'" type="video/mp4" /> </video>');
+            _this.$nextTick(() => {
+                this.videoPlayers = videojs('my-video', {
+                    controls: true, //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
+                    autoplay: true, //自动播放属性,
+                    muted: false, // 静音播放
+                    preload: 'auto', //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
+                    fluid: true
+                }, function onPlayerReady() {
+                    // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
+                    this.on('ended', function() {
+                        // videojs.log('Awww...over so soon?!');
+                    });
+                });
+
+            })
         },
         getInfluencerDetail(){
             influencerDetail({
@@ -127,6 +171,59 @@ export default {
 }
 </script>
 <style lang="less" >
+#homepage .vjs-poster{
+    display: none;
+}
+.vjs-paused .vjs-big-play-button,
+.vjs-paused.vjs-has-started .vjs-big-play-button {
+    display: block;
+}
+.video-js .vjs-tech{
+    height: 567px !important;
+    width: 100%;
+    object-fit: cover;
+}
+.my-video-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
+    padding-top: 0;
+    height: 567px !important;
+}
+.video-js .vjs-big-play-button:hover{
+    background: #ffffff;
+    color: #333333;
+}
+.video-js:hover .vjs-big-play-button{
+    background: #ffffff;
+    color: #333333;
+}
+.video-js .vjs-big-play-button{
+    font-size: 38px;
+    line-height: 100px;
+    height: 100px;
+    width: 100px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: #ffffff;
+    margin-left: 440px;
+    margin-top: 213px;
+    color: #333333;
+}
+/* 中间的播放箭头 */
+.vjs-big-play-button .vjs-icon-placeholder {
+    font-size: 1.63em;
+}
+/* 加载圆圈 */
+.vjs-loading-spinner {
+    font-size: 2.5em;
+    width: 2em;
+    height: 2em;
+    border-radius: 1em;
+    margin-top: -1em;
+    margin-left: -1.5em;
+}
+
+
+
 .video_dialog{
     .el-dialog__body{
         padding: 30px;
@@ -139,6 +236,7 @@ export default {
     display: flex;
 }
 #homepage{
+
     margin-top: 66px;
     background: rgba(248, 248, 249, 1);
     .content{
@@ -378,6 +476,11 @@ export default {
         video{
             width: 100%;
             height: 567px;
+            object-fit: cover;
+        }
+        img{
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
     }

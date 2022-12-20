@@ -353,6 +353,7 @@ export default {
                             //清除定时脚本
                             clearInterval(_this.checkQrCode);
                             _this.bindWechatDialog = false;
+                            this.$message.success('绑定成功！')
                         }else if(res.code === 1 && res.data.status === 2){//登录成功,即将跳转
                             clearInterval(_this.checkQrCode);
                             _this.bindWechatDialog = false;

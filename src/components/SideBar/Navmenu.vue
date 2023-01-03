@@ -9,7 +9,7 @@
                 active-text-color="#333333"
                 text-color="#666666"
                 @select="handleSelect">
-                <a href="" style="display: flex;justify-content: center;align-items: center"><img :src="logoImg" alt=""></a>
+                <a href="" style="display: flex;justify-content: center;align-items: center;width: 112px;padding-right: 20px;"><img :src="logoImg" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
                 <el-menu-item @click="dialogVisible = true">联系我们</el-menu-item>
@@ -22,7 +22,7 @@
                     <el-menu-item @click="handlerLogOut">退出</el-menu-item>
                 </el-submenu>
                 <el-menu-item style="float: right;padding: 0" index="/manage/order" @click="changeIsMessage">
-                    <el-badge :value="messageCount" :hidden="messageCount==0" class="item">
+                    <el-badge style="display: flex;height: 100%;align-items: center" :value="messageCount" :hidden="messageCount==0" class="item">
                         <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
                     </el-badge>
 
@@ -160,6 +160,7 @@ export default {
     padding: 7px;
     margin: auto;
     margin-top: 10px;
+    border: 1px solid #EEEEEE;
     img{
         width: 100%;
         height: 100%;
@@ -170,26 +171,26 @@ export default {
         width: 7px;
         height: 7px;
         &:first-child{
-            left: 0;
-            top: 0;
+            left: -1px;;
+            top: -1px;;
             border-top: 1px solid #333333;
             border-left: 1px solid #333333;
         }
         &:nth-child(2){
-            right: 0;
-            top: 0;
+            right: -1px;
+            top: -1px;
             border-top: 1px solid #333333;
             border-right: 1px solid #333333;
         }
         &:nth-child(3){
-            right: 0;
-            bottom: 0;
+            right: -1px;;
+            bottom: -1px;;
             border-bottom: 1px solid #333333;
             border-right: 1px solid #333333;
         }
         &:nth-child(4){
-            left: 0;
-            bottom: 0;
+            left: -1px;;
+            bottom: -1px;;
             border-bottom: 1px solid #333333;
             border-left: 1px solid #333333;
         }

@@ -594,15 +594,14 @@ export default {
 
 .el-tabs__active-bar {
     background: #333333;
+    height: 3px;
 }
-
+.el-tabs__nav-wrap::after{
+    height: 1px;
+}
 .el-tabs__item {
     color: #666666;
     font-size: 16px;
-}
-
-.el-input-group > .el-input__inner {
-    border-right: none;
 }
 
 .demo-ruleForm .el-input-group__append {

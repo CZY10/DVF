@@ -1,36 +1,42 @@
 <template>
-    <div class="footer">
-        <el-row :gutter="54" style="max-width: 1200px;margin: auto;">
-            <el-col :span="5" style="padding-left: 0">
-                <div style="max-width: 50px;margin: auto">
-                    <img :src="formData.logo" alt="">
-                </div>
-                <p style="text-align: center;margin-top: 10px">{{ formData.name }}</p>
-            </el-col>
-            <el-col :span="8">
-                <p class="title">关于我们</p>
-                <p>{{ formData.about }}</p>
-            </el-col>
-            <el-col :span="6">
-                <p class="title">联系我们</p>
-                <p><span>联系我们</span>{{ formData.phone }}</p>
-                <p><span>邮箱地址</span>{{ formData.email }}</p>
-            </el-col>
-            <el-col :span="5" style="padding-right: 0">
-                <el-col :span="12" style="padding: 0">
-                    <div class="qr_code"><img :src="formData.wechat" alt=""></div>
-                    <p style="text-align: center;margin-top: 8px">微信咨询</p>
+    <div>
+        <div class="footer">
+            <el-row :gutter="54" style="max-width: 1200px;margin: auto;padding-bottom: 28px">
+                <el-col :span="5" style="padding-left: 0">
+                    <div style="max-width: 112px;margin: auto">
+                        <img :src="formData.footerlogo" alt="">
+                    </div>
+                    <p style="text-align: center;margin-top: 10px">{{ formData.name }}</p>
                 </el-col>
-                <el-col :span="12" style="padding: 0">
-                    <div class="qr_code"><img :src="formData.chat" alt=""></div>
-                    <p style="text-align: center;margin-top: 8px">公众号</p>
+                <el-col :span="8">
+                    <p class="title">关于我们</p>
+                    <p>{{ formData.about }}</p>
                 </el-col>
-            </el-col>
-        </el-row>
-        <el-row style="max-width: 1200px;margin: auto;">
-            <p class="keep_on_record">© 2022. {{ formData.companyname }}版权所有 <a href="https://beian.miit.gov.cn/" target="_blank">{{ formData.beian }}</a></p>
-        </el-row>
+                <el-col :span="6">
+                    <p class="title">联系我们</p>
+                    <p><span>联系我们</span>{{ formData.phone }}</p>
+                    <p><span>邮箱地址</span>{{ formData.email }}</p>
+                </el-col>
+                <el-col :span="5" style="padding-right: 0">
+                    <el-col :span="12" style="padding: 0">
+                        <div class="qr_code"><img :src="formData.wechat" alt=""></div>
+                        <p style="text-align: center;margin-top: 8px">微信咨询</p>
+                    </el-col>
+                    <el-col :span="12" style="padding: 0">
+                        <div class="qr_code"><img :src="formData.chat" alt=""></div>
+                        <p style="text-align: center;margin-top: 8px">公众号</p>
+                    </el-col>
+                </el-col>
+            </el-row>
+        </div>
+        <div class="footer" style="padding-top: 0">
+            <el-row style="max-width: 1200px;margin: auto;">
+                <p class="keep_on_record">© 2022. {{ formData.companyname }}版权所有 <a href="https://beian.miit.gov.cn/" target="_blank">{{ formData.beian }}</a></p>
+            </el-row>
+        </div>
+
     </div>
+
 </template>
 
 <script>
@@ -67,7 +73,6 @@ export default {
     background: rgba(0, 8, 39, 1);
     border-top: 1px solid rgba(255, 255, 255, 0.2200);
     padding-top: 50px;
-    margin-top: 60px;
     img{
         width: 100%;
     }
@@ -108,7 +113,7 @@ export default {
         font-weight: 400;
         color: #CCD0D7;
         line-height: 20px;
-        padding: 48px 0 20px 0;
+        padding: 20px 0;
         a{
             color: #CCD0D7;
             text-decoration: none;

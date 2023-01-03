@@ -43,7 +43,8 @@
                                 <router-link v-else target="_blank" :to="{path:'/homepage:'+scope.row.influencer_id}"><el-avatar v-if="scope.row.influencer" :src="localhost + scope.row.influencer.image"></el-avatar></router-link>
                             </p>
                             <p>
-                                <span v-if="scope.row.influencer_id==''||scope.row.influencer_id==null" style="color: #999999;">--</span>
+                                <span v-if="scope.row.influencer_id==null && scope.row.status ==0">待匹配</span>
+                                <span v-else-if="scope.row.influencer_id==null && scope.row.status ==1">匹配中</span>
                                 <span v-else>NO.{{scope.row.influencer_id}}</span>
                             </p>
                         </div>
@@ -51,7 +52,7 @@
                 </el-table-column>
                 <el-table-column prop="price" label="订单金额">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.price==''" style="color: #999999;">待反馈</span>
+                        <span v-if="scope.row.influencer_id==null">待反馈</span>
                         <span v-else>{{scope.row.price}}</span>
                     </template>
                 </el-table-column>
@@ -308,8 +309,8 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="产品亚马逊链接">
-                        <p style="background: #F5F7FA;border: 1px solid #E4E7ED;border-radius: 4px">
-                            <a :href="videoForm.url" style="color: #C0C4CC;padding-left: 15px;text-decoration: none" target="_blank">{{ videoForm.url }}</a>
+                        <p style="background: #F5F7FA;border: 1px solid #E4E7ED;border-radius: 4px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis">
+                            <a :href="videoForm.url" :title="videoForm.url" style="color: #C0C4CC;padding-left: 15px;text-decoration: none;" target="_blank">{{ videoForm.url }}</a>
                         </p>
 <!--                        <el-input v-model="videoForm.url" placeholder="请输入产品亚马逊链接"></el-input>-->
                     </el-form-item>
@@ -414,9 +415,9 @@
                 <img :src="dialogImageUrl" id="viewImg" alt="">
             </div>
         </el-dialog>
-        <!--联系拍摄顾问-->
+        <!--联系达人经纪人-->
         <el-dialog
-            title="联系拍摄顾问"
+            title="联系达人经纪人"
             :visible.sync="feedbackDialog"
             width="700px"
             :close-on-click-modal="false"
@@ -489,7 +490,7 @@
                         </div>
                     </el-upload>
                 </div>
-                <div style="text-align: center;margin-top: 24px"><el-button type="primary" size="small" @click="handlerSedMeg" style="border: none;padding: 10px 58px;border-radius: 16px;background: #3E7AFF linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);">提交</el-button></div>
+                <div style="text-align: center;margin-top: 24px" class="upload_btn_box"><el-button type="primary" size="small" :disabled="this.chatForm.feedback == '' && this.feedback_images_length <=0" @click="handlerSedMeg" style="border: none;padding: 10px 58px;border-radius: 16px;background: #3E7AFF linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);">提交</el-button></div>
             </div>
         </el-dialog>
         <!--支付定金-->
@@ -529,7 +530,7 @@
         </el-dialog>
         <!--支付完成-->
         <el-dialog
-            title="支付完成"
+            :title="paymentType==0 ? '定金支付成功' : '尾款支付成功'"
             :visible.sync="paymentCompletedDialogVisible"
             width="360px"
             @close="getOrderList"
@@ -538,7 +539,7 @@
             center>
             <div slot="title">
                 <i style="color: rgba(2, 181, 120, 1);font-size: 20px" class="el-icon-success"></i>
-                支付完成
+                {{ paymentType==0 ? '定金支付成功' : '尾款支付成功'}}
             </div>
             <div>
                 <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
@@ -688,6 +689,8 @@ export default {
             message: 0,
             order:'',
             orderType:'',
+            feedback_images_length:0,
+            paymentType:0,
         }
     },
     mounted() {
@@ -832,7 +835,8 @@ export default {
         },
         //支付定金/尾款
         handlePaymentOrder(type){
-            type===0 ? this.payDepositDialogVisible=true:this.paymentDialog=true
+            type===0 ? this.payDepositDialogVisible=true:this.paymentDialog=true;
+            this.paymentType = type;
             payOrder({
                 order_id: this.orderId,
                 type:type
@@ -1118,10 +1122,12 @@ export default {
             const index = this.$refs.chatUpload.uploadFiles.findIndex(e=>e.uid === file.uid);
             this.$refs.chatUpload.uploadFiles.splice(index,1);
             this.sampleForm.file = '';
+            this.feedback_images_length --;
 
         },
         handleUploadSuccess(res, file){
             this.chatForm.feedback_images.push(res.data.url)
+            this.feedback_images_length +=1;
         },
         handleUploadError(err){
             this.$message.error(err.message)
@@ -1760,6 +1766,15 @@ export default {
 </style>
 <style scoped lang="less">
 #order{
+    .upload_btn_box{
+        .el-button.is-disabled{
+            color: #C0C4CC !important;
+            cursor: not-allowed !important;;
+            background-image: none !important;;
+            background-color: #EBEEF5 !important;;
+            border-color: #EBEEF5 !important;;
+        }
+    }
     margin-top: 66px;
     background: #F5F7F9;
     padding: 20px 30px 0 30px;

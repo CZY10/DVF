@@ -29,7 +29,7 @@
                 <el-table-column prop="paytime" label="支付时间" sortable min-width="120"></el-table-column>
                 <el-table-column prop="order_id" label="订单号" min-width="110"></el-table-column>
                 <el-table-column prop="out_trade_no" label="交易编号" min-width="130"></el-table-column>
-                <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
+                <el-table-column prop="asin" label="产品Asin" min-width="110">
                     <template slot-scope="scope">
                         <p>{{ scope.row.asin}} <a :href="scope.row.url" target="_blank"><i class="iconfont icon-fx" style="font-size: 14px"></i></a></p>
                     </template>

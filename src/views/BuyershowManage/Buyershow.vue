@@ -94,7 +94,7 @@
                     :height="1000"
                     @sort-change="handlerSort"
                     @selection-change="handleSelectionChange"
-                    style="width: 100%;">
+                    style="width: 100%;margin-bottom: 40px">
                     <el-table-column
                         type="selection"
                         :reserve-selection="true"
@@ -133,7 +133,7 @@
                         align="center"
                         width="160">
                         <template slot-scope="scope">
-                            <div class="people_works" style="height: 94px" @click="handleShowVideo(scope)" :style="{cursor: scope.row.videos.length!=0? 'pointer': 'auto'}">
+                            <div class="people_works" @click="handleShowVideo(scope)" :style="{cursor: scope.row.videos.length!=0? 'pointer': 'auto'}">
                                 <p>共{{scope.row.videos.length}}个</p>
                                 <img v-if="scope.row.videos.length>0" :src="localhost + scope.row.videos[0].coverimage" alt="">
                             </div>
@@ -144,21 +144,36 @@
                         label="交付说明">
                         <template slot-scope="scope">
                             <div class="upload_description">
+                                <div><span>卖点呈现：</span>{{ scope.row.sellingpoint_id }}</div>
+                                <div><span>拍摄场景：</span>{{ scope.row.scene_id }}</div>
+                                <div><span>视频上传：</span>{{ scope.row.videoupload_id }}</div>
+                                <div><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #999999;font-size: 12px">（样品发货后）</span></div>
                                 <div>
-                                    <p><span>卖点呈现：</span>{{ scope.row.sellingpoint_id }}</p>
-                                    <p><span>拍摄场景：</span>{{ scope.row.scene_id }}</p>
-                                </div>
-                                <div>
-                                    <p><span>视频上传：</span>{{ scope.row.videoupload_id }}</p>
-                                    <p><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #999999;font-size: 12px">（样品发货后）</span></p>
+                                    <span>其他说明：</span>
+                                    <el-tooltip placement="top" effect="light">
+                                        <div slot="content" style="max-width: 400px">
+                                            {{ scope.row.content }}</div>
+                                        <div class="other_description">
+                                            {{ scope.row.content }}</div>
+                                    </el-tooltip>
                                 </div>
                             </div>
-                            <el-tooltip placement="top" effect="light">
-                                <div slot="content" style="max-width: 400px">
-                                    {{ scope.row.content }}</div>
-                                <div class="other_description">
-                                    {{ scope.row.content }}</div>
-                            </el-tooltip>
+<!--                            <div class="upload_description">-->
+<!--                                <div>-->
+<!--                                    <p><span>卖点呈现：</span>{{ scope.row.sellingpoint_id }}</p>-->
+<!--                                    <p><span>拍摄场景：</span>{{ scope.row.scene_id }}</p>-->
+<!--                                </div>-->
+<!--                                <div>-->
+<!--                                    <p><span>视频上传：</span>{{ scope.row.videoupload_id }}</p>-->
+<!--                                    <p><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #999999;font-size: 12px">（样品发货后）</span></p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <el-tooltip placement="top" effect="light">-->
+<!--                                <div slot="content" style="max-width: 400px">-->
+<!--                                    {{ scope.row.content }}</div>-->
+<!--                                <div class="other_description">-->
+<!--                                    {{ scope.row.content }}</div>-->
+<!--                            </el-tooltip>-->
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -177,7 +192,6 @@
 
             </div>
         </div>
-        <Footer></Footer>
 
         <div ref="getheight" v-show="isShowSelectedPlan" class="foot_box">
             <el-drawer
@@ -246,7 +260,7 @@
             </el-drawer>
             <div>
                 <div>
-                    <div class="choice_style">已选择：<span>{{ selectedTableData.length }}</span>个意向方案 <i style="color: rgba(51, 51, 51, 1);font-weight: bold;display: inline-block;width: 30px;height: 30px;line-height: 30px;text-align: center;cursor: pointer" @click="drawer = !drawer" :class="drawer ? 'el-icon-arrow-down' : 'el-icon-arrow-up'"></i></div>
+                    <div class="choice_style">已选择：<span>{{ selectedTableData.length }}</span>个意向方案 <i style="color: #796CF3;font-size:14px;font-weight: bold;display: inline-block;width: 30px;height: 30px;line-height: 30px;text-align: center;cursor: pointer" @click="drawer = !drawer" :class="drawer ? 'el-icon-arrow-down' : 'el-icon-arrow-up'"></i></div>
                     <div><el-button @click="handleSubmitSelectedPlan();clearSubmitForm()">提交拍摄需求</el-button></div>
                 </div>
             </div>
@@ -435,7 +449,7 @@
                 <div class="thumb-example">
                     <ul ref="swiperList" class="swiper_list">
                         <li v-for="(item,index) in this.videoData" v-show="swiperIndex == index" :key="index">
-                            <h4 :title="item.desc" style="width:100%;text-align:center;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;margin-bottom: 22px">{{item.desc}}</h4>
+                            <h4 :title="item.desc" style="padding-left:20px;padding-right:20px;text-align:center;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;margin-bottom: 22px">{{item.desc}}</h4>
                             <div class="video_content">
 <!--                                <video-->
 <!--                                    :id="'my-player'+ ++index"-->
@@ -502,6 +516,7 @@ export default {
                 watchSlidesVisibility: true,//防止不可点击
                 on: {
                     click: function () {
+                        vm.pauseFun();
                         setTimeout(()=>{
                             vm.setSwiper(this.activeIndex)
                         },200)
@@ -595,7 +610,11 @@ export default {
         setSwiper(data){
             this.swiperIndex = data
         },
+        pauseFun(){
+            this.$refs.videoPlayerRef[this.swiperIndex].pause();
+        },
         handleClickSwiperNextButton(){
+            this.$refs.videoPlayerRef[this.swiperIndex].pause();
             if(this.swiperIndex == this.videoData.length-1){
                 this.swiperIndex = this.videoData.length-1
             }else {
@@ -603,6 +622,7 @@ export default {
             }
         },
         handleClickSwiperPreButton(){
+            this.$refs.videoPlayerRef[this.swiperIndex].pause();
             if(this.swiperIndex == 0){
                 this.swiperIndex = 0
             }else {
@@ -737,7 +757,12 @@ export default {
         },
         //关闭视频弹窗
         handleVideoClose(){
+            this.swiperIndex = 0;
+            this.videoData.forEach((item,index)=>{
+                videojs('my-video'+index+1).dispose()
+            })
             this.videoData = [];
+
         },
         //获取搜索分类
         handlerGetCategory(type){
@@ -844,7 +869,7 @@ export default {
                                     this.$refs.multipleTable.toggleRowSelection(row,true);
                                 })
                             }
-                        },100)
+                        },100);
                     }
                 })
                 .catch((err) => {
@@ -1018,6 +1043,11 @@ export default {
 }
 </script>
 <style lang="less">
+#searchBar{
+    .el-checkbox__inner{
+        border: 1px solid #796CF3;
+    }
+}
 #buyer_show{
     .video-js .vjs-tech{
         object-fit: cover;
@@ -1102,6 +1132,7 @@ export default {
     position: relative;
 }
 .swiper.gallery-thumbs .swiper-slide{
+    cursor:pointer;
     img{
         width: 100%;
         height: 100%;
@@ -1304,7 +1335,7 @@ export default {
     z-index: 2300 !important;
     border: 1px solid #796CF3 !important;
     color: rgba(51, 51, 51, 1) !important;
-    padding: 19px 20px;
+    padding: 14px;
     line-height:24px ;
 }
 .el-tooltip__popper.is-light p{
@@ -1776,7 +1807,7 @@ export default {
             backdrop-filter: blur(22px);
             padding: 37px 0;
             border-top: 1px solid;
-            border-image: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%) 1;
+            border-image: linear-gradient(228deg, #000827 0%, #FFA373 12%, #EA5EF7 48%, #776CF3 91%, #000827 100%) 1;
             >div{
                 max-width: 1200px;
                 display: flex;
@@ -1937,7 +1968,7 @@ export default {
         .people_works{
             display: block;
             width: 140px;
-            height: 94px;
+            height: 79px;
             background: #7B7A7A;
             box-shadow: 0px 6px 10px 0px rgba(0,0,0,0.07);
             border-radius: 8px;
@@ -1981,34 +2012,33 @@ export default {
             }
         }
         .upload_description{
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dashed #eeeeee;
-            margin-bottom: 10px;
-            p{
+            margin-top: 10px;
+            div{
                 font-size: 14px;
                 font-family: PingFangSC-Regular, PingFang SC;
                 font-weight: 400;
                 color: rgba(51, 51, 51, 1);
                 line-height: 24px;
                 padding-bottom: 10px;
+                display: flex;
                 span{
                     color: #999999;
+                    flex-shrink: 0;
                 }
             }
         }
         .other_description{
-            margin-bottom: 18px;
             font-size: 12px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #999999;
-            line-height: 22px;
+            padding-bottom: 0 !important;
+            line-height: 22px !important;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: -webkit-box;
-            // 下面这句用来控制行数
-            -webkit-line-clamp: 2;
+            display: -webkit-box !important;
+            //// 下面这句用来控制行数
+            -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
         }
         .consult_price{
@@ -2016,6 +2046,7 @@ export default {
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #FF2C4C;
+
             line-height: 21px;
             span{
                 font-weight: 600;

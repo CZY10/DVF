@@ -870,6 +870,7 @@ export default {
                 position: relative;
                 z-index: 0;
                 overflow: hidden;
+                height: 534px;
                 &::after {
                     content: '';
                     position: absolute;
@@ -923,9 +924,13 @@ export default {
                 padding-bottom: 14px;
                 z-index: 0;
                 overflow: hidden;
+                height: 520px;
                 .img_box{
                     height: 268px;
-                    width: 100%;
+                    padding: 1px;
+                    border-top-right-radius: 24px;
+                    border-top-left-radius: 24px;
+                    overflow: hidden;
                     img{
                         width: 100%;
                         height: 100%;

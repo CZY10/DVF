@@ -61,6 +61,7 @@
                         <div class="filter_item">
                             <span>产品品类</span>
                             <el-radio-group v-model="categoryValue" @change="handlerSearchList('reset')">
+                                <el-radio-button label="">全部</el-radio-button>
                                 <el-radio-button v-for="(item,index) in categoryList" :key="index" :label="item.id">{{item.name}}</el-radio-button>
                             </el-radio-group>
                         </div>

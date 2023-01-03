@@ -492,6 +492,7 @@ export default {
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #999999;
+            line-height: 40px;
         }
     }
     .el-input-group__append{
@@ -597,34 +598,39 @@ export default {
                         line-height: 20px;
                     }
                 }
-                ul li{
-                    display: flex;
-                    padding-left: 20px;
-                    font-size: 14px;
-                    font-family: PingFangSC-Regular, PingFang SC;
-                    font-weight: 400;
-                    color: #333333;
-                    line-height: 20px;
-                    padding-bottom: 14px;
-                    label{
+                ul {
+                    padding-bottom: 18px;
+                    li {
+                        display: flex;
+                        padding-left: 20px;
                         font-size: 14px;
                         font-family: PingFangSC-Regular, PingFang SC;
                         font-weight: 400;
-                        color: #999999;
+                        color: #333333;
                         line-height: 20px;
-                        margin-right: 20px;
-                        display: inline-block;
-                        width: 56px;
-                        flex-shrink: 0;
-                    }
-                    span{
-                        font-size: 14px;
-                        font-family: PingFangSC-Regular, PingFang SC;
-                        font-weight: 400;
-                        color: #796CF3;
-                        line-height: 20px;
-                        padding: 0 10px;
-                        cursor: pointer;
+                        padding-bottom: 14px;
+
+                        label {
+                            font-size: 14px;
+                            font-family: PingFangSC-Regular, PingFang SC;
+                            font-weight: 400;
+                            color: #999999;
+                            line-height: 20px;
+                            margin-right: 20px;
+                            display: inline-block;
+                            width: 56px;
+                            flex-shrink: 0;
+                        }
+
+                        span {
+                            font-size: 14px;
+                            font-family: PingFangSC-Regular, PingFang SC;
+                            font-weight: 400;
+                            color: #796CF3;
+                            line-height: 20px;
+                            padding: 0 10px;
+                            cursor: pointer;
+                        }
                     }
                 }
                 .save_btn{

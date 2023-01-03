@@ -1230,7 +1230,7 @@ export default {
     .el-table__body-wrapper{
         //bottom: 32px;
         //top: 0;
-        overflow: scroll;
+        //overflow: scroll;
         padding: 0 30px;
     }
     .el-table__body-wrapper .el-table__body{

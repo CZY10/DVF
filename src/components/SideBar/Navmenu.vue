@@ -9,7 +9,7 @@
                 active-text-color="#333333"
                 text-color="#666666"
                 @select="handleSelect">
-                <a href="" style="display: flex;justify-content: center;align-items: center;width: 112px;padding-right: 20px;"><img :src="logoImg" alt=""></a>
+                <a href="" style="display: flex;justify-content: center;align-items: center;width: 112px;padding: 0 20px;"><img :src="logoImg" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
                 <el-menu-item @click="dialogVisible = true">联系我们</el-menu-item>
@@ -310,8 +310,8 @@ export default {
         }
     }
     >ul{
-        max-width: 1200px;
-        margin: auto;
+        //max-width: 1200px;
+        margin: 0 10px;
         align-items: center;
         border-bottom: none;
         a{

@@ -542,7 +542,8 @@
                 {{ paymentType==0 ? '定金支付成功' : '尾款支付成功'}}
             </div>
             <div>
-                <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
+                <p v-if="paymentType == 0" style="line-height: 24px;text-align: center">平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>
+                <p v-else style="line-height: 24px;text-align: center">请尽快将样品寄送至达人收货地址，如已寄送，请及时上传样品寄送信息；若未收到达人地址信息，可通过 <i class="el-icon-chat-dot-round" style="font-size: 18px;color: #796CF3"></i> 联系达人经纪人获取~</p>
                 <div class="button_box know_btn">
                     <el-button @click="paymentCompletedDialogVisible=false;getOrderList()">我知道了</el-button>
                 </div>

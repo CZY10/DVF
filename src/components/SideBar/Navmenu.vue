@@ -118,7 +118,7 @@ export default {
                 .catch()
         },
         handleSelect(key, keyPath) {
-            console.log(key, keyPath);
+            // console.log(key, keyPath);
         },
         changeIsMessage(){
             this.setIsMessage(1)

@@ -526,6 +526,7 @@ export default {
         border-top: none;
         .content_row{
             display: flex;
+            justify-content: center;
             .avatar{
                 position: relative;
                 width: 120px;

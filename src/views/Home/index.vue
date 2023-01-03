@@ -71,19 +71,25 @@
                         <el-row :gutter="30">
                             <el-col :span="16">
                                 <div class="video_content">
-                                    <div style="display: flex;justify-content: center">
-                                        <video
-                                            :id="'my-player'+index"
-                                            ref="video"
-                                            class="video-js vjs-default-skin vjs-big-play-centered"
-                                            controls>
-                                            <source :src="item.file" />
-<!--                                            poster="../../../assets/images/video/poster_video.png"-->
-                                        </video>
+                                    <div style="display: flex;justify-content: center;height: 380px;overflow: hidden;border-radius: 20px">
+                                        <div style="height: 100%;width: 100%;">
+                                            <video
+                                                :id="'my-player'+index"
+                                                ref="video"
+                                                class="video-js"
+                                                controls
+                                                preload="auto"
+                                                data-setup="{}">
+                                                <source :src="item.file" />
+                                                <!--                                            poster="../../../assets/images/video/poster_video.png"-->
+                                            </video>
+                                        </div>
+
                                     </div>
                                     <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥{{item.lower_price}}</span>
                                         交付周期：<span style="color: #fff">{{item.leadtime_id}}</span>
                                         <span style="font-size: 12px;float: right">{{item.description}}</span>
+                                        <span style="float: right;display:block;width: 265px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap">{{item.desc}}</span>
                                     </div>
                                     <el-row class="params2">
                                         <el-col :span="12">
@@ -244,6 +250,7 @@
 import {getQrcode, takePlanList} from "@/api";
 import {mapMutations} from "vuex";
 import Footer from "@/components/Footer";
+import videojs from "video.js";
 
 export default {
     name: "home",
@@ -350,9 +357,20 @@ export default {
         this.autoPlay('tabPane1');
         this.autoPlay('tabPane2');
         this.autoPlay('tabPane3');
-        for (var i=1;i<this.shootPlanTabList.items.length;i++){
-            this.player=this.$video('my-player'+i);
-        }
+        this.$nextTick(() => {
+            setTimeout(()=>{
+                this.shootPlanTabList.items.forEach((item,index)=>{
+                    videojs('my-player'+index, {
+                    }, function onPlayerReady() {
+                        // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
+                        this.on('ended', function() {
+                            // videojs.log('Awww...over so soon?!');
+                        });
+                    });
+                })
+            },1000)
+
+        })
         this.handleTakePlanList();
     },
     methods: {
@@ -432,7 +450,25 @@ export default {
     },
 }
 </script>
-
+<style lang="less">
+.tableScrollStyle{
+    padding: 0;
+}
+.video-js .vjs-tech{
+    object-fit: cover;
+}
+.my-video11-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
+    padding-top: 0;
+}
+.video-js .vjs-big-play-button{
+    left: 50% !important;
+    top: 50% !important;
+    margin-left: -40px;
+    margin-top: -40px;
+    font-size: 38px;
+    line-height: 76px;
+}
+</style>
 <style lang="less" scoped>
 /*视频按钮样式*/
 .video-content {

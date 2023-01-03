@@ -247,9 +247,7 @@ export default {
                             this.setExpiretime(res.data.userinfo.expiretime);
                             this.setUserInfo(JSON.stringify(res.data.userinfo));
                             this.setToken(res.data.userinfo.token);
-
                             this.setAvatar(res.data.userinfo.avatar);
-
                             this.$router.push(this.fromPath)
 
                         }

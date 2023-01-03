@@ -106,7 +106,7 @@
                         width="290"
                         label="创作达人">
                         <template slot-scope="scope">
-                            <div class="people_information_style">
+                            <div class="people_information_style" style="cursor: pointer">
                                 <div class="people_img">
                                     <img :src="scope.row.image" alt="">
                                 </div>
@@ -251,7 +251,7 @@
                             </el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
-                                    <i @click="deleteRow(scope.$index,scope.row.id,selectedTableData,tableData)" style="font-size: 16px;display: block;margin: auto;width: 30px;height: 30px;line-height: 30px" class="el-icon-delete"></i>
+                                    <i @click="deleteRow(scope.$index,scope.row.id,selectedTableData,tableData)" style="font-size: 16px;display: block;margin: auto;width: 30px;height: 30px;line-height: 30px;cursor: pointer" class="el-icon-delete"></i>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -657,8 +657,6 @@ export default {
                         });
                     });
                 })
-
-
             })
 
         },
@@ -1049,6 +1047,9 @@ export default {
     }
 }
 #buyer_show{
+    .tableScrollStyle{
+        padding: 0;
+    }
     .video-js .vjs-tech{
         object-fit: cover;
     }

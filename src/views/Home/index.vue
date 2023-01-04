@@ -448,14 +448,26 @@ export default {
             }
         },
     },
+    destroyed() {
+        this.shootPlanTabList.items.forEach((item,index)=>{
+            videojs('my-player'+index).dispose()
+        })
+    }
 }
 </script>
 <style lang="less">
+#home{
+    .video_content .video-js{
+        height: 380px;
+        width: 100%;
+    }
+}
 .tableScrollStyle{
     padding: 0;
 }
 .video-js .vjs-tech{
-    object-fit: cover;
+    //object-fit: cover;
+    background: #000000;
 }
 .my-video11-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
     padding-top: 0;

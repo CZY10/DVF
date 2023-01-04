@@ -148,7 +148,7 @@
                                 <div><span>卖点呈现：</span>{{ scope.row.sellingpoint_id }}</div>
                                 <div><span>拍摄场景：</span>{{ scope.row.scene_id }}</div>
                                 <div><span>视频上传：</span>{{ scope.row.videoupload_id }}</div>
-                                <div><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #999999;font-size: 12px">（样品发货后）</span></div>
+                                <div><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #666666;font-size: 12px">（样品发货后）</span></div>
                                 <div>
                                     <span>其他说明：</span>
                                     <el-tooltip placement="top" effect="light">
@@ -602,7 +602,7 @@ export default {
         this.handlerGetCategory('type');
         this.handlerSearchList();
         this.setSwiper(0);
-
+        document.body.scrollTop = 0
     },
     beforeUpdate(){
         window.addEventListener('scroll',this.handleScroll,true)
@@ -646,11 +646,11 @@ export default {
             _this.$nextTick(() => {
                 this.videoData.forEach((item,index)=>{
                     this.videoPlayers = videojs('my-video'+index+1, {
-                        controls: true, //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
-                        autoplay: false, //自动播放属性,
-                        muted: false, // 静音播放
-                        preload: 'auto', //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
-                        fluid: true
+                        // controls: true, //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
+                        // autoplay: false, //自动播放属性,
+                        // muted: false, // 静音播放
+                        // preload: 'auto', //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
+                        // fluid: true
                     }, function onPlayerReady() {
                         // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
                         this.on('ended', function() {
@@ -1048,11 +1048,11 @@ export default {
     }
 }
 #buyer_show{
+    .video_content .vjs-poster{
+        background-size: cover;
+    }
     .tableScrollStyle{
         padding: 0;
-    }
-    .video-js .vjs-tech{
-        object-fit: cover;
     }
     .my-video11-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
         padding-top: 0;
@@ -1101,10 +1101,13 @@ export default {
         }
     }
 }
-
-.video_content .video-js{
-    height: 474px !important;
+#buyer_show{
+    .video_content .video-js{
+        height: 474px !important;
+        width: 100%;
+    }
 }
+
 .swiper-button-next.swiper-button-white, .swiper-container-rtl .swiper-button-prev.swiper-button-white,
 .swiper-button-prev.swiper-button-white, .swiper-container-rtl .swiper-button-next.swiper-button-white{
     background-image: none;
@@ -1228,11 +1231,13 @@ export default {
     max-width: 500px;
 }
 #buyer_show{
+
     .el-table__body-wrapper{
-        //bottom: 32px;
-        //top: 0;
-        //overflow: scroll;
-        padding: 0 30px;
+        border: none;
+        padding: 0;
+    }
+    .el-table__header-wrapper table{
+        padding: 0;
     }
     .el-table__body-wrapper .el-table__body{
         padding-bottom: 20px;
@@ -2021,7 +2026,7 @@ export default {
                 font-weight: 400;
                 color: rgba(51, 51, 51, 1);
                 line-height: 24px;
-                padding-bottom: 10px;
+                padding-bottom: 8px;
                 display: flex;
                 span{
                     color: #999999;

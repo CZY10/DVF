@@ -110,7 +110,6 @@ html {
    background: #CCCCCC !important;
 }
 /*table滚动条样式*/
-
 .el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar {
     width:6px;
 }
@@ -131,15 +130,16 @@ html {
 /*播放按钮*/
 .video-js{
     background: none !important;
+    position: initial;
 }
 .video_content .video-js{
-    height: 380px !important;
-    width: 100% !important;
-    object-fit: cover;
+    /*height: 380px !important;*/
+    /*width: 100% !important;*/
+    /*object-fit: cover;*/
 }
 .video_content .vjs-poster{
-    background-size: 100% 100% !important;
-    background: none;
+    /*background-size: 100% 100% !important;*/
+    /*background: none;*/
 }
 .video_content .video-js .vjs-big-play-button{
     height: 80px !important;

@@ -72,8 +72,6 @@
                     class="video-js"
                     controls
                     preload="auto"
-                    width="640"
-                    height="264"
                     :poster="localhost + videoData.coverimage"
                     data-setup="{}"
                 >
@@ -140,7 +138,7 @@ export default {
             _this.$nextTick(() => {
                 this.videoPlayers = videojs('my-video', {
                     controls: true, //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
-                    autoplay: true, //自动播放属性,
+                    autoplay: false, //自动播放属性,
                     muted: false, // 静音播放
                     preload: 'auto', //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
                     fluid: true
@@ -171,6 +169,20 @@ export default {
 }
 </script>
 <style lang="less" >
+#homepage{
+    .video_content .vjs-poster{
+        background-size: cover;
+    }
+    .vjs-poster{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+    }
+}
+
 #homepage .vjs-poster{
     display: none;
 }
@@ -181,7 +193,8 @@ export default {
 .video-js .vjs-tech{
     height: 567px !important;
     width: 100%;
-    object-fit: cover;
+    background-size: cover;
+    //object-fit: cover;
 }
 .my-video-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
     padding-top: 0;
@@ -204,9 +217,9 @@ export default {
     -moz-border-radius: 50%;
     border-radius: 50%;
     background: #ffffff;
-    margin-left: 440px;
-    margin-top: 213px;
     color: #333333;
+    margin-left: -50px;
+    margin-top: -50px;
 }
 /* 中间的播放箭头 */
 .vjs-big-play-button .vjs-icon-placeholder {
@@ -476,7 +489,7 @@ export default {
         video{
             width: 100%;
             height: 567px;
-            object-fit: cover;
+            //object-fit: cover;
         }
         img{
             width: 100%;

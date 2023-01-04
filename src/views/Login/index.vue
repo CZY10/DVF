@@ -9,7 +9,7 @@
                 active-text-color="#ffffff"
                 text-color="#666666"
             >
-                <el-menu-item index="/"><img src="../../assets/images/login_logo.png" alt=""></el-menu-item>
+                <el-menu-item index="/"><img :src="logoImg" alt=""></el-menu-item>
 
                 <el-menu-item style="float: right;" @click="dialogVisible = true">联系我们</el-menu-item>
                 <el-menu-item style="float: right;" index="3"><a href="">新手指南</a></el-menu-item>
@@ -154,6 +154,7 @@ export default {
             isDisabled:true,
             isBindPhoneDisabled:false,
             verificationCodeText:'获取验证码',
+            logoImg:require('../../assets/images/logo.png'),
             disabledText:{
                 color:'#999999'
             },
@@ -191,6 +192,7 @@ export default {
     mounted() {
         this.handlerGetQrcode();
         this.verifyToken();
+        this.logoImg = localStorage.getItem('logo')
     },
     methods: {
         ...mapMutations('login', ["setUserInfo","setToken","setAvatar","setExpiretime"]),
@@ -404,11 +406,10 @@ export default {
 }
 .header {
     > ul {
-        max-width: 1200px;
         margin: auto;
         align-items: center;
         border-bottom: none;
-
+        padding: 0 10px;
         a {
             color: #666666;
         }

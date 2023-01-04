@@ -1,7 +1,7 @@
 <template>
     <div id="home">
         <div class="banner">
-            <h1>Amazon Influencer 买家秀视频服务第一站</h1>
+            <h1>微胖联盟 Amazon Influencer视频服务第一站</h1>
             <div class="banner_img">
                 <el-row style="border-radius: 20px;overflow: hidden">
                     <video width="100%" height="100%" autoplay muted loop>

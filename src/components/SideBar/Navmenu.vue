@@ -9,7 +9,7 @@
                 active-text-color="#333333"
                 text-color="#666666"
                 @select="handleSelect">
-                <a href="" style="display: flex;justify-content: center;align-items: center;width: 112px;padding: 0 20px;"><img :src="logoImg" alt=""></a>
+                <a href="" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
                 <el-menu-item @click="dialogVisible = true">联系我们</el-menu-item>
@@ -42,7 +42,7 @@
             </div>
             <div class="contact_us_foot">
                 <p><i class="iconfont icon-phone-call"></i><span>电话：</span>0755-84861340</p>
-                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>support@amztracker.com</p>
+                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>support@amztrackers.com</p>
             </div>
         </el-dialog>
     </div>
@@ -117,9 +117,7 @@ export default {
                 })
                 .catch()
         },
-        handleSelect(key, keyPath) {
-            // console.log(key, keyPath);
-        },
+        handleSelect(key, keyPath) {},
         changeIsMessage(){
             this.setIsMessage(1)
         },
@@ -128,7 +126,20 @@ export default {
             this.$confirm('您真的要退出本次登录吗？','退出登录')
                 .then(()=>{
                     this.$store.commit('login/clearUserInfo')
-                    window.location.href = '/#/login'
+                    switch(this.$route.name)
+                    {
+                        case 'order':
+                            window.location.href = '/#/';
+                            break;
+                        case 'payment':
+                            window.location.href = '/#/';
+                            break;
+                        case 'personal':
+                            window.location.href = '/#/';
+                            break;
+                        default:
+                            window.location.href = '/#' + this.$route.fullPath;
+                    }
                 })
                 .catch((err)=>{})
         }

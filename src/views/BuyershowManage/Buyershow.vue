@@ -418,7 +418,7 @@
         </el-dialog>
         <!--支付完成-->
         <el-dialog
-            title="支付完成"
+            title="定金支付成功"
             :visible.sync="paymentCompletedDialogVisible"
             :before-close="handlePaymentCompletedClose"
             width="360px"
@@ -427,7 +427,7 @@
             center>
             <div slot="title">
                 <i style="color: rgba(2, 181, 120, 1);font-size: 20px" class="el-icon-success"></i>
-                支付完成
+                定金支付成功
             </div>
             <div>
                 <p>平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意</p>

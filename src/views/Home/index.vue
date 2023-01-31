@@ -86,21 +86,24 @@
                                         </div>
 
                                     </div>
-                                    <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥{{item.lower_price}}</span>
-                                        交付周期：<span style="color: #fff">{{item.leadtime_id}}</span>
-                                        <span style="font-size: 12px;float: right">{{item.description}}</span>
-                                        <span style="float: right;display:block;width: 265px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap">{{item.desc}}</span>
+                                    <div>
+                                        <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥{{item.lower_price}}</span>
+                                            交付周期：<span style="color: #fff">{{item.leadtime_id}}</span>
+                                            <span style="font-size: 12px;float: right">{{item.description}}</span>
+                                            <span style="float: right;display:block;width: 265px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap">{{item.desc}}</span>
+                                        </div>
+                                        <el-row class="params2">
+                                            <el-col :span="12">
+                                                <p>卖点展示：<span>{{item.sellingpoint_id}}</span></p>
+                                                <p>视频时长：<span>{{item.minvideo}}-{{item.maxvideo}}s</span></p>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <p>拍摄场景：<span>{{item.scene_id}}</span></p>
+                                                <p>视频上传：<span>{{item.videoupload_id}}</span></p>
+                                            </el-col>
+                                        </el-row>
                                     </div>
-                                    <el-row class="params2">
-                                        <el-col :span="12">
-                                            <p>卖点展示：<span>{{item.sellingpoint_id}}</span></p>
-                                            <p>视频时长：<span>{{item.minvideo}}-{{item.maxvideo}}s</span></p>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <p>拍摄场景：<span>{{item.scene_id}}</span></p>
-                                            <p>视频上传：<span>{{item.videoupload_id}}</span></p>
-                                        </el-col>
-                                    </el-row>
+
                                 </div>
                             </el-col>
                             <el-col :span="8">
@@ -359,15 +362,17 @@ export default {
         this.autoPlay('tabPane3');
         this.$nextTick(() => {
             setTimeout(()=>{
-                this.shootPlanTabList.items.forEach((item,index)=>{
-                    videojs('my-player'+index, {
-                    }, function onPlayerReady() {
-                        // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
-                        this.on('ended', function() {
-                            // videojs.log('Awww...over so soon?!');
+                if(this.shootPlanTabList.items.length>0){
+                    this.shootPlanTabList.items.forEach((item,index)=>{
+                        videojs('my-player'+index, {
+                        }, function onPlayerReady() {
+                            // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
+                            this.on('ended', function() {
+                                // videojs.log('Awww...over so soon?!');
+                            });
                         });
-                    });
-                })
+                    })
+                }
             },1000)
 
         })
@@ -449,9 +454,11 @@ export default {
         },
     },
     destroyed() {
-        this.shootPlanTabList.items.forEach((item,index)=>{
-            videojs('my-player'+index).dispose()
-        })
+        if(this.shootPlanTabList.items.length > 0){
+            this.shootPlanTabList.items.forEach((item,index)=>{
+                videojs('my-player'+index).dispose()
+            })
+        }
     }
 }
 </script>
@@ -460,6 +467,7 @@ export default {
     .video_content .video-js{
         height: 380px;
         width: 100%;
+        position: relative !important;
     }
 }
 .tableScrollStyle{
@@ -468,6 +476,8 @@ export default {
 .video-js .vjs-tech{
     //object-fit: cover;
     background: #000000;
+    width: 100%;
+    height: inherit !important;
 }
 .my-video11-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
     padding-top: 0;
@@ -479,6 +489,7 @@ export default {
     margin-top: -40px;
     font-size: 38px;
     line-height: 76px;
+    position: absolute;
 }
 </style>
 <style lang="less" scoped>
@@ -982,6 +993,7 @@ export default {
                     img{
                         width: 100%;
                         height: 100%;
+                        object-fit: cover;
                     }
                 }
                 &::after {

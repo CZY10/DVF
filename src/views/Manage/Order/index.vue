@@ -428,10 +428,10 @@
                     <div v-if="chatData.length>0" class="chat-message-body" id="chatForm">
                         <div  dis-hover v-for="(item,index) in chatData" :key="index" class="message-card">
                             <div :class="item.type == 0?'message-row-right': 'message-row-left'">
-                                <img :src="item.type == 0? avatar : require('../../../assets/images/gani.png')" height="32" width="32" >
+                                <img :src="item.type == 0? avatar : require('../../../assets/images/gani.png')" height="45" width="45" >
                                 <div class="message-content">
                                     <div :style="item.type == 0?'text-align:right;display: flex;flex-direction:row-reverse':''">
-                                       {{item.type == 0 ? '我' : 'Gani-拍摄顾问'}}
+                                       {{item.type == 0 ? '我' : 'Gani-达人经纪人'}}
                                         <span class="message-time">{{item.createtime}}</span>
                                     </div>
                                     <div class="message-body" v-show="item.content !== ''">
@@ -1090,6 +1090,12 @@ export default {
         // },
         // 发送消息
         handlerSedMeg(){
+            this.chatForm.feedback_images=[]
+            if(this.$refs.chatUpload.uploadFiles.length>0){
+                this.$refs.chatUpload.uploadFiles.forEach((item)=>{
+                    this.chatForm.feedback_images.push(item.response.data.url)
+                })
+            }
             if(this.chatForm.feedback == '' && this.chatForm.feedback_images.length == 0){
                 this.$message.warning('不能发送空白信息');
                 return;
@@ -1123,12 +1129,11 @@ export default {
             const index = this.$refs.chatUpload.uploadFiles.findIndex(e=>e.uid === file.uid);
             this.$refs.chatUpload.uploadFiles.splice(index,1);
             this.sampleForm.file = '';
-            this.feedback_images_length --;
-
+            this.feedback_images_length = this.$refs.chatUpload.uploadFiles.length;
         },
         handleUploadSuccess(res, file){
             this.chatForm.feedback_images.push(res.data.url)
-            this.feedback_images_length +=1;
+            this.feedback_images_length = this.$refs.chatUpload.uploadFiles.length;
         },
         handleUploadError(err){
             this.$message.error(err.message)
@@ -1144,8 +1149,21 @@ export default {
 </script>
 <style lang="less">
 .el-step__head.is-process,
-.el-step__title.is-process{
-    color: #C0C4CC !important;
+.el-step__title.is-process,
+.el-step__title.is-wait,
+.el-step__title.is-process
+{
+    color: #999999 !important;
+}
+.el-step__head.is-wait,
+.el-step__head.is-process{
+    color: #cccccc !important;
+}
+.el-step.is-vertical .el-step__line{
+    width: 1px !important;
+}
+.el-step__line{
+    background-color: #cccccc !important;
 }
 .el-step__head.is-finish .el-step__line{
     background: #02B578 !important;
@@ -1699,11 +1717,13 @@ export default {
     color: #333333 !important;
     line-height: 20px;
 }
+.el-step__description{
+    color: #999999 !important;
+}
 .el-step__description.is-finish{
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
-    color: #999999 !important;
     line-height: 17px;
 }
 .el-step.is-vertical .el-step__main{

@@ -3,7 +3,7 @@
         <div class="footer">
             <el-row :gutter="54" style="max-width: 1200px;margin: auto;padding-bottom: 28px">
                 <el-col :span="5" style="padding-left: 0">
-                    <div style="max-width: 112px;margin: auto">
+                    <div style="max-width: 180px;margin: auto">
                         <img :src="formData.footerlogo" alt="">
                     </div>
                     <p style="text-align: center;margin-top: 10px">{{ formData.name }}</p>

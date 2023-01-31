@@ -392,7 +392,7 @@ export default {
             if (tokenStr) {
                 this.$router.push({ path: "/" });
             } else {
-                this.$message.error('请登录!')
+                // this.$message.error('请登录!')
             }
         }
     },

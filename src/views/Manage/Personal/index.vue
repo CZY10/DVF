@@ -349,12 +349,13 @@ export default {
                                 //清除定时脚本
                                 clearInterval(_this.checkQrCode);
                             }
-                        }else if(res.code === 1 && res.data.status === 1){//扫码成功，请绑定手机号
+                        }else if(res.code === 1 && res.data.status === 1){//绑定微信成功
+                            this.userInfo.isbind=1;
                             //清除定时脚本
                             clearInterval(_this.checkQrCode);
                             _this.bindWechatDialog = false;
                             this.$message.success('绑定成功！')
-                        }else if(res.code === 1 && res.data.status === 2){//登录成功,即将跳转
+                        }else if(res.code === 1 && res.data.status === 2){
                             clearInterval(_this.checkQrCode);
                             _this.bindWechatDialog = false;
                         }

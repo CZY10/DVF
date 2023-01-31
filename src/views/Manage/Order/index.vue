@@ -514,18 +514,44 @@
                 <h5>¥{{ orderData.price }}</h5>
                 <p>定金金额</p>
                 <p>订单号：<span>{{ orderData.out_trade_no }}</span></p>
-                <ul>
-                    <li>
-                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>
-                        <!--                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>-->
-                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>
-                    </li>
-                    <li>
-                        <!--                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>-->
-                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>
-                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>
-                    </li>
-                </ul>
+                <el-tabs type="border-card">
+                    <el-tab-pane>
+                        <span slot="label" style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1);font-size: 20px;margin-right: 6px"></i>微信支付</span>
+                        <div>
+                            <div class="qrcode" ref="wechatQrCodeUrl">
+                                <span class="top_left"></span>
+                                <span class="top_right"></span>
+                                <span class="bottom_left"></span>
+                                <span class="bottom_right"></span>
+                            </div>
+                            <p style="padding-top: 8px">可截图给财务人员付款</p>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane>
+                        <span slot="label" style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1);font-size: 20px;margin-right: 6px"></i>支付宝支付</span>
+                        <div>
+                            <div class="qrcode" ref="alipayQrCodeUrl">
+                                <span class="top_left"></span>
+                                <span class="top_right"></span>
+                                <span class="bottom_left"></span>
+                                <span class="bottom_right"></span>
+                            </div>
+                            <p style="padding-top: 8px">可截图给财务人员付款</p>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+<!--                <ul>-->
+<!--                    <li>-->
+<!--                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>-->
+<!--                        &lt;!&ndash;                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>&ndash;&gt;-->
+<!--                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        &lt;!&ndash;                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>&ndash;&gt;-->
+<!--                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>-->
+<!--                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>-->
+<!--                    </li>-->
+<!--                </ul>-->
             </div>
         </el-dialog>
         <!--支付完成-->
@@ -683,7 +709,8 @@ export default {
             orderId:'',
             paymentCompletedDialogVisible:false,
             orderData:{},
-            checkPaymentVal:'',
+            checkWechatPaymentVal:'',
+            checkAlipayPaymentVal:'',
             token:'',
             avatar:'',
             isMessage: this.$store.state.order.isMessage,
@@ -713,7 +740,8 @@ export default {
             handler(val){
                 if(val[0] === false && val[1]===false){
                     setTimeout(()=>{
-                        clearInterval(this.checkPaymentVal);
+                        clearInterval(this.checkWechatPaymentVal);
+                        clearInterval(this.checkAlipayPaymentVal);
                     },5000)
                 }
             }
@@ -838,16 +866,43 @@ export default {
         handlePaymentOrder(type){
             type===0 ? this.payDepositDialogVisible=true:this.paymentDialog=true;
             this.paymentType = type;
+            //微信
             payOrder({
                 order_id: this.orderId,
-                type:type
+                type:type,
+                payment: 'wechat'
+            })
+                .then((res) => {
+                    if(res.code === 1){
+                        this.orderData = res.data.order;
+                        if(this.$refs.wechatQrCodeUrl){
+                            new QRCode(this.$refs.wechatQrCodeUrl, {
+                                text: res.data.qrcode,
+                                width: 130,
+                                height: 130,
+                                colorDark: '#000000',
+                                colorLight: '#ffffff',
+                                correctLevel: QRCode.CorrectLevel.H
+                            })
+                        }
+                        this.handlerCheckWechatPayment(res.data.order.out_trade_no);
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+            //支付宝
+            payOrder({
+                order_id: this.orderId,
+                type:type,
+                payment: 'alipay'
             })
                 .then((res) => {
                     if(res.code === 1){
                         this.orderData = res.data.order;
                         if(this.$refs.alipayQrCodeUrl){
                             new QRCode(this.$refs.alipayQrCodeUrl, {
-                                text: res.data.alipay_qrcode,
+                                text: res.data.qrcode,
                                 width: 130,
                                 height: 130,
                                 colorDark: '#000000',
@@ -855,29 +910,20 @@ export default {
                                 correctLevel: QRCode.CorrectLevel.H
                             })
                         }
-                        if(this.$refs.wechatQrCodeUrl){
-                            new QRCode(this.$refs.wechatQrCodeUrl, {
-                                text: res.data.wechat_qrcode,
-                                width: 130,
-                                height: 130,
-                                colorDark: '#000000',
-                                colorLight: '#ffffff',
-                                correctLevel: QRCode.CorrectLevel.H
-                            })
-                        }
-                        this.handlerCheckPayment(res.data.order.out_trade_no);
+                        this.handlerCheckAlipayPayment(res.data.order.out_trade_no);
                     }
                 })
                 .catch((err) => {
                     this.$message.error(err.msg);
                 });
         },
-        //检测是否支付成功
-        handlerCheckPayment(order){
+        //微信检测是否支付成功
+        handlerCheckWechatPayment(order){
             let _this = this;
-            _this.checkPaymentVal = setInterval(function (){
+            _this.checkWechatPaymentVal = setInterval(function (){
                 checkPayment({
-                    out_trade_no:order
+                    out_trade_no:order,
+                    payment: 'wechat'
                 })
                     .then((res) => {
                         if(res.code === 1){
@@ -885,7 +931,32 @@ export default {
                                 _this.payDepositDialogVisible = false;
                                 _this.paymentDialog = false;
                                 _this.paymentCompletedDialogVisible = true;
-                                clearInterval(_this.checkPaymentVal);
+                                clearInterval(_this.checkWechatPaymentVal);
+                                clearInterval(_this.checkAlipayPaymentVal);
+                            }
+                        }
+                    })
+                    .catch((err) => {
+                        this.$message.error(err.message);
+                    });
+            },3000)
+        },
+        //支付宝检测是否支付成功
+        handlerCheckAlipayPayment(order){
+            let _this = this;
+            _this.checkAlipayPaymentVal = setInterval(function (){
+                checkPayment({
+                    out_trade_no:order,
+                    payment: 'alipay'
+                })
+                    .then((res) => {
+                        if(res.code === 1){
+                            if(res.data.status === 'success'){
+                                _this.payDepositDialogVisible = false;
+                                _this.paymentDialog = false;
+                                _this.paymentCompletedDialogVisible = true;
+                                clearInterval(_this.checkAlipayPaymentVal);
+                                clearInterval(_this.checkWechatPaymentVal);
                             }
                         }
                     })
@@ -896,7 +967,8 @@ export default {
         },
         //清除定时器
         handleClose(){
-            clearInterval(this.checkPaymentVal);
+            clearInterval(this.checkWechatPaymentVal);
+            clearInterval(this.checkAlipayPaymentVal);
         },
         //退定金
         handleReturnFrontMoney(){
@@ -1618,6 +1690,103 @@ export default {
     }
     /*支付定金弹窗*/
     .pay_deposit_dialog {
+        .el-tabs--border-card>.el-tabs__content{
+            padding: 34px 15px 21px 15px;
+        }
+        .qrcode{
+            position: relative;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 140px;
+            height: 140px;
+            margin: auto;
+            border: 1px solid #eeeeee;
+            .top_left,.top_right,.bottom_left,.bottom_right{
+                position: absolute;
+                width: 4px;
+                height: 4px;
+            }
+            .top_left{
+                border-top: 1px solid #333333;
+                left: -1px;
+                top: -1px;
+                border-left: 1px solid #333333;
+            }
+            .top_right{
+                border-top: 1px solid #333333;
+                right: -1px;
+                top: -1px;
+                border-right: 1px solid #333333;
+            }
+            .bottom_left{
+                border-bottom: 1px solid #333333;
+                left: -1px;
+                bottom: -1px;
+                border-left: 1px solid #333333;
+            }
+            .bottom_right{
+                border-bottom: 1px solid #333333;
+                right: -1px;
+                bottom: -1px;
+                border-right: 1px solid #333333;
+            }
+        }
+        .el-tabs--border-card{
+            border: 1px solid #eeeeee;
+            margin-top: 15px;
+        }
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item+.el-tabs__item{
+            margin-left: 0;
+        }
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item:first-child{
+            border-right: 1px solid #eeeeee !important;
+            margin-left: 0;
+        }
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item:hover{
+            margin-left: 0;
+        }
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item{
+            color: #999999;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            border: none;
+            margin-bottom: 1px;
+            transition: none;
+            height: 42px;
+        }
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active,
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item:hover{
+            font-weight: 600;
+            color: #333333;
+            background: #F6F5FF;
+            border-bottom: 2px solid #796CF3;
+            i{
+                font-weight: normal;
+            }
+        }
+
+        .el-tabs--border-card>.el-tabs__header{
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            overflow: hidden;
+            border-bottom: 1px solid #eeeeee;
+            background: #ffffff;
+        }
+        .el-tabs--border-card{
+            box-shadow: none;
+            border-radius: 10px;
+        }
+        .el-tabs__nav{
+            width: 100%;
+            //padding-bottom: 1px;
+        }
+        .el-tabs__item{
+            width: 50%;
+            text-align: center;
+        }
+
+
         .el-alert{
             padding: 7px 0;
             .el-alert__description{
@@ -2157,7 +2326,7 @@ export default {
             color: #999999;
             line-height: 20px;
             text-align: center;
-            margin: 5px 0;
+            padding: 5px 0;
             span{
                 color: rgba(51, 51, 51, 1);
             }

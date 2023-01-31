@@ -42,7 +42,7 @@
             </div>
             <div class="contact_us_foot">
                 <p><i class="iconfont icon-phone-call"></i><span>电话：</span>0755-84861340</p>
-                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>support@amztrackers.com</p>
+                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>ceo@myvipon.ltd</p>
             </div>
         </el-dialog>
     </div>

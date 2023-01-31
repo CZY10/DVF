@@ -170,6 +170,9 @@ export default {
 </script>
 <style lang="less" >
 #homepage{
+    .el-dialog__headerbtn{
+        z-index: 999;
+    }
     .video_content .vjs-poster{
         background-size: cover;
     }
@@ -195,6 +198,7 @@ export default {
     width: 100%;
     background-size: cover;
     //object-fit: cover;
+    top: inherit;
 }
 .my-video-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
     padding-top: 0;

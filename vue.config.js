@@ -19,13 +19,13 @@ module.exports = defineConfig({
     open:true,
     https:false,
     proxy:{
-      [process.env.VUE_APP_BASE_API]: { //同济医院地址
+      '/api': {
         target: process.env.VUE_APP_BASE_URL,
         // 如果要代理 websockets
         ws: false,
         changeOrigin: true,
         pathRewrite: {   //重写路径，这种是没有我们定义的前缀
-          ['^' + process.env.VUE_APP_BASE_URL]: ''
+          '^/api': ''
         }
       },
       /*'/api':{

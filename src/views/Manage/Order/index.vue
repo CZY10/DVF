@@ -143,6 +143,7 @@
             :visible.sync="paymentDialog"
             v-if="paymentDialog"
             @close="handleClose"
+            class="payment_dialog"
             :close-on-click-modal="false"
             center
             width="500px">
@@ -156,17 +157,43 @@
             <div class="payment_content">
                 <h4>¥{{ orderData.price }}</h4>
                 <p>尾款金额</p>
-                <p>订单号：<span>{{ orderData.out_trade_no }}</span></p>
-                <ul>
-                    <li>
-                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>
-                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>
-                    </li>
-                    <li>
-                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>
-                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>
-                    </li>
-                </ul>
+                <p>订单号：<span>{{ orderData.order_id }}</span></p>
+                <el-tabs type="border-card">
+                    <el-tab-pane>
+                        <span slot="label" style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1);font-size: 20px;margin-right: 6px"></i>微信支付</span>
+                        <div>
+                            <div class="qrcode" ref="wechatQrCodeUrl">
+                                <span class="top_left"></span>
+                                <span class="top_right"></span>
+                                <span class="bottom_left"></span>
+                                <span class="bottom_right"></span>
+                            </div>
+                            <p style="padding-top: 8px">可截图给财务人员付款</p>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane>
+                        <span slot="label" style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1);font-size: 20px;margin-right: 6px"></i>支付宝支付</span>
+                        <div>
+                            <div class="qrcode" ref="alipayQrCodeUrl">
+                                <span class="top_left"></span>
+                                <span class="top_right"></span>
+                                <span class="bottom_left"></span>
+                                <span class="bottom_right"></span>
+                            </div>
+                            <p style="padding-top: 8px">可截图给财务人员付款</p>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+<!--                <ul>-->
+<!--                    <li>-->
+<!--                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>-->
+<!--                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>-->
+<!--                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>-->
+<!--                    </li>-->
+<!--                </ul>-->
             </div>
         </el-dialog>
         <!--申请退还定金-->
@@ -513,7 +540,7 @@
                 </el-alert>
                 <h5>¥{{ orderData.price }}</h5>
                 <p>定金金额</p>
-                <p>订单号：<span>{{ orderData.out_trade_no }}</span></p>
+                <p>订单号：<span>{{ orderData.order_id }}</span></p>
                 <el-tabs type="border-card">
                     <el-tab-pane>
                         <span slot="label" style="display: flex;align-items: center;justify-content: center"><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1);font-size: 20px;margin-right: 6px"></i>微信支付</span>
@@ -1688,8 +1715,9 @@ export default {
         right: 2px;
         bottom: -6px;
     }
-    /*支付定金弹窗*/
-    .pay_deposit_dialog {
+    /*支付尾款弹窗*/
+    .payment_dialog,
+    .pay_deposit_dialog{
         .el-tabs--border-card>.el-tabs__content{
             padding: 34px 15px 21px 15px;
         }
@@ -1785,8 +1813,9 @@ export default {
             width: 50%;
             text-align: center;
         }
-
-
+    }
+    /*支付定金弹窗*/
+    .pay_deposit_dialog {
         .el-alert{
             padding: 7px 0;
             .el-alert__description{

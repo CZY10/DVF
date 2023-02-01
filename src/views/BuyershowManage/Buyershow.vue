@@ -1166,6 +1166,7 @@ export default {
     .video_content .video-js{
         height: 474px !important;
         width: 100%;
+        position: relative;
     }
 }
 

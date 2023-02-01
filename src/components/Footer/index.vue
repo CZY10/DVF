@@ -58,6 +58,7 @@ export default {
                     if(res.code === 1){
                         this.formData = res.data;
                         localStorage.setItem('logo',res.data.logo)
+                        localStorage.setItem('configObj', JSON.stringify(res.data));
                     }
                 })
                 .catch((err)=>{

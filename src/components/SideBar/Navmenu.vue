@@ -25,7 +25,6 @@
                     <el-badge style="display: flex;height: 100%;align-items: center" :value="messageCount" :hidden="messageCount==0" class="item">
                         <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
                     </el-badge>
-
                 </el-menu-item>
                 <el-menu-item style="float: right;"><a href="https://peseeazfwl.feishu.cn/wiki/wikcnMyh2Kpl0beLaynqfWT3Vuc" target="_blank">新手指南</a></el-menu-item>
             </el-menu>
@@ -38,11 +37,11 @@
             width="320px">
             <div class="contact_us_box">
                 <span></span><span></span><span></span><span></span>
-                <img src="../../assets/images/contact_us.png" alt="">
+                <img :src="configData.wechat" alt="">
             </div>
             <div class="contact_us_foot">
-                <p><i class="iconfont icon-phone-call"></i><span>电话：</span>0755-84861340</p>
-                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>ceo@myvipon.ltd</p>
+                <p><i class="iconfont icon-phone-call"></i><span>电话：</span>{{ configData.phone }}</p>
+                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>{{ configData.email }}</p>
             </div>
         </el-dialog>
     </div>
@@ -56,13 +55,15 @@ import { chatCount } from '../../api/index'
 
 export default {
     name: "NavMenu",
+    inject:['reload'],
     data(){
         return{
             isLogin:true,
             dialogVisible: false,
             avatar: localStorage.getItem('avatar'),
             messageCount: 0,
-            logoImg:require('../../assets/images/logo.png')
+            logoImg:require('../../assets/images/logo.png'),
+            configData:JSON.parse(localStorage.getItem('configObj'))
         }
     },
     computed:{
@@ -70,7 +71,7 @@ export default {
             return this.$store.state.login.avatar
         },
         messageFn(){
-            return this.$store.state.order.message
+            return this.$store.state.order.isRead
         }
     },
     watch:{
@@ -80,12 +81,11 @@ export default {
         },
         messageFn(newVal){
             if(newVal === 1){
-               this.messageCount--;
-                this.setMessage(this.messageCount)
-            }
-            else {
-                this.messageCount;
-                this.setMessage(this.messageCount)
+                if(this.messageCount>0){
+                    this.messageCount--;
+                    this.setMessage(this.messageCount)
+                }
+
             }
         }
     },
@@ -96,7 +96,6 @@ export default {
         }else {
             this.isLogin = false;
         }
-
         window.addEventListener('setItem', ()=> {
             //这里就可以根据具体情况调用或刷新需要的操作
             this.avatar = localStorage.getItem('avatar'); //获取监听的值
@@ -107,7 +106,7 @@ export default {
         this.logoImg = localStorage.getItem('logo')
     },
     methods: {
-        ...mapMutations('order', ["setIsMessage","setMessage"]),
+        ...mapMutations('order', ["setIsMessage","setMessage","setIsRead"]),
         //获取消息条数
         getMessage(){
             chatCount()
@@ -140,6 +139,7 @@ export default {
                         default:
                             window.location.href = '/#' + this.$route.fullPath;
                     }
+                    this.reload();
                 })
                 .catch((err)=>{})
         }

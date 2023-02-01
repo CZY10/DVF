@@ -445,6 +445,7 @@
         <!--联系达人经纪人-->
         <el-dialog
             title="联系达人经纪人"
+            @close="handleCloseFeedbackDialog"
             :visible.sync="feedbackDialog"
             width="700px"
             :close-on-click-modal="false"
@@ -781,7 +782,7 @@ export default {
         }
     },
     methods:{
-        ...mapMutations('order', ["setIsMessage","setMessage"]),
+        ...mapMutations('order', ["setIsMessage","setMessage","setIsRead"]),
         handleShowFn(row){
             orderStep({
                 order_id:row.id
@@ -1142,7 +1143,9 @@ export default {
             });
         },
         handleChatFn(){
-            this.setMessage(this.message)
+            if(this.message == 1){
+                this.setIsRead(this.message)
+            }
             this.feedbackDialog=true;
             this.chatForm.feedback='';
             if(this.chatForm.feedback_images.length>0){
@@ -1151,7 +1154,9 @@ export default {
             }
             this.handlerGetChatList();
         },
-
+        handleCloseFeedbackDialog(){
+            this.setIsRead(0)
+        },
         //获取聊天列表
         handlerGetChatList(){
             getChatList({

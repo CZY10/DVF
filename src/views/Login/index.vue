@@ -47,7 +47,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="privacy_agreement">登录平台即代表同意<a href="">服务条款</a>及<a href="">用户隐私协议</a></p>
+                                <p class="privacy_agreement">登录平台即代表同意 <router-link target="_blank" to="/tos">《用户使用协议》</router-link></p>
                             </el-tab-pane>
 
                             <el-tab-pane label="验证码" name="second">
@@ -67,7 +67,7 @@
                                         <el-button class="submit_btn" :class="{ 'disabled_opacity':phoneError || codeError}" :disabled="phoneError || codeError" @click="handleSubmitForm('ruleForm')" round>提交</el-button><!--ruleForm.phone == '' || ruleForm.verificationCode == ''-->
                                     </el-form-item>
                                 </el-form>
-                                <p class="privacy_agreement">登录平台即代表同意<a href="">服务条款</a>及<a href="">用户隐私协议</a></p>
+                                <p class="privacy_agreement">登录平台即代表同意 <router-link target="_blank" to="/tos">《用户使用协议》</router-link></p>
                             </el-tab-pane>
 
                         </el-tabs>
@@ -556,9 +556,11 @@ export default {
                     font-weight: 400;
                     color: #666666;
                     line-height: 20px;
-
                     a {
                         color: #2489F3;
+                    }
+                    a:hover{
+                        text-decoration: none;
                     }
                 }
 

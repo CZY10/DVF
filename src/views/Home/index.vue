@@ -71,7 +71,7 @@
                         <el-row :gutter="30">
                             <el-col :span="16">
                                 <div class="video_content">
-                                    <div style="display: flex;justify-content: center;height: 380px;overflow: hidden;border-radius: 20px">
+                                    <div style="display: flex;justify-content: center;height: 380px;overflow: hidden;border-radius: 20px;padding: 1px">
                                         <div style="height: 100%;width: 100%;">
                                             <video
                                                 :id="'my-player'+index"
@@ -90,7 +90,7 @@
                                         <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥{{item.lower_price}}</span>
                                             交付周期：<span style="color: #fff">{{item.leadtime_id}}</span>
                                             <span style="font-size: 12px;float: right">{{item.description}}</span>
-                                            <span style="float: right;display:block;width: 265px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap">{{item.desc}}</span>
+                                            <span style="float: right;display:block;width: 265px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;text-align: right">{{item.desc}}</span>
                                         </div>
                                         <el-row class="params2">
                                             <el-col :span="12">
@@ -405,31 +405,31 @@ export default {
         //自动轮播
         autoPlay(tabs){
             let _this = this;
-            if(tabs == 'tabPane1'){
-                this.autoPlayInter1 = setInterval(function (){
-                    if(_this.currentIndex == _this.tabList.length-1){
-                        _this.currentIndex=0;
-                    }else {
-                        _this.currentIndex+=1;
-                    }
-                },3000)
-            }else if(tabs == 'tabPane2'){
-                this.autoPlayInter2 = setInterval(function (){
-                    if(_this.currentIndex1 == _this.buyerShowTabList.length-1){
-                        _this.currentIndex1=0;
-                    }else {
-                        _this.currentIndex1+=1;
-                    }
-                },3000)
-            }else if(tabs == 'tabPane3'){
-                this.autoPlayInter3 = setInterval(function (){
-                    if(_this.currentIndex2 == _this.shootPlanTabList.category.length-1){
-                        _this.currentIndex2=0;
-                    }else {
-                        _this.currentIndex2+=1;
-                    }
-                },3000)
-            }
+            // if(tabs == 'tabPane1'){
+            //     this.autoPlayInter1 = setInterval(function (){
+            //         if(_this.currentIndex == _this.tabList.length-1){
+            //             _this.currentIndex=0;
+            //         }else {
+            //             _this.currentIndex+=1;
+            //         }
+            //     },3000)
+            // }else if(tabs == 'tabPane2'){
+            //     this.autoPlayInter2 = setInterval(function (){
+            //         if(_this.currentIndex1 == _this.buyerShowTabList.length-1){
+            //             _this.currentIndex1=0;
+            //         }else {
+            //             _this.currentIndex1+=1;
+            //         }
+            //     },3000)
+            // }else if(tabs == 'tabPane3'){
+            //     this.autoPlayInter3 = setInterval(function (){
+            //         if(_this.currentIndex2 == _this.shootPlanTabList.category.length-1){
+            //             _this.currentIndex2=0;
+            //         }else {
+            //             _this.currentIndex2+=1;
+            //         }
+            //     },3000)
+            // }
         },
         mouseover(tabs){
             if(tabs == 'tabPane1'){
@@ -541,7 +541,7 @@ export default {
             display: block;
             width: 72px;
             height: 1px;
-            background: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%);
+            background: linear-gradient(228deg, #000827 0%, #FFA373 26%, #EA5EF7 48%, #776CF3 77%, #000827 100%);
         }
     }
     &::before {
@@ -601,6 +601,7 @@ export default {
     position: relative;
     z-index: 0;
     font-size: 20px !important;
+    font-weight: 600 !important;
     overflow: hidden;
     background:  linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1), rgba(251, 150, 139, 1));
     border-image: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1), rgba(251, 150, 139, 1));
@@ -667,7 +668,7 @@ export default {
 
 #home{
     .banner{
-        height: 591px;
+        height: 603px;
         background: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%);
         padding-top: 66px;
         position: relative;
@@ -824,7 +825,6 @@ export default {
                 }
                 .tabs_title{
                     font-size: 18px;
-                    font-weight: bold;
                     color: #FFFFFF;
                     >span{
                         color: #FF9C17;
@@ -919,6 +919,9 @@ export default {
             }
         }
         .tabs_content1{
+            .video-js .vjs-tech{
+                border-radius: 20px;
+            }
             img{
                 width: 100%;
             }
@@ -957,7 +960,7 @@ export default {
                         bottom: 0;
                         height: 1px;
                         border-radius: 1px;
-                        background: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%);
+                        background: linear-gradient(228deg, #000827 0%, #FFA373 9%, #EA5EF7 48%, #776CF3 93%, #000827 100%);
                     }
                 }
                 .params2{

@@ -21,9 +21,9 @@
                     <el-menu-item index="/manage/personal">个人资料</el-menu-item>
                     <el-menu-item @click="handlerLogOut">退出</el-menu-item>
                 </el-submenu>
-                <el-menu-item style="float: right;padding: 0" index="/manage/order" @click="changeIsMessage">
+                <el-menu-item class="icon_hover_style" style="float: right;padding: 0" index="/manage/order" @click="changeIsMessage">
                     <el-badge style="display: flex;height: 100%;align-items: center" :value="messageCount" :hidden="messageCount==0" class="item">
-                        <i class="el-icon-chat-dot-round" style="color: #666666;"></i>
+                        <i class="el-icon-chat-dot-round" style="color: #666666;font-size: 22px"></i>
                     </el-badge>
                 </el-menu-item>
                 <el-menu-item style="float: right;"><a href="https://peseeazfwl.feishu.cn/wiki/wikcnMyh2Kpl0beLaynqfWT3Vuc" target="_blank">新手指南</a></el-menu-item>
@@ -148,7 +148,17 @@ export default {
 </script>
 
 <style lang="less">
-
+.icon_hover_style:hover{
+    i{
+        color: #333333 !important;
+        font-weight: bold;
+    }
+}
+.el-menu-demo .el-badge__content{
+    height: 14px;
+    line-height: 14px;
+    font-weight: normal;
+}
 .el-menu-demo .el-badge__content.is-fixed{
     top: 18px;
     right: 18px;
@@ -252,7 +262,7 @@ export default {
 .el-menu--horizontal>.el-submenu.is-active .el-submenu__title,
 .el-menu--horizontal>.el-menu-item.is-active,
 .el-menu.el-menu--horizontal{
-    border-bottom: none !important;
+    border-bottom: 1px solid #eeeeee !important;
 }
 .el-menu-item{
     transition:none !important;
@@ -307,7 +317,7 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    z-index: 99;
+    z-index: 999;
     .user_info_box{
         display: inline-flex;
         width: 36px;

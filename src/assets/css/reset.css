@@ -167,4 +167,10 @@ html {
 .video_content .video-js .vjs-remaining-time {
     display: none !important;
 }
-
+/*表格排序颜色*/
+.el-table .ascending .sort-caret.ascending{
+    border-bottom-color: #796CF3;
+}
+.el-table .descending .sort-caret.descending{
+    border-top-color: #796CF3;
+}

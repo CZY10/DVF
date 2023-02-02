@@ -132,7 +132,7 @@
                         prop="name"
                         label="以往作品"
                         align="center"
-                        width="160">
+                        width="180">
                         <template slot-scope="scope">
                             <div class="people_works" @click="handleShowVideo(scope)" :style="{cursor: scope.row.videos.length!=0? 'pointer': 'auto'}">
                                 <p>共{{scope.row.videos.length}}个</p>
@@ -148,7 +148,7 @@
                                 <div><span>卖点呈现：</span>{{ scope.row.sellingpoint_id }}</div>
                                 <div><span>拍摄场景：</span>{{ scope.row.scene_id }}</div>
                                 <div><span>视频上传：</span>{{ scope.row.videoupload_id }}</div>
-                                <div><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #666666;font-size: 12px">（样品发货后）</span></div>
+                                <div><span>交付周期：</span>{{ scope.row.leadtime_id }}<span>（样品发货后）</span></div>
                                 <div>
                                     <span>其他说明：</span>
                                     <el-tooltip placement="top" effect="light">
@@ -267,9 +267,9 @@
             </div>
 
         </div>
-        <el-backtop style="background: #000827;width: 46px;height: 46px;bottom: 70px">
+        <el-backtop style="background: #000827;width: 36px;height: 36px;bottom: 70px">
             <div>
-                <i class="iconfont icon-fhdb" style="color: #ffffff;font-size: 25px"></i>
+                <i class="iconfont icon-fhdb" style="color: #ffffff;font-size: 20px"></i>
             </div>
         </el-backtop>
 
@@ -1109,6 +1109,9 @@ export default {
     }
 }
 #buyer_show{
+    .el-table .caret-wrapper{
+        width: 15px !important;
+    }
     .video_content .vjs-poster{
         background-size: cover;
     }
@@ -1500,7 +1503,7 @@ export default {
     z-index: 2300 !important;
     border: 1px solid #796CF3 !important;
     color: rgba(51, 51, 51, 1) !important;
-    padding: 14px;
+    padding: 10px 14px;
     line-height:24px ;
 }
 .el-tooltip__popper.is-light p{
@@ -2133,6 +2136,7 @@ export default {
         .people_works{
             display: block;
             width: 140px;
+            margin: 0 6px;
             height: 79px;
             background: #7B7A7A;
             box-shadow: 0px 6px 10px 0px rgba(0,0,0,0.07);
@@ -2179,11 +2183,11 @@ export default {
         .upload_description{
             margin-top: 10px;
             div{
-                font-size: 14px;
+                font-size: 13px;
                 font-family: PingFangSC-Regular, PingFang SC;
                 font-weight: 400;
-                color: rgba(51, 51, 51, 1);
-                line-height: 24px;
+                color: #666666;
+                line-height: 18px;
                 padding-bottom: 8px;
                 display: flex;
                 span{
@@ -2196,7 +2200,7 @@ export default {
             font-size: 12px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
-            color: #999999;
+            color: #666666 !important;
             padding-bottom: 0 !important;
             line-height: 22px !important;
             overflow: hidden;
@@ -2215,7 +2219,7 @@ export default {
             line-height: 21px;
             span{
                 font-weight: 600;
-                font-size: 20px;
+                font-size: 16px;
             }
         }
     }

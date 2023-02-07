@@ -264,6 +264,9 @@ export default {
 .el-menu.el-menu--horizontal{
     border-bottom: 1px solid #eeeeee !important;
 }
+.el-menu--horizontal > .el-menu-item.is-active{
+    border-bottom: none !important;
+}
 .el-menu-item{
     transition:none !important;
 }

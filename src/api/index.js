@@ -84,6 +84,14 @@ export function createOrder(data){
         data
     })
 }
+//获取拍摄场景列表
+export function getShootRequire(data){
+    return request({
+        url:'/api/order/shootrequire',
+        method: 'post',
+        data
+    })
+}
 //提交寄送信息
 export function createTransport(data){
     return request({

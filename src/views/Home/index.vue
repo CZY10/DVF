@@ -81,13 +81,12 @@
                                                 preload="auto"
                                                 data-setup="{}">
                                                 <source :src="item.file" />
-                                                <!--                                            poster="../../../assets/images/video/poster_video.png"-->
                                             </video>
                                         </div>
 
                                     </div>
                                     <div>
-                                        <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">￥{{item.lower_price}}</span>
+                                        <div class="params1">参考价：<span style="color: #FF2C4C;font-size: 24px;margin-right: 44px">{{ item.price_type == 0 ? '￥'+item.price : item.price_type == 1 ? '￥'+item.lower_price : '视产品而定'}}</span>
                                             交付周期：<span style="color: #fff">{{item.leadtime_id}}</span>
                                             <span style="font-size: 12px;float: right">{{item.description}}</span>
                                             <span style="float: right;display:block;width: 265px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;text-align: right">{{item.desc}}</span>
@@ -405,31 +404,31 @@ export default {
         //自动轮播
         autoPlay(tabs){
             let _this = this;
-            // if(tabs == 'tabPane1'){
-            //     this.autoPlayInter1 = setInterval(function (){
-            //         if(_this.currentIndex == _this.tabList.length-1){
-            //             _this.currentIndex=0;
-            //         }else {
-            //             _this.currentIndex+=1;
-            //         }
-            //     },3000)
-            // }else if(tabs == 'tabPane2'){
-            //     this.autoPlayInter2 = setInterval(function (){
-            //         if(_this.currentIndex1 == _this.buyerShowTabList.length-1){
-            //             _this.currentIndex1=0;
-            //         }else {
-            //             _this.currentIndex1+=1;
-            //         }
-            //     },3000)
-            // }else if(tabs == 'tabPane3'){
-            //     this.autoPlayInter3 = setInterval(function (){
-            //         if(_this.currentIndex2 == _this.shootPlanTabList.category.length-1){
-            //             _this.currentIndex2=0;
-            //         }else {
-            //             _this.currentIndex2+=1;
-            //         }
-            //     },3000)
-            // }
+            if(tabs == 'tabPane1'){
+                this.autoPlayInter1 = setInterval(function (){
+                    if(_this.currentIndex == _this.tabList.length-1){
+                        _this.currentIndex=0;
+                    }else {
+                        _this.currentIndex+=1;
+                    }
+                },3000)
+            }else if(tabs == 'tabPane2'){
+                this.autoPlayInter2 = setInterval(function (){
+                    if(_this.currentIndex1 == _this.buyerShowTabList.length-1){
+                        _this.currentIndex1=0;
+                    }else {
+                        _this.currentIndex1+=1;
+                    }
+                },3000)
+            }else if(tabs == 'tabPane3'){
+                this.autoPlayInter3 = setInterval(function (){
+                    if(_this.currentIndex2 == _this.shootPlanTabList.category.length-1){
+                        _this.currentIndex2=0;
+                    }else {
+                        _this.currentIndex2+=1;
+                    }
+                },3000)
+            }
         },
         mouseover(tabs){
             if(tabs == 'tabPane1'){

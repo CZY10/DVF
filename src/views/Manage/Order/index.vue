@@ -349,6 +349,20 @@
                     <el-form-item label="产品核心卖点">
                         <el-input type="textarea" placeholder="请输入产品核心卖点" v-model="videoForm.sellingpoint"></el-input>
                     </el-form-item>
+                    <el-form-item label="拍摄要求">
+                        <div>
+                            <div class="form_item_title">在候选达人匹配失败时，将据此为您推荐其他达人</div>
+                            <div class="item_check_style" v-for="(item,index) in videoForm.shootrequire" :key="index">
+                                <div class="label_style">{{ item.title }}</div>
+                                <el-checkbox-group v-if="item.type == 'check'" v-model="item.checkList">
+                                    <el-checkbox v-for="(i,j) in item.list" :key="j" :label="i"></el-checkbox>
+                                </el-checkbox-group>
+                                <el-radio-group v-else v-model="item.checkList">
+                                    <el-radio v-for="(i,j) in item.list" :label="i">{{ i }}</el-radio>
+                                </el-radio-group>
+                            </div>
+                        </div>
+                    </el-form-item>
                     <el-form-item label="定制需求" v-if="videoForm.shoot == 1">
                         <el-input type="textarea" placeholder="请输入您的拍摄需求" v-model="videoForm.custom"></el-input>
                     </el-form-item>
@@ -363,7 +377,9 @@
                                         <img :src="item.image" alt="">
                                     </div>
                                     <p>NO.{{item.id}}</p>
-                                    <span>￥{{item.lower_price}}-{{item.highest_price}}</span>
+                                    <span v-if="item.price_type == 0">￥{{item.price}}</span>
+                                    <span v-else-if="item.price_type == 1">￥{{item.lower_price}}-{{item.highest_price}}</span>
+                                    <span v-else>视产品而定</span>
                                 </li>
                             </router-link>
                         </ul>
@@ -619,7 +635,8 @@ import {
     createChat,
     orderDetail,
     getCategory,
-    orderStep
+    orderStep,
+    getShootRequire
 } from "@/api";
 import QRCode from "qrcodejs2";
 import {mapMutations} from "vuex";
@@ -642,6 +659,9 @@ export default {
             }
         }
         return {
+            listArray:[],
+            checkArray: {
+            },
             categoryList:[],
             isHide:false,
             form:{
@@ -749,11 +769,19 @@ export default {
             paymentType:0,
         }
     },
+    created() {
+        for (let key in this.listArray){
+            if(this.listArray[key].type == 'check'){
+                this.$set(this.listArray[key],key,this.listArray[key].checkList)
+            }
+        }
+    },
     mounted() {
         this.getOrderList();
         this.token = localStorage.getItem('token');
         this.avatar = localStorage.getItem('avatar');
         this.handlerGetCategory();
+        this.getShootRequireList();
     },
     computed:{
         query(){
@@ -783,6 +811,18 @@ export default {
     },
     methods:{
         ...mapMutations('order', ["setIsMessage","setMessage","setIsRead"]),
+        //获取拍摄场景列表
+        getShootRequireList(){
+            getShootRequire()
+                .then((res) => {
+                    if(res.code === 1){
+                        this.listArray = res.data
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
         handleShowFn(row){
             orderStep({
                 order_id:row.id
@@ -1252,6 +1292,12 @@ export default {
 }
 </script>
 <style lang="less">
+#order{
+    .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
+        background-color: #796CF3;
+        border-color: #796CF3;
+    }
+}
 .el-step__head.is-process,
 .el-step__title.is-process,
 .el-step__title.is-wait,
@@ -1990,6 +2036,16 @@ export default {
 </style>
 <style scoped lang="less">
 #order{
+    .item_check_style{
+        display: flex;
+        align-items: center;
+        height: 32px;
+        .label_style{
+            width: 48px;
+            text-align: left;
+            color: #666666;
+        }
+    }
     .upload_btn_box{
         .el-button.is-disabled{
             color: #C0C4CC !important;
@@ -2195,6 +2251,15 @@ export default {
         }
     }
     .video_dialog{
+        .form_item_title{
+            height: 17px;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            color: #999999;
+            line-height: 17px;
+            margin-top: 5px;
+            margin-bottom: 6px;
+        }
         .el-form-item--small.el-form-item{
             margin-bottom: 14px !important;
         }
@@ -2277,14 +2342,14 @@ export default {
             }
             .candidate_list {
                 li{
-                    width: 76px;
+                    width: 77px;
                     background: #FFFFFF;
                     border-radius: 3px;
                     border: 1px solid #EEEEEE;
                     text-align: center;
                     padding: 12px 5px;
                     float: left;
-                    margin-right: 7px;
+                    margin-right: 6px;
                     div{
                         width: 44px;
                         height: 44px;

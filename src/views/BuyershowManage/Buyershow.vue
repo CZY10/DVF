@@ -183,8 +183,19 @@
                         width="160"
                         align="center"
                         label="参考报价">
+                        <template slot="header">
+                            <span style="position: relative;padding-right: 13px">
+                                标准价格
+                                <el-tooltip placement="top" effect="light">
+                                    <i class="el-icon-question" style="margin-left: 6px;color: #5E5E60;font-size: 12px;position: absolute;right: 0;top: 0"></i>
+                                    <div slot="content" style="max-width: 400px">此处仅为标准化拍摄的价格，通<br>常定制化拍摄需另行收费。</div>
+                                </el-tooltip>
+                            </span>
+                        </template>
                         <template slot-scope="scope">
-                            <p class="consult_price">￥<span>{{ scope.row.lower_price }}-{{ scope.row.highest_price }}</span></p>
+                            <p v-if="scope.row.price_type==0" class="consult_price">￥<span>{{ scope.row.price }}</span></p>
+                            <p v-else-if="scope.row.price_type==1" class="consult_price">￥<span>{{ scope.row.lower_price }}-{{ scope.row.highest_price }}</span></p>
+                            <p v-else class="consult_price"><span>视产品而定</span></p>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -344,7 +355,7 @@
                                 </p>
                             </el-tooltip>
                         </div>
-                        <el-input type="textarea" placeholder="请输入产品核心卖点" v-model="videoRuleForm.selling_point"></el-input>
+                        <el-input type="textarea" placeholder="不超过350个英文字符" show-word-limit maxlength="350" v-model="videoRuleForm.selling_point"></el-input>
                     </el-form-item>
                     <el-form-item label="定制需求" v-if="videoRuleForm.selectedType == 1" prop="demand">
                         <div class="description">请具体说明您的拍摄需求
@@ -360,9 +371,23 @@
                         </div>
                         <el-input type="textarea" placeholder="请输入您的拍摄需求" v-model="videoRuleForm.demand"></el-input>
                     </el-form-item>
-                    <el-form-item label="备注（非必填）">
-                        <p class="description">在候选达人匹配失败时，将据此为您推荐其他达人</p>
-                        <el-input type="textarea" placeholder="不超过60字，如对达人性别、肤色，小孩或宠物出镜有要求，可备注" v-model="videoRuleForm.remarks"></el-input>
+                    <el-form-item label="拍摄要求" class="is-required">
+                        <div>
+                            <div class="form_item_title">在候选达人匹配失败时，将据此为您推荐其他达人</div>
+                            <div class="item_check_style" v-for="(item,index) in listArray" :key="index">
+                                <div class="label_style">{{ item.title }}</div>
+                                <el-checkbox-group v-if="item.type == 'check'" v-model="item.checkList" @change="checkRequirement">
+                                    <el-checkbox v-for="(i,index) in item.list" :key="index" :label="i"></el-checkbox>
+                                </el-checkbox-group>
+                                <el-radio-group v-else v-model="item.checkList" @change="checkRequirement">
+                                    <el-radio v-for="(i,j) in item.list" :label="i">{{ i }}</el-radio>
+                                </el-radio-group>
+                            </div>
+                            <div class="error_style" v-if="errorShow">{{ errorText }}</div>
+                        </div>
+                    </el-form-item>
+                    <el-form-item label="其他要求">
+                        <el-input type="textarea" maxlength="60" show-word-limit placeholder="不超过60字，如配件类产品仅适配特定型号，或对小孩或宠物出境有要求，在此备注" v-model="videoRuleForm.remarks"></el-input>
                     </el-form-item>
                     <el-form-item label="候选达人" style="border-top: 1px solid #eeeeee;padding-top: 14px">
                         <ul class="candidate_list">
@@ -372,7 +397,9 @@
                                         <img :src="item.image" alt="">
                                     </div>
                                     <p>NO.{{item.id}}</p>
-                                    <span>￥{{item.lower_price}}-{{item.highest_price}}</span>
+                                    <span v-if="item.price_type == 0">￥{{item.price}}</span>
+                                    <span v-else-if="item.price_type == 1">￥{{item.lower_price}}-{{item.highest_price}}</span>
+                                    <span v-else>视产品而定</span>
                                 </li>
                             </router-link>
                         </ul>
@@ -504,7 +531,7 @@
 <script>
 import Footer from "@/components/Footer";
 import QRCode from 'qrcodejs2'
-import {getCategory, getSearchList, createOrder, payOrder, checkPayment} from "@/api";
+import {getCategory, getSearchList, createOrder, payOrder, checkPayment, getShootRequire} from "@/api";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.min.css'
@@ -601,6 +628,11 @@ export default {
             localhost:process.env.VUE_APP_BASE_URL,
             order: '',
             orderType: '',
+            radioArray:[],
+            listArray:[],
+            errorText:'',
+            errorShow:false,
+            requirementValidator:false,
         }
     },
     components:{
@@ -617,12 +649,25 @@ export default {
         this.handlerGetCategory('type');
         this.handlerSearchList();
         this.setSwiper(0);
-        document.body.scrollTop = 0
+        document.body.scrollTop = 0;
+        this.getShootRequireList();
     },
     beforeUpdate(){
         window.addEventListener('scroll',this.handleScroll,true)
     },
     methods:{
+        //获取拍摄场景列表
+        getShootRequireList(){
+            getShootRequire()
+                .then((res) => {
+                    if(res.code === 1){
+                        this.listArray = res.data
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error(err.msg);
+                });
+        },
         setSwiper(data){
             this.swiperIndex = data
         },
@@ -935,7 +980,6 @@ export default {
             })
                 .then((res) => {
                     if(res.code === 1){
-                        console.log(res)
                         this.orderData = res.data.order;
                         new QRCode(this.$refs.alipayQrCodeUrl, {
                             text: res.data.qrcode,
@@ -1000,6 +1044,33 @@ export default {
                     });
             },3000)
         },
+        //拍摄要求检验
+        checkRequirement(){
+            for(let k in this.listArray){
+                if(this.listArray[k].type == 'check'){
+                    if(this.listArray[k].checkList.length <= 0){
+                        this.errorText = '请先选择'+ this.listArray[k].title;
+                        this.errorShow = true
+                        this.requirementValidator = false;
+                        return
+                    }else {
+                        this.errorShow = false;
+                        this.errorText = ''
+                    }
+                }else {
+                    if(this.listArray[k].checkList == '' || this.listArray[k].checkList == null){
+                        this.errorText = '请先选择'+ this.listArray[k].title;
+                        this.errorShow = true
+                        this.requirementValidator = false;
+                        return
+                    }else {
+                        this.errorShow = false;
+                        this.errorText = ''
+                    }
+                }
+                this.requirementValidator = true;
+            }
+        },
         //清除定时器
         handleClose(){
             clearInterval(this.checkWechatPaymentVal);
@@ -1021,24 +1092,28 @@ export default {
                 url: this.videoRuleForm.product,
                 sellingpoint: this.videoRuleForm.selling_point,
                 description: this.videoRuleForm.remarks,
+                shootrequire: this.listArray
             }
             this.$refs[formName].validate((valid) => {
+                this.checkRequirement()
                 if (valid) {
-                    createOrder(data)
-                        .then((res) => {
-                            if(res.code === 1){
-                                this.videoSubmitDialogVisible = false;
-                                this.selectRow.forEach((item)=>{
-                                    this.$refs.multipleTable.toggleRowSelection(item,false);
-                                })
-                                this.selectedTableData = [];
-                                this.payDepositDialogVisible = true;
-                                this.handlerPayOrder(res.data.id,0)
-                            }
-                        })
-                        .catch((err) => {
-                            this.$message.error(err.msg);
-                        });
+                    if(this.requirementValidator){
+                        createOrder(data)
+                            .then((res) => {
+                                if(res.code === 1){
+                                    this.videoSubmitDialogVisible = false;
+                                    this.selectRow.forEach((item)=>{
+                                        this.$refs.multipleTable.toggleRowSelection(item,false);
+                                    })
+                                    this.selectedTableData = [];
+                                    this.payDepositDialogVisible = true;
+                                    this.handlerPayOrder(res.data.id,0)
+                                }
+                            })
+                            .catch((err) => {
+                                this.$message.error(err.msg);
+                            });
+                    }
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -1662,6 +1737,47 @@ export default {
     }
 }
 .video_dialog{
+    .error_style{
+        position: absolute;
+        color: #F56C6C;
+        font-size: 12px;
+        bottom: -18px;
+    }
+    .form_item_title{
+        height: 17px;
+        font-size: 12px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        color: #999999;
+        line-height: 17px;
+        margin-top: 5px;
+        margin-bottom: 6px;
+    }
+    .item_check_style{
+        display: flex;
+        align-items: center;
+        height: 32px;
+        .el-checkbox__input.is-checked + .el-checkbox__label{
+            color: #666666;
+        }
+        .label_style{
+            width: 48px;
+            text-align: left;
+            color: #666666;
+        }
+        .el-checkbox-group,
+        .el-radio-group{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .el-checkbox,
+        .el-radio{
+            color: #666666;
+            padding-top: 5px;
+            width: 120px;
+            margin-right: 0px;
+        }
+    }
     .video_ruleForm{
         height: 500px;
         padding-top: 10px;
@@ -1757,14 +1873,14 @@ export default {
         }
         .candidate_list {
             li{
-                width: 76px;
+                width: 77px;
                 background: #FFFFFF;
                 border-radius: 3px;
                 border: 1px solid #EEEEEE;
                 text-align: center;
                 padding: 12px 5px;
                 float: left;
-                margin-right: 7px;
+                margin-right: 6px;
                 div{
                     width: 44px;
                     height: 44px;

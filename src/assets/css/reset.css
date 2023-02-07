@@ -174,3 +174,8 @@ html {
 .el-table .descending .sort-caret.descending{
     border-top-color: #796CF3;
 }
+/*单选框样式*/
+.el-radio__input.is-checked .el-radio__inner{
+    border-color: #796CF3;
+    background: #796CF3;
+}

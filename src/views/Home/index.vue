@@ -396,7 +396,7 @@ export default {
             }
         },
         handleClick(tab, event) {
-            console.log(tab, event);
+            // console.log(tab, event);
         },
         clickTab(index){
             this.currentIndex = index;
@@ -667,7 +667,7 @@ export default {
 
 #home{
     .banner{
-        height: 603px;
+        height: 570px;
         background: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%);
         padding-top: 66px;
         position: relative;
@@ -686,7 +686,7 @@ export default {
         .banner_img{
             display: flex;
             justify-content: center;
-            margin-top: 48px;
+            margin-top: 15px;
             video{
                 width: 100%;
             }
@@ -700,7 +700,7 @@ export default {
             font-weight: 900;
             color: #FFFFFF;
             line-height: 42px;
-            padding-top: 317px;
+            padding-top: 260px;
             text-align: center;
             padding-bottom: 66px;
         }
@@ -864,6 +864,7 @@ export default {
                     font-weight: 600;
                     color: #FFFFFF;
                     line-height: 24px;
+                    padding-bottom: 6px;
                     &::after {
                         display: none;
                     }

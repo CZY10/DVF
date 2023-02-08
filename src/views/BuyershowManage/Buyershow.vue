@@ -148,7 +148,7 @@
                                 <div><span>卖点呈现：</span>{{ scope.row.sellingpoint_id }}</div>
                                 <div><span>拍摄场景：</span>{{ scope.row.scene_id }}</div>
                                 <div><span>视频上传：</span>{{ scope.row.videoupload_id }}</div>
-                                <div><span>交付周期：</span>{{ scope.row.leadtime_id }}<span>（样品发货后）</span></div>
+                                <div><span>交付周期：</span>{{ scope.row.leadtime_id }}<span>（样品收货后）</span></div>
                                 <div>
                                     <span>其他说明：</span>
                                     <el-tooltip placement="top" effect="light">
@@ -166,7 +166,7 @@
 <!--                                </div>-->
 <!--                                <div>-->
 <!--                                    <p><span>视频上传：</span>{{ scope.row.videoupload_id }}</p>-->
-<!--                                    <p><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #999999;font-size: 12px">（样品发货后）</span></p>-->
+<!--                                    <p><span>交付周期：</span>{{ scope.row.leadtime_id }}<span style="color: #999999;font-size: 12px">（样品收货后）</span></p>-->
 <!--                                </div>-->
 <!--                            </div>-->
 <!--                            <el-tooltip placement="top" effect="light">-->
@@ -278,10 +278,8 @@
             </div>
 
         </div>
-        <el-backtop style="background: #000827;width: 36px;height: 36px;bottom: 70px">
-            <div>
-                <i class="iconfont icon-fhdb" style="color: #ffffff;font-size: 20px"></i>
-            </div>
+        <el-backtop style="width: 46px;height: 46px;bottom: 30px;right:10px;border: 1px solid #eeeeee;box-shadow: none" @click="handleBackTop">
+            <i class="iconfont icon-fhdb1" style="color: #999999;font-size: 14px"></i>
         </el-backtop>
 
         <!--登录提示-->
@@ -656,6 +654,12 @@ export default {
         window.addEventListener('scroll',this.handleScroll,true)
     },
     methods:{
+        //返回顶部
+        handleBackTop(){
+            this.$nextTick(()=>{
+                this.$refs.multipleTable.bodyWrapper.scrollTop = 0;
+            })
+        },
         //获取拍摄场景列表
         getShootRequireList(){
             getShootRequire()
@@ -881,6 +885,10 @@ export default {
         handlerSearchList(value){
             if(value == 'reset'){
                 this.pageIndex = 1
+                if(this.$refs.multipleTable)this.$refs.multipleTable.clearSort();
+
+                this.orderType = '';
+                this.order = '';
                 if(!localStorage.getItem('token')){
                     this.loginDialogVisible = true;
                     this.genderValue = '';
@@ -1178,6 +1186,12 @@ export default {
 }
 </script>
 <style lang="less">
+.foot_box {
+    .el-drawer__header {
+        padding: 0;
+        margin-bottom: 0;
+    }
+}
 #searchBar{
     .el-checkbox__inner{
         border: 1px solid #796CF3;
@@ -1763,6 +1777,7 @@ export default {
             width: 48px;
             text-align: left;
             color: #666666;
+            padding-top: 4px;
         }
         .el-checkbox-group,
         .el-radio-group{
@@ -1954,6 +1969,9 @@ export default {
     }
 }
 .foot_box{
+    .el-drawer__header{
+        padding: 0;
+    }
     position: fixed;
     bottom: 0;
     left: 0;
@@ -2306,6 +2324,7 @@ export default {
                 line-height: 18px;
                 padding-bottom: 8px;
                 display: flex;
+                align-items: center;
                 span{
                     color: #999999;
                     flex-shrink: 0;

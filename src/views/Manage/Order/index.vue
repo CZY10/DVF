@@ -337,7 +337,7 @@
                     </el-form-item>
                     <el-form-item label="产品亚马逊链接">
                         <p style="background: #F5F7FA;border: 1px solid #E4E7ED;border-radius: 4px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis">
-                            <a :href="videoForm.url" :title="videoForm.url" style="color: #C0C4CC;padding-left: 15px;text-decoration: none;" target="_blank">{{ videoForm.url }}</a>
+                            <a :href="videoForm.url" :title="videoForm.url" style="color: #333333;padding-left: 15px;text-decoration: none;" target="_blank">{{ videoForm.url }}</a>
                         </p>
 <!--                        <el-input v-model="videoForm.url" placeholder="请输入产品亚马逊链接"></el-input>-->
                     </el-form-item>
@@ -1297,6 +1297,12 @@ export default {
         background-color: #796CF3;
         border-color: #796CF3;
     }
+    .video_dialog{
+        .el-input.is-disabled .el-input__inner,
+        .el-textarea.is-disabled .el-textarea__inner{
+            color: #333333;
+        }
+    }
 }
 .el-step__head.is-process,
 .el-step__title.is-process,
@@ -2014,7 +2020,7 @@ export default {
 }
 .el-table__body-wrapper{
     border: 1px solid #eeeeee;
-    padding: 10px 30px;
+    padding: 0 30px;
     width: auto !important;
     border-radius: 4px !important;
     margin-top: 10px;
@@ -2044,6 +2050,7 @@ export default {
             width: 48px;
             text-align: left;
             color: #666666;
+            padding-top: 4px;
         }
     }
     .upload_btn_box{
@@ -2226,7 +2233,11 @@ export default {
                 font-family: PingFangSC-Regular, PingFang SC;
                 color: #999999;
             }
+            .cancel_style:hover{
+                background: none;
+            }
             .confirm_style{
+                border: none;
                 background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
                 font-family: PingFangSC-Regular, PingFang SC;
                 color: #FFFFFF;
@@ -2260,6 +2271,22 @@ export default {
             margin-top: 5px;
             margin-bottom: 6px;
         }
+        .item_check_style{
+            .el-checkbox-group,
+            .el-radio-group{
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
+            .el-checkbox,
+            .el-radio{
+                color: #666666;
+                padding-top: 5px;
+                width: 120px;
+                margin-right: 0px;
+            }
+        }
+
         .el-form-item--small.el-form-item{
             margin-bottom: 14px !important;
         }

@@ -109,7 +109,7 @@
                         <template slot-scope="scope">
                             <div class="people_information_style" style="cursor: pointer">
                                 <div class="people_img">
-                                    <img :src="scope.row.image" alt="">
+                                    <img :src="scope.row.image" alt="图片加载有误">
                                 </div>
                                 <div>
                                     <p class="people_nickname">NO.{{ scope.row.id }}</p>
@@ -226,7 +226,7 @@
                                 <template slot-scope="scope">
                                     <div class="people_information_style">
                                         <div class="people_img">
-                                            <img :src="scope.row.image" alt="">
+                                            <img :src="scope.row.image" alt="图片加载有误">
                                         </div>
                                         <p class="people_nickname">NO.{{ scope.row.id }}</p>
                                     </div>
@@ -1384,8 +1384,11 @@ export default {
 .el-tooltip__popper.is-dark{
     max-width: 500px;
 }
-#buyer_show{
 
+#buyer_show{
+    .el-table--enable-row-transition .el-table__body td.el-table__cell{
+        background-color: transparent !important;
+    }
     .el-table__body-wrapper{
         border: none;
         padding: 0;
@@ -2029,7 +2032,11 @@ export default {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                color: #ffffff;
+                line-height: 64px;
             }
+            img[src=""],
+            img:not([src]) { opacity: 0; }
         }
         .people_nickname{
             font-size: 14px;
@@ -2244,7 +2251,11 @@ export default {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+                    line-height: 120px;
+                    color: #ffffff;
                 }
+                img[src=""],
+                img:not([src]) { opacity: 0; }
             }
             .people_nickname{
                 font-size: 14px;

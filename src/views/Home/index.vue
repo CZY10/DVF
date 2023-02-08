@@ -66,7 +66,8 @@
                     <a class="see_more" href="/#/buyershow">更多+</a>
                 </ul>
 
-                <div class="tabs_content1" @mouseover="mouseover('tabPane3')" @mouseout="mouseout('tabPane3')">
+<!--                <div class="tabs_content1" @mouseover="mouseover('tabPane3')" @mouseout="mouseout('tabPane3')">-->
+                <div class="tabs_content1" @click="mouseover('tabPane3')">
                     <div v-for="(item,index) in shootPlanTabList.items" :key="index" v-show="currentIndex2 == index">
                         <el-row :gutter="30">
                             <el-col :span="16">
@@ -664,10 +665,9 @@ export default {
     background-color: #d3dce6;
 }
 
-
 #home{
     .banner{
-        height: 570px;
+        height: 585px;
         background: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%);
         padding-top: 66px;
         position: relative;
@@ -686,7 +686,7 @@ export default {
         .banner_img{
             display: flex;
             justify-content: center;
-            margin-top: 15px;
+            margin-top: 30px;
             video{
                 width: 100%;
             }

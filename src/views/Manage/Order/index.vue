@@ -2103,6 +2103,7 @@ export default {
             .avatar_box{
                 display: flex;
                 align-items: center;
+                justify-content: center;
                 >p:first-child{
                     width: 40px;
                     height: 40px;

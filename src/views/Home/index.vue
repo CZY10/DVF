@@ -282,7 +282,7 @@ export default {
                 },
                 {
                     no:'03.',
-                    label:'A++视频',
+                    label:'A+视频',
                     description: '阻止竞品关联！促进listing转化！提升产品权重！阻止竞品关联！阻止竞品关联！',
                 },
                 {

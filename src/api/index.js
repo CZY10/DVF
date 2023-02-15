@@ -274,3 +274,19 @@ export function orderStep(data){
         data
     })
 }
+//获取chatGPT列表
+export function chatgptList(data){
+    return request({
+        url:'/api/chatgpt/index',
+        method: 'post',
+        data
+    })
+}
+//chatGPT消息发送
+export function createChatgpt(data){
+    return request({
+        url:'/api/chatgpt/create',
+        method: 'post',
+        data
+    })
+}

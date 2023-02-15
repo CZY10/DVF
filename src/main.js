@@ -12,6 +12,10 @@ import { refreshToken } from '../src/api/index';
 import {mapMutations} from "vuex";
 // import 'swiper/dist/css/swiper.css'
 
+//一键复制
+import VueClipBoard from 'vue-clipboard2'
+Vue.use(VueClipBoard)
+
 
 Vue.prototype.$video = videojs;
 Vue.config.productionTip = false;

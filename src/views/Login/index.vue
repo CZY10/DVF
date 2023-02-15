@@ -9,7 +9,7 @@
                 active-text-color="#ffffff"
                 text-color="#666666"
             >
-                <el-menu-item index="/"><img :src="logoImg" alt=""></el-menu-item>
+                <el-menu-item index="/" style="width: 237px"><img :src="logoImg" alt="" style="width: 100%"></el-menu-item>
 
                 <el-menu-item style="float: right;" @click="dialogVisible = true">联系我们</el-menu-item>
                 <el-menu-item style="float: right;" index="3"><a href="">新手指南</a></el-menu-item>

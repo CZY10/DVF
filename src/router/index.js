@@ -7,6 +7,7 @@ import Manage from "@/views/Manage";
 import Order from "@/views/Manage/Order";
 import Payment from "@/views/Manage/Payment";
 import Personal from "@/views/Manage/Personal";
+import ChatGPT from "@/views/ChatGPT";
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,12 @@ const routes = [
                 name: 'home',
                 meta: {requiresAuth: false},
                 component: Home,
+            },
+            {
+                path: '/chatgpt',
+                name: 'chatgpt',
+                meta: {requiresAuth: false},
+                component: ChatGPT,
             },
             {
                 path: '/buyershowManage',

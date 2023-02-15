@@ -7,7 +7,7 @@ import {refreshToken} from "@/api";
 
 const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_URL,   // api的base_url  自动加在url前面
-    timeout:10000, //请求超时时间
+    timeout:1000*60, //请求超时时间
 })
 
 // request拦截器
@@ -48,7 +48,7 @@ service.interceptors.response.use(
     error => {
         let _this = this;
         if(error.response.data.code === 401){
-            MessageBox.confirm('会话过期，可以取消继续留在该页面，或者重新登录', '确定登出', {
+            MessageBox.confirm('重新登录或取消继续留在该页面', '重新登录', {
                 confirmButtonText: '重新登录',
                 cancelButtonText: '取消',
                 offset:100,

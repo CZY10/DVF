@@ -272,23 +272,23 @@ export default {
                 {
                     no:'01.',
                     label:'关联视频',
-                    description:'阻止竞品关联！促进listing转化！提升产品权重！阻止竞品关联！阻止竞品关联！',
+                    description:'阻止竞品关联！还可抢占竞品流量，增强买家购买信心，提升产品转化',
 
                 },
                 {
                     no:'02.',
                     label:'主图视频',
-                    description: '阻止竞品关联！促进listing转化！提升产品权重！阻止竞品关联！阻止竞品关联！',
+                    description: '拔高产品调性！凸显产品特性和细节，有效减少客户退换货及差评',
                 },
                 {
                     no:'03.',
                     label:'A+视频',
-                    description: '阻止竞品关联！促进listing转化！提升产品权重！阻止竞品关联！阻止竞品关联！',
+                    description: '提升产品说服力！更有助于提高listing转化率和复购率，减少退换货和差评',
                 },
                 {
                     no:'04.',
                     label:'QA视频',
-                    description: '阻止竞品关联！促进listing转化！提升产品权重！阻止竞品关联！阻止竞品关联！'
+                    description: '增加产品可信度！提升买家购买信心和购物体验，提高listing转化和权重'
                 },
             ],
             buyerShowTabList:[

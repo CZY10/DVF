@@ -7,7 +7,7 @@
                         <img :src="item.type == 0? avatar : require('../../assets/images/chatgpt.png')" height="45" width="45" >
                         <div class="message-content">
                             <div :style="item.type == 0?'text-align:right;display: flex;flex-direction:row-reverse;line-height:24px':''">
-                                {{item.type == 0 ? '我' : 'chatGPT'}}
+                                {{item.type == 0 ? '我' : 'ChatGPT'}}
                                 <span class="message-time">{{item.createtime}}</span>
                             </div>
                             <div class="message-body" v-show="item.content !== ''">
@@ -65,19 +65,8 @@ export default {
     },
     mounted() {
         this.handlerGetChatList();
-        let getDomeHeight = $(window).height()-180-document.getElementById('textarea_dome').offsetHeight-document.getElementById('upload_btn_box').offsetHeight;
-        setTimeout(()=>{
-            if(this.chatData.length > 0){
-                this.scrollToBottom();
-                document.getElementById('chatForm').style.height = getDomeHeight + 'px';
-            }else {
-                document.getElementById('empty_dome').style.height = getDomeHeight + 'px';
-            }
-        },1000)
-
     },
     methods:{
-
         // 发送消息
         handlerSedMeg(){
             //获取当前时间
@@ -122,6 +111,18 @@ export default {
                         if(this.chatData.length>0){
                             this.scrollToBottom();
                         }
+                        let getDomeHeight = $(window).height()-180-document.getElementById('textarea_dome').offsetHeight-document.getElementById('upload_btn_box').offsetHeight;
+                        if(this.chatData.length > 0){
+                            this.scrollToBottom();
+                            this.$nextTick(function () {
+                                document.getElementById('chatForm').style.height = getDomeHeight + 'px';
+                            })
+                        }else {
+                            this.$nextTick(function () {
+                                document.getElementById('empty_dome').style.height = getDomeHeight + 'px';
+                            })
+
+                        }
                     }
                 })
                 .catch((err)=>{
@@ -151,6 +152,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 html{
     height: 100%;
 }
@@ -258,6 +260,8 @@ html{
             .message-body {
                 padding: 6px 14px;
                 margin-top: 10px;
+                word-break: break-all;
+                word-wrap: break-word;
             }
             .message-time {
                 margin:0 10px;
@@ -275,5 +279,10 @@ html{
         }
     }
 
+}
+@media screen and (max-width: 600px){
+    #chatgpt{
+        padding: 20px;
+    }
 }
 </style>

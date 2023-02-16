@@ -41,6 +41,7 @@
 
 <script>
 import {getConfig} from '@/api'
+import {mapMutations} from "vuex";
 export default {
     name: "index",
     data(){
@@ -52,13 +53,15 @@ export default {
         this.getContent()
     },
     methods:{
+        ...mapMutations('login', ["setLogo"]),
         getContent(){
             getConfig()
                 .then((res)=>{
                     if(res.code === 1){
                         this.formData = res.data;
-                        localStorage.setItem('logo',res.data.logo)
+                        localStorage.setItem('logo',res.data.logo);
                         localStorage.setItem('configObj', JSON.stringify(res.data));
+                        this.setLogo(res.data.logo)
                     }
                 })
                 .catch((err)=>{

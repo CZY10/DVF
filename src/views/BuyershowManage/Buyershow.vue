@@ -648,7 +648,6 @@ export default {
         this.handlerSearchList();
         this.setSwiper(0);
         document.body.scrollTop = 0;
-        this.getShootRequireList();
     },
     beforeUpdate(){
         window.addEventListener('scroll',this.handleScroll,true)
@@ -1179,6 +1178,7 @@ export default {
                 });
             }else {
                 this.videoSubmitDialogVisible = true;
+                this.getShootRequireList();
                 this.drawer = false;
             }
         }

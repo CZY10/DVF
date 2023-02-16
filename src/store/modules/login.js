@@ -6,6 +6,7 @@ export default {
         token:'',
         loginFromPath:'/',
         expiretime:'',
+        logo:'',
     },
     mutations:{
         setUserInfo(state,payload){
@@ -31,6 +32,9 @@ export default {
         },
         setLoginFromPath(state,payload){
             state.loginFromPath = payload
+        },
+        setLogo(state,payload){
+            state.logo = payload
         },
     },
     actions:{

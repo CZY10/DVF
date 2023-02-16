@@ -12,8 +12,8 @@
                 <a href="" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" style="width: 100%" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
-                <el-menu-item @click="dialogVisible = true">联系我们</el-menu-item>
-                <el-menu-item :index="token?'/chatgpt':'/login'">chatGPT</el-menu-item>
+                <el-menu-item @click="handlerClick">联系我们</el-menu-item>
+                <el-menu-item :index="token?'/chatgpt':'/login'">ChatGPT</el-menu-item>
                 <el-menu-item v-if="!isLogin" style="float: right;" index="/login"><el-button class="login_btn" round>登陆/注册</el-button></el-menu-item>
                 <el-submenu v-else index="/manage" style="float: right;border-radius: 10px">
                     <template slot="title"><span class="user_info_box"><img :src="avatar" alt=""></span></template>
@@ -50,9 +50,9 @@
 </template>
 
 <script>
-import store from "@/store";
 import {mapMutations} from "vuex";
 import { chatCount } from '../../api/index'
+import store from "@/store";
 
 export default {
     name: "NavMenu",
@@ -63,8 +63,8 @@ export default {
             dialogVisible: false,
             avatar: localStorage.getItem('avatar'),
             messageCount: 0,
-            logoImg:require('../../assets/images/logo.png'),
-            configData:JSON.parse(localStorage.getItem('configObj')),
+            logoImg:localStorage.getItem('logo'),
+            configData:{},
             token:localStorage.getItem('token')
         }
     },
@@ -74,6 +74,9 @@ export default {
         },
         messageFn(){
             return this.$store.state.order.isRead
+        },
+        logoFn(){
+            return this.$store.state.login.logo
         }
     },
     watch:{
@@ -89,6 +92,9 @@ export default {
                 }
 
             }
+        },
+        logoFn(newVal){
+            this.logoImg = newVal;
         }
     },
     created() {
@@ -104,10 +110,15 @@ export default {
     },
     mounted() {
         this.getMessage();
-        this.logoImg = localStorage.getItem('logo')
     },
     methods: {
         ...mapMutations('order', ["setIsMessage","setMessage","setIsRead"]),
+        handlerClick(){
+            this.dialogVisible = true;
+            if(localStorage.getItem('configObj')!=null){
+                this.configData = JSON.parse(localStorage.getItem('configObj'));
+            }
+        },
         //获取消息条数
         getMessage(){
             chatCount()
@@ -152,6 +163,34 @@ export default {
 </script>
 
 <style lang="less">
+@media screen and (max-width: 600px){
+    .header{
+        padding: 12px 0;
+    }
+    .header > ul{
+        margin: 10px;
+        padding-bottom: 10px;
+    }
+    .header > ul li{
+        height: 40px !important;
+        line-height: 40px !important;
+    }
+    .header > ul a{
+        height: 40px !important;
+        line-height: 40px !important;
+        padding: 0 10px !important;
+    }
+    .el-menu-item{
+        padding: 0 6px !important;
+    }
+    .el-menu--horizontal>.el-submenu .el-submenu__title{
+        height: 40px !important;
+        line-height: 40px !important;
+    }
+    .el-menu.el-menu--horizontal{
+        border-bottom: none;
+    }
+}
 .icon_hover_style:hover{
     i{
         color: #333333 !important;
@@ -266,7 +305,7 @@ export default {
 .el-menu--horizontal>.el-submenu.is-active .el-submenu__title,
 .el-menu--horizontal>.el-menu-item.is-active,
 .el-menu.el-menu--horizontal{
-    border-bottom: 1px solid #eeeeee !important;
+    border-bottom: 1px solid #eeeeee;
 }
 .el-menu--horizontal > .el-menu-item.is-active{
     border-bottom: none !important;
@@ -297,8 +336,8 @@ export default {
 .el-menu--horizontal>.el-submenu .el-submenu__title,
 .el-submenu.is-active .el-submenu__title,
 .el-menu--horizontal>.el-menu-item{
-    height: 66px !important;
-    line-height: 66px !important;
+    height: 66px;
+    line-height: 66px;
 }
 
 .el-submenu__title i{

@@ -46,26 +46,26 @@ service.interceptors.response.use(
         }
     },
     error => {
-        let _this = this;
-        if(error.response.data.code === 401){
-            MessageBox.confirm('重新登录或取消继续留在该页面', '重新登录', {
-                confirmButtonText: '重新登录',
-                cancelButtonText: '取消',
-                offset:100,
-                type: 'warning',
-                callback(val){
-                    if(val === 'confirm'){
-                        store.commit('login/clearUserInfo');
-                        localStorage.removeItem('userInfo')//删除用户信息
-                        localStorage.removeItem('token ');//删除token
-                        localStorage.removeItem('avatar')//删除用户信息
-                        window.location.href= '/#/login'
-                    }else {
-                        return
-                    }
-                }
-            })
-        }
+        // let _this = this;
+        // if(error.response.data.code === 401){
+        //     MessageBox.confirm('重新登录或取消继续留在该页面', '重新登录', {
+        //         confirmButtonText: '重新登录',
+        //         cancelButtonText: '取消',
+        //         offset:100,
+        //         type: 'warning',
+        //         callback(val){
+        //             if(val === 'confirm'){
+        //                 store.commit('login/clearUserInfo');
+        //                 localStorage.removeItem('userInfo')//删除用户信息
+        //                 localStorage.removeItem('token ');//删除token
+        //                 localStorage.removeItem('avatar')//删除用户信息
+        //                 window.location.href= '/#/login'
+        //             }else {
+        //                 return
+        //             }
+        //         }
+        //     })
+        // }
         console.log('err' + error) // for debug
 
 

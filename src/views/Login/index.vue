@@ -26,7 +26,9 @@
                         <img id="img" src="../../assets/images/login_banner.png" alt="">
                     </div>
                 </el-col>
-                <el-col :span="12" class="right">
+
+
+                <el-col :span="12" class="right max_right">
                     <div class="tabs" v-if="!hasBindPhone">
                         <h3>注册/登录</h3>
                         <p class="description">未注册时，首次登录系统将自动为您注册</p>
@@ -71,6 +73,51 @@
                             </el-tab-pane>
 
                         </el-tabs>
+                    </div>
+                    <div class="tabs" v-else>
+                        <h3 style="padding-bottom: 17px">请绑定手机号</h3>
+                        <el-form :model="ruleForm" :rules="bindPhoneRules" ref="bindPhoneRuleForm" class="demo-ruleForm">
+                            <el-form-item prop="phone">
+                                <el-input v-model="ruleForm.phone" placeholder="请输入手机号码"
+                                          autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item prop="verificationCode">
+                                <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                                    <el-button slot="append" @click="handlerSend('mobilelogin')" :style="{'color':(isDisabled? '#999999':'#2489F3')}" :disabled="isDisabled" type="text">
+                                        {{ verificationCodeText }}</el-button>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button class="submit_btn" :class="{ 'disabled_opacity':phoneError || codeError}" :disabled="phoneError || codeError" @click="handleBindPhone('bindPhoneRuleForm')" round>提交</el-button>
+                            </el-form-item>
+                        </el-form>
+                        <p class="privacy_agreement">绑定后即可使用微信扫码登录，更便捷</p>
+                    </div>
+                </el-col>
+
+                <el-col :span="12" class="right min_right">
+                    <div class="tabs" v-if="!hasBindPhone">
+                        <h3>注册/登录</h3>
+                        <p class="description">未注册时，首次登录系统将自动为您注册</p>
+                        <div>
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+                                <el-form-item prop="phone">
+                                    <el-input v-model="ruleForm.phone" placeholder="请输入手机号码"
+                                              autocomplete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item prop="verificationCode">
+                                    <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                                        <el-button slot="append" @click="handlerSend('mobilelogin')" :style="{'color':(isDisabled? '#999999':'#2489F3')}" :disabled="isDisabled" type="text">
+                                            {{ verificationCodeText }}
+                                        </el-button>
+                                    </el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button class="submit_btn" :class="{ 'disabled_opacity':phoneError || codeError}" :disabled="phoneError || codeError" @click="handleSubmitForm('ruleForm')" round>提交</el-button><!--ruleForm.phone == '' || ruleForm.verificationCode == ''-->
+                                </el-form-item>
+                            </el-form>
+                            <p class="privacy_agreement">登录平台即代表同意 <router-link target="_blank" to="/tos">《用户使用协议》</router-link></p>
+                        </div>
                     </div>
                     <div class="tabs" v-else>
                         <h3 style="padding-bottom: 17px">请绑定手机号</h3>
@@ -450,6 +497,7 @@ export default {
         height: 100%;
         padding-top: 66px;
         .left {
+            display: block;
             .content_img {
                 img {
                     width: 100%;
@@ -576,6 +624,43 @@ export default {
                         margin-top: 10px;
                     }
                 }
+            }
+        }
+        .min_right{
+            display: none;
+        }
+        .max_right{
+            display: block;
+        }
+    }
+}
+
+@media screen and (max-width: 600px){
+    .header{
+        >ul{
+            display: flex;
+        }
+    }
+    .content{
+        .content_body{
+            .left{
+                display: none;
+            }
+            .right{
+                width: 100%;
+                margin: 0 40px;
+                .tabs{
+                    padding: 30px 20px;
+                    h3{
+                        font-size: 18px;
+                    }
+                }
+            }
+            .min_right{
+                display: block;
+            }
+            .max_right{
+                display: none;
             }
         }
     }

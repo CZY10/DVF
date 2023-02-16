@@ -360,22 +360,6 @@ export default {
         this.autoPlay('tabPane1');
         this.autoPlay('tabPane2');
         this.autoPlay('tabPane3');
-        this.$nextTick(() => {
-            setTimeout(()=>{
-                if(this.shootPlanTabList.items.length>0){
-                    this.shootPlanTabList.items.forEach((item,index)=>{
-                        videojs('my-player'+index, {
-                        }, function onPlayerReady() {
-                            // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
-                            this.on('ended', function() {
-                                // videojs.log('Awww...over so soon?!');
-                            });
-                        });
-                    })
-                }
-            },1000)
-
-        })
         this.handleTakePlanList();
     },
     methods: {
@@ -383,7 +367,20 @@ export default {
         handleTakePlanList(){
             takePlanList()
                 .then((res)=>{
-                    this.shootPlanTabList = res.data
+                    this.shootPlanTabList = res.data;
+                    this.$nextTick(() => {
+                        if(this.shootPlanTabList.items.length>0){
+                            this.shootPlanTabList.items.forEach((item,index)=>{
+                                videojs('my-player'+index, {
+                                }, function onPlayerReady() {
+                                    // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
+                                    this.on('ended', function() {
+                                        // videojs.log('Awww...over so soon?!');
+                                    });
+                                });
+                            })
+                        }
+                    })
                 })
                 .catch((err)=>{
                     console.log(err)

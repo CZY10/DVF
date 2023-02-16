@@ -163,34 +163,6 @@ export default {
 </script>
 
 <style lang="less">
-@media screen and (max-width: 600px){
-    .header{
-        padding: 12px 0;
-    }
-    .header > ul{
-        margin: 10px;
-        padding-bottom: 10px;
-    }
-    .header > ul li{
-        height: 40px !important;
-        line-height: 40px !important;
-    }
-    .header > ul a{
-        height: 40px !important;
-        line-height: 40px !important;
-        padding: 0 10px !important;
-    }
-    .el-menu-item{
-        padding: 0 6px !important;
-    }
-    .el-menu--horizontal>.el-submenu .el-submenu__title{
-        height: 40px !important;
-        line-height: 40px !important;
-    }
-    .el-menu.el-menu--horizontal{
-        border-bottom: none;
-    }
-}
 .icon_hover_style:hover{
     i{
         color: #333333 !important;
@@ -336,8 +308,8 @@ export default {
 .el-menu--horizontal>.el-submenu .el-submenu__title,
 .el-submenu.is-active .el-submenu__title,
 .el-menu--horizontal>.el-menu-item{
-    height: 66px;
-    line-height: 66px;
+    height: 66px !important;
+    line-height: 66px !important;
 }
 
 .el-submenu__title i{
@@ -400,6 +372,36 @@ export default {
                 border: none;
             }
         }
+    }
+}
+@media screen and (max-width: 600px){
+    .header{
+        padding: 12px 0;
+    }
+    .header > ul{
+        margin: 10px;
+        padding-bottom: 10px;
+    }
+    .header > ul li{
+        height: 40px !important;
+        line-height: 40px !important;
+    }
+    .header > ul a{
+        height: 40px !important;
+        line-height: 40px !important;
+        padding: 0 10px !important;
+    }
+    .el-menu-item{
+        padding: 0 6px !important;
+    }
+    .el-menu--horizontal>.el-submenu .el-submenu__title,
+    .el-submenu.is-active .el-submenu__title,
+    .el-menu--horizontal>.el-menu-item{
+        height: 40px !important;
+        line-height: 40px !important;
+    }
+    .el-menu.el-menu--horizontal{
+        border-bottom: none;
     }
 }
 </style>

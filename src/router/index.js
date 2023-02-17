@@ -25,7 +25,7 @@ const routes = [
             {
                 path: '/chatgpt',
                 name: 'chatgpt',
-                meta: {requiresAuth: false},
+                meta: {requiresAuth: true},
                 component: ChatGPT,
             },
             {

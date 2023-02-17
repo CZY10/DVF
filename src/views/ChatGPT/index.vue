@@ -126,7 +126,8 @@ export default {
                     }
                 })
                 .catch((err)=>{
-                    this.$message.error(err.message)
+                    console.log(err)
+                    this.$message.error(err)
                 })
         },
         //一键复制

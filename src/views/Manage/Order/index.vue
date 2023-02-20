@@ -1606,6 +1606,7 @@ export default {
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
+        white-space: pre-wrap;
     }
     .message-row-left .message-body{
         background: #F6F7F9;

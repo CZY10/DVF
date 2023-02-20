@@ -22,7 +22,7 @@
                         <img :src="require('../../assets/images/chatgpt.png')" height="45" width="45" >
                         <div class="message-content">
                             <div>
-                                chatGPT
+                                ChatGPT
                                 <span class="message-time">{{nowDate}}</span>
                             </div>
                             <div class="message-body">
@@ -175,6 +175,11 @@ html{
             align-items: center;
             height: 100%;
         }
+        &{
+            scrollbar-width:thin;
+            //scrollbar-background:rgba(0,0,0,0.1);
+            //background:rgba(0,0,0,0.1);
+        }
         /* 设置滚动条的样式 */
         &::-webkit-scrollbar {
             width:6px;
@@ -182,6 +187,7 @@ html{
         /* 滚动槽 */
         &::-webkit-scrollbar-track {
             border-radius:10px;
+            background: #ffffff;
         }
         /* 滚动条滑块 */
         &::-webkit-scrollbar-thumb {
@@ -263,6 +269,7 @@ html{
                 margin-top: 10px;
                 word-break: break-all;
                 word-wrap: break-word;
+                white-space: pre-wrap;
             }
             .message-time {
                 margin:0 10px;

@@ -92,7 +92,13 @@ export default {
                     }
                 })
                 .catch((err)=>{
-                    this.$message.error(err.message)
+                    if (err.request.status === 500 || err.request.status === 501 || err.request.status === 502 || err.request.status === 503 || err.request.status === 504){
+                        this.$message({
+                            message: '当前ChatGPT请求人数过多，请刷新后再试~',
+                            type: 'error',
+                            duration:5000
+                        });
+                    }
                 })
         },
         scrollToBottom(){ // 滚动到窗体底部

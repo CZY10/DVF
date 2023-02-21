@@ -7,7 +7,7 @@ import {refreshToken} from "@/api";
 
 const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_URL,   // api的base_url  自动加在url前面
-    timeout:1000*60, //请求超时时间
+    timeout:5000*60, //请求超时时间
 })
 
 // request拦截器

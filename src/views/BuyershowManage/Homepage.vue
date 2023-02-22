@@ -18,7 +18,7 @@
                     <el-card class="box_card basic_information_card" style="margin-bottom: 20px">
                         <h4>基本资料</h4>
                         <div>年龄：<span style="margin-right: 40px">{{userInfo.age}}岁</span>性别：<span>{{ userInfo.genderdata === 'male' ? '男' : '女' }}</span></div>
-                        <div>国家：<span>美国</span></div>
+                        <div>国家：<span>{{ userInfo.country_id.name }}</span></div>
                         <div style="display: flex;align-items: center">社交平台：<i v-for="(item,index) in userInfo.platform"><img :src="item.image" alt=""></i></div>
                         <div>个人简介<p :title="userInfo.signature">{{ userInfo.signature }}</p></div>
                     </el-card>

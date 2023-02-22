@@ -1619,6 +1619,7 @@ export default {
         border-top-left-radius: 0;
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
+        white-space: pre-wrap;
     }
 
     .message-row-right > img,

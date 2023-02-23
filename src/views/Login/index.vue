@@ -166,7 +166,7 @@ export default {
     name: "login",
     data() {
         const validatePhone = (rule, value, callback) => {
-            const regExp = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/
+            const regExp = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[03678]|18[0-9]|14[579]|19[89])[0-9]{8}$/
             if (!regExp.test(value)) {
                 callback(new Error('手机号码格式错误，请输入正确的手机号码！'))
                 this.isDisabled=true;

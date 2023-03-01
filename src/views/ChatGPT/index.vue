@@ -39,8 +39,11 @@
                 type="textarea"
                 style="margin:10px 0 0 0;"
                 maxlength="500"
-                placeholder="请输入您的问题..."
+                ref="input"
+                :placeholder="'请输入您的问题...\n(按Shift+Enter键可换行,按Enter键直接发送信息)'"
                 show-word-limit
+                @keyup.enter.native="onEnterKey"
+                @keyup.enter.shift="onShiftEnterKey"
                 :rows="4"/>
         </div>
         <div style="text-align: center;margin-top: 24px" id="upload_btn_box"><el-button type="primary" size="small" :disabled="this.questionTxt == ''" @click="handlerSedMeg" style="border: none;padding: 10px 58px;border-radius: 16px;background: #3E7AFF linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);">提交</el-button></div>
@@ -67,12 +70,25 @@ export default {
         this.handlerGetChatList();
     },
     methods:{
+        onEnterKey(event) {
+            if (!event.shiftKey) {
+                // 如果没有按下 shift 键，就发送消息
+                event.preventDefault() // 阻止默认的换行行为
+                this.handlerSedMeg()
+            }
+        },
+        onShiftEnterKey() {
+            // 如果按下了 shift 键，就换行
+            this.questionTxt += '\n'
+        },
+
         // 发送消息
         handlerSedMeg(){
             //获取当前时间
             this.nowDate = new Date().toLocaleString().replace(/\//g,'-');
             this.isLoading = true;
             let content = this.questionTxt
+            content = content.replace(/[\r\n]+$/, '');
             let chatList={
                 content: content,
                 createtime: this.nowDate,

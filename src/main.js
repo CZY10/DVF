@@ -12,6 +12,19 @@ import { refreshToken } from '../src/api/index';
 import {mapMutations} from "vuex";
 // import 'swiper/dist/css/swiper.css'
 
+// Vue.directive('enter-shift', {
+//   bind: function(el) {
+//     el.addEventListener('keydown', function(e) {
+//       console.log(e.keyCode,e.shiftKey)
+//       if (e.keyCode === 13 && e.shiftKey) {
+//         console.log(666)
+//         e.preventDefault();
+//         el.value += '\n';
+//       }
+//     });
+//   }
+// });
+
 //一键复制
 import VueClipBoard from 'vue-clipboard2'
 Vue.use(VueClipBoard)

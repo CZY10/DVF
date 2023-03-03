@@ -26,7 +26,7 @@
                                 <span class="message-time">{{nowDate}}</span>
                             </div>
                             <div class="message-body">
-                                <i class="el-icon-loading"></i>思考中，约2分钟，勿走开...
+                                <i class="el-icon-loading"></i>思考中，约1分钟，勿走开...
                             </div>
                         </div>
                     </div>
@@ -42,12 +42,11 @@
                 ref="input"
                 :placeholder="'请输入您的问题...\n(按Shift+Enter键可换行,按Enter键直接发送信息)'"
                 show-word-limit
-                @keyup.enter.native="onEnterKey"
-                @keyup.enter.shift="onShiftEnterKey"
+                @keydown.enter.native="onEnterKey"
+                @keydown.enter.shift="onShiftEnterKey"
                 :rows="4"/>
         </div>
         <div style="text-align: center;margin-top: 24px" id="upload_btn_box"><el-button type="primary" size="small" :disabled="this.questionTxt == ''" @click="handlerSedMeg" style="border: none;padding: 10px 58px;border-radius: 16px;background: #3E7AFF linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);">提交</el-button></div>
-
     </div>
 </template>
 

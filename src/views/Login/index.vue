@@ -231,6 +231,7 @@ export default {
             },
             wechatToken:'',
             fromPath: localStorage.getItem('loginFromPath'),
+            source:''
         }
     },
     created() {
@@ -239,7 +240,8 @@ export default {
     mounted() {
         this.handlerGetQrcode();
         this.verifyToken();
-        this.logoImg = localStorage.getItem('logo')
+        this.logoImg = localStorage.getItem('logo');
+        this.source = localStorage.getItem('source');
     },
     methods: {
         ...mapMutations('login', ["setUserInfo","setToken","setAvatar","setExpiretime"]),
@@ -347,7 +349,8 @@ export default {
                 if (valid) {
                     mobileLogin({
                         mobile: this.ruleForm.phone,
-                        captcha: this.ruleForm.verificationCode
+                        captcha: this.ruleForm.verificationCode,
+                        source: this.source
                     })
                         .then((res) => {
                             if(res.code === 1){
@@ -386,6 +389,7 @@ export default {
                         mobile: this.ruleForm.phone,
                         captcha: this.ruleForm.verificationCode,
                         wechat_token: this.wechatToken,
+                        source: this.source,
                     })
                         .then((res) => {
                             if(res.code === 1){

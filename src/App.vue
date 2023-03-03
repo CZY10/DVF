@@ -20,7 +20,7 @@ export default {
         }
     },
     created() {
-        // console.log(this.$router.path)
+        // console.log(this.$router)
     },
     methods:{
         reload() {

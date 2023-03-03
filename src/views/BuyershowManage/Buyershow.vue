@@ -1227,14 +1227,6 @@ export default {
         padding-top: 0 !important;
     }
 }
-.el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 150px;
-    margin: 0;
-}
-
 
 .swiper.gallery-thumbs .swiper-container-android .swiper-slide, .swiper-wrapper{
     position: relative;

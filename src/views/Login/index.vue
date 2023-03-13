@@ -148,11 +148,11 @@
             width="320px">
             <div class="contact_us_box">
                 <span></span><span></span><span></span><span></span>
-                <img src="../../assets/images/contact_us.png" alt="">
+                <img :src="configData.wechat" alt="">
             </div>
             <div class="contact_us_foot">
-                <p><i class="iconfont icon-phone-call"></i><span>电话：</span>0755-84861340</p>
-                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>support@amztracker.com</p>
+                <p><i class="iconfont icon-phone-call"></i><span>电话：</span>{{ configData.phone }}</p>
+                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>{{ configData.email }}</p>
             </div>
         </el-dialog>
     </div>
@@ -231,7 +231,8 @@ export default {
             },
             wechatToken:'',
             fromPath: localStorage.getItem('loginFromPath'),
-            source:''
+            source:'',
+            configData:{},
         }
     },
     created() {
@@ -242,6 +243,9 @@ export default {
         this.verifyToken();
         this.logoImg = localStorage.getItem('logo');
         this.source = localStorage.getItem('source');
+        if(localStorage.getItem('configObj')!=null){
+            this.configData = JSON.parse(localStorage.getItem('configObj'));
+        }
     },
     methods: {
         ...mapMutations('login', ["setUserInfo","setToken","setAvatar","setExpiretime"]),

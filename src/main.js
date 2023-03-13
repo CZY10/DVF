@@ -5,8 +5,8 @@ import store from './store'
 import './plugins/element.js'
 import './assets/css/reset.css'
 
-import videojs from "video.js";
-import "video.js/dist/video-js.css";
+// import videojs from "video.js";
+// import "video.js/dist/video-js.css";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { refreshToken } from '../src/api/index';
 import {mapMutations} from "vuex";
@@ -19,7 +19,7 @@ import VueClipBoard from 'vue-clipboard2'
 Vue.use(VueClipBoard)
 
 
-Vue.prototype.$video = videojs;
+// Vue.prototype.$video = videojs;
 Vue.config.productionTip = false;
 
 Vue.use(elTableInfiniteScroll)

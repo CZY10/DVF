@@ -41,7 +41,7 @@
             </div>
             <div class="content">
                 <div style="max-width: 1200px;margin: auto">
-                    <h2 class="title_box">查找适合你的拍摄方案</h2>
+                    <h2>查找适合你的拍摄方案</h2>
                     <div style="background: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1));border-radius: 23px;padding: 2px">
                         <div class="search_style">
                             <el-input placeholder="搜索品类/红人编号" v-model="keyword" class="input-with-select input_radius">
@@ -115,9 +115,9 @@
                                     <p class="people_nickname">NO.{{ scope.row.id }}</p>
                                     <span class="people_type">{{ scope.row.type }}</span>
                                     <p>
-                                        <img :src="scope.row.country_id.image" style="margin-right: 10px;width: 14px" alt="">
-                                        <img v-if="scope.row.genderdata === 'male'" src="../../assets/images/male.png" alt="">
-                                        <img v-else src="../../assets/images/female.png" alt="">
+                                        <img :src="scope.row.country_id.image" style="margin-right: 10px;width: 14px;height: 14px" alt="">
+                                        <img style="width: 14px;height: 14px" v-if="scope.row.genderdata === 'male'" src="../../assets/images/male.png" alt="">
+                                        <img style="margin-right: 10px;width: 14px;height: 14px" v-else src="../../assets/images/female.png" alt="">
                                     </p>
                                     <el-tooltip placement="bottom" :content="scope.row.categorys" effect="light">
                                         <div class="title_style">
@@ -136,7 +136,7 @@
                         <template slot-scope="scope">
                             <div class="people_works" @click="handleShowVideo(scope)" :style="{cursor: scope.row.videos.length!=0? 'pointer': 'auto'}">
                                 <p>共{{scope.row.videos.length}}个</p>
-                                <img v-if="scope.row.videos.length>0" :src="localhost + scope.row.videos[0].coverimage" alt="">
+                                <img :src="scope.row.videos.length>0 ? localhost + scope.row.videos[0].coverimage : ''" alt="">
                             </div>
                         </template>
                     </el-table-column>
@@ -388,19 +388,27 @@
                         <el-input type="textarea" maxlength="60" show-word-limit placeholder="不超过60字，如配件类产品仅适配特定型号，或对小孩或宠物出境有要求，在此备注" v-model="videoRuleForm.remarks"></el-input>
                     </el-form-item>
                     <el-form-item label="候选达人" style="border-top: 1px solid #eeeeee;padding-top: 14px">
+                        <div class="form_item_title">系统将按以下优先级为您匹配候选达人 <span style="color:rgba(245, 100, 34, 0.7)">(若您需要调整候选达人的优先级时，可手动拖动候选达人进行优先级调整)</span></div>
                         <ul class="candidate_list">
-                            <router-link v-for="(item,index) in selectedTableData" :key="index" target="_blank" :to="{path:'/homepage:'+item.id}">
-                                <li>
-                                    <div>
-                                        <img :src="item.image" alt="">
-                                    </div>
-                                    <p>NO.{{item.id}}</p>
-                                    <span v-if="item.price_type == 0">￥{{item.price}}</span>
-                                    <span v-else-if="item.price_type == 1">￥{{item.lower_price}}-{{item.highest_price}}</span>
-                                    <span v-else>视产品而定</span>
-                                </li>
-                            </router-link>
+                        <draggable class="list-group" tag="ul" v-model="selectedTableData" v-bind="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
+                            <transition-group type="transition" :name="'flip-list'">
+                                <router-link class="list-group-item" v-for="(item,index) in selectedTableData" :key="index" target="_blank" :to="{path:'/homepage:'+item.id}">
+                                    <li>
+                                        <span style="color: #666666;padding-bottom: 5px">优先级：<span style="color: #F56422;display: inline">{{++index}}</span></span>
+                                        <div>
+                                            <img :src="item.image" alt="">
+                                        </div>
+                                        <p>NO.{{item.id}}</p>
+                                        <span v-if="item.price_type == 0">￥{{item.price}}</span>
+                                        <span v-else-if="item.price_type == 1">￥{{item.lower_price}}-{{item.highest_price}}</span>
+                                        <span v-else>视产品而定</span>
+                                    </li>
+                                </router-link>
+                            </transition-group>
+                        </draggable>
                         </ul>
+
+
                     </el-form-item>
                 </el-form>
             </div>
@@ -530,10 +538,11 @@
 import Footer from "@/components/Footer";
 import QRCode from 'qrcodejs2'
 import {getCategory, getSearchList, createOrder, payOrder, checkPayment, getShootRequire} from "@/api";
-import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.min.css'
 import videojs from "video.js";
+import "video.js/dist/video-js.css";
+import draggable from 'vuedraggable'
 
 
 let vm = null;
@@ -541,6 +550,8 @@ export default {
     name: "buyershow",
     data(){
         return{
+            isDragging: false,
+            delayedDragging: false,
             swiperOptionThumbs: {
                 // loop: true,
                 loopedSlides: 5, // looped slides should be the same
@@ -613,7 +624,32 @@ export default {
             keywords:'',
             checkType: [],
             tableData: [],
-            selectedTableData:[],
+            selectedTableData:[
+                {
+                    image:'11',
+                    id:1,
+                    fixed:false,
+                    lower_price:'1547',
+                    highest_price:'7187',
+                    price_type:1
+                }
+                ,{
+                    image:'11',
+                    id:2,
+                    fixed:false,
+                    lower_price:'232',
+                    highest_price:'8522',
+                    price_type:1
+                },
+                {
+                    image:'11',
+                    id:3,
+                    fixed:false,
+                    lower_price:'124',
+                    highest_price:'8325',
+                    price_type:0
+                }
+            ],
             isShowSelectedPlan: false,
             totalNum:1,
             selectRow:[],
@@ -636,10 +672,20 @@ export default {
     components:{
         Footer,
         Swiper,
-        SwiperSlide
+        SwiperSlide,
+        draggable
     },
     created() {
         vm = this;
+    },
+    computed:{
+        dragOptions() {
+            return {
+                animation: 0,
+                group: "description",
+                ghostClass: "ghost"
+            };
+        },
     },
     mounted() {
         this.footerHeight = this.$refs.getheight.offsetHeight + 'px'
@@ -653,6 +699,13 @@ export default {
         window.addEventListener('scroll',this.handleScroll,true)
     },
     methods:{
+        onMove({ relatedContext, draggedContext }) {
+            const relatedElement = relatedContext.element;
+            const draggedElement = draggedContext.element;
+            return (
+                (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+            );
+        },
         //返回顶部
         handleBackTop(){
             this.$nextTick(()=>{
@@ -1183,9 +1236,23 @@ export default {
             }
         }
     },
+    watch: {
+        isDragging(newValue) {
+            if (newValue) {
+                this.delayedDragging = true;
+                return;
+            }
+            this.$nextTick(() => {
+                this.delayedDragging = false;
+            });
+        }
+    }
 }
 </script>
 <style lang="less">
+.list-group-item{
+    float: left;
+}
 .foot_box {
     .el-drawer__header {
         padding: 0;
@@ -1753,7 +1820,6 @@ export default {
         bottom: -18px;
     }
     .form_item_title{
-        height: 17px;
         font-size: 12px;
         font-family: PingFangSC-Regular, PingFang SC;
         color: #999999;
@@ -1924,6 +1990,7 @@ export default {
                     margin-right: 0;
                 }
             }
+            overflow: auto;
         }
     }
     .form_button{
@@ -2095,7 +2162,7 @@ export default {
         height: 340px;
         background: #000827;
         h2{
-            font-family: GothamHTF;
+            font-family: GothamHTF,'微软雅黑',Verdana, Arial, Helvetica, sans-serif;
             font-size: 40px;
             font-weight: 900;
             color: #FFFFFF;
@@ -2160,7 +2227,7 @@ export default {
         max-width: 1200px;
         margin: auto;
         h2{
-            font-family: GothamHTF;
+            font-family: GothamHTF,'微软雅黑',Verdana, Arial, Helvetica, sans-serif;
             font-size: 40px;
             font-weight: 900;
             color: #333333;

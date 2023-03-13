@@ -9,14 +9,14 @@
                 active-text-color="#333333"
                 text-color="#666666"
                 @select="handleSelect">
-                <a href="" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" style="width: 100%" alt=""></a>
+                <a href="" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" style="width: 100%;height: 100%" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
                 <el-menu-item @click="handlerClick">联系我们</el-menu-item>
                 <el-menu-item index="/chatgpt">ChatGPT</el-menu-item>
                 <el-menu-item v-if="!isLogin" style="float: right;" index="/login"><el-button class="login_btn" round>登陆/注册</el-button></el-menu-item>
                 <el-submenu v-else index="/manage" style="float: right;border-radius: 10px">
-                    <template slot="title"><span class="user_info_box"><img :src="avatar" alt=""></span></template>
+                    <template slot="title"><span class="user_info_box"><img :src="avatar" width="36px" height="36px" alt=""></span></template>
                     <el-menu-item index="/manage/order">订单信息</el-menu-item>
                     <el-menu-item index="/manage/payment">支付记录</el-menu-item>
                     <el-menu-item index="/manage/personal">个人资料</el-menu-item>

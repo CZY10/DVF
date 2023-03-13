@@ -254,6 +254,7 @@ import {getQrcode, takePlanList} from "@/api";
 import {mapMutations} from "vuex";
 import Footer from "@/components/Footer";
 import videojs from "video.js";
+import "video.js/dist/video-js.css";
 
 export default {
     name: "home",
@@ -655,14 +656,14 @@ export default {
         position: relative;
         h1{
             font-size: 50px;
-            font-family: GothamHTF;
+            font-family: GothamHTF,'微软雅黑',Verdana, Arial, Helvetica, sans-serif;
             font-weight: bold;
             color: #FFFFFF;
             line-height: 80px;
             text-align: center;
             padding-top: 30px;
             span{
-                font-family: GothamHTF;
+                font-family: GothamHTF,'微软雅黑',Verdana, Arial, Helvetica, sans-serif;
             }
         }
         .banner_img{
@@ -678,7 +679,7 @@ export default {
         background: #000827;
         .content_title{
             font-size: 40px;
-            font-family: GothamHTF;
+            font-family: GothamHTF,'微软雅黑',Verdana, Arial, Helvetica, sans-serif;
             font-weight: 900;
             color: #FFFFFF;
             line-height: 42px;
@@ -740,6 +741,7 @@ export default {
                 }
                 img{
                     width: 100%;
+                    height: 100%;
                 }
                 .services_flex{
                     display: flex;
@@ -906,6 +908,7 @@ export default {
             }
             img{
                 width: 100%;
+                height: 100%;
             }
             .video_content{
                 background: linear-gradient(180deg, rgba(121, 108, 243, 1), rgba(223, 96, 247, 1), rgba(251, 150, 139, 1));
@@ -1055,6 +1058,7 @@ export default {
                 padding: 20px;
                 img{
                     width: 100%;
+                    height: 100%;
                     display: block;
                 }
             }

@@ -19,11 +19,11 @@
                 </el-col>
                 <el-col :span="5" style="padding-right: 0">
                     <el-col :span="12" style="padding: 0">
-                        <div class="qr_code"><img :src="formData.wechat" alt=""></div>
+                        <div class="qr_code"><img :src="formData.wechat" style="width: 72px;height: 72px" alt=""></div>
                         <p style="text-align: center;margin-top: 8px">微信咨询</p>
                     </el-col>
                     <el-col :span="12" style="padding: 0">
-                        <div class="qr_code"><img :src="formData.chat" alt=""></div>
+                        <div class="qr_code"><img :src="formData.chat" style="width: 72px;height: 72px" alt=""></div>
                         <p style="text-align: center;margin-top: 8px">公众号</p>
                     </el-col>
                 </el-col>
@@ -79,6 +79,7 @@ export default {
     padding-top: 50px;
     img{
         width: 100%;
+        height: 100%;
     }
     .title{
         font-size: 16px;

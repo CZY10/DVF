@@ -388,13 +388,13 @@
                         <el-input type="textarea" maxlength="60" show-word-limit placeholder="不超过60字，如配件类产品仅适配特定型号，或对小孩或宠物出境有要求，在此备注" v-model="videoRuleForm.remarks"></el-input>
                     </el-form-item>
                     <el-form-item label="候选达人" style="border-top: 1px solid #eeeeee;padding-top: 14px">
-                        <div class="form_item_title">系统将按以下优先级为您匹配候选达人 <span style="color:rgba(245, 100, 34, 0.7)">(若您需要调整候选达人的优先级时，可手动拖动候选达人进行优先级调整)</span></div>
+<!--                        <div class="form_item_title">系统将按以下优先级为您匹配候选达人 <span style="color:rgba(245, 100, 34, 0.7)">(若您需要调整候选达人的优先级时，可手动拖动候选达人进行优先级调整)</span></div>-->
                         <ul class="candidate_list">
                         <draggable class="list-group" tag="ul" v-model="selectedTableData" v-bind="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
                             <transition-group type="transition" :name="'flip-list'">
                                 <router-link class="list-group-item" v-for="(item,index) in selectedTableData" :key="index" target="_blank" :to="{path:'/homepage:'+item.id}">
                                     <li>
-                                        <span style="color: #666666;padding-bottom: 5px">优先级：<span style="color: #F56422;display: inline">{{++index}}</span></span>
+<!--                                        <span style="color: #666666;padding-bottom: 5px">优先级：<span style="color: #F56422;display: inline">{{++index}}</span></span>-->
                                         <div>
                                             <img :src="item.image" alt="">
                                         </div>

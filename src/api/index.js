@@ -220,7 +220,7 @@ export function chatCount(data){
         data
     })
 }
-//获取消息条数
+//获取配置信息
 export function getConfig(data){
     return request({
         url:'/api/config/index',

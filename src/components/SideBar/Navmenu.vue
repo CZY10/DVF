@@ -140,19 +140,19 @@ export default {
                     switch(this.$route.name)
                     {
                         case 'order':
-                            window.location.href = '/#/';
+                            window.location.href = '/';
                             break;
                         case 'payment':
-                            window.location.href = '/#/';
+                            window.location.href = '/';
                             break;
                         case 'personal':
-                            window.location.href = '/#/';
+                            window.location.href = '/';
                             break;
                         case 'chatgpt':
-                            window.location.href = '/#/';
+                            window.location.href = '/';
                             break;
                         default:
-                            window.location.href = '/#' + this.$route.fullPath;
+                            window.location.href = this.$route.fullPath;
                     }
                     this.reload();
                 })

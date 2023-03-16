@@ -28,14 +28,6 @@ module.exports = defineConfig({
           '^/api': ''
         }
       },
-      /*'/api':{
-        target: 'http://testaiapi.blhltd.com/addons/wechatscanlogin/',//后端域名
-        ws: false,
-        changeOrigin: true,
-        pathRewrite:{ //重新路径
-          '^/api':''
-        }
-      }*/
     }
   },
   configureWebpack: {

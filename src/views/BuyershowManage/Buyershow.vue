@@ -749,7 +749,7 @@ export default {
         /*关闭支付完成页面并跳转至订单信息页面*/
         handlePaymentCompletedClose(){
             this.paymentCompletedDialogVisible=false;
-            window.open('/#/manage/order', '_blank');
+            window.open('/manage/order', '_blank');
         },
         /*播放视频*/
         handleShowVideo(scope){

@@ -63,7 +63,7 @@
                     <li v-for="(item,index) in shootPlanTabList.category" :key="index" @click="currentIndex2 = index" :class="{active2:currentIndex2 == index}">
                         {{item.name}}
                     </li>
-                    <a class="see_more" href="/#/buyershow">更多+</a>
+                    <a class="see_more" href="/buyershow">更多+</a>
                 </ul>
 
 <!--                <div class="tabs_content1" @mouseover="mouseover('tabPane3')" @mouseout="mouseout('tabPane3')">-->

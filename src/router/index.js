@@ -111,7 +111,7 @@ VueRouter.prototype.push = function push(location) {
 //路由拦截
 router.beforeEach((to, from, next) => {
     const url = window.location.href;
-    const regex = /\?.*?(?=#)/; // 匹配问号之后、#号之前的内容
+    const regex = /\?(.*)/; // 匹配问号之后、#号之前的内容
     const str = url.match(regex);
     if (str) {
         const subString = str[0].substring(1); // 去掉问号

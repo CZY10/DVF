@@ -62,7 +62,7 @@ service.interceptors.response.use(
             //             localStorage.removeItem('userInfo')//删除用户信息
             //             localStorage.removeItem('token ');//删除token
             //             localStorage.removeItem('avatar')//删除用户信息
-            //             window.location.href= '/#/login'
+            //             window.location.href= '/login'
             //         }else {
             //             return
             //         }

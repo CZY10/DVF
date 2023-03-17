@@ -365,7 +365,6 @@ export default {
                 p{
                     font-size: 14px;
                     color: #333333;
-                    height: 38px;
                     padding-top: 8px;
                     word-break: break-all;
                     text-overflow: ellipsis;

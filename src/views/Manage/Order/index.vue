@@ -2375,7 +2375,6 @@ export default {
                 .list-group-item{
                     position: relative;
                     float: left;
-                    cursor: auto;
                     .list-group-index{
                         position: absolute;
                         top: 6px;

@@ -1,4 +1,4 @@
-@import url('https://at.alicdn.com/t/c/font_3721021_8788h529uu9.css?spm=a313x.7781069.1998910419.54&file=font_3721021_8788h529uu9.css');
+@import url('https://at.alicdn.com/t/c/font_3721021_im3k9tke9d.css?spm=a313x.7781069.1998910419.54&file=font_3721021_im3k9tke9d.css');
 
 @font-face {
     font-family: GothamHTF;
@@ -7,6 +7,11 @@
     font-display: swap;
     src: url("../../assets/fonts/font.ttf");
 
+}
+
+img[src=""],
+img:not([src]){
+    opacity:0;
 }
 
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {

@@ -371,8 +371,9 @@
                     </el-form-item>
                     <el-form-item label="候选达人" style="border-top: 1px solid #eeeeee;padding-top: 14px">
                         <ul class="candidate_list">
-                            <router-link v-for="(item,index) in videoForm.influencers" :key="index" target="_blank" :to="{path:'/homepage:'+item.id}">
+                            <router-link class="list-group-item" v-for="(item,index) in videoForm.influencers" :key="index" target="_blank" :to="{path:'/homepage:'+item.id}">
                                 <li>
+                                    <span class="list-group-index">0{{++index}}</span>
                                     <div>
                                         <img :src="item.image" alt="">
                                     </div>
@@ -2371,6 +2372,37 @@ export default {
                 }
             }
             .candidate_list {
+                .list-group-item{
+                    position: relative;
+                    float: left;
+                    cursor: auto;
+                    .list-group-index{
+                        position: absolute;
+                        top: 6px;
+                        right: 6px;
+                        background: #CCCCCC;
+                        padding: 0 4px;
+                        border-radius: 7px 0px 0px 7px;
+                        font-size: 10px;
+                        color: #FFFFFF;
+                        line-height: 14px;
+                    }
+                    &:first-child{
+                        .list-group-index{
+                            background: #FF2C4C;
+                        }
+                    }
+                    &:nth-child(2){
+                        .list-group-index{
+                            background: #FF9C17;
+                        }
+                    }
+                    &:nth-child(3){
+                        .list-group-index{
+                            background: #796CF3;
+                        }
+                    }
+                }
                 li{
                     width: 77px;
                     background: #FFFFFF;
@@ -2414,6 +2446,7 @@ export default {
                         margin-right: 0;
                     }
                 }
+
             }
         }
     }

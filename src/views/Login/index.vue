@@ -160,13 +160,13 @@
 
 <script>
 import {mapMutations} from 'vuex'
-import {getQrcode, smsSend, mobileLogin, bindPhone, checkQr,} from "@/api/index"
+import {getQrcode, smsSend, mobileLogin, bindPhone, checkQr, getConfig,} from "@/api/index"
 import login from "@/store/modules/login";
 export default {
     name: "login",
     data() {
         const validatePhone = (rule, value, callback) => {
-            const regExp = /^(0|86|17951)?(13[0-9]|14[579]|15[0-9]|166|17[03678]|18[0-9]|19[0-9])[0-9]{8}$/
+            const regExp = /^(0|86|17951)?(13[0-9]|14[0-9]|15[0-9]|166|17[0-9]|18[0-9]|19[0-9])[0-9]{8}$/
             if (!regExp.test(value)) {
                 callback(new Error('手机号码格式错误，请输入正确的手机号码！'))
                 this.isDisabled=true;
@@ -241,14 +241,35 @@ export default {
     mounted() {
         this.handlerGetQrcode();
         this.verifyToken();
-        this.logoImg = localStorage.getItem('logo');
         this.source = localStorage.getItem('source');
-        if(localStorage.getItem('configObj')!=null){
+        if(localStorage.getItem('configObj')){
             this.configData = JSON.parse(localStorage.getItem('configObj'));
+        }
+        if(localStorage.getItem('logo')){
+            this.logoImg = localStorage.getItem('logo')
+        }else {
+            this.getContent()
         }
     },
     methods: {
         ...mapMutations('login', ["setUserInfo","setToken","setAvatar","setExpiretime"]),
+        ...mapMutations('login', ["setLogo"]),
+        //获取公共配置信息
+        getContent(){
+            getConfig()
+                .then((res)=>{
+                    if(res.code === 1){
+                        this.logoImg = res.data.logo;
+                        localStorage.setItem('logo',res.data.logo);
+                        localStorage.setItem('configObj', JSON.stringify(res.data));
+                        this.setLogo(res.data.logo)
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        },
+
         //获取微信二维码
         handlerGetQrcode(){
             getQrcode()
@@ -272,6 +293,7 @@ export default {
             let _this = this;
             let form = new FormData();
             form.append('wechat_token',_this.wechatToken)
+            form.append('source',_this.source)
             _this.checkQrCode = setInterval(()=>{
                 checkQr(form)
                     .then((res) => {

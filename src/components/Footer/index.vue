@@ -50,24 +50,12 @@ export default {
         }
     },
     mounted() {
-        this.getContent()
+        if(localStorage.getItem('configObj')){
+            this.formData = JSON.parse(localStorage.getItem('configObj'));
+        }
     },
     methods:{
-        ...mapMutations('login', ["setLogo"]),
-        getContent(){
-            getConfig()
-                .then((res)=>{
-                    if(res.code === 1){
-                        this.formData = res.data;
-                        localStorage.setItem('logo',res.data.logo);
-                        localStorage.setItem('configObj', JSON.stringify(res.data));
-                        this.setLogo(res.data.logo)
-                    }
-                })
-                .catch((err)=>{
-                    console.log(err)
-                })
-        }
+
     }
 }
 </script>

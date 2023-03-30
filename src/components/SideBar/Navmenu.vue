@@ -210,25 +210,20 @@ export default {
 
         if(localStorage.getItem('userInfo')) this.userId = JSON.parse(localStorage.getItem('userInfo')).user_id;
 
-
-
-        // if(localStorage.getItem('isBindEnterpriseQr')){
-        //     this.isBindEnterpriseQr = localStorage.getItem('isBindEnterpriseQr');
-        //     if(this.isBindEnterpriseQr == 1){
-        //         this.dialog = true;
-        //         this.handleCheckEnterpriseQr();
-        //         document.querySelector('body,html').classList.add('el-popup-parent--hidden');
-        //     }else {
-        //         this.dialog = false;
-        //         document.querySelector('body,html').classList.remove( 'el-popup-parent--hidden');
-        //         localStorage.setItem('isBindEnterpriseQr',0)
-        //     }
-        // }else if(this.isBindEnterpriseQr == null && this.token){
-        //     this.handleAddWeCom();
-        // }
-
-
-
+        if(localStorage.getItem('isBindEnterpriseQr')){
+            this.isBindEnterpriseQr = localStorage.getItem('isBindEnterpriseQr');
+            if(this.isBindEnterpriseQr == 1){
+                this.dialog = true;
+                this.handleCheckEnterpriseQr();
+                document.querySelector('body,html').classList.add('el-popup-parent--hidden');
+            }else {
+                this.dialog = false;
+                document.querySelector('body,html').classList.remove( 'el-popup-parent--hidden');
+                localStorage.setItem('isBindEnterpriseQr',0)
+            }
+        }else if(this.isBindEnterpriseQr == null && this.token){
+            this.handleAddWeCom();
+        }
 
         if( this.token && JSON.parse(localStorage.getItem('serviceInfoList')) ){
             this.serviceInfoList = JSON.parse(localStorage.getItem('serviceInfoList'));

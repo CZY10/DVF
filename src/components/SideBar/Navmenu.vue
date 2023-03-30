@@ -235,8 +235,8 @@ export default {
         }else {
             this.handleAddWeCom()
         }
-        if(localStorage.getItem('serviceInfoList')){
-            this.serviceInfoList = localStorage.getItem('serviceInfoList')
+        if(JSON.parse(localStorage.getItem('serviceInfoList'))){
+            this.serviceInfoList = JSON.parse(localStorage.getItem('serviceInfoList'))
         }else {
             this.getServiceInfo()
         }

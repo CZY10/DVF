@@ -8,7 +8,7 @@
                 mode="horizontal"
                 active-text-color="#333333"
                 text-color="#666666">
-                <a href="" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" style="width: 100%;height: 100%" alt=""></a>
+                <a href="javascript:;;" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" style="width: 100%;height: 100%" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
                 <el-menu-item @click="handlerClick">联系我们</el-menu-item>
@@ -235,6 +235,11 @@ export default {
         }else {
             this.getContent()
         }
+        if(localStorage.getItem('serviceInfoQrCode')){
+            this.contactMeQr = localStorage.getItem('serviceInfoQrCode')
+        }else {
+            this.handleAddWeCom()
+        }
     },
     methods: {
         ...mapMutations('order', ["setIsMessage","setMessage","setIsRead"]),
@@ -272,6 +277,7 @@ export default {
                     }
                     if(res.code == 1){
                         localStorage.setItem('isBindEnterpriseQr',res.data.pop_ups);
+                        localStorage.setItem('serviceInfoQrCode',res.data.qr_code);
                         this.contactMeQr = res.data.qr_code;
                     }
                 })

@@ -225,11 +225,6 @@ export default {
             this.handleAddWeCom();
         }
 
-        if( this.token && JSON.parse(localStorage.getItem('serviceInfoList')) ){
-            this.serviceInfoList = JSON.parse(localStorage.getItem('serviceInfoList'));
-        }else if(this.token) {
-            this.getServiceInfo();
-        }
         if(JSON.parse(localStorage.getItem('configObj'))){
             this.logoWhite = JSON.parse(localStorage.getItem('configObj')).footerlogo
         }else {
@@ -240,6 +235,12 @@ export default {
         }else {
             this.handleAddWeCom()
         }
+        if(localStorage.getItem('serviceInfoList')){
+            this.serviceInfoList = localStorage.getItem('serviceInfoList')
+        }else {
+            this.getServiceInfo()
+        }
+
     },
     methods: {
         ...mapMutations('order', ["setIsMessage","setMessage","setIsRead"]),
@@ -350,6 +351,7 @@ export default {
                         }else if(res.code === 1 && res.data.static === 1){//扫码成功
                             //渲染绑定手机页面
                             _this.dialog = false;
+                            this.getServiceInfo();
                             //清除定时脚本
                             clearInterval(_this.checkEnterpriseQr);
                             localStorage.setItem('isBindEnterpriseQr',0)

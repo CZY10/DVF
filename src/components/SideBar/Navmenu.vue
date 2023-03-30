@@ -8,7 +8,7 @@
                 mode="horizontal"
                 active-text-color="#333333"
                 text-color="#666666">
-                <a href="javascript:;;" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" style="width: 100%;height: 100%" alt=""></a>
+                <a href="" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" style="width: 100%;height: 100%" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
                 <el-menu-item @click="handlerClick">联系我们</el-menu-item>
@@ -98,7 +98,7 @@
             class="weComDialog"
             height="100%"
             width="100%">
-            <a href="" style="padding:22px 0 0 30px;position:fixed;left:0;top:0;right:0;display: flex;justify-content: center;align-items: center;width: 180px;"><img :src="logoWhite" style="width: 100%;height: 100%" alt=""></a>
+            <a href="javascript:;;" style="padding:22px 0 0 30px;position:fixed;left:0;top:0;right:0;display: flex;justify-content: center;align-items: center;width: 180px;"><img :src="logoWhite" style="width: 100%;height: 100%" alt=""></a>
             <div class="content">
                 <div>
                     <p class="head">为提升服务体验，保障交付质量，请您扫码<span>添加专属账号经理</span></p>

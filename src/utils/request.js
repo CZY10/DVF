@@ -26,12 +26,12 @@ service.interceptors.response.use(
         const res = response.data;
         const reg = /^0.*0$|^0$/;
         if(res.code !== 1) {
-                // Message({
-                //     message: res.msg,
-                //     type: 'error',
-                //     offset:100,
-                //     duration: 5 * 1000
-                // })
+                Message({
+                    message: res.msg,
+                    type: 'error',
+                    offset:100,
+                    duration: 5 * 1000
+                })
             if(res.code == 300 && reg.test(res.errorCode)){
                 Message({
                     message: '未知错误,请稍后再试或联系管理员!',

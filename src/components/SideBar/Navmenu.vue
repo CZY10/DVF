@@ -33,7 +33,7 @@
                         popper-class="menu_popover"
                         trigger="click">
                         <div slot="reference" style="display: flex;justify-content: center;align-items: center;">
-                            <img style="width: 24px;height: 24px;margin-right: 8px;border-radius: 50%" :src="serviceInfoList.service_avatar" alt="">
+                            <img style="width: 30px;height: 30px;margin-right: 8px;border-radius: 50%" :src="serviceInfoList.service_avatar" alt="">
                             专属账号经理
                         </div>
                         <div>

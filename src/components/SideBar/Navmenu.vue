@@ -86,7 +86,6 @@
             </div>
         </el-dialog>
 
-        <!--扫码加微信-->
         <el-dialog
             :visible="dialog"
             :show-close="false"
@@ -104,12 +103,13 @@
                     <p class="head">为提升服务体验，保障交付质量，请您扫码<span>添加专属账号经理</span></p>
                     <div style="display: flex;justify-content: center">
                         <div class="body">
-                            <div>
+                            <div style="margin-right: 40px">
                                 <p class="title">微信扫码</p>
                                 <p class="description">添加专属账号经理</p>
                                 <div class="weChatcode">
                                     <img :src="contactMeQr" alt="">
                                 </div>
+                                <div style="text-align: center;color: #FFFFFF;padding-top: 24px;font-size: 16px">扫码添加后，等待<span style="color:#FFFA00;">3-5s</span>即可自动跳转</div>
                             </div>
                             <div>
                                 <div class="weCom_img"><img src="../../assets/images/weCom.png" alt=""></div>
@@ -360,7 +360,7 @@ export default {
                     .catch((err) => {
                         this.$message.error(err.msg);
                     });
-            },5000)
+            },3000)
 
         },
         //获取公共配置信息
@@ -545,6 +545,7 @@ export default {
                 }
             }
             .weChatcode{
+                box-sizing: border-box;
                 width: 354px;
                 height: 354px;
                 border-radius: 8px;

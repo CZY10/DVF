@@ -11,8 +11,8 @@
             >
                 <el-menu-item index="/" style="width: 237px"><img :src="logoImg" alt="" style="width: 100%"></el-menu-item>
 
-                <el-menu-item style="float: right;" @click="dialogVisible = true">联系我们</el-menu-item>
-                <el-menu-item style="float: right;" index="3"><a href="">新手指南</a></el-menu-item>
+                <el-menu-item style="float: right;" @click="dialogVisible = true">加群交流</el-menu-item>
+<!--                <el-menu-item style="float: right;" index="3"><a href="">新手指南</a></el-menu-item>-->
             </el-menu>
         </div>
         <div class="content">
@@ -244,6 +244,8 @@ export default {
         this.source = localStorage.getItem('source');
         if(localStorage.getItem('configObj')){
             this.configData = JSON.parse(localStorage.getItem('configObj'));
+        }else {
+            this.getContent()
         }
         if(localStorage.getItem('logo')){
             this.logoImg = localStorage.getItem('logo')
@@ -262,7 +264,8 @@ export default {
                         this.logoImg = res.data.logo;
                         localStorage.setItem('logo',res.data.logo);
                         localStorage.setItem('configObj', JSON.stringify(res.data));
-                        this.setLogo(res.data.logo)
+                        this.setLogo(res.data.logo);
+                        this.configData = res.data;
                     }
                 })
                 .catch((err)=>{

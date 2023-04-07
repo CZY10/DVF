@@ -52,10 +52,23 @@ export default {
     mounted() {
         if(localStorage.getItem('configObj')){
             this.formData = JSON.parse(localStorage.getItem('configObj'));
+        }else {
+            this.getContent()
         }
     },
     methods:{
-
+        //获取公共配置信息
+        getContent(){
+            getConfig()
+                .then((res)=>{
+                    if(res.code === 1){
+                        this.formData = res.data;
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        }
     }
 }
 </script>

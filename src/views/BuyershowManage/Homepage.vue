@@ -174,6 +174,8 @@ export default {
 #homepage{
     .el-dialog__headerbtn{
         z-index: 999;
+        background: #fff;
+        border-radius: 50%;
     }
     .video_content .vjs-poster{
         background-size: cover;
@@ -255,8 +257,6 @@ export default {
     display: flex;
 }
 #homepage{
-
-    margin-top: 66px;
     background: rgba(248, 248, 249, 1);
     .content{
         overflow: hidden;

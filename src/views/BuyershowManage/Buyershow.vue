@@ -2189,7 +2189,6 @@ export default {
 
 #buyer_show{
     .banner{
-        margin-top: 66px;
         height: 340px;
         background: #000827;
         h2{

@@ -4,14 +4,19 @@
             <el-menu
                 :default-active="$route.path"
                 class="el-menu-demo"
+                id="menu_box"
                 router
                 mode="horizontal"
                 active-text-color="#333333"
                 text-color="#666666">
                 <a href="" style="display: flex;justify-content: center;align-items: center;width: 180px;padding: 0 20px;"><img :src="logoImg" style="width: 100%;height: 100%" alt=""></a>
                 <el-menu-item index="/">首页</el-menu-item>
+                <el-menu-item index="/videohome">视频服务站</el-menu-item>
+                <el-menu-item><a target="_blank" style="width: 100%" href="https://seller.vipona.com/account/login">海外Deal站</a></el-menu-item>
                 <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
-                <el-menu-item @click="handlerClick">联系我们</el-menu-item>
+                <el-menu-item><a target="_blank" style="width: 100%" href="https://seller.vipona.com/account/login">Vipon自助发帖</a></el-menu-item>
+                <el-menu-item><a target="_blank" style="width: 100%" href="https://seller.vipona.com/account/login">FB推广</a></el-menu-item>
+                <el-menu-item><a target="_blank" style="width: 100%" href="https://seller.vipona.com/account/login">Deal站推广</a></el-menu-item>
                 <el-menu-item index="/chatgpt">ChatGPT</el-menu-item>
                 <el-menu-item v-if="!isLogin" style="float: right;" index="/login"><el-button class="login_btn" round>登陆/注册</el-button></el-menu-item>
                 <el-submenu v-else index="/manage" style="float: right;border-radius: 10px">
@@ -26,14 +31,16 @@
                         <i class="el-icon-chat-dot-round" style="color: #666666;font-size: 22px"></i>
                     </el-badge>
                 </el-menu-item>
+
                 <el-menu-item style="float: right;"><a href="https://peseeazfwl.feishu.cn/wiki/wikcnMyh2Kpl0beLaynqfWT3Vuc" target="_blank">新手指南</a></el-menu-item>
+                <el-menu-item style="float: right" @click="handlerClick">联系我们</el-menu-item>
                 <el-menu-item v-if="token" style="float: right">
                     <el-popover
                         placement="bottom"
                         popper-class="menu_popover"
                         trigger="click">
                         <div slot="reference" style="display: flex;justify-content: center;align-items: center;">
-                            <img style="width: 30px;height: 30px;margin-right: 8px;border-radius: 50%" :src="serviceInfoList.service_avatar" alt="">
+                            <img style="width: 30px;height: 30px;margin-right: 8px;border-radius: 50%;" :src="serviceInfoList.service_avatar" alt="">
                             专属账号经理
                         </div>
                         <div>
@@ -204,6 +211,7 @@ export default {
         })
     },
     mounted() {
+
         this.getMessage();
 
         if(JSON.parse(localStorage.getItem('configObj'))) this.logoWhite = JSON.parse(localStorage.getItem('configObj')).footerlogo;
@@ -239,6 +247,15 @@ export default {
             this.serviceInfoList = JSON.parse(localStorage.getItem('serviceInfoList'))
         }else {
             this.getServiceInfo()
+        }
+
+        //获取导航栏高度
+        document.getElementById('app').style.paddingTop=document.getElementById('menu_box').offsetHeight + 'px'
+        window.onresize= () => {
+            return (() => {
+                //获取导航栏高度
+                document.getElementById('app').style.paddingTop=document.getElementById('menu_box').offsetHeight + 'px'
+            })();
         }
 
     },
@@ -828,12 +845,10 @@ export default {
     }
 }
 @media screen and (max-width: 600px){
-    .header{
-        padding: 12px 0;
-    }
     .header > ul{
         margin: 10px;
         padding-bottom: 10px;
+        margin-bottom: 0;
     }
     .header > ul li{
         height: 40px !important;

@@ -62,7 +62,7 @@ export default {
             questionTxt:'',
             isLoading:false,
             nowDate:'',
-            avatar: localStorage.getItem('avatar')
+            avatar: localStorage.getItem('avatar'),
         }
     },
     mounted() {
@@ -132,7 +132,7 @@ export default {
                         if(this.chatData.length>0){
                             this.scrollToBottom();
                         }
-                        let getDomeHeight = $(window).height()-180-document.getElementById('textarea_dome').offsetHeight-document.getElementById('upload_btn_box').offsetHeight;
+                        let getDomeHeight = $(window).height()-document.getElementById('textarea_dome').offsetHeight-document.getElementById('upload_btn_box').offsetHeight-document.getElementById('menu_box').offsetHeight-116;
                         if(this.chatData.length > 0){
                             this.scrollToBottom();
                             this.$nextTick(function () {
@@ -180,7 +180,7 @@ html{
 }
 #chatgpt{
     margin: auto;
-    margin-top: 86px;
+    margin-top: 20px;
     max-width: 1200px;
     border: 1px solid #eeeeee;
     padding: 20px 30px;

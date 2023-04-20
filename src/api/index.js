@@ -314,3 +314,29 @@ export function serviceInfo(data){
         data
     })
 }
+
+//获取FB群组
+export function fbData(data){
+    return request({
+        url:'/api/home/fbData',
+        method: 'post',
+        data
+    })
+}
+//获取达人数据
+export function influenceData(data){
+    return request({
+        url:'/api/home/influenceData',
+        method: 'post',
+        data
+    })
+}
+//获取DEAL数据
+export function dealData(data){
+    return request({
+        url:'/api/home/dealData',
+        method: 'post',
+        data
+    })
+}
+

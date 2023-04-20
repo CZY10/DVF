@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from "@/views/Layout";
 import Home from "@/views/Home"
+import VideoHome from "@/views/VideoHome"
 import BuyershowManage from "@/views/BuyershowManage/index.vue";
 import Manage from "@/views/Manage";
 import Order from "@/views/Manage/Order";
@@ -23,13 +24,19 @@ const routes = [
                 component: Home,
             },
             {
+                path: '/videohome',
+                name: 'videoHome',
+                meta: {requiresAuth: false},
+                component: VideoHome,
+            },
+            {
                 path: '/chatgpt',
                 name: 'chatgpt',
                 meta: {requiresAuth: true},
                 component: ChatGPT,
             },
             {
-                path: '/buyershowManage',
+                path: '/buyershowmanage',
                 name: 'buyershowManage',
                 meta: {requiresAuth: false},
                 component: BuyershowManage,

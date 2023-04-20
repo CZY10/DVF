@@ -34,6 +34,8 @@ import {
     Rate,
     Steps,
     Step,
+    Carousel,
+    CarouselItem,
     Backtop,
     Drawer,
     Empty,
@@ -78,6 +80,8 @@ Vue.use(Card);
 Vue.use(Rate);
 Vue.use(Steps);
 Vue.use(Step);
+Vue.use(Carousel);
+Vue.use(CarouselItem);
 Vue.use(Backtop);
 Vue.use(Drawer);
 Vue.use(Empty);

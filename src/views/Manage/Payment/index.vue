@@ -149,7 +149,6 @@ export default {
 </style>
 <style lang="less" scoped>
 #payment {
-    margin-top: 66px;
     background: #F5F7F9;
     padding: 20px 30px 0 30px;
     .content{

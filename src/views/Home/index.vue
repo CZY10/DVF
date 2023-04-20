@@ -8,7 +8,8 @@
                             <div class="item_box">
                                 <h5 :style="index == 0? 'color:#ffffff' : 'color:#333333'">{{index == 0 ? '微胖联盟 Amazon Influencer 视频服务第一站':'微胖联盟 海外Deal站'}}</h5>
                                 <div class="description">{{index == 0 ? '':'官方Deal联盟 一手推广资源'}}</div>
-                                <div style="text-align: center"><el-button class="banner_btn" @click.stop="handleConsult" round>立即咨询</el-button></div>
+                                <div v-if="index == 0" style="text-align: center"><el-button class="banner_btn" @click.stop="handleConsult" round>立即咨询</el-button></div>
+                                <div v-else style="text-align: center"><el-button class="banner_btn" round>立即咨询</el-button></div>
                             </div>
                         </div>
                     </a>
@@ -124,7 +125,6 @@
 
             </div>
         </div>
-
 
         <!--Deal推广-->
         <div class="buyshow" style="background: #FFFFFF">

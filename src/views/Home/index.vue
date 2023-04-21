@@ -145,7 +145,7 @@
                                 </li>
                             </ul>
                             <div class="fb_price">
-                                <span style="color: #FF2C4C;padding-right: 6px;font-size: 12px">￥<span style="font-size: 20px">{{ item.discount_price }}</span></span><span style="color: #999999;font-size: 12px">¥{{ item.price }}</span>
+                                <span style="color: #FF2C4C;padding-right: 6px;font-size: 12px">￥<span style="font-size: 20px">{{ item.discount_price }}</span></span><span style="color: #999999;font-size: 12px;text-decoration: line-through">¥{{ item.price }}</span>
                             </div>
                         </div>
 

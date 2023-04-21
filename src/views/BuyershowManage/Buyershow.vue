@@ -807,7 +807,6 @@ export default {
                 if (scrollTop >= heightTop) {
                     //表头到达页面顶部固定表头
                     let top = scrollTop - (heightTop-166);
-                    console.log(heightTop,top)
                     document.getElementsByClassName(
                         "filter_search"
                     )[0].style.position = "relative";

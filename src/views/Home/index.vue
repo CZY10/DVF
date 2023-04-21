@@ -491,16 +491,6 @@ export default {
 
                 }
             }
-            //&:after{
-            //    content: '';
-            //    width: 29px;
-            //    height: 3px;
-            //    background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
-            //    border-radius: 2px;
-            //    position: absolute;
-            //    top: -3px;
-            //    left: 24px;
-            //}
         }
         .buyshowItem:hover{
             border-bottom: 3px solid #796CF3;
@@ -612,26 +602,15 @@ export default {
         }
         //Deal推广
         .dealItem{
-            //box-sizing: border-box;
             padding: 14px;
-            //padding-bottom: 55px;
             margin: 0 15px 40px 15px;
             width: 210px;
             display: inline-flex;
             justify-content: center;
             box-sizing: border-box;
-            //border-bottom: 3px solid #796CF3;
-            //box-shadow: 0px 4px 8px 0px #F1F4F7;
-            //border-radius: 10px;
-            //border: 1px solid #EEEEEE;
-            //transform: perspective(800px) rotateX(30deg);
-            //padding-bottom: 40px;
             position: relative;
             >div{
                 width: 182px;
-                //position: absolute;
-                //border: 1px solid #999;
-                //transform: perspective(800px) rotateX(332deg);
                 position: relative;
                 top: 17px;
                 padding-bottom: 40px;
@@ -665,12 +644,16 @@ export default {
                     color: #333333;
                     line-height: 22px;
                     text-align: center;
+                    padding-left: 14px;
+                    padding-right: 14px;
                 }
                 .deal_list{
                     flex-flow: row wrap;
                     justify-content: center;
                     padding: 17px 0;
                     margin-bottom: 2px;
+                    padding-left: 14px;
+                    padding-right: 14px;
                     li{
                         box-sizing: border-box;
                         border-radius: 16px;
@@ -694,7 +677,6 @@ export default {
                     bottom: 14px;
                     left: 20px;
                     right: 20px;
-                    //border-top: 1px solid #eeeeee;
                     padding-top: 14px;
                 }
             }
@@ -707,10 +689,7 @@ export default {
             bottom: -11px;
             display: block;
             content: '';
-            //box-sizing: border-box;
             padding: 14px;
-            //margin: 0 20px 20px 20px;
-            //width: 197px;
             box-shadow: 0px 4px 8px 0px #F1F4F7;
             border-radius: 10px;
             border: 1px solid #EEEEEE;
@@ -847,7 +826,7 @@ export default {
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 9999;
+        z-index: 999;
         >div{
             height: 100%;
             align-items: center;

@@ -815,7 +815,7 @@ export default {
                     )[0].style.zIndex = "500";
                     document.getElementsByClassName(
                         "filter_search"
-                    )[0].style.top = `${top-35}px`;
+                    )[0].style.top = `${top-100}px`;
 
                     document.getElementsByClassName(
                         "el-table__header-wrapper"
@@ -825,7 +825,7 @@ export default {
                     )[0].style.zIndex = "500";
                     document.getElementsByClassName(
                         "el-table__header-wrapper"
-                    )[0].style.top = `${top-35}px`;
+                    )[0].style.top = `${top-100}px`;
 
                 } else if (scrollTop == 0) {
                     //表格横向

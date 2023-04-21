@@ -77,64 +77,40 @@
 
             </el-menu>
         </div>
-        <el-dialog
-            title="微信咨询"
-            :visible.sync="dialogVisible"
-            center
-            class="weChatDialog"
-            width="320px">
-            <div class="contact_us_box">
-                <span></span><span></span><span></span><span></span>
-                <img :src="configData.wechat" alt="">
-            </div>
-            <div class="contact_us_foot">
-                <p><i class="iconfont icon-phone-call"></i><span>电话：</span>{{ configData.phone }}</p>
-                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>{{ configData.email }}</p>
-            </div>
-        </el-dialog>
-
-        <el-dialog
-            :visible="dialog"
-            :show-close="false"
-            :close-on-press-escape="false"
-            :close-on-click-modal="false"
-            :lock-scroll="false"
-            :fullscreen="true"
-            center
-            class="weComDialog"
-            height="100%"
-            width="100%">
-            <a href="javascript:;;" style="padding:22px 0 0 30px;position:fixed;left:0;top:0;right:0;display: flex;justify-content: center;align-items: center;width: 180px;"><img :src="logoWhite" style="width: 100%;height: 100%" alt=""></a>
-            <div class="content">
-                <div>
-                    <p class="head">为提升服务体验，保障交付质量，请您扫码<span>添加专属账号经理</span></p>
-                    <div style="display: flex;justify-content: center">
-                        <div class="body">
-                            <div style="margin-right: 40px">
-                                <p class="title">微信扫码</p>
-                                <p class="description">添加专属账号经理</p>
-                                <div class="weChatcode">
-                                    <img :src="contactMeQr" alt="">
-                                </div>
-                                <div style="text-align: center;color: #FFFFFF;padding-top: 24px;font-size: 16px">扫码添加后，等待<span style="color:#FFFA00;">3-5s</span>即可自动跳转</div>
-                            </div>
-                            <div>
-                                <div class="weCom_img"><img src="../../assets/images/weCom.png" alt=""></div>
-                                <div class="weCom_description">
-                                    <p>通过后，您还将获得以下福利</p>
-                                    <ul>
-                                        <li>首单优惠 <span>¥50.00</span></li>
-                                        <li>团购买10单 <span>免1单</span></li>
-                                        <li>ChatGPT <span>不限次数</span> 使用</li>
-                                        <li>VIP专属 <span>1对1</span> 服务</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </el-dialog>
+<!--        <el-dialog-->
+<!--            title="微信咨询"-->
+<!--            :visible.sync="dialogVisible"-->
+<!--            center-->
+<!--            class="weChatDialog"-->
+<!--            width="320px">-->
+<!--            <div class="contact_us_box">-->
+<!--                <span></span><span></span><span></span><span></span>-->
+<!--                <img :src="configData.wechat" alt="">-->
+<!--            </div>-->
+<!--            <div class="contact_us_foot">-->
+<!--                <p><i class="iconfont icon-phone-call"></i><span>电话：</span>{{ configData.phone }}</p>-->
+<!--                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>{{ configData.email }}</p>-->
+<!--            </div>-->
+<!--        </el-dialog>-->
+<!--        <div class="dialog" v-show="isShowDialog">-->
+<!--            <div class="dialog_content">-->
+<!--                <span class="dialog_close" @click="isShowDialog=false">-->
+<!--                </span>-->
+<!--                <h3>扫码添加账号经理</h3>-->
+<!--                <div class="qr_code">-->
+<!--                    <img src="../../assets/images/home/contact_me_qr.png" alt="">-->
+<!--                    <span class="left"></span>-->
+<!--                    <span class="right"></span>-->
+<!--                </div>-->
+<!--                <p class="description_title">您可获取以下福利</p>-->
+<!--                <ul class="dialog_description">-->
+<!--                    <li><span class="dialog_no">01</span>价值<b><span style="font-size: 14px">￥</span>99</b>元《产品推广诊断建议》</li>-->
+<!--                    <li><span class="dialog_no">02</span>买家秀首单优惠<b><span style="font-size: 14px">￥</span>50</b>元</li>-->
+<!--                    <li><span class="dialog_no">03</span>买家团购买10单<b><span style="font-size: 14px">免</span>1<span style="font-size: 14px">单</span></b></li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+        <ConsultDialog :visible.sync="isShowDialog"></ConsultDialog>
     </div>
 </template>
 
@@ -142,15 +118,19 @@
 import {mapMutations} from "vuex";
 import {chatCount, addWeCom, checkQr, checkEnterpriseQr, serviceInfo,getConfig} from '../../api/index'
 import store from "@/store";
+import ConsultDialog from "@/components/ConsultDialog";
 
 export default {
     name: "NavMenu",
     inject:['reload'],
+    components:{
+        ConsultDialog
+    },
     data(){
         return{
             dialog:false,
             isLogin:true,
-            dialogVisible: false,
+            isShowDialog:false,
             avatar: localStorage.getItem('avatar'),
             messageCount: 0,
             logoImg:localStorage.getItem('logo'),
@@ -305,7 +285,7 @@ export default {
         },
         //联系我们
         handlerClick(){
-            this.dialogVisible = true;
+            this.isShowDialog = true;
             if(localStorage.getItem('configObj')!=null){
                 this.configData = JSON.parse(localStorage.getItem('configObj'));
             }
@@ -659,87 +639,7 @@ export default {
     font-weight: 400;
     color: #FFFFFF !important;
 }
-.contact_us_box{
-    position: relative;
-    width: 220px;
-    height: 220px;
-    padding: 7px;
-    margin: auto;
-    margin-top: 10px;
-    border: 1px solid #EEEEEE;
-    img{
-        width: 100%;
-        height: 100%;
-    }
-    span{
-        position: absolute;
-        display: block;
-        width: 7px;
-        height: 7px;
-        &:first-child{
-            left: -1px;;
-            top: -1px;;
-            border-top: 1px solid #333333;
-            border-left: 1px solid #333333;
-        }
-        &:nth-child(2){
-            right: -1px;
-            top: -1px;
-            border-top: 1px solid #333333;
-            border-right: 1px solid #333333;
-        }
-        &:nth-child(3){
-            right: -1px;;
-            bottom: -1px;;
-            border-bottom: 1px solid #333333;
-            border-right: 1px solid #333333;
-        }
-        &:nth-child(4){
-            left: -1px;;
-            bottom: -1px;;
-            border-bottom: 1px solid #333333;
-            border-left: 1px solid #333333;
-        }
-    }
-}
-.contact_us_foot{
-    margin-top: 24px;
-    p{
-        font-size: 14px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #333333;
-        line-height: 20px;
-        display: flex;
-        align-items: center;
-        margin-top: 12px;
-        span{
-            color: rgba(153, 153, 153, 1);
 
-        }
-        i{
-            display: flex;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 7px;
-            justify-content: center;
-            align-items: center;
-        }
-        &:first-child{
-            i{
-                background: rgba(0, 217, 173, 0.1);
-                color: #00D9AD;
-            }
-        }
-        &:nth-child(2){
-            i{
-                background: rgba(0, 178, 255, 0.1);
-                color: #00B2FF;
-            }
-        }
-    }
-}
 .el-menu,
 .el-menu--horizontal .el-menu .el-menu-item{
     background: none !important;
@@ -872,4 +772,5 @@ export default {
         border-bottom: none;
     }
 }
+
 </style>

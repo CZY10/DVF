@@ -3,14 +3,16 @@
         <div class="banner">
             <el-carousel height="340px" :interval="3000" autoplay indicator-position="none" arrow="always">
                 <el-carousel-item v-for="(item,index) in 2" :key="item">
-                    <div class="carousel_item" :class="'carousel-item' + index">
-                        <div class="item_box">
-                            <h5 :style="index == 0? 'color:#ffffff' : 'color:#333333'">{{index == 0 ? '微胖联盟 Amazon Influencer 视频服务第一站':'微胖联盟 海外Deal站'}}</h5>
-                            <div class="description">{{index == 0 ? '':'官方Deal联盟 一手推广资源'}}</div>
-                            <div v-if="index == 0" style="text-align: center"><el-button class="banner_btn" round>立即咨询</el-button></div>
-                            <div v-else style="text-align: center"><a href="https://seller.vipona.com/account/login" target="_blank"><el-button class="banner_btn" round>立即咨询</el-button></a></div>
+                    <a :href="index == 0 ? '/videohome' : index == 1 ? 'https://seller.vipona.com/account/login':''" target="_blank" style="width: 100%;height: 100%">
+                        <div class="carousel_item" :class="'carousel-item' + index">
+                            <div class="item_box">
+                                <h5 :style="index == 0? 'color:#ffffff' : 'color:#333333'">{{index == 0 ? '微胖联盟 Amazon Influencer 视频服务第一站':'微胖联盟 海外Deal站'}}</h5>
+                                <div class="description">{{index == 0 ? '':'官方Deal联盟 一手推广资源'}}</div>
+                                <div v-if="index == 0" style="text-align: center"><el-button class="banner_btn" @click.stop="handleConsult" round>立即咨询</el-button></div>
+                                <div v-else style="text-align: center"><el-button class="banner_btn" round>立即咨询</el-button></div>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </el-carousel-item>
             </el-carousel>
         </div>
@@ -38,7 +40,7 @@
                         <div class="item_img"><img :src="item.image" alt=""></div>
                         <div class="flex_between item_pic">
                             <h5>NO.{{item.id}}</h5>
-                            <div>￥<span>{{ item.price }}</span></div>
+                            <div><b v-if="item.price != '视产品而定'" style="font-weight: normal">￥</b><span>{{ item.price }}</span></div>
                         </div>
                         <div class="flex_between item_title">
                             <div class="title_style">{{item.type}}</div>
@@ -124,7 +126,6 @@
             </div>
         </div>
 
-
         <!--Deal推广-->
         <div class="buyshow" style="background: #FFFFFF">
             <div class="auto1200 pt60">
@@ -135,19 +136,22 @@
                             <div class="deal_head">
                                 <img :src="item.logo" alt="">
                             </div>
-                            <h5 class="deal_name">{{item.name}}</h5>
+                            <h5 class="deal_name">
+                                {{item.name}}
+                            </h5>
                             <ul class="flex_style deal_list">
-                                <li v-for="(j,index) in item.label" :key="index">{{ j }}</li>
+                                <li v-for="(j,index) in item.label" :key="index">
+                                    {{j}}
+                                </li>
                             </ul>
                             <div class="fb_price">
-                                <span style="color: #FF2C4C;padding-right: 6px;font-size: 12px">￥<span style="font-size: 20px">{{ item.discount_price }}</span></span><span style="color: #999999;font-size: 12px">¥{{ item.price }}</span>
+                                <span style="color: #FF2C4C;padding-right: 6px;font-size: 12px">￥<span style="font-size: 20px">{{ item.discount_price }}</span></span><span style="color: #999999;font-size: 12px;text-decoration: line-through">¥{{ item.price }}</span>
                             </div>
                         </div>
 
                     </a>
                 </div>
                 <div class="flex_between button_box"><a target="_blank" href="https://seller.vipona.com/account/login" style="color: #FFFFFF"><el-button round>查看全部</el-button></a></div>
-
             </div>
         </div>
 
@@ -157,22 +161,25 @@
                     怎么推广，效果最好？
                     <span style="margin-left: 30px">免费领取：价值99元<span style="color: #FF9C17">《产品推广诊断建议》</span>+买家秀首单<span style="color: #FF9C17">50元优惠</span></span>
                 </h5>
-                <el-button round>立即获取</el-button>
+                <el-button round @click="isShowDialog = true">立即获取</el-button>
             </div>
             <i class="el-icon-close close_btn" @click="isShowTag = false"></i>
         </div>
         <!--footer-->
         <Footer></Footer>
+        <ConsultDialog :visible.sync="isShowDialog"></ConsultDialog>
     </div>
 </template>
 
 <script>
 import {influenceData, fbData, dealData, getConfig} from "@/api";
 import Footer from "@/components/Footer";
+import ConsultDialog from "@/components/ConsultDialog";
 export default {
     name: "index",
     components:{
-        Footer
+        Footer,
+        ConsultDialog
     },
     data(){
         return{
@@ -185,6 +192,7 @@ export default {
             ids:196,
             influenceList:{},
             formData:{},
+            isShowDialog: false,
         }
     },
     mounted() {
@@ -193,7 +201,6 @@ export default {
         this.handleTakePlanList();
         this.getFBData();
         this.getDealData();
-
         if(localStorage.getItem('configObj')){
             this.formData = JSON.parse(localStorage.getItem('configObj'));
         }else {
@@ -201,6 +208,10 @@ export default {
         }
     },
     methods:{
+        handleConsult(event){
+            event.preventDefault();
+            this.isShowDialog = true;
+        },
         //获取公共配置信息
         getContent(){
             getConfig()
@@ -360,6 +371,7 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                font-weight: 600;
                 i{
                     width:40px;
                     height: 40px;
@@ -367,6 +379,7 @@ export default {
                     background: pink;
                     font-size: 20px;
                     color: #FFFFFF;
+                    font-weight: normal;
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -405,9 +418,6 @@ export default {
                 cursor: pointer;
                 font-size: 14px;
                 color: #666666;
-                &:last-child{
-                    padding-right: 0;
-                }
             }
         }
         .activeStyle{
@@ -481,16 +491,16 @@ export default {
 
                 }
             }
-            &:after{
-                content: '';
-                width: 29px;
-                height: 3px;
-                background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
-                border-radius: 2px;
-                position: absolute;
-                top: -3px;
-                left: 24px;
-            }
+            //&:after{
+            //    content: '';
+            //    width: 29px;
+            //    height: 3px;
+            //    background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
+            //    border-radius: 2px;
+            //    position: absolute;
+            //    top: -3px;
+            //    left: 24px;
+            //}
         }
         .buyshowItem:hover{
             border-bottom: 3px solid #796CF3;
@@ -502,7 +512,7 @@ export default {
         }
         .button_box{
             justify-content: center;
-            padding: 10px 0 100px 0;
+            padding-bottom: 100px;
             .el-button{
                 background: #3442FF linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
                 border-radius: 20px;
@@ -519,7 +529,7 @@ export default {
             background: #FFFFFF;
             box-shadow: 0px 4px 8px 0px #F1F4F7;
             border-radius: 10px;
-            padding: 20px 20px 14px 20px;
+            padding: 20px 20px 54px 20px;
             width: 216px;
             margin: 0 12px 30px 12px;
             position: relative;
@@ -558,7 +568,6 @@ export default {
                 flex-flow: row wrap;
                 justify-content: center;
                 padding: 17px 0 30px 0;
-                border-bottom: 1px solid #eeeeee;
                 li{
                     box-sizing: border-box;
                     border-radius: 16px;
@@ -576,6 +585,11 @@ export default {
             .fb_price{
                 padding-top: 14px;
                 text-align: center;
+                position: absolute;
+                bottom: 14px;
+                left: 20px;
+                right: 20px;
+                border-top: 1px solid #eeeeee;
             }
             &:after{
                 content: '';
@@ -592,33 +606,45 @@ export default {
             border-bottom: 3px solid #796CF3;
             position: relative;
             top: -7px;
-            padding-bottom: 11px;
             > ul{
-                padding-bottom: 30px !important;
+                padding-bottom: 20px !important;
             }
         }
         //Deal推广
         .dealItem{
-            box-sizing: border-box;
+            //box-sizing: border-box;
             padding: 14px;
-            margin: 0 20px 20px 20px;
-            width: 197px;
-            box-shadow: 0px 4px 8px 0px #F1F4F7;
-            border-radius: 10px;
-            border: 1px solid #EEEEEE;
-            transform: perspective(800px) rotateX(30deg);
+            //padding-bottom: 55px;
+            margin: 0 15px 40px 15px;
+            width: 210px;
+            display: inline-flex;
+            justify-content: center;
+            box-sizing: border-box;
+            //border-bottom: 3px solid #796CF3;
+            //box-shadow: 0px 4px 8px 0px #F1F4F7;
+            //border-radius: 10px;
+            //border: 1px solid #EEEEEE;
+            //transform: perspective(800px) rotateX(30deg);
+            //padding-bottom: 40px;
+            position: relative;
             >div{
+                width: 182px;
+                //position: absolute;
+                //border: 1px solid #999;
+                //transform: perspective(800px) rotateX(332deg);
                 position: relative;
+                top: 17px;
+                padding-bottom: 40px;
                 .deal_head{
                     position: absolute;
-                    width: 72px;
-                    height: 87px;
+                    width: 70px;
+                    height: 70px;
                     background: #ffffff;
                     box-shadow: 0px 4px 8px 0px #F1F4F7;
                     border-radius: 50%;
                     transform: translate(-50%,-50%);
                     left: 50%;
-                    top: -20px;
+                    top: -1px;
                     overflow: hidden;
                     padding: 16px;
                     box-sizing: border-box;
@@ -626,12 +652,14 @@ export default {
                     justify-content: center;
                     align-items: center;
                     img{
-                        width: 100%;
-                        height: 100%;
+                        width: auto;
+                        height: auto;
+                        max-width: 38px;
+                        max-height: 38px;
                     }
                 }
                 .deal_name{
-                    padding-top: 40px;
+                    padding-top: 45px;
                     font-size: 16px;
                     font-weight: 600;
                     color: #333333;
@@ -642,13 +670,14 @@ export default {
                     flex-flow: row wrap;
                     justify-content: center;
                     padding: 17px 0;
+                    margin-bottom: 2px;
                     li{
                         box-sizing: border-box;
                         border-radius: 16px;
                         border: 1px solid #EEEEEE;
                         padding: 5px 10px;
                         margin: 3px;
-                        font-size: 15px;
+                        font-size: 12px;
                         cursor: pointer;
                         font-weight: 200;
                         cursor: pointer;
@@ -661,12 +690,37 @@ export default {
                 }
                 .fb_price{
                     text-align: center;
+                    position: absolute;
+                    bottom: 14px;
+                    left: 20px;
+                    right: 20px;
+                    //border-top: 1px solid #eeeeee;
+                    padding-top: 14px;
                 }
             }
+        }
+        .dealItem:before{
+            position: absolute;
+            left: 8px;
+            top: 0;
+            right: 8px;
+            bottom: -11px;
+            display: block;
+            content: '';
+            //box-sizing: border-box;
+            padding: 14px;
+            //margin: 0 20px 20px 20px;
+            //width: 197px;
+            box-shadow: 0px 4px 8px 0px #F1F4F7;
+            border-radius: 10px;
+            border: 1px solid #EEEEEE;
+            transform: perspective(800px) rotateX(30deg);
+            //padding-bottom: 40px;
         }
         .dealItem:hover{
             border-bottom: 3px solid #796CF3;
             position: relative;
+            border-radius: 10px;
             top: -7px;
             .deal_list{
                 padding-bottom: 15px !important;
@@ -741,7 +795,15 @@ export default {
                         right: 0;
                     }
 
-                    &:nth-child(2){
+                    &:nth-child(1){
+                        h4 span{
+                            &:before{
+                                content: url("../../assets/images/home/up.png");
+                            }
+                        }
+
+                    }
+                    &:nth-child(3){
                         h4 span{
                             &:before{
                                 content: url("../../assets/images/home/up.png");
@@ -781,7 +843,11 @@ export default {
     .tag_style{
         background: #796CF3;
         height: 70px;
-        position: relative;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
         >div{
             height: 100%;
             align-items: center;

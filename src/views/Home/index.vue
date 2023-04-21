@@ -652,7 +652,7 @@ export default {
                     justify-content: center;
                     align-items: center;
                     img{
-                        width: 100%;
+                        width: auto;
                         height: auto;
                         max-width: 38px;
                         max-height: 38px;

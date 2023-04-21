@@ -843,7 +843,11 @@ export default {
     .tag_style{
         background: #796CF3;
         height: 70px;
-        position: relative;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
         >div{
             height: 100%;
             align-items: center;

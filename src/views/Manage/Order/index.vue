@@ -26,7 +26,13 @@
                 :height="tableHeight"
                 :header-cell-style="{background:'#F6F6F6'}"
                 @sort-change="handlerSort"
+                @selection-change="handleSelectionChange"
                 style="width: 100%">
+<!--                <el-table-column-->
+<!--                    type="selection"-->
+<!--                    :selectable="handleSelectable"-->
+<!--                    width="55">-->
+<!--                </el-table-column>-->
                 <el-table-column prop="createtime" label="创建时间" sortable="custom" min-width="100"></el-table-column>
                 <el-table-column prop="id" label="订单号" min-width="110"></el-table-column>
                 <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
@@ -666,6 +672,7 @@ export default {
             }
         }
         return {
+            multipleSelection:[],
             listArray:[],
             checkArray: {
             },
@@ -818,6 +825,14 @@ export default {
     },
     methods:{
         ...mapMutations('order', ["setIsMessage","setMessage","setIsRead"]),
+        handleSelectable(row){
+
+            return row.category_id == 18 ? false : true
+        },
+        handleSelectionChange(val){
+            // console.log(val)
+            this.multipleSelection = val
+        },
         //获取拍摄场景列表
         getShootRequireList(){
             getShootRequire()
@@ -896,6 +911,7 @@ export default {
                         this.tableData = res.data.data;
                         this.total = res.data.total;
                         this.setIsMessage(0)
+                        this.handleSelectable();
                     }
                 })
                 .catch((err) => {

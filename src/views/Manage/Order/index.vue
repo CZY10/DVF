@@ -473,7 +473,13 @@
                     <div v-if="chatData.length>0" class="chat-message-body" id="chatForm">
                         <div  dis-hover v-for="(item,index) in chatData" :key="index" class="message-card">
                             <div :class="item.type == 0?'message-row-right': 'message-row-left'">
-                                <img :src="item.type == 0? avatar : require('../../../assets/images/gani.png')" height="45" width="45" >
+                                <div style="position: relative">
+                                    <img style="border-radius: 50%" :src="item.type == 0? avatar : require('../../../assets/images/gani.png')" height="45" width="45" >
+                                    <div v-if="item.type == 0" style="position: absolute;bottom: 6px;left: 0;font-family: PingFangSC-Regular, PingFang SC;font-size: 12px">
+                                        <span v-if="item.is_read == 1" style="color: #999999;">已读</span>
+                                        <span v-else style="color: #796CF3">未读</span>
+                                    </div>
+                                </div>
                                 <div class="message-content">
                                     <div :style="item.type == 0?'text-align:right;display: flex;flex-direction:row-reverse;line-height:24px':''">
                                        {{item.type == 0 ? '我' : 'Gani-达人经纪人'}}

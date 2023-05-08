@@ -906,6 +906,7 @@ export default {
                 orderType: this.orderType,
             })
                 .then((res) => {
+                    console.log(22)
                     if(res.code === 1){
                         this.pageState = true;
                         this.tableData = res.data.data;
@@ -915,7 +916,7 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    this.$message.error(err.msg);
+                    // this.$message.error(err.msg);
                 });
         },
         //初始化列表

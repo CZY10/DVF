@@ -13,6 +13,7 @@
                             <div class="message-body" v-show="item.content !== ''">
                                 {{item.content}}
                                 <el-button type="text" size="mini" v-if="item.type == 1" @click="handleCopyToClip(item.content)">一键复制</el-button>
+
                             </div>
                         </div>
                     </div>
@@ -255,7 +256,7 @@ html{
             flex-direction:row-reverse;
             overflow: auto;
             .message-body{
-                background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);;
+                background: #796CF3;
                 color: #FFFFFF;
                 font-size: 14px;
                 font-family: PingFangSC-Regular, PingFang SC;

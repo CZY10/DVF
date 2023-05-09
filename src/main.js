@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 import './assets/css/reset.css'
-
+import 'default-passive-events'
 // import videojs from "video.js";
 // import "video.js/dist/video-js.css";
 import elTableInfiniteScroll from "el-table-infinite-scroll";

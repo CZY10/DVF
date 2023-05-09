@@ -231,7 +231,6 @@ export default {
             },
             wechatToken:'',
             fromPath: localStorage.getItem('loginFromPath'),
-            source:'',
             configData:{},
         }
     },
@@ -241,7 +240,6 @@ export default {
     mounted() {
         this.handlerGetQrcode();
         this.verifyToken();
-        this.source = localStorage.getItem('source');
         if(localStorage.getItem('configObj')){
             this.configData = JSON.parse(localStorage.getItem('configObj'));
         }else {
@@ -296,7 +294,8 @@ export default {
             let _this = this;
             let form = new FormData();
             form.append('wechat_token',_this.wechatToken)
-            form.append('source',_this.source)
+            form.append('source',_this.$route.query.source?_this.$route.query.source:'')
+            form.append('action',_this.$route.query.action?_this.$route.query.action:'')
             _this.checkQrCode = setInterval(()=>{
                 checkQr(form)
                     .then((res) => {
@@ -328,8 +327,7 @@ export default {
                             this.setUserInfo(JSON.stringify(res.data.userinfo));
                             this.setToken(res.data.userinfo.token);
                             this.setAvatar(res.data.userinfo.avatar);
-                            this.$router.push(this.fromPath)
-
+                            res.data.jump ? window.location.href = res.data.jump : this.$router.push(this.fromPath);
                         }
                     })
                     .catch((err) => {
@@ -379,7 +377,8 @@ export default {
                     mobileLogin({
                         mobile: this.ruleForm.phone,
                         captcha: this.ruleForm.verificationCode,
-                        source: this.source
+                        source: this.$route.query.source?this.$route.query.source:'',
+                        action:this.$route.query.action?this.$route.query.action:'',
                     })
                         .then((res) => {
                             if(res.code === 1){
@@ -395,7 +394,8 @@ export default {
                                 this.setUserInfo(JSON.stringify(res.data.userinfo));
                                 this.setToken(res.data.userinfo.token);
                                 this.setAvatar(res.data.userinfo.avatar);
-                                this.$router.push(this.fromPath)
+                                res.data.jump ? window.location.href = res.data.jump : this.$router.push(this.fromPath);
+
                             }
                         })
                         .catch((err) => {
@@ -418,7 +418,8 @@ export default {
                         mobile: this.ruleForm.phone,
                         captcha: this.ruleForm.verificationCode,
                         wechat_token: this.wechatToken,
-                        source: this.source,
+                        source: this.$route.query.source?this.$route.query.source:'',
+                        action:this.$route.query.action?this.$route.query.action:'',
                     })
                         .then((res) => {
                             if(res.code === 1){
@@ -431,7 +432,7 @@ export default {
                                 this.setUserInfo(JSON.stringify(res.data.userinfo));
                                 this.setToken(res.data.userinfo.token);
                                 this.setAvatar(res.data.userinfo.avatar);
-                                this.$router.push(this.fromPath)
+                                res.data.jump ? window.location.href = res.data.jump : this.$router.push(this.fromPath);
 
                             }else if(res.code === 0 && res.data.status === 0){
                                 // this.$message.error(res.msg);

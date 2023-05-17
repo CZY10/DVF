@@ -340,3 +340,11 @@ export function dealData(data){
     })
 }
 
+//登录页面判断deal用户的跳转
+export function determineDeal(data) {
+    return request({
+        url: "/api/user/directDeal",
+        method: "post",
+        data
+    })
+}

@@ -491,6 +491,7 @@
             width="896px"
             :close-on-click-modal="false"
             class="video_dialog video_player"
+            v-if="videoPlayDialog"
             @close="handleVideoClose"
             center>
             <div style="padding-top: 0">
@@ -499,30 +500,28 @@
                         <li v-for="(item,index) in this.videoData" v-show="swiperIndex == index" :key="index">
                             <h4 :title="item.desc" style="padding-left:20px;padding-right:20px;text-align:center;font-size: 16px;font-weight: 600;color: #333333;line-height: 22px;z-index: 99;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;margin-bottom: 22px">{{item.desc}}</h4>
                             <div class="video_content">
-<!--                                <video-->
-<!--                                    :id="'my-player'+ ++index"-->
-<!--                                    ref="video"-->
-<!--                                    :poster="localhost + item.coverimage"-->
-<!--                                    class="video-js vjs-default-skin vjs-big-play-centered"-->
-<!--                                    controls>-->
-<!--                                    <source :src="localhost + item.file" />-->
-<!--                                </video>-->
-                                <video
-                                    :id="'my-video'+index+1"
-                                    ref="videoPlayerRef"
-                                    class="video-js"
-                                    controls
-                                    preload="auto"
-                                    :poster="localhost + item.coverimage"
-                                    data-setup="{}"
-                                >
-                                    <source :src="localhost + item.file" />
+                                <div v-if="swiperIndex == index && !videoUrl" class="video_img" @click="videoUrl = item.file">
+                                    <img :src="localhost + item.coverimage" alt="">
+                                </div>
+                                <video width="100%"
+                                       height="100%"
+                                       autoplay
+                                       controls
+                                       class="video-js"
+                                       ref="videoPlayer"
+                                       preload="none"
+                                       @click="handlePause(index)"
+                                       v-if="swiperIndex == index && videoUrl">
+                                    <source :src="localhost+videoUrl" type="video/mp4">
                                 </video>
+                                <div v-if="swiperIndex == index && isShowBtn" @click="handlePlayer" class="vjs-big-play-button">
+                                    <div class="btn_style"></div>
+                                </div>
                             </div>
                         </li>
                     </ul>
                     <!-- swiper2 Thumbs -->
-                    <swiper class="swiper gallery-thumbs" id="swiperThumbs" :options="swiperOptionThumbs" style="" ref="swiperThumbs">
+                    <swiper class="swiper gallery-thumbs" id="swiperThumbs" :options="swiperOptionThumbs" ref="swiperThumbs">
                         <swiper-slide v-for="(item,index) in this.videoData" :key="index" :class="'slide-'+ ++index">
                             <img :src="localhost + item.coverimage" alt="">
                         </swiper-slide>
@@ -540,7 +539,6 @@ import QRCode from 'qrcodejs2'
 import {getCategory, getSearchList, createOrder, payOrder, checkPayment, getShootRequire} from "@/api";
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.min.css'
-import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import draggable from 'vuedraggable'
 
@@ -550,31 +548,58 @@ export default {
     name: "buyershow",
     data(){
         return{
+            isShowBtn:false,
+            videoUrl:null,
             isDragging: false,
             delayedDragging: false,
+            sideIndex:null,
             swiperOptionThumbs: {
-                // loop: true,
-                loopedSlides: 5, // looped slides should be the same
+                loopedSlides: 5,
                 spaceBetween: 24,
                 centeredSlides: true,
                 slidesPerView: 'auto',
                 touchRatio: 0.2,
+                initialSlide:0,
                 slideToClickedSlide: true,
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev'
                 },
-                watchSlidesVisibility: true,//防止不可点击
+                watchSlidesVisibility: true,
                 on: {
                     click: function () {
-                        vm.pauseFun();
+                        vm.videoUrl = vm.videoData[this.activeIndex].file
+                        if(vm.sideIndex != this.activeIndex && vm.sideIndex != null){
+                            vm.videoUrl = null;
+                            vm.isShowBtn = false;
+                        }else {
+                            if(vm.videoUrl){
+                                if(vm.sideIndex == null){
+                                    setTimeout(()=>{
+                                        vm.$refs.videoPlayer[0].pause();
+                                        vm.isShowBtn=false;
+                                    },0)
+                                }else {
+                                    setTimeout(()=>{
+                                        if (vm.$refs.videoPlayer[0].paused) {
+                                            vm.$refs.videoPlayer[0].play();
+                                            vm.isShowBtn=false;
+                                        } else {
+                                            vm.$refs.videoPlayer[0].pause();
+                                            vm.isShowBtn=true;
+                                        }
+                                    },0)
+                                }
+                            }else{
+                                vm.isShowBtn = false;
+                            }
+                        }
                         setTimeout(()=>{
                             vm.setSwiper(this.activeIndex)
-                        },200)
-
+                        },0)
+                        vm.sideIndex = this.activeIndex
                     }
                 }
-
             },
             swiperIndex:0,
             loading: false,
@@ -624,32 +649,7 @@ export default {
             keywords:'',
             checkType: [],
             tableData: [],
-            selectedTableData:[
-                {
-                    image:'11',
-                    id:1,
-                    fixed:false,
-                    lower_price:'1547',
-                    highest_price:'7187',
-                    price_type:1
-                }
-                ,{
-                    image:'11',
-                    id:2,
-                    fixed:false,
-                    lower_price:'232',
-                    highest_price:'8522',
-                    price_type:1
-                },
-                {
-                    image:'11',
-                    id:3,
-                    fixed:false,
-                    lower_price:'124',
-                    highest_price:'8325',
-                    price_type:0
-                }
-            ],
+            selectedTableData:[],
             isShowSelectedPlan: false,
             totalNum:1,
             selectRow:[],
@@ -699,6 +699,14 @@ export default {
         window.addEventListener('scroll',this.handleScroll,true)
     },
     methods:{
+        handlePlayer(){
+            this.isShowBtn=false;
+            if(this.$refs.videoPlayer[0].paused)this.$refs.videoPlayer[0].play()
+
+        },
+        handlePause(){
+            this.$refs.videoPlayer[0].paused ? this.isShowBtn=false : this.isShowBtn=true
+        },
         onMove({ relatedContext, draggedContext }) {
             const relatedElement = relatedContext.element;
             const draggedElement = draggedContext.element;
@@ -727,24 +735,17 @@ export default {
         setSwiper(data){
             this.swiperIndex = data
         },
-        pauseFun(){
-            this.$refs.videoPlayerRef[this.swiperIndex].pause();
-        },
         handleClickSwiperNextButton(){
-            this.$refs.videoPlayerRef[this.swiperIndex].pause();
-            if(this.swiperIndex == this.videoData.length-1){
-                this.swiperIndex = this.videoData.length-1
-            }else {
-                this.swiperIndex++
-            }
+            this.videoUrl= null;
+            this.swiperIndex == this.videoData.length-1 ? this.swiperIndex = this.videoData.length-1 : this.swiperIndex++;
+            this.isShowBtn = false;
+            this.sideIndex = this.activeIndex
         },
         handleClickSwiperPreButton(){
-            this.$refs.videoPlayerRef[this.swiperIndex].pause();
-            if(this.swiperIndex == 0){
-                this.swiperIndex = 0
-            }else {
-                this.swiperIndex--
-            }
+            this.videoUrl= null;
+            this.swiperIndex == 0 ? this.swiperIndex = 0 : this.swiperIndex--;
+            this.isShowBtn = false;
+            this.sideIndex = this.activeIndex
         },
         /*关闭支付完成页面并跳转至订单信息页面*/
         handlePaymentCompletedClose(){
@@ -758,24 +759,6 @@ export default {
                 this.drawer = false;
                 this.videoPlayDialog =true;
             }
-            let _this = this;
-            _this.$nextTick(() => {
-                this.videoData.forEach((item,index)=>{
-                    this.videoPlayers = videojs('my-video'+index+1, {
-                        // controls: true, //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
-                        // autoplay: false, //自动播放属性,
-                        // muted: false, // 静音播放
-                        // preload: 'auto', //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
-                        // fluid: true
-                    }, function onPlayerReady() {
-                        // videojs.log('Your player is ready!'); // 比如： 播放量+1请求
-                        this.on('ended', function() {
-                            // videojs.log('Awww...over so soon?!');
-                        });
-                    });
-                })
-            })
-
         },
         cellClick(row, column, cell, event){
             if(column.property === 'information'){
@@ -872,12 +855,11 @@ export default {
         },
         //关闭视频弹窗
         handleVideoClose(){
+            this.videoUrl=null;
             this.swiperIndex = 0;
-            this.videoData.forEach((item,index)=>{
-                videojs('my-video'+index+1).dispose()
-            })
             this.videoData = [];
-
+            this.isShowBtn = false;
+            this.sideIndex = null;
         },
         //获取搜索分类
         handlerGetCategory(type){
@@ -1268,6 +1250,52 @@ export default {
     .el-table .caret-wrapper{
         width: 15px !important;
     }
+    .video_content{
+        .video_img{
+            position: relative;
+            height: 100%;
+            width: 100%;
+            img{
+                width: 100%;
+                height: 100%;
+                -o-object-fit: cover;
+                object-fit: cover;
+            }
+        }
+        .video_img:before{
+            position: absolute;
+            content: "";
+            left: 1px;
+            top: 1px;
+            right: 1px;
+            bottom: 1px;
+            background: rgba(0,0,0,.4);
+            z-index: 9;
+            border-radius: 4px;
+        }
+        .video_img:after{
+            box-sizing: border-box;
+            font-family: element-icons;
+            position: absolute;
+            content: "\e791";
+            width: 100px;
+            height: 100px;
+            font-size: 62px;
+            background: #fff;
+            box-shadow: 0 6px 10px 0 rgb(0 0 0 / 7%);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            display: flex;
+            z-index: 99;
+            justify-content: center;
+            align-items: center;
+            transform: translate(-50%,-50%);
+            cursor: pointer;
+        }
+    }
+
     .video_content .vjs-poster{
         background-size: cover;
     }
@@ -1277,15 +1305,37 @@ export default {
     .my-video11-dimensions.vjs-fluid:not(.vjs-audio-only-mode){
         padding-top: 0;
     }
-    .video-js .vjs-big-play-button{
-        left: 50%;
-        top: 50%;
-        margin-left: -50px;
-        margin-top: -50px;
-        width: 100px !important;
-        height: 100px !important;
-        font-size: 38px;
-        line-height: 96px;
+    .vjs-big-play-button{
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        right: 1px;
+        bottom: 1px;
+        background: rgba(0,0,0,.4);
+        z-index: 9;
+        border-radius: 4px;
+        .btn_style{
+            overflow: hidden;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            background: #fff;
+            width: 100px !important;
+            height: 100px !important;
+            font-size: 38px;
+            line-height: 96px;
+            transform: translate(-50%,-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn_style:after{
+            font-family: element-icons;
+            content: "\e791";
+            font-size: 62px;
+            cursor: pointer;
+        }
     }
 }
 
@@ -1310,6 +1360,7 @@ export default {
         .video_content{
             height: 474px;
             width: 100%;
+            position: relative;
         }
     }
 }

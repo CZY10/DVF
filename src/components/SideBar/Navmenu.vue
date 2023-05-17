@@ -77,22 +77,6 @@
 
             </el-menu>
         </div>
-<!--        <el-dialog-->
-<!--            title="微信咨询"-->
-<!--            :visible.sync="dialogVisible"-->
-<!--            center-->
-<!--            class="weChatDialog"-->
-<!--            width="320px">-->
-<!--            <div class="contact_us_box">-->
-<!--                <span></span><span></span><span></span><span></span>-->
-<!--                <img :src="configData.wechat" alt="">-->
-<!--            </div>-->
-<!--            <div class="contact_us_foot">-->
-<!--                <p><i class="iconfont icon-phone-call"></i><span>电话：</span>{{ configData.phone }}</p>-->
-<!--                <p><i class="iconfont icon-mail"></i><span>邮箱：</span>{{ configData.email }}</p>-->
-<!--            </div>-->
-<!--        </el-dialog>-->
-
         <el-dialog
             :visible="dialog"
             :show-close="false"
@@ -247,12 +231,12 @@ export default {
         }
         if(localStorage.getItem('serviceInfoQrCode')){
             this.contactMeQr = localStorage.getItem('serviceInfoQrCode')
-        }else {
+        }else if(this.token){
             this.handleAddWeCom()
         }
         if(JSON.parse(localStorage.getItem('serviceInfoList'))){
             this.serviceInfoList = JSON.parse(localStorage.getItem('serviceInfoList'))
-        }else {
+        }else if(this.token){
             this.getServiceInfo()
         }
 

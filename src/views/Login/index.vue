@@ -189,6 +189,8 @@ export default {
             }
         }
         return {
+            source:'',
+            action:'',
             dialogVisible:false,
             phoneError:true,
             codeError:true,
@@ -250,6 +252,8 @@ export default {
         }else {
             this.getContent()
         }
+        this.source = this.$route.query.source || localStorage.getItem('source') || '';
+        this.action = this.$route.query.action || localStorage.getItem('action') || '';
     },
     methods: {
         ...mapMutations('login', ["setUserInfo","setToken","setAvatar","setExpiretime"]),
@@ -294,8 +298,8 @@ export default {
             let _this = this;
             let form = new FormData();
             form.append('wechat_token',_this.wechatToken)
-            form.append('source',_this.$route.query.source?_this.$route.query.source:'')
-            form.append('action',_this.$route.query.action?_this.$route.query.action:'')
+            form.append('source',_this.source)
+            form.append('action',_this.action)
             _this.checkQrCode = setInterval(()=>{
                 checkQr(form)
                     .then((res) => {
@@ -375,10 +379,10 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     mobileLogin({
+                        source:this.source,
                         mobile: this.ruleForm.phone,
                         captcha: this.ruleForm.verificationCode,
-                        source: this.$route.query.source?this.$route.query.source:'',
-                        action:this.$route.query.action?this.$route.query.action:'',
+                        action:this.action,
                     })
                         .then((res) => {
                             if(res.code === 1){
@@ -418,8 +422,8 @@ export default {
                         mobile: this.ruleForm.phone,
                         captcha: this.ruleForm.verificationCode,
                         wechat_token: this.wechatToken,
-                        source: this.$route.query.source?this.$route.query.source:'',
-                        action:this.$route.query.action?this.$route.query.action:'',
+                        source: this.source,
+                        action:this.action,
                     })
                         .then((res) => {
                             if(res.code === 1){

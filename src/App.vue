@@ -5,18 +5,9 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import login from "@/store/modules/login";
 import { determineDeal } from "@/api/index";
 export default {
   name: "app",
-  data() {
-    return {
-      isToken: false,
-      action: "",
-      source: "",
-    };
-  },
   components: {},
   provide() {
     return {
@@ -26,6 +17,9 @@ export default {
   data() {
     return {
       isRouterAlive: true,
+      isToken: false,
+      action: "",
+      source: "",
     };
   },
   mounted() {},
@@ -42,8 +36,10 @@ export default {
 
     if (this.isToken == true && this.source == "vipon_deal") {
       if (this.action == "account/login") {
-        localStorage.setItem("token", "");
-        this.setToken("");
+        localStorage.removeItem("source");
+        localStorage.removeItem("avatar");
+        localStorage.removeItem("token");
+        this.$store.commit("resetState");
         this.$router.push("/login");
       } else {
         determineDeal({
@@ -64,7 +60,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations("login", ["setToken"]),
     reload() {
       this.isRouterAlive = false;
       this.$nextTick(() => {

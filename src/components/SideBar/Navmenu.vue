@@ -329,11 +329,11 @@ export default {
     });
 
     //海外Deal站跳转
-    this.DealHook = "https://hkatest.myvipon.com/promotion/index";
+    this.DealHook = "https://hkatest.myvipon.com";
     if (process.env.NODE_ENV == "production") {
-      this.DealHook = "https://seller.vipona.com/promotion/index";
+      this.DealHook = "https://seller.vipona.com";
     } else if (process.env.NODE_ENV == "test") {
-      this.DealHook = "https://hkatest.myvipon.com/promotion/index";
+      this.DealHook = "https://hkatest.myvipon.com";
     }
   },
   mounted() {
@@ -569,6 +569,7 @@ export default {
         this.$router.push("/login");
       }
     },
+    //Fb跳转
     goFb() {
       if (window.localStorage.token) {
         this.FbSrc = "https://hkatest.myvipon.com/hot/fb";

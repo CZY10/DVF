@@ -46,6 +46,7 @@ export default {
           is_login: true,
           action: this.action,
           source: this.source,
+          id: this.$route.query.id || "",
         })
           .then((res) => {
             console.log(res);

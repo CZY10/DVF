@@ -445,9 +445,8 @@ export default {
     //fb详情页
     godetailsFb(item) {
       this.fbbaseURLC = this.fbbaseURLC + item.id;
-      window.open(this.fbbaseURLC, "_black");
-      this.$router.go(0);
-
+      // window.open(this.fbbaseURLC, "_black");
+      // this.$router.go(0);
       if (process.env.NODE_ENV == "production") {
         this.fbbaseURLX = this.fbbaseURLX + item.id;
         window.open(this.fbbaseURLX, "_blank");
@@ -458,10 +457,9 @@ export default {
     },
     //Deal详情页
     godetailsDeal(item) {
-      this.dealBaseURLC = this.dealBaseURLC + item.id;
-      window.open(this.dealBaseURLC, "_black");
-      this.$router.go(0);
-
+      // this.dealBaseURLC = this.dealBaseURLC + item.id;
+      // window.open(this.dealBaseURLC, "_black");
+      // this.$router.go(0);
       if (process.env.NODE_ENV == "production") {
         this.dealBaseURLX = this.dealBaseURLX + item.id;
         window.open(this.dealBaseURLX, "_blank");

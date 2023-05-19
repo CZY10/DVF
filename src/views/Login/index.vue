@@ -440,9 +440,11 @@ export default {
       var timer = 0;
       let _this = this;
       let form = new FormData();
+      let id = this.$route.query.id || "";
       form.append("wechat_token", _this.wechatToken);
       form.append("source", _this.source);
       form.append("action", _this.action);
+      form.append("id", id);
       _this.checkQrCode = setInterval(() => {
         checkQr(form)
           .then((res) => {
@@ -533,6 +535,7 @@ export default {
             mobile: this.ruleForm.phone,
             captcha: this.ruleForm.verificationCode,
             action: this.action,
+            id: this.$route.query.id || "",
           })
             .then((res) => {
               if (res.code === 1) {
@@ -580,6 +583,7 @@ export default {
             wechat_token: this.wechatToken,
             source: this.source,
             action: this.action,
+            id: this.$route.query.id || "",
           })
             .then((res) => {
               if (res.code === 1) {

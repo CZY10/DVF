@@ -329,7 +329,7 @@ export default {
     });
 
     //海外Deal站跳转
-    this.DealHook = "https://hkatest.myvipon.com";
+    // this.DealHook = "https://hkatest.myvipon.com";
     if (process.env.NODE_ENV == "production") {
       this.DealHook = "https://seller.vipona.com";
     } else if (process.env.NODE_ENV == "test") {

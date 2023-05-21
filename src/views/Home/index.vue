@@ -444,15 +444,17 @@ export default {
     },
     //fb详情页
     godetailsFb(item) {
-      this.fbbaseURLC = this.fbbaseURLC + item.id;
+      // this.fbbaseURLC = this.fbbaseURLC + item.id;
       // window.open(this.fbbaseURLC, "_black");
       // this.$router.go(0);
       if (process.env.NODE_ENV == "production") {
         this.fbbaseURLX = this.fbbaseURLX + item.id;
         window.open(this.fbbaseURLX, "_blank");
+        this.$router.go(0);
       } else if (process.env.NODE_ENV == "test") {
         this.fbbaseURLC = this.fbbaseURLC + item.id;
         window.open(this.fbbaseURLC, "_black");
+        this.$router.go(0);
       }
     },
     //Deal详情页
@@ -463,9 +465,11 @@ export default {
       if (process.env.NODE_ENV == "production") {
         this.dealBaseURLX = this.dealBaseURLX + item.id;
         window.open(this.dealBaseURLX, "_blank");
+        this.$router.go(0);
       } else if (process.env.NODE_ENV == "test") {
         this.dealBaseURLC = this.dealBaseURLC + item.id;
         window.open(this.dealBaseURLC, "_black");
+        this.$router.go(0);
       }
     },
   },

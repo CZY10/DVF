@@ -54,8 +54,11 @@
         @sort-change="handlerSort"
         @selection-change="handleSelectionChange"
         style="width: 100%"
+        @select-all="selectAll"
       >
-        <el-table-column type="selection"></el-table-column>
+      <!-- 订单多选 -->
+        <el-table-column type="selection" :selectable="selectable" >
+        </el-table-column>
         <el-table-column
           prop="createtime"
           label="创建时间"
@@ -1545,13 +1548,21 @@ export default {
     handleSelectable(row) {
       return row.category_id == 18 ? false : true;
     },
+    //当选择项发生变化时会触发该事件
     handleSelectionChange(val) {
       this.multipleSelection = val;
-
-      if (val) {
-        val.forEach((item) => {
-          this.$refs.multipleTable.toggleRowSelection(item);
-        });
+      console.log(this.multipleSelection)
+    },
+    //当用户手动勾选全选 Checkbox 时触发的事件
+    selectAll(){
+   
+    },
+    // 判断CheckBox 是否可以勾选
+    selectable(row,index){
+      if(row.status == 1){
+        return false
+      }else{
+        return true
       }
     },
     //获取拍摄场景列表

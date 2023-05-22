@@ -329,7 +329,7 @@ export default {
     });
 
     //海外Deal站跳转
-    // this.DealHook = "https://hkatest.myvipon.com";
+    this.DealHook = "https://hkatest.myvipon.com";
     if (process.env.NODE_ENV == "production") {
       this.DealHook = "https://seller.vipona.com";
     } else if (process.env.NODE_ENV == "test") {
@@ -540,8 +540,8 @@ export default {
     //   vipon自助发帖跳转
     goVipon() {
       if (window.localStorage.token) {
-        // this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
-        // window.open(this.ViponSrc, "_black");
+        this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
+        window.open(this.ViponSrc, "_black");
         if (process.env.NODE_ENV == "production") {
           this.ViponSrc = "https://seller.vipona.com/promotion/index";
           window.open(this.ViponSrc, "_black");
@@ -556,8 +556,8 @@ export default {
     // Deal跳转
     goDeak() {
       if (window.localStorage.token) {
-        // this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
-        // window.open(this.DealSrc, "_black");
+        this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
+        window.open(this.DealSrc, "_black");
         if (process.env.NODE_ENV == "production") {
           this.DealSrc = "https://seller.vipona.com/hot/deal";
           window.open(this.DealSrc, "_black");
@@ -572,8 +572,8 @@ export default {
     //Fb跳转
     goFb() {
       if (window.localStorage.token) {
-        // this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
-        // window.open(this.FbSrc, "_black");
+        this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
+        window.open(this.FbSrc, "_black");
         if (process.env.NODE_ENV == "production") {
           this.FbSrc = "https://seller.vipona.com/hot/fb";
           window.open(this.FbSrc, "_black");

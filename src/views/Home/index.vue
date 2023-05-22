@@ -444,32 +444,32 @@ export default {
     },
     //fb详情页
     godetailsFb(item) {
-      // this.fbbaseURLC = this.fbbaseURLC + item.id;
-      // window.open(this.fbbaseURLC, "_black");
-      // this.$router.go(0);
+      this.fbbaseURLC = this.fbbaseURLC + item.id;
+      window.open(this.fbbaseURLC, "_black");
+      this.fbbaseURLC = "https://hkatest.myvipon.com/hot/fb-detail?id=";
       if (process.env.NODE_ENV == "production") {
         this.fbbaseURLX = this.fbbaseURLX + item.id;
         window.open(this.fbbaseURLX, "_blank");
-        this.$router.go(0);
+        this.fbbaseURLX = "https://seller.vipona.com/hot/fb-detail?id=";
       } else if (process.env.NODE_ENV == "test") {
         this.fbbaseURLC = this.fbbaseURLC + item.id;
         window.open(this.fbbaseURLC, "_black");
-        this.$router.go(0);
+        this.fbbaseURLC = "https://hkatest.myvipon.com/hot/fb-detail?id=";
       }
     },
     //Deal详情页
     godetailsDeal(item) {
-      // this.dealBaseURLC = this.dealBaseURLC + item.id;
-      // window.open(this.dealBaseURLC, "_black");
-      // this.$router.go(0);
+      this.dealBaseURLC = this.dealBaseURLC + item.id;
+      window.open(this.dealBaseURLC, "_black");
+      this.dealBaseURLC = "https://hkatest.myvipon.com/hot/deal-detail?id=";
       if (process.env.NODE_ENV == "production") {
         this.dealBaseURLX = this.dealBaseURLX + item.id;
         window.open(this.dealBaseURLX, "_blank");
-        this.$router.go(0);
+        this.dealBaseURLX = `https://seller.vipona.com/hot/deal-detail?id=`;
       } else if (process.env.NODE_ENV == "test") {
         this.dealBaseURLC = this.dealBaseURLC + item.id;
         window.open(this.dealBaseURLC, "_black");
-        this.$router.go(0);
+        this.dealBaseURLC = "https://hkatest.myvipon.com/hot/deal-detail?id=";
       }
     },
   },

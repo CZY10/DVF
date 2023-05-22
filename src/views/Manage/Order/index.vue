@@ -56,8 +56,8 @@
         style="width: 100%"
         @select-all="selectAll"
       >
-      <!-- 订单多选 -->
-        <el-table-column type="selection" :selectable="selectable" >
+        <!-- 订单多选 -->
+        <el-table-column type="selection" :selectable="selectable">
         </el-table-column>
         <el-table-column
           prop="createtime"
@@ -371,7 +371,15 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="text-align: center; margin-top: 20px">
+      <div
+        style="
+          text-align: center;
+          margin-top: 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
         <el-pagination
           background
           @size-change="handleSizeChange"
@@ -383,6 +391,19 @@
           :total="total"
         >
         </el-pagination>
+
+        <div style="display: flex; align-items: center">
+          <span class="pagination-span"
+            >合计：<span style="color: #ff000c; font-weight: 900"
+              >￥00.00</span
+            ></span
+          >
+          <el-button class="pagination-btn" @click="ConsolidatedPayment"
+            ><span class="pagination-btn-span"
+              >合并支付({{ multipleSelection.length }})</span
+            ></el-button
+          >
+        </div>
       </div>
     </div>
     <!--支付尾款-->
@@ -1542,6 +1563,17 @@ export default {
         this.getOrderList();
       }
     },
+    tableData() {
+      //默认勾选上所有的选项
+      this.$nextTick(() => {
+        for (const item of this.tableData) {
+          if (item.status == 1) {
+          } else {
+            this.$refs.multipleTable.toggleRowSelection(item, true);
+          }
+        }
+      });
+    },
   },
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
@@ -1551,19 +1583,27 @@ export default {
     //当选择项发生变化时会触发该事件
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      console.log(this.multipleSelection)
     },
     //当用户手动勾选全选 Checkbox 时触发的事件
-    selectAll(){
-   
-    },
+    selectAll() {},
     // 判断CheckBox 是否可以勾选
-    selectable(row,index){
-      if(row.status == 1){
-        return false
-      }else{
-        return true
+    selectable(row, index) {
+      if (row.status == 1) {
+        return false;
+      } else {
+        return true;
       }
+    },
+    //合并支付
+    ConsolidatedPayment() {
+      const arr = [];
+      this.multipleSelection.forEach((item) => {
+        arr.push(item.id);
+      });
+      const str = arr.join(",");
+      this.orderId = str;
+      console.log(this.orderId);
+      this.handlePaymentOrder();
     },
     //获取拍摄场景列表
     getShootRequireList() {
@@ -3397,5 +3437,39 @@ export default {
   font-weight: NaN;
   text-align: left;
   line-height: 20px;
+}
+</style>
+<style lang="less" scoped>
+.pagination-span {
+  width: 111px;
+  height: 22px;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #999999;
+  line-height: 20px;
+}
+.pagination-btn {
+  width: 140px;
+  height: 32px;
+  background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+  border-radius: 16px;
+  position: relative;
+
+  .pagination-btn-span {
+    width: 79px;
+    height: 20px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 20px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
 }
 </style>

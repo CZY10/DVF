@@ -398,10 +398,16 @@
               >￥00.00</span
             ></span
           >
-          <el-button class="pagination-btn" @click="ConsolidatedPayment"
-            ><span class="pagination-btn-span"
+          <el-button
+            class="pagination-btn"
+            @click="ConsolidatedPayment"
+            v-if="multipleSelection.length != 0"
+            ><span class="pagination-btn-span" ref="btnDom"
               >合并支付({{ multipleSelection.length }})</span
             ></el-button
+          >
+          <el-button class="paginationBtn" v-if="multipleSelection.length == 0"
+            >合并支付</el-button
           >
         </div>
       </div>
@@ -1522,6 +1528,7 @@ export default {
       orderType: "",
       feedback_images_length: 0,
       paymentType: 0,
+      strArr: "",
     };
   },
   created() {
@@ -1583,6 +1590,7 @@ export default {
     //当选择项发生变化时会触发该事件
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      console.log(this.multipleSelection);
     },
     //当用户手动勾选全选 Checkbox 时触发的事件
     selectAll() {},
@@ -1603,7 +1611,7 @@ export default {
       const str = arr.join(",");
       this.orderId = str;
       console.log(this.orderId);
-      this.handlePaymentOrder();
+      this.handlePaymentOrder(0);
     },
     //获取拍摄场景列表
     getShootRequireList() {
@@ -2124,6 +2132,7 @@ export default {
     background-color: #796cf3;
     border-color: #796cf3;
   }
+
   .video_dialog {
     .el-input.is-disabled .el-input__inner,
     .el-textarea.is-disabled .el-textarea__inner {
@@ -2131,36 +2140,45 @@ export default {
     }
   }
 }
+
 .el-step__head.is-process,
 .el-step__title.is-process,
 .el-step__title.is-wait,
 .el-step__title.is-process {
   color: #999999 !important;
 }
+
 .el-step__head.is-wait,
 .el-step__head.is-process {
   color: #cccccc !important;
 }
+
 .el-step.is-vertical .el-step__line {
   width: 1px !important;
 }
+
 .el-step__line {
   background-color: #cccccc !important;
 }
+
 .el-step__head.is-finish .el-step__line {
   background: #02b578 !important;
 }
+
 .el-step__head.is-wait .el-icon-success:before,
 .el-step__head.is-process .el-icon-success:before {
   font-family: "iconfont" !important;
   content: "\e666";
 }
+
 .el-step__icon-inner[class*="el-icon"]:not(.is-status) {
   font-size: 18px !important;
 }
+
 #order {
   .know_btn {
     padding-top: 28px;
+
     button {
       display: block;
       margin: auto;
@@ -2174,16 +2192,20 @@ export default {
       padding: 5px 41px;
     }
   }
+
   .viewDialog .el-dialog {
     width: auto;
   }
+
   .viewImg img {
     display: block;
     width: 100%;
   }
+
   .el-upload-list__item {
     transition: none;
   }
+
   .form_error {
     position: absolute;
     top: 12px;
@@ -2191,9 +2213,11 @@ export default {
     left: -5px;
     color: #f56c6c;
   }
+
   .el-table__body-wrapper .el-table__body {
     margin-bottom: 30px;
   }
+
   .el-upload-list--picture-card .el-upload-list__item .el-icon-close {
     display: block;
     width: 20px;
@@ -2204,15 +2228,18 @@ export default {
     background: #ed4014;
     opacity: 1;
   }
+
   .submit_form .el-upload-list--picture-card .el-upload-list__item {
     position: relative;
     transition: none !important;
     margin-bottom: 0 !important;
   }
+
   .el-upload-list--picture-card .el-upload-list__item-actions span {
     display: inline-block;
     background: none;
   }
+
   .el-upload-list--picture-card
     .el-upload-list__item-actions
     .el-upload-list__item-delete {
@@ -2220,45 +2247,56 @@ export default {
     right: 0;
     top: 0;
   }
+
   .el-upload-list--picture-card .el-upload-list__item-actions .check_preview {
     position: absolute;
     right: 9px;
     bottom: 0;
   }
+
   .flex_center {
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   .el-alert__title {
     font-size: 12px !important;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400 !important;
     color: #666666 !important;
   }
+
   .el-alert__content {
     padding: 0 0 0 20px !important;
   }
+
   .el-form-item--mini .el-form-item__label {
     line-height: 20px !important;
   }
+
   .el-rate__icon {
     font-size: 20px;
   }
+
   .form_item_block {
     padding-top: 10px;
   }
+
   .form_item_block label {
     width: 100% !important;
     margin-bottom: 10px;
   }
+
   .form_item_block .el-form-item__content {
     margin-left: 0 !important;
     float: inherit !important;
   }
+
   .el-form-item--mini .el-form-item__content {
     float: right;
   }
+
   //上传
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
@@ -2268,9 +2306,11 @@ export default {
     overflow: hidden;
     width: 100% !important;
   }
+
   .avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -2278,17 +2318,20 @@ export default {
     line-height: 150px;
     text-align: center;
   }
+
   .avatar {
     width: 100%;
     height: 150px;
     display: block;
   }
+
   .submit_form {
     .el-upload--picture-card {
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
+
       .el-icon-plus {
         &:after {
           content: "点击上传（支持jpg、png，5M以内）";
@@ -2302,45 +2345,55 @@ export default {
         }
       }
     }
+
     .el-upload-list--picture-card .el-upload-list__item {
       width: 100%;
     }
+
     .el-upload-list--picture-card .el-upload-list__item-thumbnail {
       height: 150px;
     }
+
     .description {
       line-height: 20px;
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
       color: #999999;
       padding-top: 10px;
+
       b {
         font-weight: normal;
         color: #ed4014;
       }
+
       span {
         color: #796cf3;
       }
     }
+
     .demo_img {
       height: 180px;
       border: 1px solid #eeeeee;
       position: relative;
+
       img {
         width: 100%;
         height: 100%;
       }
+
       .upload_preview {
         position: absolute;
         cursor: pointer;
         right: 9px;
         bottom: 0;
+
         i {
           color: #333333;
           font-size: 18px;
         }
       }
     }
+
     button {
       width: 140px;
       height: 32px;
@@ -2354,30 +2407,36 @@ export default {
       margin-top: 13px;
     }
   }
+
   /*单选样式*/
   .el-radio__input.is-checked .el-radio__inner {
     border-color: #796cf3;
     background: #796cf3;
   }
+
   /*在线聊天*/
   .chat-message-body {
     height: 350px;
     overflow: auto;
     border-top: 1px solid #eeeeee;
   }
+
   /* 设置滚动条的样式 */
   .chat-message-body::-webkit-scrollbar {
     width: 6px;
   }
+
   /* 滚动槽 */
   .chat-message-body::-webkit-scrollbar-track {
     border-radius: 10px;
   }
+
   /* 滚动条滑块 */
   .chat-message-body::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.1);
   }
+
   .chat-message-body::-webkit-scrollbar-thumb:window-inactive {
     background: #d8d8d8;
   }
@@ -2388,39 +2447,47 @@ export default {
     align-items: center;
     height: 100%;
   }
+
   .message-card {
     margin: 20px 0;
   }
+
   .message-row-left {
     display: flex;
     flex-direction: row;
     overflow: auto;
   }
+
   .message-row-right {
     display: flex;
     flex-direction: row-reverse;
     overflow: auto;
   }
+
   /* 设置滚动条的样式 */
   .message-row-left::-webkit-scrollbar,
   .message-row-right::-webkit-scrollbar {
     height: 6px;
   }
+
   /* 滚动槽 */
   .message-row-left::-webkit-scrollbar-track,
   .message-row-right::-webkit-scrollbar-track {
     border-radius: 10px;
   }
+
   /* 滚动条滑块 */
   .message-row-left::-webkit-scrollbar-thumb,
   .message-row-right::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.1);
   }
+
   .message-row-left::-webkit-scrollbar-thumb:window-inactive,
   .message-row-right::-webkit-scrollbar-thumb:window-inactive {
     background: #d8d8d8;
   }
+
   .message-row-right .message-body {
     /*display: inline;*/
     background: #796cf3;
@@ -2435,6 +2502,7 @@ export default {
     border-bottom-right-radius: 8px;
     white-space: pre-wrap;
   }
+
   .message-row-left .message-body {
     background: #f6f7f9;
     font-size: 14px;
@@ -2453,19 +2521,23 @@ export default {
   .message-row-left > img {
     border-radius: 50%;
   }
+
   .message-row-left .message-content {
     margin-right: 40px;
     align-items: start;
   }
+
   .message-row-right .message-content {
     margin-left: 40px;
     align-items: end;
   }
+
   .message-content {
     margin: 5px 10px 5px 10px;
     display: flex;
     flex-direction: column;
   }
+
   .message-content .name {
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -2473,11 +2545,13 @@ export default {
     color: #333333;
     line-height: 24px;
   }
+
   .message-body {
     padding: 6px 14px;
     border-radius: 3px;
     margin-top: 10px;
   }
+
   .message-time {
     margin: 0 10px;
     font-size: 12px;
@@ -2486,34 +2560,42 @@ export default {
     color: #999999;
     line-height: 24px;
   }
+
   .footer-btn {
     float: right;
     margin-bottom: 5px;
   }
+
   .spin-icon-load {
     animation: ani-spin 1s linear infinite;
   }
+
   @keyframes ani-spin {
     form {
       transform: rotate(0deg);
     }
+
     50% {
       transform: rotate(180deg);
     }
+
     to {
       transform: rotate(360deg);
     }
   }
+
   .feedback_images_list {
     display: flex;
     position: relative;
   }
+
   .feedback_images_list > div {
     display: flex;
     justify-content: end;
     padding: 8px;
     margin-top: 10px;
   }
+
   .feedback_images_list .item_img {
     width: 96px;
     height: 96px;
@@ -2522,9 +2604,11 @@ export default {
     position: relative;
     overflow: hidden;
   }
+
   .message-row-right .feedback_images_list {
     justify-content: end;
   }
+
   .message-row-right .feedback_images_list > div {
     background: #796cf3;
     border-top-right-radius: 0;
@@ -2532,6 +2616,7 @@ export default {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
   }
+
   .message-row-left .feedback_images_list > div {
     background: rgba(246, 247, 249, 1);
     border-top-right-radius: 8px;
@@ -2539,12 +2624,15 @@ export default {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
   }
+
   .feedback_images_list .item_img .demo-upload-list-cover {
     display: none;
   }
+
   .feedback_images_list .item_img:hover .demo-upload-list-cover {
     display: block;
   }
+
   .feedback_images_list .demo-upload-list-cover {
     line-height: 90px;
     text-align: center;
@@ -2555,14 +2643,17 @@ export default {
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     cursor: pointer;
+
     i {
       color: #ffffff;
     }
   }
+
   .feedback_modal textarea.ivu-input {
     height: 100px;
     border-radius: 4px;
   }
+
   .feedback_modal .title {
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -2570,6 +2661,7 @@ export default {
     line-height: 20px;
     margin: 20px 0 10px 0;
   }
+
   .feedback_modal .el-dialog__title:after {
     display: block;
     content: "请在下方留言反馈，系统会及时通知达人经纪人查看";
@@ -2578,6 +2670,7 @@ export default {
     font-weight: normal;
     text-align: center;
   }
+
   .feedback_modal .title span {
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -2585,18 +2678,22 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     line-height: 17px;
   }
+
   .chat_upload .el-upload--picture-card {
     width: 62px;
     height: 60px;
     line-height: 60px;
   }
+
   .chat_upload .el-upload-list--picture-card .el-upload-list__item {
     width: 62px;
     height: 60px;
   }
+
   .chat_upload i {
     font-size: 14px;
   }
+
   .chat_upload
     .el-upload-list--picture-card
     .el-upload-list__item-actions
@@ -2604,6 +2701,7 @@ export default {
     top: -10px;
     right: 2px;
   }
+
   .chat_upload
     .el-upload-list--picture-card
     .el-upload-list__item-actions
@@ -2612,12 +2710,14 @@ export default {
     right: 2px;
     bottom: -6px;
   }
+
   /*支付尾款弹窗*/
   .payment_dialog,
   .pay_deposit_dialog {
     .el-tabs--border-card > .el-tabs__content {
       padding: 34px 15px 21px 15px;
     }
+
     .qrcode {
       position: relative;
       padding: 5px;
@@ -2628,6 +2728,7 @@ export default {
       height: 140px;
       margin: auto;
       border: 1px solid #eeeeee;
+
       .top_left,
       .top_right,
       .bottom_left,
@@ -2636,24 +2737,28 @@ export default {
         width: 4px;
         height: 4px;
       }
+
       .top_left {
         border-top: 1px solid #333333;
         left: -1px;
         top: -1px;
         border-left: 1px solid #333333;
       }
+
       .top_right {
         border-top: 1px solid #333333;
         right: -1px;
         top: -1px;
         border-right: 1px solid #333333;
       }
+
       .bottom_left {
         border-bottom: 1px solid #333333;
         left: -1px;
         bottom: -1px;
         border-left: 1px solid #333333;
       }
+
       .bottom_right {
         border-bottom: 1px solid #333333;
         right: -1px;
@@ -2661,20 +2766,25 @@ export default {
         border-right: 1px solid #333333;
       }
     }
+
     .el-tabs--border-card {
       border: 1px solid #eeeeee;
       margin-top: 15px;
     }
+
     .el-tabs--border-card > .el-tabs__header .el-tabs__item + .el-tabs__item {
       margin-left: 0;
     }
+
     .el-tabs--border-card > .el-tabs__header .el-tabs__item:first-child {
       border-right: 1px solid #eeeeee !important;
       margin-left: 0;
     }
+
     .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
       margin-left: 0;
     }
+
     .el-tabs--border-card > .el-tabs__header .el-tabs__item {
       color: #999999;
       font-family: PingFangSC-Semibold, PingFang SC;
@@ -2683,12 +2793,14 @@ export default {
       transition: none;
       height: 42px;
     }
+
     .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
     .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
       font-weight: 600;
       color: #333333;
       background: #f6f5ff;
       border-bottom: 2px solid #796cf3;
+
       i {
         font-weight: normal;
       }
@@ -2701,34 +2813,42 @@ export default {
       border-bottom: 1px solid #eeeeee;
       background: #ffffff;
     }
+
     .el-tabs--border-card {
       box-shadow: none;
       border-radius: 10px;
     }
+
     .el-tabs__nav {
       width: 100%;
       //padding-bottom: 1px;
     }
+
     .el-tabs__item {
       width: 50%;
       text-align: center;
     }
   }
+
   /*支付定金弹窗*/
   .pay_deposit_dialog {
     .el-alert {
       padding: 7px 0;
+
       .el-alert__description {
         margin: 0;
       }
     }
+
     .el-alert__icon {
       color: #796cf3;
     }
+
     .el-alert--info.is-light {
       background: #f4f2ff;
       color: #666666;
     }
+
     .el-alert__title {
       font-size: 12px !important;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -2741,6 +2861,7 @@ export default {
 .hide_upload .el-upload--picture-card {
   display: none !important;
 }
+
 /*单选框*/
 .el-radio--small.is-bordered {
   height: 191px !important;
@@ -2748,6 +2869,7 @@ export default {
   width: 208px;
   border-radius: 10px !important;
 }
+
 .el-radio--small.is-bordered .el-radio__label {
   font-size: 14px !important;
   font-family: PingFangSC-Semibold, PingFang SC;
@@ -2755,9 +2877,11 @@ export default {
   color: #333333;
   line-height: 20px;
 }
+
 .el-radio__label ul {
   padding-top: 10px;
 }
+
 .el-radio__label ul li {
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -2767,6 +2891,7 @@ export default {
   padding: 4px 0 4px 12px;
   position: relative;
 }
+
 .el-radio__label ul li:before {
   display: inline-block;
   content: "";
@@ -2779,24 +2904,30 @@ export default {
   top: 50%;
   margin-top: -2px;
 }
+
 .el-radio__input.is-checked + .el-radio__label {
   color: #333333 !important;
 }
+
 .radio_style2 .el-radio__input.is-checked .el-radio__inner {
   border: 1px solid #00d9ad !important;
   background: #00d9ad !important;
 }
+
 .radio_style2.is-bordered.is-checked {
   border: 2px solid #00d9ad !important;
 }
+
 .radio_style1 .el-radio__input.is-checked .el-radio__inner {
   border: 1px solid rgba(121, 108, 243, 1) !important;
   background: rgba(121, 108, 243, 1) !important;
   background-image: url("../../../assets/images/radio_style1_bg.png");
 }
+
 .radio_style1.is-bordered.is-checked {
   border: 2px solid rgba(121, 108, 243, 1) !important;
 }
+
 /*步骤条样式*/
 .el-step.is-vertical .el-step__title {
   font-size: 14px;
@@ -2804,10 +2935,12 @@ export default {
   padding-bottom: 6px !important;
   font-family: PingFangSC-Semibold, PingFang SC;
 }
+
 .el-step__head.is-finish {
   color: #02b578 !important;
   border-color: #02b578 !important;
 }
+
 .el-step__title.is-finish {
   font-size: 14px;
   font-family: PingFangSC-Semibold, PingFang SC;
@@ -2815,24 +2948,29 @@ export default {
   color: #333333 !important;
   line-height: 20px;
 }
+
 .el-step__description {
   color: #999999 !important;
 }
+
 .el-step__description.is-finish {
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   line-height: 17px;
 }
+
 .el-step.is-vertical .el-step__main {
   margin-bottom: 15px;
 }
+
 /*分页样式*/
 .el-pagination.is-background .el-pager li:not(.disabled).active {
   background: #ffffff !important;
   color: #776cf3 !important;
   border: 1px solid #776cf3;
 }
+
 .el-pagination.is-background .btn-next,
 .el-pagination.is-background .btn-prev,
 .el-pagination.is-background .el-pager li {
@@ -2841,9 +2979,11 @@ export default {
   font-weight: normal;
   color: #999999 !important;
 }
+
 .el-table .el-table__cell.gutter {
   background: #f6f6f6;
 }
+
 .el-badge__content.is-dot {
   width: 6px !important;
   height: 6px !important;
@@ -2854,30 +2994,36 @@ export default {
 .el-table__header-wrapper {
   border-radius: 4px;
   background: #f6f6f6;
+
   table {
     padding: 0 30px;
     width: auto !important;
   }
 }
+
 .el-table th.el-table__cell.is-leaf {
   border-bottom: none !important;
   padding: 6px 0;
 }
+
 .el-table__body-wrapper {
   border: 1px solid #eeeeee;
   padding: 0 30px;
   width: auto !important;
   border-radius: 4px !important;
   margin-top: 10px;
+
   .el-table__body {
     width: auto !important;
   }
 }
+
 .el-table th.el-table__cell > .cell,
 .el-table td.el-table__cell div {
   font-family: PingFangSC-Regular, PingFang SC;
   color: #333333;
 }
+
 .order_table {
   .cell {
     text-align: center;
@@ -2890,6 +3036,7 @@ export default {
     display: flex;
     align-items: center;
     height: 32px;
+
     .label_style {
       width: 48px;
       text-align: left;
@@ -2897,6 +3044,7 @@ export default {
       padding-top: 4px;
     }
   }
+
   .upload_btn_box {
     .el-button.is-disabled {
       color: #c0c4cc !important;
@@ -2906,26 +3054,32 @@ export default {
       border-color: #ebeef5 !important;
     }
   }
+
   background: #f5f7f9;
   padding: 20px 30px 0 30px;
+
   .reset_btn {
     margin-left: 30px;
     color: #333333;
     font-size: 14px;
+
     i {
       color: #796cf3;
       font-size: 16px;
     }
   }
+
   .content {
     background: #ffffff;
     border-radius: 0px 4px 4px 0px;
     border: 1px solid #eeeeee;
     padding: 20px 30px;
+
     .form_search {
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       .title {
         font-size: 14px;
         font-family: PingFangSC-Semibold, PingFang SC;
@@ -2933,20 +3087,24 @@ export default {
         color: #333333;
       }
     }
+
     .order_table {
       i {
         color: #796cf3;
         font-size: 10px;
       }
+
       .deatail_btn {
         color: #796cf3;
         font-size: 12px;
         padding: 3px 5px;
       }
+
       .avatar_box {
         display: flex;
         align-items: center;
         justify-content: center;
+
         > p:first-child {
           width: 40px;
           height: 40px;
@@ -2955,15 +3113,18 @@ export default {
           line-height: 40px;
           margin-right: 10px;
           flex-shrink: 0;
+
           img {
             width: 100%;
           }
         }
       }
+
       .status_style {
         display: flex;
         align-items: center;
         justify-content: center;
+
         i {
           display: inline-block;
           width: 4px;
@@ -2972,17 +3133,21 @@ export default {
           margin-right: 6px;
         }
       }
+
       .operation_btn {
         width: 82px;
         border-radius: 16px !important;
       }
+
       .payment_btn_style {
         color: #796cf3;
         border: 1px solid #796cf3;
+
         &:hover {
           background: none;
         }
       }
+
       .normal_style {
         width: 82px;
         color: #333333;
@@ -2990,6 +3155,7 @@ export default {
       }
     }
   }
+
   .payment_content {
     h4 {
       font-size: 22px;
@@ -3000,6 +3166,7 @@ export default {
       text-align: center;
       padding: 20px 0 6px 0;
     }
+
     p {
       font-size: 14px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -3008,10 +3175,12 @@ export default {
       line-height: 20px;
       text-align: center;
       padding-bottom: 10px;
+
       span {
         color: #333333;
       }
     }
+
     ul {
       border-radius: 10px;
       border: 2px solid #f4f2ff;
@@ -3019,16 +3188,19 @@ export default {
       justify-content: space-between;
       padding: 20px 30px;
       margin: 15px 35px 16px 35px;
+
       li {
         div {
           width: 128px;
           height: 128px;
           background: #ffffff;
           border: 1px solid #eeeeee;
+
           img {
             width: 100%;
           }
         }
+
         p {
           font-size: 14px;
           font-family: PingFangSC-Semibold, PingFang SC;
@@ -3041,6 +3213,7 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
+
           i {
             font-size: 18px;
             margin-right: 6px;
@@ -3049,6 +3222,7 @@ export default {
       }
     }
   }
+
   .return_deposit_dialog {
     p {
       font-size: 14px;
@@ -3058,28 +3232,34 @@ export default {
       line-height: 24px;
       text-align: center;
       padding-bottom: 4px;
+
       b {
         color: #333333;
       }
     }
+
     .button_box {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 24px;
+
       button {
         padding: 8px 45px;
         border-radius: 16px;
         font-size: 14px;
       }
+
       .cancel_style {
         border: 1px solid #eeeeee;
         font-family: PingFangSC-Regular, PingFang SC;
         color: #999999;
       }
+
       .cancel_style:hover {
         background: none;
       }
+
       .confirm_style {
         border: none;
         background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
@@ -3088,6 +3268,7 @@ export default {
       }
     }
   }
+
   .to_comment_dialog {
     .description {
       font-size: 12px;
@@ -3098,12 +3279,14 @@ export default {
       text-align: center;
       margin-bottom: 34px;
     }
+
     .comment_form {
       .el-form-item {
         margin-bottom: 14px;
       }
     }
   }
+
   .video_dialog {
     .form_item_title {
       height: 17px;
@@ -3114,6 +3297,7 @@ export default {
       margin-top: 5px;
       margin-bottom: 6px;
     }
+
     .item_check_style {
       .el-checkbox-group,
       .el-radio-group {
@@ -3121,6 +3305,7 @@ export default {
         display: flex;
         justify-content: space-between;
       }
+
       .el-checkbox,
       .el-radio {
         color: #666666;
@@ -3133,32 +3318,39 @@ export default {
     .el-form-item--small.el-form-item {
       margin-bottom: 14px !important;
     }
+
     .video_ruleForm {
       height: 565px;
       padding-top: 10px;
       padding-right: 10px;
       margin: 0 12px;
       overflow: auto;
+
       /* 设置滚动条的样式 */
       &::-webkit-scrollbar {
         width: 6px;
       }
+
       /* 滚动槽 */
       &::-webkit-scrollbar-track {
         border-radius: 10px;
       }
+
       /* 滚动条滑块 */
       &::-webkit-scrollbar-thumb {
         border-radius: 10px;
         background: rgba(0, 0, 0, 0.1);
       }
+
       &::-webkit-scrollbar-thumb:window-inactive {
         background: #d8d8d8;
       }
+
       .radio_style1 {
         background: rgba(131, 96, 255, 0.04);
         border: 1px solid rgba(131, 96, 255, 1);
         position: relative;
+
         &:before {
           content: url("../../../assets/images/radio_style1_bg.png");
           width: 60px;
@@ -3168,6 +3360,7 @@ export default {
           right: 12px;
           bottom: 12px;
         }
+
         .recommend:before {
           position: absolute;
           content: "";
@@ -3179,6 +3372,7 @@ export default {
           margin-top: -2px;
           left: 8px;
         }
+
         .recommend {
           position: absolute;
           text-align: center;
@@ -3196,10 +3390,12 @@ export default {
           padding-left: 8px;
         }
       }
+
       .radio_style2 {
         position: relative;
         background: rgba(0, 217, 173, 0.04);
         border: 1px solid rgba(0, 217, 173, 1);
+
         &:before {
           width: 60px;
           height: 60px;
@@ -3210,10 +3406,12 @@ export default {
           bottom: 12px;
         }
       }
+
       .candidate_list {
         .list-group-item {
           position: relative;
           float: left;
+
           .list-group-index {
             position: absolute;
             top: 6px;
@@ -3225,22 +3423,26 @@ export default {
             color: #ffffff;
             line-height: 14px;
           }
+
           &:first-child {
             .list-group-index {
               background: #ff2c4c;
             }
           }
+
           &:nth-child(2) {
             .list-group-index {
               background: #ff9c17;
             }
           }
+
           &:nth-child(3) {
             .list-group-index {
               background: #796cf3;
             }
           }
         }
+
         li {
           width: 77px;
           background: #ffffff;
@@ -3250,18 +3452,21 @@ export default {
           padding: 12px 5px;
           float: left;
           margin-right: 6px;
+
           div {
             width: 44px;
             height: 44px;
             border-radius: 26px;
             margin: auto;
             overflow: hidden;
+
             img {
               width: 100%;
               object-fit: cover;
               height: 100%;
             }
           }
+
           p {
             font-size: 12px;
             font-family: PingFangSC-Regular, PingFang SC;
@@ -3271,6 +3476,7 @@ export default {
             text-align: center;
             margin: 4px 0;
           }
+
           span {
             display: block;
             font-size: 12px;
@@ -3280,6 +3486,7 @@ export default {
             line-height: 17px;
             text-align: center;
           }
+
           &:last-child li {
             margin-right: 0;
           }
@@ -3287,15 +3494,19 @@ export default {
       }
     }
   }
+
   .submit_dialog {
     .el-form-item--small.el-form-item {
       margin-bottom: 20px !important;
     }
+
     .submit_form {
       padding: 10px 16px 0 16px;
     }
+
     .button_box {
       padding-top: 7px;
+
       button {
         display: block;
         margin: auto;
@@ -3310,6 +3521,7 @@ export default {
       }
     }
   }
+
   .pay_deposit_dialog {
     h5 {
       font-size: 22px;
@@ -3320,6 +3532,7 @@ export default {
       text-align: center;
       margin: 18px 0 1px 0;
     }
+
     p {
       font-size: 14px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -3328,10 +3541,12 @@ export default {
       line-height: 20px;
       text-align: center;
       padding: 5px 0;
+
       span {
         color: rgba(51, 51, 51, 1);
       }
     }
+
     ul {
       border-radius: 10px;
       border: 2px solid #f4f2ff;
@@ -3339,16 +3554,19 @@ export default {
       justify-content: space-between;
       padding: 20px 30px;
       margin: 15px 35px 16px 35px;
+
       li {
         div {
           width: 128px;
           height: 128px;
           background: #ffffff;
           border: 1px solid #eeeeee;
+
           img {
             width: 100%;
           }
         }
+
         p {
           font-size: 14px;
           font-family: PingFangSC-Semibold, PingFang SC;
@@ -3360,6 +3578,7 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
+
           i {
             font-size: 18px;
             margin-right: 6px;
@@ -3449,6 +3668,7 @@ export default {
   color: #999999;
   line-height: 20px;
 }
+
 .pagination-btn {
   width: 140px;
   height: 32px;
@@ -3471,5 +3691,16 @@ export default {
     right: 0;
     margin: auto;
   }
+}
+
+.paginationBtn {
+  width: 140px;
+  height: 32px;
+  background: linear-gradient(233deg, #eaadf0 0%, #ada9e4 100%);
+  border-radius: 16px;
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 8px;
 }
 </style>

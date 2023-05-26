@@ -49,9 +49,7 @@ export default {
           id: this.$route.query.id || "",
         })
           .then((res) => {
-            if (res.data.jump) {
-              // window.open(res.data.jump, "_blank");
-            }
+            console.log(res);
           })
           .catch((res) => {
             console.log(res);

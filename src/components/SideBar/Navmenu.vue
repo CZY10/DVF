@@ -539,50 +539,38 @@ export default {
     },
     //   vipon自助发帖跳转
     goVipon() {
-      if (window.localStorage.token) {
+      this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
+      window.open(this.ViponSrc, "_black");
+      if (process.env.NODE_ENV == "production") {
+        this.ViponSrc = "https://seller.vipona.com/promotion/index";
+        window.open(this.ViponSrc, "_black");
+      } else if (process.env.NODE_ENV == "test") {
         this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
         window.open(this.ViponSrc, "_black");
-        if (process.env.NODE_ENV == "production") {
-          this.ViponSrc = "https://seller.vipona.com/promotion/index";
-          window.open(this.ViponSrc, "_black");
-        } else if (process.env.NODE_ENV == "test") {
-          this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
-          window.open(this.ViponSrc, "_black");
-        }
-      } else {
-        this.$router.push("/login");
       }
     },
     // Deal跳转
     goDeak() {
-      if (window.localStorage.token) {
+      this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
+      window.open(this.DealSrc, "_black");
+      if (process.env.NODE_ENV == "production") {
+        this.DealSrc = "https://seller.vipona.com/hot/deal";
+        window.open(this.DealSrc, "_black");
+      } else if (process.env.NODE_ENV == "test") {
         this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
         window.open(this.DealSrc, "_black");
-        if (process.env.NODE_ENV == "production") {
-          this.DealSrc = "https://seller.vipona.com/hot/deal";
-          window.open(this.DealSrc, "_black");
-        } else if (process.env.NODE_ENV == "test") {
-          this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
-          window.open(this.DealSrc, "_black");
-        }
-      } else {
-        this.$router.push("/login");
       }
     },
     //Fb跳转
     goFb() {
-      if (window.localStorage.token) {
+      this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
+      window.open(this.FbSrc, "_black");
+      if (process.env.NODE_ENV == "production") {
+        this.FbSrc = "https://seller.vipona.com/hot/fb";
+        window.open(this.FbSrc, "_black");
+      } else if (process.env.NODE_ENV == "test") {
         this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
         window.open(this.FbSrc, "_black");
-        if (process.env.NODE_ENV == "production") {
-          this.FbSrc = "https://seller.vipona.com/hot/fb";
-          window.open(this.FbSrc, "_black");
-        } else if (process.env.NODE_ENV == "test") {
-          this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
-          window.open(this.FbSrc, "_black");
-        }
-      } else {
-        this.$router.push("/login");
       }
     },
   },

@@ -22,7 +22,12 @@ export default {
       source: "",
     };
   },
-  mounted() {},
+  mounted() {
+    // if (localStorage.getItem("src")) {
+    //   window.open(localStorage.getItem("src"), "_black");
+    //   localStorage.removeItem("src");
+    // }
+  },
   created() {
     this.source =
       this.$route.query.source || localStorage.getItem("source") || "";
@@ -48,9 +53,7 @@ export default {
           source: this.source,
           id: this.$route.query.id || "",
         })
-          .then((res) => {
-            console.log(res);
-          })
+          .then((res) => {})
           .catch((res) => {
             console.log(res);
           });

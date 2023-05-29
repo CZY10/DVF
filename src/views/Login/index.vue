@@ -486,6 +486,11 @@ export default {
               res.data.jump
                 ? (window.location.href = res.data.jump)
                 : this.$router.push(this.fromPath);
+
+              if (window.localStorage.getItem("src")) {
+                window.location.href = window.localStorage.getItem("src");
+                localStorage.removeItem("src");
+              }
             }
           })
           .catch((err) => {
@@ -560,6 +565,10 @@ export default {
                 res.data.jump
                   ? (window.location.href = res.data.jump)
                   : this.$router.push(this.fromPath);
+                if (window.localStorage.getItem("src")) {
+                  window.location.href = window.localStorage.getItem("src");
+                  localStorage.removeItem("src");
+                }
               }
             })
             .catch((err) => {

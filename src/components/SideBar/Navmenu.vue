@@ -473,19 +473,19 @@ export default {
           localStorage.clear("serviceInfoList");
           switch (this.$route.name) {
             case "order":
-              window.location.href = "/";
+              window.location.href = "/login";
               break;
             case "payment":
-              window.location.href = "/";
+              window.location.href = "/login";
               break;
             case "personal":
-              window.location.href = "/";
+              window.location.href = "/login";
               break;
             case "chatgpt":
-              window.location.href = "/";
+              window.location.href = "/login";
               break;
             default:
-              window.location.href = this.$route.fullPath;
+              window.location.href = "/login";
           }
           this.reload();
         })

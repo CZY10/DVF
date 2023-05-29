@@ -255,11 +255,9 @@
           </a>
         </div>
         <div class="flex_between button_box">
-          <a
-            href="https://seller.vipona.com/account/login"
-            target="_blank"
-            style="color: #ffffff"
-            ><el-button round>查看全部</el-button></a
+          <!-- href="https://seller.vipona.com/account/login" -->
+          <a target="_blank" style="color: #ffffff"
+            ><el-button round @click="goFB">查看全部</el-button></a
           >
         </div>
       </div>
@@ -319,11 +317,8 @@
           </a>
         </div>
         <div class="flex_between button_box">
-          <a
-            target="_blank"
-            href="https://seller.vipona.com/account/login"
-            style="color: #ffffff"
-            ><el-button round>查看全部</el-button></a
+          <a target="_blank" style="color: #ffffff"
+            ><el-button round @click="goDeal">查看全部</el-button></a
           >
         </div>
       </div>
@@ -390,6 +385,20 @@ export default {
     }
   },
   methods: {
+    goFB() {
+      if (window.localStorage.getItem("token")) {
+        window.open("https://hkatest.myvipon.com/hot/fb", "_blank");
+      } else {
+        window.open("https://seller.vipona.com/account/login", "_blank");
+      }
+    },
+    goDeal() {
+      if (window.localStorage.getItem("token")) {
+        window.open("https://hkatest.myvipon.com/hot/deal", "_blank");
+      } else {
+        window.open("https://seller.vipona.com/account/login", "_blank");
+      }
+    },
     handleConsult(event) {
       event.preventDefault();
       this.isShowDialog = true;

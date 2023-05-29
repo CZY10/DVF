@@ -550,21 +550,6 @@ export default {
           window.open(this.ViponSrc, "_black");
         }
       } else {
-        window.localStorage.setItem(
-          "src",
-          "https://hkatest.myvipon.com/promotion/index"
-        );
-        if (process.env.NODE_ENV == "production") {
-          window.localStorage.setItem(
-            "src",
-            "https://seller.vipona.com/promotion/index"
-          );
-        } else if (process.env.NODE_ENV == "test") {
-          window.localStorage.setItem(
-            "src",
-            "https://hkatest.myvipon.com/promotion/index"
-          );
-        }
         this.$router.push("/login");
       }
     },
@@ -581,21 +566,6 @@ export default {
           window.open(this.DealSrc, "_black");
         }
       } else {
-        window.localStorage.setItem(
-          "src",
-          "https://hkatest.myvipon.com/hot/deal"
-        );
-        if (process.env.NODE_ENV == "production") {
-          window.localStorage.setItem(
-            "src",
-            "https://seller.vipona.com/hot/deal"
-          );
-        } else if (process.env.NODE_ENV == "test") {
-          window.localStorage.setItem(
-            "src",
-            "https://hkatest.myvipon.com/hot/deal"
-          );
-        }
         this.$router.push("/login");
       }
     },
@@ -612,21 +582,6 @@ export default {
           window.open(this.FbSrc, "_black");
         }
       } else {
-        window.localStorage.setItem(
-          "src",
-          "https://hkatest.myvipon.com/hot/fb"
-        );
-        if (process.env.NODE_ENV == "production") {
-          window.localStorage.setItem(
-            "src",
-            "https://seller.vipona.com/hot/fb"
-          );
-        } else if (process.env.NODE_ENV == "test") {
-          window.localStorage.setItem(
-            "src",
-            "https://hkatest.myvipon.com/hot/fb"
-          );
-        }
         this.$router.push("/login");
       }
     },

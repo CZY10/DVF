@@ -53,7 +53,11 @@ export default {
           source: this.source,
           id: this.$route.query.id || "",
         })
-          .then((res) => {})
+          .then((res) => {
+            if (res.data.jump) {
+              window.location.href = res.data.jump;
+            }
+          })
           .catch((res) => {
             console.log(res);
           });

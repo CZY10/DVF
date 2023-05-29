@@ -168,7 +168,7 @@
             <div class="button_box">
               <a
                 target="_blank"
-                href="https://seller.vipona.com/account/login"
+                href="https://hkatest.myvipon.com/promotion/index?token=4686d164-3051-48f2-a477-c1ee6de6a402&id="
                 style="color: #ffffff"
                 ><el-button class="btn_type">发布促销</el-button></a
               >

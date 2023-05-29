@@ -54,7 +54,8 @@ export default {
           id: this.$route.query.id || "",
         })
           .then((res) => {
-            if (res.data.jump) {
+            if (!localStorage.getItem("jumpsrc")) {
+              localStorage.setItem("jumpsrc", res.data.jump);
               window.location.href = res.data.jump;
             }
           })

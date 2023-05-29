@@ -374,7 +374,9 @@ export default {
       configData: {},
     };
   },
-  created() {},
+  created() {
+    console.log(this.$route.query.id);
+  },
   mounted() {
     this.handlerGetQrcode();
     this.verifyToken();
@@ -444,6 +446,7 @@ export default {
       form.append("wechat_token", _this.wechatToken);
       form.append("source", _this.source);
       form.append("action", _this.action);
+      form.append("id", id);
       _this.checkQrCode = setInterval(() => {
         checkQr(form)
           .then((res) => {
@@ -469,6 +472,7 @@ export default {
               //清除定时脚本
               clearInterval(_this.checkQrCode);
             } else if (res.code === 1 && res.data.status === 2) {
+              let hrefLink = "https://www.viponm.com";
               //登录成功,即将跳转
               clearInterval(_this.checkQrCode);
               localStorage.setItem(
@@ -482,8 +486,20 @@ export default {
               this.setUserInfo(JSON.stringify(res.data.userinfo));
               this.setToken(res.data.userinfo.token);
               this.setAvatar(res.data.userinfo.avatar);
+
+              if (process.env.NODE_ENV == "production") {
+                hrefLink = `https://www.viponm.com`;
+              } else if (process.env.NODE_ENV == "development") {
+                hrefLink = `http://testai.blhltd.com`;
+              } else {
+                hrefLink = `http://localhost:8088`;
+              }
+
+              window.location.href = hrefLink;
+              localStorage.removeItem("source");
+              localStorage.removeItem("active");
               res.data.jump
-                ? (window.location.href = res.data.jump)
+                ? window.open(res.data.jump, "_blank")
                 : this.$router.push(this.fromPath);
 
               if (window.localStorage.getItem("src")) {
@@ -563,6 +579,7 @@ export default {
                 res.data.jump
                   ? (window.location.href = res.data.jump)
                   : this.$router.push(this.fromPath);
+
                 if (window.localStorage.getItem("src")) {
                   window.location.href = window.localStorage.getItem("src");
                   localStorage.removeItem("src");

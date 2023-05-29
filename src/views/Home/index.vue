@@ -348,6 +348,7 @@
 import { influenceData, fbData, dealData, getConfig } from "@/api";
 import Footer from "@/components/Footer";
 import ConsultDialog from "@/components/ConsultDialog";
+import { log } from "video.js";
 export default {
   name: "index",
   components: {
@@ -453,32 +454,51 @@ export default {
     },
     //fb详情页
     godetailsFb(item) {
-      this.fbbaseURLC = this.fbbaseURLC + item.id;
-      window.open(this.fbbaseURLC, "_black");
-      this.fbbaseURLC = "https://hkatest.myvipon.com/hot/fb-detail?id=";
+      let loginHref = `http://testai.blhltd.com`;
       if (process.env.NODE_ENV == "production") {
-        this.fbbaseURLX = this.fbbaseURLX + item.id;
-        window.open(this.fbbaseURLX, "_blank");
-        this.fbbaseURLX = "https://seller.vipona.com/hot/fb-detail?id=";
-      } else if (process.env.NODE_ENV == "test") {
-        this.fbbaseURLC = this.fbbaseURLC + item.id;
-        window.open(this.fbbaseURLC, "_black");
-        this.fbbaseURLC = "https://hkatest.myvipon.com/hot/fb-detail?id=";
+        this.fbbaseURLC = `https://seller.vipona.com`;
+        loginHref = `https://www.viponm.com`;
+      } else if (process.env.NODE_ENV == "development") {
+        this.fbbaseURLC = `https://hkatest.myvipon.com`;
+        loginHref = `http://testai.blhltd.com`;
+      } else {
+        this.fbbaseURLC = `https://hkatest.myvipon.com`;
+        loginHref = `http://localhost:8088`;
+      }
+
+      if (this.token) {
+        window.open(this.fbbaseURLC + `/hot/fb-detail?id=${item.id}`, "_black");
+        this.fbbaseURLC = `${this.fbbaseURLC} + /hot/fb-detail?id=`;
+      } else {
+        window.location.href =
+          loginHref +
+          `/login?source=vipon_deal&action=hot/fb-detail&id=${item.id}`;
       }
     },
     //Deal详情页
     godetailsDeal(item) {
-      this.dealBaseURLC = this.dealBaseURLC + item.id;
-      window.open(this.dealBaseURLC, "_black");
-      this.dealBaseURLC = "https://hkatest.myvipon.com/hot/deal-detail?id=";
+      let loginHref = `http://testai.blhltd.com`;
       if (process.env.NODE_ENV == "production") {
-        this.dealBaseURLX = this.dealBaseURLX + item.id;
-        window.open(this.dealBaseURLX, "_blank");
-        this.dealBaseURLX = `https://seller.vipona.com/hot/deal-detail?id=`;
-      } else if (process.env.NODE_ENV == "test") {
-        this.dealBaseURLC = this.dealBaseURLC + item.id;
-        window.open(this.dealBaseURLC, "_black");
-        this.dealBaseURLC = "https://hkatest.myvipon.com/hot/deal-detail?id=";
+        this.fbbaseURLC = `https://seller.vipona.com`;
+        loginHref = `https://www.viponm.com`;
+      } else if (process.env.NODE_ENV == "development") {
+        this.fbbaseURLC = `https://hkatest.myvipon.com`;
+        loginHref = `http://testai.blhltd.com`;
+      } else {
+        this.fbbaseURLC = `https://hkatest.myvipon.com`;
+        loginHref = `http://localhost:8088`;
+      }
+
+      if (this.token) {
+        window.open(
+          this.fbbaseURLC + `/hot/deal-detail?id=${item.id}`,
+          "_black"
+        );
+        this.fbbaseURLC = `${this.fbbaseURLC} + /hot/deal-detail?id=`;
+      } else {
+        window.location.href =
+          loginHref +
+          `/login?source=vipon_deal&action=hot/deal-detail&id=${item.id}`;
       }
     },
   },

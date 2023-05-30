@@ -1574,7 +1574,12 @@ export default {
       //默认勾选上所有的选项
       this.$nextTick(() => {
         for (const item of this.tableData) {
-          if (item.status == 1) {
+          if (
+            item.status == 2 ||
+            item.status == 3 ||
+            item.status == 0 ||
+            item.status == 4
+          ) {
           } else {
             this.$refs.multipleTable.toggleRowSelection(item, true);
           }
@@ -1596,7 +1601,12 @@ export default {
     selectAll() {},
     // 判断CheckBox 是否可以勾选
     selectable(row, index) {
-      if (row.status == 1) {
+      if (
+        row.status == 2 ||
+        row.status == 3 ||
+        row.status == 0 ||
+        row.status == 4
+      ) {
         return false;
       } else {
         return true;

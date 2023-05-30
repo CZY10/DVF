@@ -555,9 +555,11 @@ export default {
             mobile: this.ruleForm.phone,
             captcha: this.ruleForm.verificationCode,
             action: this.action,
+            id: this.$route.query.id || "",
           })
             .then((res) => {
               if (res.code === 1) {
+                let hrefLink = "https://www.viponm.com";
                 if (res.data.type == "register") {
                   this.$message.success(res.msg);
                 }
@@ -576,8 +578,19 @@ export default {
                 this.setUserInfo(JSON.stringify(res.data.userinfo));
                 this.setToken(res.data.userinfo.token);
                 this.setAvatar(res.data.userinfo.avatar);
+
+                if (process.env.NODE_ENV == "production") {
+                  hrefLink = `https://www.viponm.com`;
+                } else if (process.env.NODE_ENV == "development") {
+                  hrefLink = `http://testai.blhltd.com`;
+                } else {
+                  hrefLink = `http://localhost:8088`;
+                }
+                window.location.href = hrefLink;
+                localStorage.removeItem("source");
+                localStorage.removeItem("active");
                 res.data.jump
-                  ? (window.location.href = res.data.jump)
+                  ? window.open(res.data.jump, "_blank")
                   : this.$router.push(this.fromPath);
 
                 if (window.localStorage.getItem("src")) {

@@ -545,7 +545,7 @@ export default {
         if (process.env.NODE_ENV == "production") {
           this.ViponSrc = "https://seller.vipona.com/promotion/index";
           window.open(this.ViponSrc, "_black");
-        } else if (process.env.NODE_ENV == "test") {
+        } else if (process.env.NODE_ENV == "development") {
           this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
           window.open(this.ViponSrc, "_black");
         }
@@ -559,13 +559,13 @@ export default {
             "src",
             "https://seller.vipona.com/promotion/index"
           );
-        } else if (process.env.NODE_ENV == "test") {
+        } else if (process.env.NODE_ENV == "development") {
           window.localStorage.setItem(
             "src",
             "https://hkatest.myvipon.com/promotion/index"
           );
         }
-        this.$router.push("/login");
+        this.$router.push("/login?source=vipon_deal&action=promotion/index");
       }
     },
     // Deal跳转
@@ -576,7 +576,7 @@ export default {
         if (process.env.NODE_ENV == "production") {
           this.DealSrc = "https://seller.vipona.com/hot/deal";
           window.open(this.DealSrc, "_black");
-        } else if (process.env.NODE_ENV == "test") {
+        } else if (process.env.NODE_ENV == "development") {
           this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
           window.open(this.DealSrc, "_black");
         }
@@ -590,13 +590,13 @@ export default {
             "src",
             "https://seller.vipona.com/hot/deal"
           );
-        } else if (process.env.NODE_ENV == "test") {
+        } else if (process.env.NODE_ENV == "development") {
           window.localStorage.setItem(
             "src",
             "https://hkatest.myvipon.com/hot/deal"
           );
         }
-        this.$router.push("/login");
+        this.$router.push("/login?source=vipon_deal&action=hot/deal");
       }
     },
     //Fb跳转
@@ -621,13 +621,13 @@ export default {
             "src",
             "https://seller.vipona.com/hot/fb"
           );
-        } else if (process.env.NODE_ENV == "test") {
+        } else if (process.env.NODE_ENV == "development") {
           window.localStorage.setItem(
             "src",
             "https://hkatest.myvipon.com/hot/fb"
           );
         }
-        this.$router.push("/login");
+        this.$router.push("/login?source=vipon_deal&action=hot/fb");
       }
     },
   },

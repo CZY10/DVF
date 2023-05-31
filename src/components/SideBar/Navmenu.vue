@@ -331,7 +331,7 @@ export default {
     this.DealHook = "https://hkatest.myvipon.com";
     if (process.env.NODE_ENV == "production") {
       this.DealHook = "https://seller.vipona.com";
-    } else if (process.env.NODE_ENV == "test") {
+    } else if (process.env.NODE_ENV == "development") {
       this.DealHook = "https://hkatest.myvipon.com";
     }
   },
@@ -549,21 +549,7 @@ export default {
           window.open(this.ViponSrc, "_black");
         }
       } else {
-        window.localStorage.setItem(
-          "src",
-          "https://hkatest.myvipon.com/promotion/index"
-        );
-        if (process.env.NODE_ENV == "production") {
-          window.localStorage.setItem(
-            "src",
-            "https://seller.vipona.com/promotion/index"
-          );
-        } else if (process.env.NODE_ENV == "development") {
-          window.localStorage.setItem(
-            "src",
-            "https://hkatest.myvipon.com/promotion/index"
-          );
-        }
+      
         this.$router.push("/login?source=vipon_deal&action=promotion/index");
       }
     },
@@ -580,21 +566,7 @@ export default {
           window.open(this.DealSrc, "_black");
         }
       } else {
-        window.localStorage.setItem(
-          "src",
-          "https://hkatest.myvipon.com/hot/deal"
-        );
-        if (process.env.NODE_ENV == "production") {
-          window.localStorage.setItem(
-            "src",
-            "https://seller.vipona.com/hot/deal"
-          );
-        } else if (process.env.NODE_ENV == "development") {
-          window.localStorage.setItem(
-            "src",
-            "https://hkatest.myvipon.com/hot/deal"
-          );
-        }
+       
         this.$router.push("/login?source=vipon_deal&action=hot/deal");
       }
     },
@@ -611,21 +583,7 @@ export default {
           window.open(this.FbSrc, "_black");
         }
       } else {
-        window.localStorage.setItem(
-          "src",
-          "https://hkatest.myvipon.com/hot/fb"
-        );
-        if (process.env.NODE_ENV == "production") {
-          window.localStorage.setItem(
-            "src",
-            "https://seller.vipona.com/hot/fb"
-          );
-        } else if (process.env.NODE_ENV == "development") {
-          window.localStorage.setItem(
-            "src",
-            "https://hkatest.myvipon.com/hot/fb"
-          );
-        }
+       
         this.$router.push("/login?source=vipon_deal&action=hot/fb");
       }
     },

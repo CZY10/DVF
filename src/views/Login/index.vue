@@ -501,11 +501,6 @@ export default {
               res.data.jump
                 ? window.open(res.data.jump, "_blank")
                 : this.$router.push(this.fromPath);
-
-              if (window.localStorage.getItem("src")) {
-                window.location.href = window.localStorage.getItem("src");
-                localStorage.removeItem("src");
-              }
             }
           })
           .catch((err) => {
@@ -592,11 +587,6 @@ export default {
                 res.data.jump
                   ? window.open(res.data.jump, "_blank")
                   : this.$router.push(this.fromPath);
-
-                if (window.localStorage.getItem("src")) {
-                  window.location.href = window.localStorage.getItem("src");
-                  localStorage.removeItem("src");
-                }
               }
             })
             .catch((err) => {

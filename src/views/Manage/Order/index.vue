@@ -57,8 +57,8 @@
         @select-all="selectAll"
       >
         <!-- 订单多选 -->
-        <el-table-column type="selection" :selectable="selectable">
-        </el-table-column>
+        <!-- <el-table-column type="selection" :selectable="selectable"> -->
+        <!-- </el-table-column> -->
         <el-table-column
           prop="createtime"
           label="创建时间"
@@ -392,7 +392,7 @@
         >
         </el-pagination>
 
-        <div style="display: flex; align-items: center">
+        <!-- <div style="display: flex; align-items: center">
           <span class="pagination-span"
             >合计：<span style="color: #ff000c; font-weight: 900"
               >￥00.00</span
@@ -409,7 +409,7 @@
           <el-button class="paginationBtn" v-if="multipleSelection.length == 0"
             >合并支付</el-button
           >
-        </div>
+        </div> -->
       </div>
     </div>
     <!--支付尾款-->

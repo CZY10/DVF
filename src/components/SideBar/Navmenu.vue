@@ -24,11 +24,9 @@
         <el-menu-item index="/">首页</el-menu-item>
         <el-menu-item index="/videohome">视频服务站</el-menu-item>
         <!-- "https://seller.vipona.com/account/login" -->
-        <el-menu-item
-          ><a target="_blank" style="width: 100%" :href="DealHook"
-            >海外Deal站</a
-          ></el-menu-item
-        >
+        <!-- <el-menu-item
+          ><a style="width: 100%" :href="DealHook">海外Deal站</a></el-menu-item
+        > -->
         <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
         <!-- href="https://seller.vipona.com/account/login" -->
         <el-menu-item
@@ -48,7 +46,7 @@
             >Deal站推广</a
           ></el-menu-item
         >
-        <el-menu-item index="/chatgpt">ChatGPT</el-menu-item>
+        <!-- <el-menu-item index="/chatgpt">ChatGPT</el-menu-item> -->
         <el-menu-item v-if="!isLogin" style="float: right" index="/login"
           ><el-button class="login_btn" round
             >登陆/注册</el-button
@@ -166,6 +164,7 @@
         </el-menu-item>
       </el-menu>
     </div>
+
     <el-dialog
       :visible="dialog"
       :show-close="false"
@@ -227,7 +226,7 @@
                   <ul>
                     <li>首单优惠 <span>¥50.00</span></li>
                     <li>团购买10单 <span>免1单</span></li>
-                    <li>ChatGPT <span>不限次数</span> 使用</li>
+                    <!-- <li>ChatGPT <span>不限次数</span> 使用</li> -->
                     <li>VIP专属 <span>1对1</span> 服务</li>
                   </ul>
                 </div>
@@ -473,19 +472,19 @@ export default {
           localStorage.clear("serviceInfoList");
           switch (this.$route.name) {
             case "order":
-              window.location.href = "/login";
+              window.location.href = "/";
               break;
             case "payment":
-              window.location.href = "/login";
+              window.location.href = "/";
               break;
             case "personal":
-              window.location.href = "/login";
+              window.location.href = "/";
               break;
             case "chatgpt":
-              window.location.href = "/login";
+              window.location.href = "/";
               break;
             default:
-              window.location.href = "/login";
+              window.location.href = this.$route.fullPath;
           }
           this.reload();
         })

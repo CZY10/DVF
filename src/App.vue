@@ -39,7 +39,7 @@ export default {
       this.isToken = false;
     }
 
-    if (this.isToken == true && this.source == "vipon_deal") {
+    if (this.isToken == true || this.source == "vipon_deal") {
       if (this.action == "account/login") {
         localStorage.removeItem("source");
         localStorage.removeItem("avatar");

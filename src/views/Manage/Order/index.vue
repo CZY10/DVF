@@ -57,8 +57,8 @@
         @select-all="selectAll"
       >
         <!-- 订单多选 -->
-        <!-- <el-table-column type="selection" :selectable="selectable"> -->
-        <!-- </el-table-column> -->
+        <!-- <el-table-column type="selection" :selectable="selectable">
+        </el-table-column> -->
         <el-table-column
           prop="createtime"
           label="创建时间"

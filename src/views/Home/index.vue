@@ -862,6 +862,7 @@ export default {
       justify-content: center;
       box-sizing: border-box;
       position: relative;
+      cursor: pointer;
       > div {
         width: 182px;
         position: relative;

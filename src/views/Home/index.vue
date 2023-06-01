@@ -389,10 +389,6 @@ export default {
     //   vipon自助发帖跳转
     goVipon() {
       if (window.localStorage.getItem("token")) {
-        this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
-        localStorage.removeItem("source");
-        localStorage.removeItem("active");
-        window.open(this.ViponSrc, "_black");
         if (process.env.NODE_ENV == "production") {
           this.ViponSrc = "https://seller.vipona.com/promotion/index";
           localStorage.removeItem("source");
@@ -411,10 +407,6 @@ export default {
 
     goFB() {
       if (window.localStorage.getItem("token")) {
-        this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
-        localStorage.removeItem("source");
-        localStorage.removeItem("active");
-        window.open(this.FbSrc, "_black");
         if (process.env.NODE_ENV == "production") {
           this.FbSrc = "https://seller.vipona.com/hot/fb";
           localStorage.removeItem("source");

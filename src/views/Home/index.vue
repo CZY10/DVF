@@ -166,11 +166,10 @@
               </li>
             </ul>
             <div class="button_box">
-              <a
-                target="_blank"
-                href="https://hkatest.myvipon.com/promotion/index?token=4686d164-3051-48f2-a477-c1ee6de6a402&id="
-                style="color: #ffffff"
-                ><el-button class="btn_type">发布促销</el-button></a
+              <a style="color: #ffffff"
+                ><el-button class="btn_type" @click="goVipon"
+                  >发布促销</el-button
+                ></a
               >
               <a
                 target="_blank"
@@ -385,19 +384,71 @@ export default {
       this.getContent();
     }
   },
+
   methods: {
+    //   vipon自助发帖跳转
+    goVipon() {
+      if (window.localStorage.getItem("token")) {
+        this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
+        localStorage.removeItem("source");
+        localStorage.removeItem("active");
+        window.open(this.ViponSrc, "_black");
+        if (process.env.NODE_ENV == "production") {
+          this.ViponSrc = "https://seller.vipona.com/promotion/index";
+          localStorage.removeItem("source");
+          localStorage.removeItem("active");
+          window.open(this.ViponSrc, "_black");
+        } else if (process.env.NODE_ENV == "development") {
+          this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
+          localStorage.removeItem("source");
+          localStorage.removeItem("active");
+          window.open(this.ViponSrc, "_black");
+        }
+      } else {
+        this.$router.push("/login?source=vipon_deal&action=promotion/index");
+      }
+    },
+
     goFB() {
       if (window.localStorage.getItem("token")) {
-        window.open("https://hkatest.myvipon.com/hot/fb", "_blank");
+        this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
+        localStorage.removeItem("source");
+        localStorage.removeItem("active");
+        window.open(this.FbSrc, "_black");
+        if (process.env.NODE_ENV == "production") {
+          this.FbSrc = "https://seller.vipona.com/hot/fb";
+          localStorage.removeItem("source");
+          localStorage.removeItem("active");
+          window.open(this.FbSrc, "_black");
+        } else if (process.env.NODE_ENV == "test") {
+          this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
+          localStorage.removeItem("source");
+          localStorage.removeItem("active");
+          window.open(this.FbSrc, "_black");
+        }
       } else {
-        window.open("https://seller.vipona.com/account/login", "_blank");
+        this.$router.push("/login?source=vipon_deal&action=hot/fb");
       }
     },
     goDeal() {
       if (window.localStorage.getItem("token")) {
-        window.open("https://hkatest.myvipon.com/hot/deal", "_blank");
+        this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
+        localStorage.removeItem("source");
+        localStorage.removeItem("active");
+        window.open(this.DealSrc, "_black");
+        if (process.env.NODE_ENV == "production") {
+          this.DealSrc = "https://seller.vipona.com/hot/deal";
+          localStorage.removeItem("source");
+          localStorage.removeItem("active");
+          window.open(this.DealSrc, "_black");
+        } else if (process.env.NODE_ENV == "development") {
+          this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
+          localStorage.removeItem("source");
+          localStorage.removeItem("active");
+          window.open(this.DealSrc, "_black");
+        }
       } else {
-        window.open("https://seller.vipona.com/account/login", "_blank");
+        this.$router.push("/login?source=vipon_deal&action=hot/deal");
       }
     },
     handleConsult(event) {

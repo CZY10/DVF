@@ -490,9 +490,9 @@ export default {
 
               console.log("jump", res.data.jump);
 
-              // res.data.jump
-              //   ? window.open(res.data.jump, "_blank")
-              //   : this.$router.push(this.fromPath);
+              res.data.jump
+                ? window.open(res.data.jump, "_blank")
+                : this.$router.push(this.fromPath);
 
               if (process.env.NODE_ENV == "production") {
                 hrefLink = `https://www.viponm.com`;
@@ -502,7 +502,7 @@ export default {
                 hrefLink = `http://localhost:8088`;
               }
 
-              // window.location.href = hrefLink;
+              window.location.href = hrefLink;
               localStorage.removeItem("source");
               localStorage.removeItem("active");
             }

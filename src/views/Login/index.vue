@@ -618,57 +618,53 @@ export default {
     },
 
     //短信登录注册
-    handleSubmitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    async handleSubmitForm(formName) {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          mobileLogin({
+          const res = await mobileLogin({
             source: this.source,
             mobile: this.ruleForm.phone,
             captcha: this.ruleForm.verificationCode,
             action: this.action,
             id: this.$route.query.id || "",
-          })
-            .then((res) => {
-              if (res.code === 1) {
-                let hrefLink = "https://www.viponm.com";
-                if (res.data.type == "register") {
-                  this.$message.success(res.msg);
-                }
-                clearInterval(this.checkQrCode);
-                localStorage.setItem(
-                  "userInfo",
-                  JSON.stringify(res.data.userinfo)
-                );
-                localStorage.setItem("token", res.data.userinfo.token);
-                localStorage.setItem("avatar", res.data.userinfo.avatar);
-                localStorage.setItem(
-                  "expiretime",
-                  res.data.userinfo.expiretime
-                );
-                this.setExpiretime(res.data.userinfo.expiretime);
-                this.setUserInfo(JSON.stringify(res.data.userinfo));
-                this.setToken(res.data.userinfo.token);
-                this.setAvatar(res.data.userinfo.avatar);
+          });
 
-                if (process.env.NODE_ENV == "production") {
-                  hrefLink = `https://www.viponm.com`;
-                } else if (process.env.NODE_ENV == "development") {
-                  hrefLink = `http://testai.blhltd.com`;
-                } else {
-                  hrefLink = `http://localhost:8088`;
-                }
-                localStorage.removeItem("source");
-                localStorage.removeItem("active");
-                res.data.jump
-                  ? window.open(res.data.jump, "_blank")
-                  : this.$router.push(this.fromPath);
-                window.location.href = hrefLink;
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              // this.$message.error(err.msg);
-            });
+          if (res.code === 1) {
+            let hrefLink = "https://www.viponm.com";
+            if (res.data.type == "register") {
+              this.$message.success(res.msg);
+            }
+            clearInterval(this.checkQrCode);
+            localStorage.setItem("userInfo", JSON.stringify(res.data.userinfo));
+            localStorage.setItem("token", res.data.userinfo.token);
+            localStorage.setItem("avatar", res.data.userinfo.avatar);
+            localStorage.setItem("expiretime", res.data.userinfo.expiretime);
+            this.setExpiretime(res.data.userinfo.expiretime);
+            this.setUserInfo(JSON.stringify(res.data.userinfo));
+            this.setToken(res.data.userinfo.token);
+            this.setAvatar(res.data.userinfo.avatar);
+
+            if (process.env.NODE_ENV == "production") {
+              hrefLink = `https://www.viponm.com`;
+            } else if (process.env.NODE_ENV == "development") {
+              hrefLink = `http://testai.blhltd.com`;
+            } else {
+              hrefLink = `http://localhost:8088`;
+            }
+            if (res.data.jump) {
+              await new Promise((resolve) => {
+                window.open(res.data.jump, "_blank");
+                setTimeout(() => {
+                  resolve();
+                }, 1000);
+              });
+            } else {
+              this.$router.push(this.fromPath);
+            }
+            localStorage.removeItem("source");
+            localStorage.removeItem("active");
+            window.location.href = hrefLink;
+          }
         } else {
           console.log("error submit!!");
           return false;

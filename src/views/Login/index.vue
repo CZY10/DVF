@@ -375,9 +375,7 @@ export default {
       configData: {},
     };
   },
-  created() {
-    console.log(this.$route.query.id);
-  },
+  created() {},
   mounted() {
     this.handlerGetQrcode();
     this.verifyToken();
@@ -438,8 +436,81 @@ export default {
           this.$message.error(err.msg);
         });
     },
+
     //检测二维码是否扫码成功
-    handleCheckQr() {
+    // handleCheckQr() {
+    //   var timer = 0;
+    //   let _this = this;
+    //   let form = new FormData();
+    //   let id = this.$route.query.id || "";
+    //   form.append("wechat_token", _this.wechatToken);
+    //   form.append("source", _this.source);
+    //   form.append("action", _this.action);
+    //   form.append("id", id);
+    //   _this.checkQrCode = setInterval(() => {
+    //     checkQr(form)
+    //       .then((res) => {
+    //         if (res.code === 0) {
+    //           //二维码已失效
+    //           _this.isRefresh = true;
+    //           //清除定时脚本
+    //           clearInterval(_this.checkQrCode);
+    //         }
+    //         if (res.code === 1 && res.data.status === 0) {
+    //           //请等待扫码
+    //           timer++;
+    //           if (timer > 60) {
+    //             //等待扫码,超过3分钟未扫描，二维码提示已过期
+    //             _this.isRefresh = true;
+    //             //清除定时脚本
+    //             clearInterval(_this.checkQrCode);
+    //           }
+    //         } else if (res.code === 1 && res.data.status === 1) {
+    //           //扫码成功，请绑定手机号
+    //           //渲染绑定手机页面
+    //           _this.hasBindPhone = true;
+    //           //清除定时脚本
+    //           clearInterval(_this.checkQrCode);
+    //         } else if (res.code === 1 && res.data.status === 2) {
+    //           let hrefLink = "https://www.viponm.com";
+    //           //登录成功,即将跳转
+    //           clearInterval(_this.checkQrCode);
+    //           localStorage.setItem(
+    //             "userInfo",
+    //             JSON.stringify(res.data.userinfo)
+    //           );
+    //           localStorage.setItem("token", res.data.userinfo.token);
+    //           localStorage.setItem("avatar", res.data.userinfo.avatar);
+    //           localStorage.setItem("expiretime", res.data.userinfo.expiretime);
+    //           this.setExpiretime(res.data.userinfo.expiretime);
+    //           this.setUserInfo(JSON.stringify(res.data.userinfo));
+    //           this.setToken(res.data.userinfo.token);
+    //           this.setAvatar(res.data.userinfo.avatar);
+
+    //           console.log("jump", res.data.jump);
+    //           res.data.jump
+    //             ? window.open(res.data.jump, "_blank")
+    //             : this.$router.push(this.fromPath);
+
+    //           if (process.env.NODE_ENV == "production") {
+    //             hrefLink = `https://www.viponm.com`;
+    //           } else if (process.env.NODE_ENV == "development") {
+    //             hrefLink = `http://testai.blhltd.com`;
+    //           } else {
+    //             hrefLink = `http://localhost:8088`;
+    //           }
+
+    //           localStorage.removeItem("source");
+    //           localStorage.removeItem("active");
+    //           window.location.href = hrefLink;
+    //         }
+    //       })
+    //       .catch((err) => {
+    //         this.$message.error(err.msg);
+    //       });
+    //   }, 3000);
+    // },
+    async handleCheckQr() {
       var timer = 0;
       let _this = this;
       let form = new FormData();
@@ -448,70 +519,71 @@ export default {
       form.append("source", _this.source);
       form.append("action", _this.action);
       form.append("id", id);
-      _this.checkQrCode = setInterval(() => {
-        checkQr(form)
-          .then((res) => {
-            if (res.code === 0) {
-              //二维码已失效
+      _this.checkQrCode = setInterval(async () => {
+        try {
+          const res = await checkQr(form);
+          if (res.code === 0) {
+            //二维码已失效
+            _this.isRefresh = true;
+            //清除定时脚本
+            clearInterval(_this.checkQrCode);
+          }
+          if (res.code === 1 && res.data.status === 0) {
+            //请等待扫码
+            timer++;
+            if (timer > 60) {
+              //等待扫码,超过3分钟未扫描，二维码提示已过期
               _this.isRefresh = true;
               //清除定时脚本
               clearInterval(_this.checkQrCode);
             }
-            if (res.code === 1 && res.data.status === 0) {
-              //请等待扫码
-              timer++;
-              if (timer > 60) {
-                //等待扫码,超过3分钟未扫描，二维码提示已过期
-                _this.isRefresh = true;
-                //清除定时脚本
-                clearInterval(_this.checkQrCode);
-              }
-            } else if (res.code === 1 && res.data.status === 1) {
-              //扫码成功，请绑定手机号
-              //渲染绑定手机页面
-              _this.hasBindPhone = true;
-              //清除定时脚本
-              clearInterval(_this.checkQrCode);
-            } else if (res.code === 1 && res.data.status === 2) {
-              let hrefLink = "https://www.viponm.com";
-              //登录成功,即将跳转
-              clearInterval(_this.checkQrCode);
-              localStorage.setItem(
-                "userInfo",
-                JSON.stringify(res.data.userinfo)
-              );
-              localStorage.setItem("token", res.data.userinfo.token);
-              localStorage.setItem("avatar", res.data.userinfo.avatar);
-              localStorage.setItem("expiretime", res.data.userinfo.expiretime);
-              this.setExpiretime(res.data.userinfo.expiretime);
-              this.setUserInfo(JSON.stringify(res.data.userinfo));
-              this.setToken(res.data.userinfo.token);
-              this.setAvatar(res.data.userinfo.avatar);
-
-              console.log("jump", res.data.jump);
-
-              res.data.jump
-                ? window.open(res.data.jump, "_blank")
-                : this.$router.push(this.fromPath);
-
-              if (process.env.NODE_ENV == "production") {
-                hrefLink = `https://www.viponm.com`;
-              } else if (process.env.NODE_ENV == "development") {
-                hrefLink = `http://testai.blhltd.com`;
-              } else {
-                hrefLink = `http://localhost:8088`;
-              }
-
-              window.location.href = hrefLink;
-              localStorage.removeItem("source");
-              localStorage.removeItem("active");
+          } else if (res.code === 1 && res.data.status === 1) {
+            //扫码成功，请绑定手机号 //渲染绑定手机页面
+            _this.hasBindPhone = true;
+            //清除定时脚本
+            clearInterval(_this.checkQrCode);
+          } else if (res.code === 1 && res.data.status === 2) {
+            let hrefLink = "https://www.viponm.com";
+            //登录成功,即将跳转
+            clearInterval(_this.checkQrCode);
+            localStorage.setItem("userInfo", JSON.stringify(res.data.userinfo));
+            localStorage.setItem("token", res.data.userinfo.token);
+            localStorage.setItem("avatar", res.data.userinfo.avatar);
+            localStorage.setItem("expiretime", res.data.userinfo.expiretime);
+            this.setExpiretime(res.data.userinfo.expiretime);
+            this.setUserInfo(JSON.stringify(res.data.userinfo));
+            this.setToken(res.data.userinfo.token);
+            this.setAvatar(res.data.userinfo.avatar);
+            console.log("jump", res.data.jump);
+            if (res.data.jump) {
+              await new Promise((resolve) => {
+                window.open(res.data.jump, "_blank");
+                setTimeout(() => {
+                  resolve();
+                }, 1000);
+              });
+            } else {
+              this.$router.push(this.fromPath);
             }
-          })
-          .catch((err) => {
-            this.$message.error(err.msg);
-          });
+
+            if (process.env.NODE_ENV == "production") {
+              hrefLink = `https://www.viponm.com`;
+            } else if (process.env.NODE_ENV == "development") {
+              hrefLink = `http://testai.blhltd.com`;
+            } else {
+              hrefLink = `http://localhost:8088`;
+            }
+
+            localStorage.removeItem("source");
+            localStorage.removeItem("active");
+            window.location.href = hrefLink;
+          }
+        } catch (err) {
+          this.$message.error(err.msg);
+        }
       }, 3000);
     },
+
     handleClick(tab) {
       if (tab.index == 0) {
         this.handleCheckQr();
@@ -585,12 +657,12 @@ export default {
                 } else {
                   hrefLink = `http://localhost:8088`;
                 }
-                window.location.href = hrefLink;
                 localStorage.removeItem("source");
                 localStorage.removeItem("active");
                 res.data.jump
                   ? window.open(res.data.jump, "_blank")
                   : this.$router.push(this.fromPath);
+                window.location.href = hrefLink;
               }
             })
             .catch((err) => {

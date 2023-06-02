@@ -38,6 +38,7 @@ export default {
     } else {
       this.isToken = false;
     }
+    console.log(this.source);
 
     if (this.isToken == true && this.source == "vipon_deal") {
       if (this.action == "account/login") {

@@ -347,7 +347,6 @@
 import { influenceData, fbData, dealData, getConfig } from "@/api";
 import Footer from "@/components/Footer";
 import ConsultDialog from "@/components/ConsultDialog";
-import { log } from "video.js";
 export default {
   name: "index",
   components: {
@@ -370,6 +369,9 @@ export default {
       fbbaseURLC: `https://hkatest.myvipon.com/hot/fb-detail?id=`,
       dealBaseURLX: `https://seller.vipona.com/hot/deal-detail?id=`,
       dealBaseURLC: `https://hkatest.myvipon.com/hot/deal-detail?id=`,
+      ViponSrc: "",
+      DealSrc: "",
+      FbSrc: "",
     };
   },
   mounted() {

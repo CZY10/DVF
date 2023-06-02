@@ -370,6 +370,9 @@ export default {
       fbbaseURLC: `https://hkatest.myvipon.com/hot/fb-detail?id=`,
       dealBaseURLX: `https://seller.vipona.com/hot/deal-detail?id=`,
       dealBaseURLC: `https://hkatest.myvipon.com/hot/deal-detail?id=`,
+      ViponSrc: "",
+      DealSrc: "",
+      FbSrc: "",
     };
   },
   mounted() {

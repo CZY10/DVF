@@ -226,7 +226,7 @@
                   <ul>
                     <li>首单优惠 <span>¥50.00</span></li>
                     <li>团购买10单 <span>免1单</span></li>
-                    <!-- <li>ChatGPT <span>不限次数</span> 使用</li> -->
+                    <li>最新AI教程资料，<span>免费赠送</span></li>
                     <li>VIP专属 <span>1对1</span> 服务</li>
                   </ul>
                 </div>

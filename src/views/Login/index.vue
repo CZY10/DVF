@@ -300,6 +300,7 @@ import {
   getConfig,
 } from "@/api/index";
 import login from "@/store/modules/login";
+import { log } from "video.js";
 export default {
   name: "login",
   data() {
@@ -487,20 +488,27 @@ export default {
               this.setToken(res.data.userinfo.token);
               this.setAvatar(res.data.userinfo.avatar);
 
-              if (process.env.NODE_ENV == "production") {
-                hrefLink = `https://www.viponm.com`;
-              } else if (process.env.NODE_ENV == "development") {
-                hrefLink = `http://testai.blhltd.com`;
-              } else {
-                hrefLink = `http://localhost:8088`;
-              }
+              setTimeout(() => {
+                console.log(res.data.jump, 789);
 
-              window.location.href = hrefLink;
-              localStorage.removeItem("source");
-              localStorage.removeItem("active");
-              res.data.jump
-                ? window.open(res.data.jump, "_blank")
-                : this.$router.push(this.fromPath);
+                if (process.env.NODE_ENV == "production") {
+                  hrefLink = `https://www.viponm.com`;
+                } else if (process.env.NODE_ENV == "development") {
+                  hrefLink = `http://testai.blhltd.com`;
+                } else {
+                  hrefLink = `http://localhost:8088`;
+                }
+
+                window.location.href = hrefLink;
+                localStorage.removeItem("source");
+                localStorage.removeItem("active");
+                if (res.data.jump) {
+                  console.log("jump", res.data.jump);
+                  res.data.jump
+                    ? window.open(res.data.jump, "_blank")
+                    : this.$router.push(this.fromPath);
+                }
+              }, 0);
             }
           })
           .catch((err) => {

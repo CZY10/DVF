@@ -347,7 +347,6 @@
 import { influenceData, fbData, dealData, getConfig } from "@/api";
 import Footer from "@/components/Footer";
 import ConsultDialog from "@/components/ConsultDialog";
-import { log } from "video.js";
 export default {
   name: "index",
   components: {

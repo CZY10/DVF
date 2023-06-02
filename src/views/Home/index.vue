@@ -426,10 +426,6 @@ export default {
     },
     goDeal() {
       if (window.localStorage.getItem("token")) {
-        this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
-        localStorage.removeItem("source");
-        localStorage.removeItem("active");
-        window.open(this.DealSrc, "_black");
         if (process.env.NODE_ENV == "production") {
           this.DealSrc = "https://seller.vipona.com/hot/deal";
           localStorage.removeItem("source");

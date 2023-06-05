@@ -209,6 +209,7 @@
                   scope.row.apply_refund_deposit == 1 && scope.row.status == 1
                 "
                 class="Thprice"
+                style="right: 65px"
               >
                 正在退还
               </div>
@@ -455,7 +456,7 @@
     </div>
     <!--支付尾款-->
     <el-dialog
-      title="请尽快支付尾款"
+      title="请尽快支付订单"
       :visible.sync="paymentDialog"
       v-if="paymentDialog"
       @close="handleClose"
@@ -464,7 +465,7 @@
       center
       width="500px"
     >
-      <el-alert
+      <!-- <el-alert
         title="支付完尾款，代表服务正式生效。在订单完成之前，平台不会将你的款项支付给达人。"
         center
         style="position: relative; background: #f4f2ff"
@@ -480,10 +481,11 @@
             color: #776cf3;
           "
         ></i>
-      </el-alert>
+      </el-alert> -->
       <div class="payment_content">
         <h4>¥{{ orderData.price }}</h4>
-        <p>尾款金额</p>
+        <p v-if="orderIdFlex">合并订单金额</p>
+        <p v-if="orderIdFlex == false">尾款金额</p>
         <!-- <p>
           订单号：<span>{{ orderData.order_id }}</span>
         </p> -->
@@ -545,6 +547,22 @@
             </div>
           </el-tab-pane>
         </el-tabs>
+        <div class="group_26 flex-row">
+          <div class="image-text_40 flex-row justify-between">
+            <img
+              class="thumbnail_26"
+              referrerpolicy="no-referrer"
+              src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngadd69f7b6dbb5a1080befad2c5168f68a6705b339b5967fdd3f737c59baf4d89"
+            />
+            <div class="text-group_14">
+              <span class="text_98">1、订单支付成功后，</span>
+              <span class="text_99">定金</span>
+              <span class="paragraph_1"
+                >将原路退回至您的「支付宝/微信」账户；<br />2、完成订单支付，代表服务正式生效。在完成交付之前，平台不会将你的款项支付给达人。</span
+              >
+            </div>
+          </div>
+        </div>
         <!--                <ul>-->
         <!--                    <li>-->
         <!--                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>-->
@@ -1442,6 +1460,7 @@ export default {
       }
     };
     return {
+      orderIdFlex: false,
       centerDialogVisible: false,
       multipleSelection: [],
       listArray: [],
@@ -1688,6 +1707,7 @@ export default {
       this.orderId = str;
       console.log(this.orderId);
       this.handlePaymentOrder(1);
+      this.orderIdFlex = true;
     },
     //获取拍摄场景列表
     getShootRequireList() {
@@ -1815,6 +1835,7 @@ export default {
     },
     //支付定金/尾款
     handlePaymentOrder(type) {
+      this.orderIdFlex = false;
       type === 0
         ? (this.payDepositDialogVisible = true)
         : (this.paymentDialog = true);
@@ -3800,6 +3821,7 @@ export default {
   font-weight: 400;
   font-size: 14px;
   line-height: 8px;
+  pointer-events: none;
 }
 
 .paginationBtn:hover {

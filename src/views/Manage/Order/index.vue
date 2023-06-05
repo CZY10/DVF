@@ -57,8 +57,8 @@
         @select-all="selectAll"
       >
         <!-- 订单多选 -->
-        <!-- <el-table-column type="selection" :selectable="selectable">
-        </el-table-column> -->
+        <el-table-column type="selection" :selectable="selectable">
+        </el-table-column>
         <el-table-column
           prop="createtime"
           label="创建时间"
@@ -139,6 +139,7 @@
               @hide="stepsList = []"
               @show="handleShowFn(scope.row)"
               trigger="hover"
+              style="position: relative"
             >
               <div solt="content" style="padding: 15px 15px 0 15px">
                 <el-steps direction="vertical" :active="stepsList.current">
@@ -163,6 +164,8 @@
                       ? '#FF000C'
                       : scope.row.status == 2
                       ? '#FF000C'
+                      : scope.row.status == 3
+                      ? '#FF000C'
                       : scope.row.status == 4
                       ? '#00D9AD'
                       : '#333333',
@@ -175,6 +178,8 @@
                         ? '#FF000C'
                         : scope.row.status == 1
                         ? '#FF000C'
+                        : scope.row.status == 3
+                        ? '#FF000C'
                         : scope.row.status == 2
                         ? '#FF000C'
                         : scope.row.status == 4
@@ -184,13 +189,13 @@
                 ></i>
                 {{
                   scope.row.status == 0
-                    ? "待支付订单"
+                    ? "待支付定金"
                     : scope.row.status == 1
-                    ? "待付尾款"
+                    ? "待支付订单"
                     : scope.row.status == 2
                     ? "待寄送样品"
                     : scope.row.status == 3
-                    ? "待上传视频"
+                    ? "上传视频"
                     : scope.row.status == 4
                     ? "已完成"
                     : scope.row.status == 5
@@ -198,10 +203,19 @@
                     : "已退尾款频"
                 }}
               </span>
+              <div v-if="scope.row.status == 5" class="Thprice">已退还</div>
+              <div
+                v-if="
+                  scope.row.apply_refund_deposit == 1 && scope.row.status == 1
+                "
+                class="Thprice"
+              >
+                正在退还
+              </div>
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="hasMessage" label="达人沟通">
+        <el-table-column prop="hasMessage" label="订单信息">
           <template slot-scope="scope">
             <el-badge
               is-dot
@@ -215,7 +229,7 @@
               class="badge_style"
             >
               <i
-                class="el-icon-chat-dot-round"
+                class="el-icon-message"
                 style="font-size: 20px; cursor: pointer"
               ></i>
             </el-badge>
@@ -258,7 +272,7 @@
                     handlePaymentOrder(1);
                   "
                   round
-                  >付尾款</el-button
+                  >支付订单</el-button
                 >
                 <div class="normal_style" v-else>/</div>
                 <div
@@ -289,7 +303,11 @@
                   >退定金</el-button
                 >
               </div>
-              <div v-else-if="scope.row.status == 2" class="flex_center">
+              <div
+                v-else-if="scope.row.status == 2"
+                class="flex_center"
+                style="position: relative"
+              >
                 <el-tooltip class="item" effect="dark" placement="bottom">
                   <div
                     slot="content"
@@ -313,6 +331,26 @@
                     >提交寄送信息</el-button
                   >
                 </el-tooltip>
+                <div
+                  style="
+                    width: 6px;
+                    height: 6px;
+                    background: #ed4014;
+                    position: absolute;
+                    top: 5px;
+                    right: 10px;
+                    border-radius: 50%;
+                  "
+                  v-if="scope.row.site_read == 0"
+                ></div>
+                <el-button
+                  class="operation_btn"
+                  size="small"
+                  style="margin-left: 10px"
+                  @click="getsiteRead(scope.row.id)"
+                  round
+                  >查看地址
+                </el-button>
               </div>
               <div v-else-if="scope.row.status == 3" class="flex_center">
                 <div class="normal_style">/</div>
@@ -392,11 +430,14 @@
         >
         </el-pagination>
 
-        <!-- <div style="display: flex; align-items: center">
-          <span class="pagination-span"
+        <div style="display: flex; align-items: center">
+          <span class="pagination-span" v-if="priceNum != 0"
             >合计：<span style="color: #ff000c; font-weight: 900"
-              >￥00.00</span
+              >￥{{ priceNum }}</span
             ></span
+          >
+          <span class="pagination-span" v-if="priceNum == 0"
+            >合计：<span style="color: #999; font-weight: 900">--</span></span
           >
           <el-button
             class="pagination-btn"
@@ -409,7 +450,7 @@
           <el-button class="paginationBtn" v-if="multipleSelection.length == 0"
             >合并支付</el-button
           >
-        </div> -->
+        </div>
       </div>
     </div>
     <!--支付尾款-->
@@ -443,9 +484,9 @@
       <div class="payment_content">
         <h4>¥{{ orderData.price }}</h4>
         <p>尾款金额</p>
-        <p>
+        <!-- <p>
           订单号：<span>{{ orderData.order_id }}</span>
-        </p>
+        </p> -->
         <el-tabs type="border-card">
           <el-tab-pane>
             <span
@@ -1345,6 +1386,21 @@
         </div>
       </div>
     </el-dialog>
+
+    <!-- 查看地址 -->
+    <el-dialog
+      title="请尽快将产品送到以下地址"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
+      <div class="elDialogDz">{{ getsite }}</div>
+      <div style="width: 100%; display: flex; justify-content: center">
+        <el-button class="elDialogDz-btn" @click="IselDialogDz">
+          我知道了
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -1363,6 +1419,7 @@ import {
   getCategory,
   orderStep,
   getShootRequire,
+  siteRead,
 } from "@/api";
 import QRCode from "qrcodejs2";
 import { mapMutations } from "vuex";
@@ -1385,6 +1442,7 @@ export default {
       }
     };
     return {
+      centerDialogVisible: false,
       multipleSelection: [],
       listArray: [],
       checkArray: {},
@@ -1529,6 +1587,8 @@ export default {
       feedback_images_length: 0,
       paymentType: 0,
       strArr: "",
+      priceNum: 0,
+      getsite: "",
     };
   },
   created() {
@@ -1578,7 +1638,8 @@ export default {
             item.status == 2 ||
             item.status == 3 ||
             item.status == 0 ||
-            item.status == 4
+            item.status == 4 ||
+            item.status == 5
           ) {
           } else {
             this.$refs.multipleTable.toggleRowSelection(item, true);
@@ -1595,7 +1656,11 @@ export default {
     //当选择项发生变化时会触发该事件
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      console.log(this.multipleSelection);
+      let num = 0;
+      this.multipleSelection.map((item) => {
+        num = num + item.price * 1;
+      });
+      this.priceNum = num;
     },
     //当用户手动勾选全选 Checkbox 时触发的事件
     selectAll() {},
@@ -1605,7 +1670,8 @@ export default {
         row.status == 2 ||
         row.status == 3 ||
         row.status == 0 ||
-        row.status == 4
+        row.status == 4 ||
+        row.status == 5
       ) {
         return false;
       } else {
@@ -1621,7 +1687,7 @@ export default {
       const str = arr.join(",");
       this.orderId = str;
       console.log(this.orderId);
-      this.handlePaymentOrder(0);
+      this.handlePaymentOrder(1);
     },
     //获取拍摄场景列表
     getShootRequireList() {
@@ -1699,8 +1765,8 @@ export default {
         orderType: this.orderType,
       })
         .then((res) => {
-          console.log(22);
-          if (res.code === 1) {
+          // console.log(res, "res");
+          if (res.code == 1) {
             this.pageState = true;
             this.tableData = res.data.data;
             this.total = res.data.total;
@@ -2132,6 +2198,28 @@ export default {
     handleImgView(file) {
       this.dialogImageUrl = file;
       this.imgDialog = true;
+    },
+
+    // 查看地址
+    getsiteRead(id) {
+      siteRead({
+        order_id: id,
+      }).then((res) => {
+        if (res.code == 1) {
+          this.centerDialogVisible = true;
+          this.getOrderList();
+          let req = this.tableData.filter((item) => {
+            return item.id == id;
+          });
+          // console.log(req[0].site);
+          this.getsite = req[0].site;
+        }
+      });
+    },
+
+    //关闭查看地址
+    IselDialogDz() {
+      this.centerDialogVisible = false;
     },
   },
 };
@@ -3712,5 +3800,51 @@ export default {
   font-weight: 400;
   font-size: 14px;
   line-height: 8px;
+}
+
+.paginationBtn:hover {
+  color: #ffffff;
+}
+</style>
+<style lang="less" scoped>
+.elDialogDz {
+  width: 368px;
+  height: 140px;
+  background: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #eeeeee;
+  margin: 24px auto;
+  padding: 12px 16px;
+}
+
+.elDialogDz-btn {
+  width: 140px;
+  height: 32px;
+  background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+  border-radius: 16px;
+  line-height: 0px;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.elDialogDz-btn:hover {
+  color: #ffffff;
+}
+
+.Thprice {
+  // width: 42px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid #796cf3;
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #796cf3;
+  text-align: center;
+  position: absolute;
+  top: 30px;
+  right: 70px;
 }
 </style>

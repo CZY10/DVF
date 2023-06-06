@@ -1129,6 +1129,7 @@ export default {
       errorText: "",
       errorShow: false,
       requirementValidator: false,
+      fleg: true,
     };
   },
   components: {
@@ -1607,6 +1608,7 @@ export default {
             createOrder(data)
               .then((res) => {
                 if (res.code === 1) {
+                  this.fleg = false;
                   this.videoSubmitDialogVisible = false;
                   this.selectRow.forEach((item) => {
                     this.$refs.multipleTable.toggleRowSelection(item, false);
@@ -1675,9 +1677,10 @@ export default {
           type: "warning",
         });
       } else {
-        this.videoSubmitDialogVisible = true;
-        this.getShootRequireList();
         this.drawer = false;
+        this.videoSubmitDialogVisible = true;
+        this.isShowSelectedPlan = false;
+        this.getShootRequireList();
       }
     },
   },
@@ -1690,6 +1693,15 @@ export default {
       this.$nextTick(() => {
         this.delayedDragging = false;
       });
+    },
+    videoSubmitDialogVisible(newvideoSubmitDialogVisible) {
+      if (newvideoSubmitDialogVisible == false) {
+        if (this.fleg == true) {
+          this.isShowSelectedPlan = true;
+        } else {
+          this.fleg = true;
+        }
+      }
     },
   },
 };

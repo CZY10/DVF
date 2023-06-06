@@ -342,7 +342,7 @@
                     right: 10px;
                     border-radius: 50%;
                   "
-                  v-if="scope.row.site_read == 0"
+                  v-if="scope.row.site_read == 1"
                 ></div>
                 <el-button
                   class="operation_btn"
@@ -485,7 +485,7 @@
       <div class="payment_content">
         <h4>¥{{ orderData.price }}</h4>
         <p v-if="orderIdFlex">合并订单金额</p>
-        <p v-if="orderIdFlex == false">尾款金额</p>
+        <p v-if="orderIdFlex == false">订单金额</p>
         <!-- <p>
           订单号：<span>{{ orderData.order_id }}</span>
         </p> -->
@@ -1661,7 +1661,7 @@ export default {
             item.status == 5
           ) {
           } else {
-            this.$refs.multipleTable.toggleRowSelection(item, true);
+            this.$refs.multipleTable.toggleRowSelection(item, false);
           }
         }
       });
@@ -1674,6 +1674,7 @@ export default {
     },
     //当选择项发生变化时会触发该事件
     handleSelectionChange(val) {
+      console.log(val);
       this.multipleSelection = val;
       let num = 0;
       this.multipleSelection.map((item) => {
@@ -1690,7 +1691,8 @@ export default {
         row.status == 3 ||
         row.status == 0 ||
         row.status == 4 ||
-        row.status == 5
+        row.status == 5 ||
+        row.apply_refund_deposit == 0
       ) {
         return false;
       } else {
@@ -2236,6 +2238,7 @@ export default {
           this.getsite = req[0].site;
         }
       });
+      console.log(this.tableData);
     },
 
     //关闭查看地址
@@ -3830,7 +3833,7 @@ export default {
 </style>
 <style lang="less" scoped>
 .elDialogDz {
-  width: 368px;
+  width: 90%;
   height: 140px;
   background: #ffffff;
   border-radius: 4px;

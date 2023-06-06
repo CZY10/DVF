@@ -56,6 +56,8 @@ export default {
         })
           .then((res) => {
             window.location.href = res.data.jump;
+            localStorage.removeItem("source");
+            localStorage.removeItem("avatar");
           })
           .catch((res) => {
             console.log(res);

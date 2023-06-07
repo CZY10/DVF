@@ -1692,7 +1692,7 @@ export default {
         row.status == 0 ||
         row.status == 4 ||
         row.status == 5 ||
-        row.apply_refund_deposit == 0
+        row.influencer_id == null
       ) {
         return false;
       } else {

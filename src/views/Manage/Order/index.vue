@@ -203,7 +203,17 @@
                     : "已退尾款频"
                 }}
               </span>
-              <div v-if="scope.row.status == 5" class="Thprice">已退还</div>
+              <div
+                v-if="
+                  scope.row.status == 5 ||
+                  scope.row.status == 2 ||
+                  scope.row.status == 3 ||
+                  scope.row.status == 4
+                "
+                class="Thprice"
+              >
+                已退还
+              </div>
               <div
                 v-if="
                   scope.row.apply_refund_deposit == 1 && scope.row.status == 1
@@ -1363,7 +1373,7 @@
     </el-dialog>
     <!--支付完成-->
     <el-dialog
-      :title="paymentType == 0 ? '定金支付成功' : '尾款支付成功'"
+      :title="paymentType == 0 ? '定金支付成功' : '订单支付成功'"
       :visible.sync="paymentCompletedDialogVisible"
       width="360px"
       @close="getOrderList"
@@ -1376,7 +1386,7 @@
           style="color: rgba(2, 181, 120, 1); font-size: 20px"
           class="el-icon-success"
         ></i>
-        {{ paymentType == 0 ? "定金支付成功" : "尾款支付成功" }}
+        {{ paymentType == 0 ? "定金支付成功" : "订单支付成功" }}
       </div>
       <div>
         <p
@@ -3782,13 +3792,13 @@ export default {
 </style>
 <style lang="less" scoped>
 .pagination-span {
-  width: 111px;
   height: 22px;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #999999;
   line-height: 20px;
+  margin-right: 15px;
 }
 
 .pagination-btn {

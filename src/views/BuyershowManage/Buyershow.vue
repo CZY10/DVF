@@ -42,17 +42,7 @@
       <div class="content">
         <div style="max-width: 1200px; margin: auto">
           <h2>查找适合你的拍摄方案</h2>
-          <div
-            style="
-              background: linear-gradient(
-                180deg,
-                rgba(121, 108, 243, 1),
-                rgba(223, 96, 247, 1)
-              );
-              border-radius: 23px;
-              padding: 2px;
-            "
-          >
+          <div class="search_style">
             <div class="search_style">
               <el-input
                 placeholder="搜索品类/红人编号"
@@ -3012,6 +3002,15 @@ export default {
         font-size: 16px;
       }
     }
+  }
+  .box-border {
+    border-radius: 23px;
+    padding: 2px;
+    background: linear-gradient(
+      180deg,
+      rgba(121, 108, 243, 1),
+      rgba(223, 96, 247, 1)
+    );
   }
 }
 </style>

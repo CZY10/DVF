@@ -195,7 +195,7 @@
                     : scope.row.status == 2
                     ? "待寄送样品"
                     : scope.row.status == 3
-                    ? "上传视频"
+                    ? "待上传视频"
                     : scope.row.status == 4
                     ? "已完成"
                     : scope.row.status == 5
@@ -216,7 +216,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="hasMessage" label="订单信息">
+        <el-table-column prop="hasMessage" label="达人沟通">
           <template slot-scope="scope">
             <el-badge
               is-dot
@@ -230,7 +230,7 @@
               class="badge_style"
             >
               <i
-                class="el-icon-message"
+                class="el-icon-chat-dot-round"
                 style="font-size: 20px; cursor: pointer"
               ></i>
             </el-badge>
@@ -976,8 +976,8 @@
                 v-show="false"
               ></el-checkbox-group>
               <el-upload
-                ref="upload"
                 :class="{ hide_upload: isHide }"
+                ref="upload"
                 :action="localhost + '/api/common/upload'"
                 :on-change="changeUpload"
                 list-type="picture-card"
@@ -1402,7 +1402,7 @@
 
     <!-- 查看地址 -->
     <el-dialog
-      title="请尽快将产品送到以下地址"
+      title="请尽快将产品寄送到以下地址"
       :visible.sync="centerDialogVisible"
       width="30%"
       center
@@ -2039,6 +2039,7 @@ export default {
       if (!isLt5M) {
         this.$message.error("上传头像图片大小不能超过 5MB!");
       }
+      this.isHide = false;
       return isFileType && isLt5M;
     },
     handleRemove(file) {

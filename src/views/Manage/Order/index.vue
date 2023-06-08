@@ -203,17 +203,7 @@
                     : "已退尾款频"
                 }}
               </span>
-              <div
-                v-if="
-                  scope.row.status == 5 ||
-                  scope.row.status == 2 ||
-                  scope.row.status == 3 ||
-                  scope.row.status == 4
-                "
-                class="Thprice"
-              >
-                已退还
-              </div>
+              <div v-if="backDeposit == 1" class="Thprice">已退还</div>
               <div
                 v-if="
                   scope.row.apply_refund_deposit == 1 && scope.row.status == 1
@@ -1613,6 +1603,7 @@ export default {
       strArr: "",
       priceNum: 0,
       getsite: "",
+      backDeposit: 0,
     };
   },
   created() {
@@ -1740,6 +1731,7 @@ export default {
         .then((res) => {
           if (res.code === 1) {
             this.stepsList = res.data;
+            this.backDeposit = res.data.back_deposit;
           }
         })
         .catch((err) => {
@@ -2248,7 +2240,7 @@ export default {
           this.getsite = req[0].site;
         }
       });
-      console.log(this.tableData);
+      // console.log(this.tableData);
     },
 
     //关闭查看地址

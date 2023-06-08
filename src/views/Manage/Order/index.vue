@@ -1594,7 +1594,7 @@ export default {
       checkAlipayPaymentVal: "",
       token: "",
       avatar: "",
-      isMessage: this.$store.state.order.isMessage,
+      isMessage: this.$store.state.order.isMessage || window.localStorage.getItem("ismessage"),
       message: 0,
       order: "",
       orderType: "",
@@ -1795,6 +1795,7 @@ export default {
             this.tableData = res.data.data;
             this.total = res.data.total;
             this.setIsMessage(0);
+            window.localStorage.setItem("ismessage",0)
             this.handleSelectable();
           }
         })

@@ -1407,7 +1407,11 @@
       width="30%"
       center
     >
-      <div class="elDialogDz">{{ getsite }}</div>
+      <div class="elDialogDz">
+        <div v-for="(item, index) in strArray" :key="index">
+          {{ item }}
+        </div>
+      </div>
       <div style="width: 100%; display: flex; justify-content: center">
         <el-button class="elDialogDz-btn" @click="IselDialogDz">
           我知道了
@@ -1594,7 +1598,9 @@ export default {
       checkAlipayPaymentVal: "",
       token: "",
       avatar: "",
-      isMessage: this.$store.state.order.isMessage || window.localStorage.getItem("ismessage"),
+      isMessage:
+        this.$store.state.order.isMessage ||
+        window.localStorage.getItem("ismessage"),
       message: 0,
       order: "",
       orderType: "",
@@ -1604,6 +1610,7 @@ export default {
       priceNum: 0,
       getsite: "",
       backDeposit: 0,
+      strArray: [],
     };
   },
   created() {
@@ -1795,7 +1802,7 @@ export default {
             this.tableData = res.data.data;
             this.total = res.data.total;
             this.setIsMessage(0);
-            window.localStorage.setItem("ismessage",0)
+            window.localStorage.setItem("ismessage", 0);
             this.handleSelectable();
           }
         })
@@ -1821,7 +1828,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.isMessage = 0;
+      this.isMessage = 1;
       if (this.pageState === true) this.getOrderList();
     },
     //删除订单
@@ -2239,9 +2246,9 @@ export default {
           });
           // console.log(req[0].site);
           this.getsite = req[0].site;
+          this.strArray = this.getsite.split("\r\n");
         }
       });
-      // console.log(this.tableData);
     },
 
     //关闭查看地址

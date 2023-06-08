@@ -1396,12 +1396,7 @@
           平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意
         </p>
         <p v-else style="line-height: 24px; text-align: center">
-          请尽快将样品寄送至达人收货地址，如已寄送，请及时上传样品寄送信息；若未收到达人地址信息，可通过
-          <i
-            class="el-icon-chat-dot-round"
-            style="font-size: 18px; color: #796cf3"
-          ></i>
-          联系达人经纪人获取~
+          请尽快将样品寄送至达人收货地址，如已寄送，请及时上传样品寄送信息；点击【查看地址】即可获取达人收获信息~
         </p>
         <div class="button_box know_btn">
           <el-button
@@ -1691,6 +1686,11 @@ export default {
         num = num + item.price * 1;
       });
       this.priceNum = num;
+
+      setTimeout(() => {
+        var element = document.querySelector(".is-indeterminate");
+        element.classList.remove("is-indeterminate");
+      }, 10);
     },
     //当用户手动勾选全选 Checkbox 时触发的事件
     selectAll() {},

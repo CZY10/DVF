@@ -80,8 +80,8 @@
               scope.row.order_type == 0
                 ? "定金"
                 : scope.row.order_type == 1
-                ? "总款"
-                : "总款"
+                ? "订单金额"
+                : "订单金额"
             }}
           </template>
         </el-table-column>

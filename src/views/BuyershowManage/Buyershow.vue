@@ -24,7 +24,7 @@
             <div class="service_item">
               <i class="iconfont icon-yp"></i>
               <div>
-                <p>补缴尾款</p>
+                <p>支付订单（同步退定金）</p>
                 <p>寄送样品</p>
               </div>
               <i class="iconfont icon-bz" style="color: #ffffff"></i>

@@ -164,8 +164,6 @@
                       ? '#FF000C'
                       : scope.row.status == 2
                       ? '#FF000C'
-                      : scope.row.status == 3
-                      ? '#FF000C'
                       : scope.row.status == 4
                       ? '#00D9AD'
                       : '#333333',
@@ -177,8 +175,6 @@
                       scope.row.status == 0
                         ? '#FF000C'
                         : scope.row.status == 1
-                        ? '#FF000C'
-                        : scope.row.status == 3
                         ? '#FF000C'
                         : scope.row.status == 2
                         ? '#FF000C'

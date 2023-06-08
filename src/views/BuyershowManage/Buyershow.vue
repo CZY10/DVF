@@ -42,7 +42,7 @@
       <div class="content">
         <div style="max-width: 1200px; margin: auto">
           <h2>查找适合你的拍摄方案</h2>
-          <div class="search_style">
+          <div class="box-border">
             <div class="search_style">
               <el-input
                 placeholder="搜索品类/红人编号"

@@ -3880,3 +3880,10 @@ export default {
   right: 70px;
 }
 </style>
+
+<style>
+.el-table__row > td > .cell {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+</style>

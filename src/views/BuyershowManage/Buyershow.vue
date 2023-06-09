@@ -1667,10 +1667,10 @@ export default {
           type: "warning",
         });
       } else {
-        this.videoSubmitDialogVisible = true;
-        this.getShootRequireList();
         this.drawer = false;
         this.isShowSelectedPlan = false;
+        this.videoSubmitDialogVisible = true;
+        this.getShootRequireList();
       }
     },
   },

@@ -20,6 +20,7 @@ export default {
       isToken: false,
       action: "",
       source: "",
+      fullscreenLoading: false,
     };
   },
   mounted() {
@@ -41,6 +42,16 @@ export default {
     console.log(this.source);
 
     if (this.isToken == true && this.source == "vipon_deal") {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "#fff",
+      });
+      setTimeout(() => {
+        loading.close();
+      }, 5000);
+
       if (this.action == "account/login") {
         localStorage.removeItem("source");
         localStorage.removeItem("avatar");

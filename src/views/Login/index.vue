@@ -280,10 +280,6 @@
           <i class="iconfont icon-phone-call"></i><span>电话：</span
           >{{ configData.phone }}
         </p>
-        <!-- <p>
-          <i class="iconfont icon-mail"></i><span>邮箱：</span
-          >{{ configData.email }}
-        </p> -->
         <p>
           <i class="iconfont icon-mail"></i><span>邮箱：</span>ceo@viponltd.com
         </p>

@@ -24,7 +24,7 @@
             <div class="service_item">
               <i class="iconfont icon-yp"></i>
               <div>
-                <p>补缴尾款</p>
+                <p>支付订单（同步退定金）</p>
                 <p>寄送样品</p>
               </div>
               <i class="iconfont icon-bz" style="color: #ffffff"></i>
@@ -42,17 +42,7 @@
       <div class="content">
         <div style="max-width: 1200px; margin: auto">
           <h2>查找适合你的拍摄方案</h2>
-          <div
-            style="
-              background: linear-gradient(
-                180deg,
-                rgba(121, 108, 243, 1),
-                rgba(223, 96, 247, 1)
-              );
-              border-radius: 23px;
-              padding: 2px;
-            "
-          >
+          <div class="box-border">
             <div class="search_style">
               <el-input
                 placeholder="搜索品类/红人编号"
@@ -1678,8 +1668,8 @@ export default {
         });
       } else {
         this.drawer = false;
-        this.videoSubmitDialogVisible = true;
         this.isShowSelectedPlan = false;
+        this.videoSubmitDialogVisible = true;
         this.getShootRequireList();
       }
     },
@@ -3012,6 +3002,15 @@ export default {
         font-size: 16px;
       }
     }
+  }
+  .box-border {
+    border-radius: 23px;
+    padding: 2px;
+    background: linear-gradient(
+      180deg,
+      rgba(121, 108, 243, 1),
+      rgba(223, 96, 247, 1)
+    );
   }
 }
 </style>

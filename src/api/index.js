@@ -348,3 +348,12 @@ export function determineDeal(data) {
         data
     })
 }
+
+// 修改订单地址的未读状态
+export function siteRead(data) {
+    return request({
+        url: "/api/order/siteRead",
+        method: "post",
+        data
+    })
+}

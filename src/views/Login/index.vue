@@ -273,10 +273,7 @@
     >
       <div class="contact_us_box">
         <span></span><span></span><span></span><span></span>
-        <img
-          src="https://api.viponm.com/uploads/20230306/7397351747f8e7dd44b44c4024b3ee5b.png"
-          style="width: 260px"
-        />
+        <img :src="configData.wechat" style="width: 260px" />
       </div>
       <div class="contact_us_foot">
         <p>

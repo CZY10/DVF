@@ -33,10 +33,7 @@
         <el-col :span="4" style="padding-right: 0">
           <el-col :span="12" style="padding: 0">
             <div class="qr_code">
-              <img
-                src="https://api.viponm.com/uploads/20230306/7397351747f8e7dd44b44c4024b3ee5b.png"
-                alt=""
-              />
+              <img :src="formData.wechat" alt="" />
             </div>
             <p style="text-align: center; margin-top: 8px">微信咨询</p>
           </el-col>

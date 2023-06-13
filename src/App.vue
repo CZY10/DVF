@@ -50,7 +50,7 @@ export default {
       });
       setTimeout(() => {
         loading.close();
-      }, 5000);
+      }, 10000);
 
       if (this.action == "account/login") {
         localStorage.removeItem("source");

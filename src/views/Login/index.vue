@@ -273,7 +273,7 @@
     >
       <div class="contact_us_box">
         <span></span><span></span><span></span><span></span>
-        <img :src="configData.wechat" alt="" />
+        <img :src="configData.wechat" style="width: 260px" />
       </div>
       <div class="contact_us_foot">
         <p>

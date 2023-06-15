@@ -9,6 +9,9 @@ import Order from "@/views/Manage/Order";
 import Payment from "@/views/Manage/Payment";
 import Personal from "@/views/Manage/Personal";
 import ChatGPT from "@/views/ChatGPT";
+import webDeal from "@/views/webDeal/index.vue"
+import Requirement from "@/components/RequirementSubmission/index.vue"
+import Note from "@/components/RequirementSubmission/note.vue"
 
 Vue.use(VueRouter)
 
@@ -28,6 +31,24 @@ const routes = [
                 name: 'videoHome',
                 meta: {requiresAuth: false},
                 component: VideoHome,
+            },
+            {
+                path: '/webDeal',
+                name: 'webDeal',
+                meta: {requiresAuth: false},
+                component: webDeal,
+            },
+            {
+                path: '/Requirement',
+                name: 'Requirement',
+                meta: {requiresAuth: true},
+                component: Requirement,
+            },
+            {
+                path: '/Note',
+                name: 'Note',
+                meta: {requiresAuth: true},
+                component: Note,
             },
             {
                 path: '/chatgpt',

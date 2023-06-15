@@ -70,6 +70,11 @@
           label="订单号"
           min-width="110"
         ></el-table-column>
+        <el-table-column label="意向达人" min-width="40">
+          <template>
+            <div>平台推荐</div>
+          </template>
+        </el-table-column>
         <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
           <template slot-scope="scope">
             <p>
@@ -3878,5 +3883,12 @@ export default {
   position: absolute;
   top: 30px;
   right: 70px;
+}
+</style>
+
+<style>
+.el-table__row > td > .cell {
+  padding-right: 0px;
+  padding-left: 0px;
 }
 </style>

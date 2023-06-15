@@ -27,23 +27,12 @@
         <!-- <el-menu-item
           ><a style="width: 100%" :href="DealHook">海外Deal站</a></el-menu-item
         > -->
+        <el-menu-item index="/webDeal">海外Deal站</el-menu-item>
         <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
         <!-- href="https://seller.vipona.com/account/login" -->
         <el-menu-item
           ><a target="_blank" style="width: 100%" @click="goVipon"
-            >Vipon自助发帖</a
-          ></el-menu-item
-        >
-        <!-- href="https://seller.vipona.com/account/login" -->
-        <el-menu-item
-          ><a target="_blank" style="width: 100%" @click="goFb"
-            >FB推广</a
-          ></el-menu-item
-        >
-        <!-- href="https://seller.vipona.com/account/login" -->
-        <el-menu-item
-          ><a target="_blank" style="width: 100%" @click="goDeak"
-            >Deal站推广</a
+            >站外推广</a
           ></el-menu-item
         >
         <!-- <el-menu-item index="/chatgpt">ChatGPT</el-menu-item> -->
@@ -95,7 +84,10 @@
         <el-menu-item style="float: right" @click="handlerClick"
           >联系我们</el-menu-item
         >
-        <el-menu-item v-if="token" style="float: right">
+        <el-menu-item
+          v-if="token"
+          style="float: right; padding-left: 0; width: 100px"
+        >
           <el-popover
             placement="bottom"
             popper-class="menu_popover"
@@ -162,6 +154,28 @@
             </div>
           </el-popover>
         </el-menu-item>
+        <el-menu-item style="float: right">
+          <button
+            style="
+              width: 148px;
+              height: 35px;
+              background: #ffffff;
+              border-radius: 18px;
+              cursor: pointer;
+              border: none;
+              border: 1px solid rgba(121, 108, 243, 1);
+              border-image: linear-gradient(
+                  180deg,
+                  rgba(121, 108, 243, 1),
+                  rgba(223, 96, 247, 1)
+                )
+                1 1;
+            "
+            @click="goRequirementSubmission"
+          >
+            提交拍摄需求
+          </button></el-menu-item
+        >
       </el-menu>
     </div>
 
@@ -538,57 +552,24 @@ export default {
     },
     //   vipon自助发帖跳转
     goVipon() {
+      if (process.env.NODE_ENV == "production") {
+        this.ViponSrc = "https://seller.vipona.com/dashboard/index";
+      } else if (process.env.NODE_ENV == "development") {
+        this.ViponSrc = "https://hkatest.myvipon.com/dashboard/index";
+      }
       if (window.localStorage.getItem("token")) {
-        if (process.env.NODE_ENV == "production") {
-          this.ViponSrc = "https://seller.vipona.com/promotion/index";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.ViponSrc, "_black");
-        } else if (process.env.NODE_ENV == "development") {
-          this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.ViponSrc, "_black");
-        }
+        localStorage.removeItem("source");
+        localStorage.removeItem("active");
+        window.location.href = this.ViponSrc;
       } else {
-        this.$router.push("/login?source=vipon_deal&action=promotion/index");
+        window.location.href = this.ViponSrc;
       }
     },
-    // Deal跳转
-    goDeak() {
-      if (window.localStorage.getItem("token")) {
-        if (process.env.NODE_ENV == "production") {
-          this.DealSrc = "https://seller.vipona.com/hot/deal";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.DealSrc, "_black");
-        } else if (process.env.NODE_ENV == "development") {
-          this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.DealSrc, "_black");
-        }
-      } else {
-        this.$router.push("/login?source=vipon_deal&action=hot/deal");
-      }
-    },
-    //Fb跳转
-    goFb() {
-      if (window.localStorage.getItem("token")) {
-        if (process.env.NODE_ENV == "production") {
-          this.FbSrc = "https://seller.vipona.com/hot/fb";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.FbSrc, "_black");
-        } else if (process.env.NODE_ENV == "test") {
-          this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.FbSrc, "_black");
-        }
-      } else {
-        this.$router.push("/login?source=vipon_deal&action=hot/fb");
-      }
+    goRequirementSubmission() {
+      window.open(
+        this.$router.resolve({ path: "/Requirement" }).href,
+        "_blank"
+      );
     },
   },
 };

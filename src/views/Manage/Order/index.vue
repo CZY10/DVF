@@ -1627,6 +1627,9 @@ export default {
     this.avatar = localStorage.getItem("avatar");
     this.handlerGetCategory();
     this.getShootRequireList();
+    setTimeout(() => {
+      console.log(this.tableData);
+    }, 1000);
   },
   computed: {
     query() {

@@ -201,13 +201,22 @@
                     content="请按模板格式导入,支持多笔需求一同导入"
                     placement="bottom"
                   >
-                    <div class="liBtn1div">
-                      <img
-                        src="@/assets/images/excel4.png"
-                        style="width: 20px; margin-right: 5px"
-                      />
-                      <span>导入</span>
-                    </div>
+                    <el-upload
+                      action="#"
+                      accept=".xls, .xlsx"
+                      :show-file-list="false"
+                      :multiple="false"
+                      :http-request="httpRequest"
+                    >
+                      <div class="liBtn1div">
+                        <img
+                          src="@/assets/images/excel4.png"
+                          style="width: 20px; margin-right: 5px"
+                        />
+
+                        <span>导入</span>
+                      </div>
+                    </el-upload>
                   </el-tooltip>
                 </li>
                 <li class="liBtn2" @click="addRequireList">手动添加</li>
@@ -701,9 +710,11 @@ import {
   needsSelectInfluencer,
   needsSubmit,
   checkPayment,
+  needsTemplate,
 } from "@/api";
 import draggable from "vuedraggable";
 import QRCode from "qrcodejs2";
+import * as XLSX from "xlsx";
 export default {
   data() {
     return {
@@ -770,12 +781,26 @@ export default {
       },
       checkWechatPaymentVal: "",
       checkAlipayPaymentVal: "",
+      fileList: [],
     };
   },
   components: {
     draggable,
   },
   methods: {
+    httpRequest(file) {
+      console.log(file.file);
+      needsTemplate({
+        file: file.file,
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+
     // 开始拖拽事件
     onStart() {
       // to do

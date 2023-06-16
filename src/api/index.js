@@ -438,3 +438,12 @@ export function needsSubmit(data) {
         data
     })
 }
+
+//导入模板
+export function needsTemplate(data) {
+    return request({
+        url: "/api/needs/template",
+        method: "post",
+        data
+    })
+}

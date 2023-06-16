@@ -1,5 +1,6 @@
 //请求方法
 import request,{createAPI} from "@/utils/request";
+import { log } from "video.js";
 
 //post请求
 // export function login(data){
@@ -443,7 +444,22 @@ export function needsSubmit(data) {
 export function needsTemplate(data) {
     return request({
         url: "/api/needs/template",
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
         method: "post",
         data
     })
 }
+
+
+// export function needsTemplate(data) {
+//     return request({
+//         url: "/api/needs/template",
+//         method: "post",
+//         headers: {
+//             'Content-Type': 'multipart/form-data'
+//         },
+//         data
+//     })
+// }

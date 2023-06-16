@@ -202,7 +202,7 @@
                     placement="bottom"
                   >
                     <el-upload
-                      action="#"
+                      action=""
                       accept=".xls, .xlsx"
                       :show-file-list="false"
                       :multiple="false"
@@ -750,7 +750,6 @@ export default {
       videoSubmitDialogVisible: false,
       isvideoSubmitDialogVisible: 0,
       videoRuleForm: {
-        selectedType: "0",
         product: "",
         category: "",
         selling_point: "",
@@ -788,13 +787,19 @@ export default {
     draggable,
   },
   methods: {
-    httpRequest(file) {
-      console.log(file.file);
+    httpRequest(fileLit) {
+      const formData = new FormData();
+      // for (const key in fileLit.file) {
+      //   formData.append(key, fileLit.file[key]);
+      // }
+      console.log(fileLit);
+      formData.append("file", fileLit.file);
       needsTemplate({
-        file: file.file,
+        file: fileLit.file,
       })
         .then((res) => {
           console.log(res);
+          this.reqsearch();
         })
         .catch((res) => {
           console.log(res);
@@ -855,7 +860,6 @@ export default {
     },
     addRequireList() {
       (this.videoRuleForm = {
-        selectedType: "0",
         product: "",
         category: "",
         selling_point: "",
@@ -872,9 +876,7 @@ export default {
     submitForm(formName) {
       if (this.isvideoSubmitDialogVisible == 0) {
         let data = {
-          shoot: this.videoRuleForm.selectedType,
           influencer_ids: [],
-          custom: this.videoRuleForm.demand,
           url: this.videoRuleForm.product,
           description: this.videoRuleForm.remarks,
           shootrequire: this.listArray,
@@ -891,7 +893,6 @@ export default {
                 console.log(res);
                 this.reqsearch();
                 (this.videoRuleForm = {
-                  selectedType: "0",
                   product: "",
                   category: "",
                   selling_point: "",
@@ -926,7 +927,6 @@ export default {
                 console.log(res);
                 this.reqsearch();
                 (this.videoRuleForm = {
-                  selectedType: "0",
                   product: "",
                   category: "",
                   selling_point: "",
@@ -951,7 +951,6 @@ export default {
       this.formId = id;
       this.isvideoSubmitDialogVisible = 1;
       (this.videoRuleForm = {
-        selectedType: "0",
         product: "",
         category: "",
         selling_point: "",

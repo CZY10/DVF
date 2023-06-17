@@ -897,7 +897,7 @@ export default {
       if (window.localStorage.getItem("token")) {
         localStorage.removeItem("source");
         localStorage.removeItem("active");
-        window.location.href = this.ViponSrc;
+        window.open(this.ViponSrc, "_blank");
       } else {
         window.location.href = this.ViponSrc;
       }

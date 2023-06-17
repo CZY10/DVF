@@ -1387,7 +1387,7 @@
     <el-dialog
       title="已选达人"
       :visible.sync="centerDialogVisibleXinz"
-      width="30%"
+      width="25%"
       center
     >
       <ul style="display: flex; justify-content: center">

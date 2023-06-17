@@ -13,7 +13,7 @@
         <div class="RequirementWenben-div2">
           <div class="elIcon2">
             <img src="@/assets/images/excel4.png" />
-            <span style="cursor: pointer">下载模板</span>
+            <a :href="fileDiz" style="cursor: pointer">下载模板</a>
           </div>
         </div>
       </div>
@@ -33,10 +33,13 @@
             color: '#333333',
           }"
           max-height="600"
+          @selection-change="handleSelectionChange"
         >
-          <el-table-column type="index" label="序号" width="50">
+          <el-table-column type="selection" width="50" :selectable="selectable">
           </el-table-column>
-          <el-table-column label="意向达人" width="310">
+          <el-table-column type="index" width="50" label="序号">
+          </el-table-column>
+          <el-table-column label="意向达人" width="275">
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
                 <ul class="influencerInfoUl">
@@ -109,7 +112,7 @@
           </el-table-column>
           <el-table-column label="产品信息" width="180">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag">--</div>
+              <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div v-else style="display: flex; cursor: pointer">
                 <div
                   style="height: 60px; width: 60px; border: 1px solid #f0f0f0"
@@ -151,7 +154,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄预算/¥" width="150">
+          <el-table-column label="拍摄预算/¥" width="160">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div v-else style="width: 100%">{{ scope.row.budget }}</div>
@@ -166,7 +169,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄要求" width="120">
+          <el-table-column label="拍摄要求" width="100">
             <template slot-scope="scope">
               <div v-if="scope.row.flag == 1 || scope.row.title == ''">--</div>
               <div
@@ -202,7 +205,7 @@
                       :multiple="false"
                       :http-request="httpRequest"
                     >
-                      <div class="liBtn1div">
+                      <div class="liBtn1div" @click="daoRid(scope.row.id)">
                         <img
                           src="@/assets/images/excel4.png"
                           style="width: 20px; margin-right: 5px"
@@ -213,7 +216,9 @@
                     </el-upload>
                   </el-tooltip>
                 </li>
-                <li class="liBtn2" @click="addRequireList">手动添加</li>
+                <li class="liBtn2" @click="addRequireList(scope.row.id)">
+                  手动添加
+                </li>
               </ul>
 
               <ul v-else style="display: flex; justify-content: center">
@@ -249,6 +254,12 @@
           <div class="triangle"></div>
         </div>
       </div>
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        circle
+        @click="deleteList"
+      ></el-button>
       <div class="RequirementBtn">
         <button v-if="tableData.length == 1" style="background: #cccccc">
           提交
@@ -360,7 +371,7 @@
               v-model="videoRuleForm.demand"
             ></el-input>
           </el-form-item>
-          <el-form-item label="拍摄要求" class="is-required">
+          <el-form-item label="拍摄要素" class="is-required">
             <div>
               <div class="form_item_title">
                 在候选达人匹配失败时，将据此为您推荐其他达人
@@ -786,6 +797,9 @@ export default {
       checkWechatPaymentVal: "",
       checkAlipayPaymentVal: "",
       fileList: [],
+      handleSelectionChangeList: [],
+      daorid: "",
+      fileDiz: "",
     };
   },
   components: {
@@ -801,6 +815,7 @@ export default {
       formData.append("file", fileLit.file);
       needsTemplate({
         file: fileLit.file,
+        id: this.daorid,
       })
         .then((res) => {
           console.log(res);
@@ -809,6 +824,10 @@ export default {
         .catch((res) => {
           console.log(res);
         });
+    },
+    daoRid(id) {
+      this.daorid = id;
+      console.log(id);
     },
 
     // 开始拖拽事件
@@ -863,7 +882,7 @@ export default {
         this.requirementValidator = true;
       }
     },
-    addRequireList() {
+    addRequireList(id) {
       (this.videoRuleForm = {
         product: "",
         category: "",
@@ -875,7 +894,12 @@ export default {
         this.getShootRequireList();
       this.videoSubmitDialogVisible = true;
       this.isvideoSubmitDialogVisible = 0;
-      console.log(this.isvideoSubmitDialogVisible);
+      if (id == undefined) {
+        this.isvideoSubmitDialogVisible = 0;
+      } else {
+        this.isvideoSubmitDialogVisible = 1;
+        this.formId = id;
+      }
     },
     //保存拍摄需求
     submitForm(formName) {
@@ -1066,7 +1090,8 @@ export default {
             title: "",
           });
           this.tableData = res.data.data;
-          console.log(res.data.data);
+          console.log(this.tableData);
+          this.fileDiz = res.data.file;
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
           });
@@ -1078,7 +1103,7 @@ export default {
       this.payDepositDialogVisible = true;
       const arr = [];
       this.tableData.forEach((item) => {
-        if (item.id) {
+        if (item.id && item.title != "") {
           arr.push(item.id);
         }
       });
@@ -1167,6 +1192,28 @@ export default {
     },
     delitemElement(index) {
       this.myArray.splice(index, index);
+    },
+    handleSelectionChange(val) {
+      this.handleSelectionChangeList = val;
+      console.log(val);
+    },
+    selectable(row) {
+      if (row.flag == 1) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    deleteList() {
+      if (this.handleSelectionChangeList.length > 0) {
+        var idList = [];
+        this.handleSelectionChangeList.forEach((item) => {
+          idList.push(item.id);
+        });
+        const influencer_ids = idList.join(",");
+        this.centerDialogVisibles = true;
+        this.formId = influencer_ids;
+      }
     },
   },
   mounted() {
@@ -1756,7 +1803,7 @@ export default {
 .el-icon-question {
   position: absolute;
   top: 13px;
-  left: 245px;
+  left: 278px;
   cursor: pointer;
 }
 </style>
@@ -2004,6 +2051,18 @@ export default {
 </style>
 
 <style lang="less" scoped>
+::v-deep .el-table .has-gutter .el-checkbox .el-checkbox__inner {
+  display: none;
+}
+
+::v-deep .el-table .cell::before {
+  content: "";
+  text-align: center;
+  line-height: 37px;
+}
+</style>
+
+<style lang="less" scoped>
 .navmenu {
   padding: 0 10px;
   background: #ffffff;
@@ -2043,11 +2102,12 @@ export default {
           width: 20px;
           margin-right: 5px;
         }
-        span {
+        a {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #796cf3;
+          text-decoration: none;
         }
       }
     }
@@ -2059,7 +2119,7 @@ export default {
     border-radius: 5px;
     position: absolute;
     top: -60px;
-    left: 160px;
+    left: 195px;
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
@@ -2080,7 +2140,6 @@ export default {
   .RequirementBtn {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
     button {
       width: 160px;
       height: 42px;

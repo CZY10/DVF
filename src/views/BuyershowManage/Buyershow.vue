@@ -1677,6 +1677,7 @@ export default {
           influencer_ids: influencer_ids,
         }).then((res) => {
           console.log(res);
+          location.reload();
           window.open(
             this.$router.resolve({ path: "/Requirement" }).href,
             "_blank"

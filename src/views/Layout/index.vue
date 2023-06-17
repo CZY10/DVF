@@ -77,6 +77,15 @@ export default {
   },
   created() {
     if (
+      this.$route.fullPath == "/videohome" ||
+      this.$route.fullPath == "/buyershow" ||
+      this.$route.fullPath == "/"
+    ) {
+      this.flags = true;
+    } else {
+      this.flags = false;
+    }
+    if (
       this.$route.fullPath == "/Requirement" ||
       this.$route.fullPath == "/Note"
     ) {

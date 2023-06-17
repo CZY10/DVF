@@ -33,7 +33,7 @@
         <el-col :span="4" style="padding-right: 0">
           <el-col :span="12" style="padding: 0">
             <div class="qr_code">
-              <img :src="formData.wechat" />
+              <img :src="formData.wechat" alt="" />
             </div>
             <p style="text-align: center; margin-top: 8px">微信咨询</p>
           </el-col>

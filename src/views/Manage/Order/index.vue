@@ -840,7 +840,7 @@
               v-model="videoForm.sellingpoint"
             ></el-input>
           </el-form-item>
-          <el-form-item label="拍摄要求">
+          <el-form-item label="拍摄要素">
             <div>
               <div class="form_item_title">
                 在候选达人匹配失败时，将据此为您推荐其他达人

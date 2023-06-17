@@ -224,7 +224,7 @@
               <ul v-else style="display: flex; justify-content: center">
                 <li
                   style="color: #796cf3; cursor: pointer"
-                  @click="modifysubmitForm(scope.row.id)"
+                  @click="modifysubmitForm(scope.row.id, scope.$index)"
                 >
                   修改
                 </li>
@@ -255,19 +255,31 @@
         </div>
       </div>
       <el-button
-        type="danger"
         icon="el-icon-delete"
         circle
         @click="deleteList"
+        style="background-color: white"
       ></el-button>
       <div class="RequirementBtn">
-        <button v-if="tableData.length == 1" style="background: #cccccc">
+        <button
+          v-if="tableData.length == 1"
+          style="background: #cccccc"
+          @click="tiso"
+        >
           提交
         </button>
-        <button v-else-if="tableDataTitle" style="background: #cccccc">
+        <button
+          v-else-if="tableDataTitle"
+          style="background: #cccccc"
+          @click="tist"
+        >
           提交
         </button>
-        <button v-else-if="checked == false" style="background: #cccccc">
+        <button
+          v-else-if="checked == false"
+          style="background: #cccccc"
+          @click="tiss"
+        >
           提交
         </button>
         <button @click="submitTo" v-else>提交</button>
@@ -974,20 +986,19 @@ export default {
       }
     },
     //修改拍摄需求
-    modifysubmitForm(id) {
-      this.getShootRequireList();
-      this.videoSubmitDialogVisible = true;
+    modifysubmitForm(id, index) {
+      (this.videoRuleForm = {
+        product: this.tableData[index].url,
+        remarks: this.tableData[index].description,
+        category: this.tableData[index].title,
+        copper: this.tableData[index].budget,
+        selling_point: this.tableData[index].point,
+      }),
+        (this.listArray = this.tableData[index].shootrequire);
+      this.radio = this.tableData[index].method + "";
       this.formId = id;
       this.isvideoSubmitDialogVisible = 1;
-      (this.videoRuleForm = {
-        product: "",
-        category: "",
-        selling_point: "",
-        demand: "",
-        remarks: "",
-        copper: "",
-      }),
-        console.log(this.isvideoSubmitDialogVisible);
+      this.videoSubmitDialogVisible = true;
     },
     //copy拍摄需求
     copysubmitForm(id) {
@@ -1018,7 +1029,6 @@ export default {
     },
     //查看拍摄需求
     looksubmitForm(id, index) {
-      console.log(this.tableData[index]);
       (this.videoRuleForm = {
         product: this.tableData[index].url,
         remarks: this.tableData[index].description,
@@ -1214,6 +1224,15 @@ export default {
         this.centerDialogVisibles = true;
         this.formId = influencer_ids;
       }
+    },
+    tiso() {
+      this.$message("您还没有添加然后需求，请添加需求在提交");
+    },
+    tist() {
+      this.$message("您还没有添加然后需求，请添加需求在提交");
+    },
+    tiss() {
+      this.$message("请先阅读同意《视频拍摄服务及售后说明》");
     },
   },
   mounted() {

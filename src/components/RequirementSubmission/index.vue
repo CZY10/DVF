@@ -1133,6 +1133,7 @@ export default {
                 _this.payDepositDialogVisible = false;
                 clearInterval(_this.checkWechatPaymentVal);
                 clearInterval(_this.checkAlipayPaymentVal);
+                _this.$router.push("/manage/order");
               }
             }
           })
@@ -1155,6 +1156,7 @@ export default {
                 _this.payDepositDialogVisible = false;
                 clearInterval(_this.checkAlipayPaymentVal);
                 clearInterval(_this.checkWechatPaymentVal);
+                _this.$router.push("/manage/order");
               }
             }
           })
@@ -1193,6 +1195,11 @@ export default {
     },
     centerDialogVisible(newVal) {
       console.log(newVal);
+      if (newVal == false) {
+        this.reqsearch();
+      }
+    },
+    payDepositDialogVisible(newVal) {
       if (newVal == false) {
         this.reqsearch();
       }

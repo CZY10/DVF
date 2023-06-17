@@ -11,12 +11,6 @@
       <div class="RequirementWenben">
         <div class="RequirementWenben-div1">待提交的需求</div>
         <div class="RequirementWenben-div2">
-          <div class="elIcon">
-            <i class="el-icon-s-opportunity"></i>
-            <span style="cursor: pointer" @click="goNote"
-              >注意事项及售后说明</span
-            >
-          </div>
           <div class="elIcon2">
             <img src="@/assets/images/excel4.png" />
             <span style="cursor: pointer">下载模板</span>
@@ -174,7 +168,7 @@
           </el-table-column>
           <el-table-column label="拍摄要求" width="120">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag == 1">--</div>
+              <div v-if="scope.row.flag == 1 || scope.row.title == ''">--</div>
               <div
                 v-else
                 style="color: #796cf3; cursor: pointer"
@@ -188,7 +182,7 @@
             <template slot-scope="scope">
               <ul
                 style="display: flex; justify-content: center"
-                v-if="scope.row.flag == 1"
+                v-if="scope.row.flag == 1 || scope.row.title == ''"
               >
                 <li
                   class="liBtn1"
@@ -262,7 +256,17 @@
         <button v-else-if="tableDataTitle" style="background: #cccccc">
           提交
         </button>
+        <button v-else-if="checked == false" style="background: #cccccc">
+          提交
+        </button>
         <button @click="submitTo" v-else>提交</button>
+      </div>
+      <div class="elIcon">
+        <el-checkbox v-model="checked" style="margin-right: 10px"></el-checkbox>
+        <span>我已阅读并同意</span
+        ><span style="cursor: pointer; color: #796cf3" @click="goNote"
+          >《视频拍摄服务及售后说明》</span
+        >
       </div>
     </div>
 
@@ -718,6 +722,7 @@ import * as XLSX from "xlsx";
 export default {
   data() {
     return {
+      checked: false,
       tableDataTitle: true,
       orderData: [
         {
@@ -2024,22 +2029,6 @@ export default {
     }
     .RequirementWenben-div2 {
       display: flex;
-      .elIcon {
-        margin-right: 20px;
-        display: flex;
-        align-items: center;
-        i {
-          color: #796cf3;
-          font-size: 18px;
-          margin-right: 5px;
-        }
-        span {
-          font-size: 14px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #666666;
-        }
-      }
       .elIcon2 {
         display: flex;
         align-items: center;
@@ -2095,6 +2084,11 @@ export default {
       border: none;
       color: white;
     }
+  }
+
+  .elIcon {
+    text-align: center;
+    margin-top: 10px;
   }
 
   .tableBtn {

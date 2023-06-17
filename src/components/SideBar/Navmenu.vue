@@ -81,9 +81,9 @@
             >新手指南</a
           ></el-menu-item
         >
-        <el-menu-item style="float: right" @click="handlerClick"
+        <!-- <el-menu-item style="float: right" @click="handlerClick"
           >联系我们</el-menu-item
-        >
+        > -->
         <el-menu-item
           v-if="token"
           style="float: right; padding-left: 0; width: 100px"
@@ -170,9 +170,11 @@
                   rgba(223, 96, 247, 1)
                 )
                 1 1;
+              color: #796cf3;
             "
             @click="goRequirementSubmission"
           >
+            <img src="@/assets/images/pens.png" alt="" />
             提交拍摄需求
           </button></el-menu-item
         >
@@ -250,7 +252,6 @@
         </div>
       </div>
     </el-dialog>
-    <ConsultDialog :visible.sync="isShowComDialog"></ConsultDialog>
   </div>
 </template>
 
@@ -265,19 +266,14 @@ import {
   getConfig,
 } from "../../api/index";
 import store from "@/store";
-import ConsultDialog from "@/components/ConsultDialog";
 
 export default {
   name: "NavMenu",
   inject: ["reload"],
-  components: {
-    ConsultDialog,
-  },
   data() {
     return {
       dialog: false,
       isLogin: true,
-      isShowComDialog: false,
       avatar: localStorage.getItem("avatar"),
       messageCount: 0,
       logoImg: localStorage.getItem("logo"),
@@ -458,13 +454,6 @@ export default {
           console.log(err);
         });
     },
-    //联系我们
-    handlerClick() {
-      this.isShowComDialog = true;
-      if (localStorage.getItem("configObj") != null) {
-        this.configData = JSON.parse(localStorage.getItem("configObj"));
-      }
-    },
     //获取消息条数
     getMessage() {
       chatCount()
@@ -553,16 +542,17 @@ export default {
     //   vipon自助发帖跳转
     goVipon() {
       if (process.env.NODE_ENV == "production") {
-        this.ViponSrc = "https://seller.vipona.com/dashboard/index";
+        this.ViponSrc = "https://seller.vipona.com/hot/deal";
       } else if (process.env.NODE_ENV == "development") {
-        this.ViponSrc = "https://hkatest.myvipon.com/dashboard/index";
+        this.ViponSrc = "https://hkatest.myvipon.com/hot/deal";
       }
       if (window.localStorage.getItem("token")) {
         localStorage.removeItem("source");
         localStorage.removeItem("active");
-        window.location.href = this.ViponSrc;
+        // window.location.href = this.ViponSrc;
+        window.open(this.ViponSrc, "_blank");
       } else {
-        window.location.href = this.ViponSrc;
+        window.open(this.ViponSrc, "_blank");
       }
     },
     goRequirementSubmission() {

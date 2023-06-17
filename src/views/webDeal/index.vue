@@ -794,6 +794,13 @@ export default {
     this.DealTop7ul();
     this.DealTop7Ul2();
   },
+  destroyed: function () {
+    console.log("我已经离开了！");
+    clearInterval(this.timefor);
+    clearTimeout(this.timer);
+    clearInterval(this.time1);
+    clearInterval(this.time2);
+  },
   methods: {
     carouselUlClick(index) {
       this.index = index - 1;
@@ -840,7 +847,7 @@ export default {
       }, 2000);
     },
     DealTop7ul() {
-      setInterval(() => {
+      this.time1 = setInterval(() => {
         this.num--;
         if (this.num == -2300) {
           this.num = 0;
@@ -849,7 +856,7 @@ export default {
       }, 20);
     },
     DealTop7Ul2() {
-      setInterval(() => {
+      this.time2 = setInterval(() => {
         this.num2--;
         if (this.num2 == -2300) {
           this.num2 = 0;

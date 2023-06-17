@@ -138,7 +138,7 @@ VueRouter.prototype.push = function push(location) {
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-    console.log(to,from)
+
     if(to.query.source)localStorage.setItem('source',to.query.source)
     if(to.query.action)localStorage.setItem('action',to.query.action)
     localStorage.setItem('loginFromPath',from.path)

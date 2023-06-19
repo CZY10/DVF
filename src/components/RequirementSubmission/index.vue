@@ -1226,13 +1226,13 @@ export default {
       }
     },
     tiso() {
-      this.$message("您还没有添加然后需求，请添加需求在提交");
+      this.$message("您还没有添加任何需求，请添加需求再提交");
     },
     tist() {
       this.$message("您还没有添加然后需求，请添加需求在提交");
     },
     tiss() {
-      this.$message("请先阅读同意《视频拍摄服务及售后说明》");
+      this.$message("请先阅读并同意《视频拍摄服务及售后说明》");
     },
   },
   mounted() {

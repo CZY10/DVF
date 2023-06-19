@@ -2245,6 +2245,7 @@ export default {
     }
   }
   .RequirementBtn {
+    margin-top: 30px;
     display: flex;
     justify-content: center;
     button {

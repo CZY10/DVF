@@ -955,7 +955,7 @@ export default {
                 if (res.code == 1) {
                   console.log(res);
                   this.$message({
-                    message: "导入成功",
+                    message: "添加成功",
                     type: "success",
                     offset: 400,
                     center: true,

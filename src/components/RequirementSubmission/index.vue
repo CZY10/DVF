@@ -270,8 +270,8 @@
           未选意向达人情况下，默认为 平台推荐达人
           <div class="triangle"></div>
         </div>
+        <div @click="deleteList" class="delList">删除</div>
       </div>
-      <div @click="deleteList" class="delList">删除</div>
       <div class="RequirementBtn">
         <button
           v-if="tableData.length == 1"
@@ -2260,11 +2260,13 @@ export default {
   }
   .delList {
     font-size: 12px;
+    width: 24px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #999999;
     cursor: pointer;
     margin-left: 35px;
+    margin-top: 20px;
   }
 
   .delList:hover {

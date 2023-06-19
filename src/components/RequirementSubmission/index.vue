@@ -529,7 +529,7 @@
       <div
         style="
           height: 160px;
-          background: #f6f6f6;
+          background: #fff;
           border-radius: 4px;
           margin-top: 40px;
           padding: 20px;
@@ -1052,6 +1052,7 @@ export default {
             type: "success",
             offset: 400,
             center: true,
+            // duration: 0,
           });
         }
       });
@@ -2151,18 +2152,6 @@ export default {
 }
 </style>
 
-<style>
-.el-message--success {
-  background-color: #000000;
-  border-color: #000000;
-  opacity: 0.47;
-  min-width: 140px;
-  border-radius: 6px;
-}
-.el-message--success .el-message__content {
-  color: white;
-}
-</style>
 
 <style lang="less" scoped>
 ::v-deep .el-table .has-gutter .el-checkbox .el-checkbox__inner {
@@ -2173,6 +2162,20 @@ export default {
   content: "";
   text-align: center;
   line-height: 37px;
+}
+</style>
+
+
+<style>
+.el-message--success {
+  background-color: #000000;
+  border-color: #000000;
+  opacity: 0.47;
+  min-width: 140px;
+  border-radius: 6px;
+}
+.el-message--success .el-message__content {
+  color: white;
 }
 </style>
 
@@ -2252,7 +2255,7 @@ export default {
     }
   }
   .RequirementBtn {
-    margin-top: 30px;
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     button {

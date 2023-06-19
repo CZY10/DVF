@@ -463,14 +463,7 @@
           <div class="choice_style">
             已选择：<span>{{ selectedTableData.length }}</span
             >个意向方案
-            <span
-              style="
-                font-size: 14px;
-                color: #333333;
-                background: rgb(122, 167, 197);
-              "
-              >非必选</span
-            >
+            <span style="font-size: 12px; color: #999">（非必选）</span>
             <i
               style="
                 color: #796cf3;

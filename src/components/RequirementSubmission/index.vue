@@ -254,12 +254,7 @@
           <div class="triangle"></div>
         </div>
       </div>
-      <el-button
-        icon="el-icon-delete"
-        circle
-        @click="deleteList"
-        style="background-color: white"
-      ></el-button>
+      <div @click="deleteList" class="delList">删除</div>
       <div class="RequirementBtn">
         <button
           v-if="tableData.length == 1"
@@ -2169,6 +2164,17 @@ export default {
       border: none;
       color: white;
     }
+  }
+  .delList {
+    font-size: 12px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #999999;
+    cursor: pointer;
+  }
+
+  .delList:hover {
+    color: #796cf3;
   }
 
   .elIcon {

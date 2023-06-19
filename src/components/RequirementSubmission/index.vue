@@ -534,6 +534,7 @@
           margin-top: 40px;
           padding: 20px;
         "
+        ref="backgroundD"
       >
         <p style="margin-bottom: 20px" v-show="myArray.length != 0">
           已选达人<span style="font-size: 12px; color: #999; margin-left: 5px"
@@ -1341,6 +1342,13 @@ export default {
     payDepositDialogVisible(newVal) {
       if (newVal == false) {
         this.reqsearch();
+      }
+    },
+    myArray(newVal) {
+      if (newVal.length == 0) {
+        this.$refs.backgroundD.style.background = "#fff";
+      } else {
+        this.$refs.backgroundD.style.background = "#f6f6f6";
       }
     },
   },
@@ -2151,7 +2159,6 @@ export default {
   min-width: 140px;
   border-radius: 6px;
 }
-
 .el-message--success .el-message__content {
   color: white;
 }

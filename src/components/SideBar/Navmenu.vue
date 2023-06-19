@@ -27,8 +27,8 @@
         <!-- <el-menu-item
           ><a style="width: 100%" :href="DealHook">海外Deal站</a></el-menu-item
         > -->
-        <el-menu-item index="/webDeal">海外Deal站</el-menu-item>
         <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
+        <el-menu-item index="/webDeal">海外Deal站</el-menu-item>
         <!-- href="https://seller.vipona.com/account/login" -->
         <el-menu-item
           ><a target="_blank" style="width: 100%" @click="goVipon"

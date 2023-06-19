@@ -88,7 +88,7 @@
           <template slot-scope="scope">
             <p>
               {{ scope.row.asin }}
-              <a :href="scope.row.url" target="_blank"
+              <a :href="scope.row.url" target="_blank" v-if="scope.row.url"
                 ><i class="iconfont icon-fx"></i
               ></a>
             </p>
@@ -1399,7 +1399,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            cursor: pointer;
           "
+          @click="goDrxqy(darList[index].user_id)"
         >
           <img
             :src="item.image"
@@ -2265,6 +2267,13 @@ export default {
     //关闭查看地址
     IselDialogDz() {
       this.centerDialogVisible = false;
+    },
+
+    goDrxqy(id) {
+      window.open(
+        this.$router.resolve({ path: `/homepage:${id}` }).href,
+        "_blank"
+      );
     },
   },
 };

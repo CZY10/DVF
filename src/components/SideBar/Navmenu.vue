@@ -86,7 +86,7 @@
         > -->
         <el-menu-item
           v-if="token"
-          style="float: right; padding-left: 0; width: 100px"
+          style="float: right; padding-left: 0; width: 100px; margin-left: 10px"
         >
           <el-popover
             placement="bottom"

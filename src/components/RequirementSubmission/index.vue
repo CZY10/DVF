@@ -3,7 +3,8 @@
     <div class="navmenu">
       <img
         src="	https://api.viponm.com/uploads/20230208/729c6923d894d9e7689a0ba1137c8918.svg"
-        style="width: 180px; height: 100%; padding: 0 20px"
+        style="width: 180px; height: 100%; padding: 0 20px; cursor: pointer"
+        @click="goHome"
       />
     </div>
     <div class="RequirementBoxBanxin">
@@ -26,6 +27,7 @@
         "
       >
         <el-table
+          ref="elTable"
           :data="tableData"
           style="width: 100%"
           :header-cell-style="{
@@ -64,6 +66,8 @@
                         font-family: PingFangSC-Regular, PingFang SC;
                         font-weight: 400;
                         color: #999999;
+                        max-width: 50px;
+                        white-space: nowrap;
                       "
                     >
                       <span>NO.{{ item.user_id }}</span>
@@ -113,7 +117,10 @@
           <el-table-column label="产品信息" width="180">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
-              <div v-else style="display: flex; cursor: pointer">
+              <div
+                v-else
+                style="display: flex; align-items: center; cursor: pointer"
+              >
                 <div
                   style="height: 60px; width: 60px; border: 1px solid #f0f0f0"
                 >
@@ -130,7 +137,17 @@
                   />
                 </div>
                 <div>
-                  <p style="width: 100px; margin-top: 10px">
+                  <p
+                    style="
+                      width: 100px;
+                      max-height: 3em;
+                      overflow: hidden;
+                      display: -webkit-box;
+                      -webkit-box-orient: vertical;
+                      -webkit-line-clamp: 2;
+                      text-overflow: ellipsis;
+                    "
+                  >
                     {{ scope.row.title }}
                   </p>
                   <p
@@ -140,7 +157,7 @@
                       font-weight: 400;
                       color: #999999;
                     "
-                    v-if="scope.row.asin"
+                    v-if="scope.row.url"
                     @click="gocommodity(scope.row.url)"
                   >
                     {{ scope.row.asin }}
@@ -518,7 +535,7 @@
           padding: 20px;
         "
       >
-        <p style="margin-bottom: 20px">
+        <p style="margin-bottom: 20px" v-show="myArray.length != 0">
           已选达人<span style="font-size: 12px; color: #999; margin-left: 5px"
             >默认按以下顺序为您匹配，拖动可调整</span
           >
@@ -827,6 +844,15 @@ export default {
         .then((res) => {
           console.log(res);
           this.reqsearch();
+          if (res.code == 1) {
+            this.tableTop();
+            this.$message({
+              message: "导入成功",
+              type: "success",
+              offset: 400,
+              center: true,
+            });
+          }
         })
         .catch((res) => {
           console.log(res);
@@ -926,17 +952,25 @@ export default {
           if (valid) {
             if (this.requirementValidator) {
               create(data).then((res) => {
-                console.log(res);
-                this.reqsearch();
-                (this.videoRuleForm = {
-                  product: "",
-                  category: "",
-                  selling_point: "",
-                  demand: "",
-                  remarks: "",
-                  copper: "",
-                }),
-                  (this.videoSubmitDialogVisible = false);
+                if (res.code == 1) {
+                  console.log(res);
+                  this.$message({
+                    message: "导入成功",
+                    type: "success",
+                    offset: 400,
+                    center: true,
+                  });
+                  this.reqsearch();
+                  (this.videoRuleForm = {
+                    product: "",
+                    category: "",
+                    selling_point: "",
+                    demand: "",
+                    remarks: "",
+                    copper: "",
+                  }),
+                    (this.videoSubmitDialogVisible = false);
+                }
               });
             }
           } else {
@@ -960,17 +994,25 @@ export default {
           if (valid) {
             if (this.requirementValidator) {
               needsEdit(data).then((res) => {
-                console.log(res);
-                this.reqsearch();
-                (this.videoRuleForm = {
-                  product: "",
-                  category: "",
-                  selling_point: "",
-                  demand: "",
-                  remarks: "",
-                  copper: "",
-                }),
-                  (this.videoSubmitDialogVisible = false);
+                if (res.code == 1) {
+                  console.log(res);
+                  this.$message({
+                    message: "修改成功",
+                    type: "success",
+                    offset: 400,
+                    center: true,
+                  });
+                  this.reqsearch();
+                  (this.videoRuleForm = {
+                    product: "",
+                    category: "",
+                    selling_point: "",
+                    demand: "",
+                    remarks: "",
+                    copper: "",
+                  }),
+                    (this.videoSubmitDialogVisible = false);
+                }
               });
             }
           } else {
@@ -1003,8 +1045,28 @@ export default {
         if (res.code == 1) {
           console.log(res);
           this.reqsearch();
+          this.tableTop();
+          this.$message({
+            message: "克隆成功",
+            type: "success",
+            offset: 400,
+            center: true,
+          });
         }
       });
+    },
+    tableTop() {
+      let top = this.$refs.elTable.bodyWrapper.scrollTop;
+      var distance =
+        this.$refs.elTable.bodyWrapper.scrollHeight -
+        this.$refs.elTable.bodyWrapper.scrollTop -
+        this.$refs.elTable.bodyWrapper.clientHeight;
+      const timeTop = setInterval(() => {
+        this.$refs.elTable.bodyWrapper.scrollTop = top += 30;
+        if (top >= distance) {
+          clearInterval(timeTop);
+        }
+      }, 10);
     },
     //删除拍摄需求
     deletesubmitForm(id) {
@@ -1072,19 +1134,27 @@ export default {
     },
     isaddperson() {
       const arr = [];
-      this.myArray.forEach((item) => {
-        arr.push(item.user_id);
-      });
-      const influencer_ids = arr.join(",");
-      needsSelectInfluencer({
-        influencer_ids: influencer_ids,
-        id: this.ispersonid,
-      }).then((res) => {
-        if (res.code == 1) {
-          this.centerDialogVisible = false;
-          this.reqsearch();
-        }
-      });
+      console.log(this.myArray.length);
+      if (this.myArray.length != undefined) {
+        this.myArray.forEach((item) => {
+          arr.push(item.user_id);
+        });
+        const influencer_ids = arr.join(",");
+        needsSelectInfluencer({
+          influencer_ids: influencer_ids,
+          id: this.ispersonid,
+        }).then((res) => {
+          if (res.code == 1) {
+            this.centerDialogVisible = false;
+            this.reqsearch();
+          }
+        });
+      } else {
+        this.$message({
+          message: "请先添加达人",
+          type: "warning",
+        });
+      }
     },
     reqsearch() {
       search().then((res) => {
@@ -1196,7 +1266,12 @@ export default {
       }, 3000);
     },
     delitemElement(index) {
-      this.myArray.splice(index, index);
+      if (this.myArray.length == 1) {
+        this.myArray = [];
+      } else {
+        this.myArray.splice(index, index);
+        console.log(this.myArray, index);
+      }
     },
     handleSelectionChange(val) {
       this.handleSelectionChangeList = val;
@@ -1228,6 +1303,9 @@ export default {
     },
     tiss() {
       this.$message("请先阅读并同意《视频拍摄服务及售后说明》");
+    },
+    goHome() {
+      this.$router.push("/");
     },
   },
   mounted() {
@@ -1948,7 +2026,8 @@ export default {
       font-weight: 400;
       color: rgba(153, 153, 153, 1);
       line-height: 17px;
-      padding-bottom: 10px;
+      margin-top: 7px;
+      margin-bottom: 5px;
       span {
         color: #ed4014;
       }
@@ -2064,6 +2143,20 @@ export default {
 }
 </style>
 
+<style>
+.el-message--success {
+  background-color: #000000;
+  border-color: #000000;
+  opacity: 0.47;
+  min-width: 140px;
+  border-radius: 6px;
+}
+
+.el-message--success .el-message__content {
+  color: white;
+}
+</style>
+
 <style lang="less" scoped>
 ::v-deep .el-table .has-gutter .el-checkbox .el-checkbox__inner {
   display: none;
@@ -2171,6 +2264,7 @@ export default {
     font-weight: 400;
     color: #999999;
     cursor: pointer;
+    margin-left: 35px;
   }
 
   .delList:hover {

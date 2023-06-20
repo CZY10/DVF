@@ -881,18 +881,24 @@ export default {
       window.location.href = "";
     },
     goLogin() {
-      if (localStorage.getItem("token")) {
-        this.$router.push("/");
-        window.location.href = "";
-      } else {
-        this.$router.push("/login");
-      }
-    },
-    goVipon() {
       if (process.env.NODE_ENV == "production") {
         this.ViponSrc = "https://seller.vipona.com/dashboard/index";
       } else if (process.env.NODE_ENV == "development") {
         this.ViponSrc = "https://hkatest.myvipon.com/dashboard/index";
+      }
+      if (window.localStorage.getItem("token")) {
+        localStorage.removeItem("source");
+        localStorage.removeItem("active");
+        window.open(this.ViponSrc, "_blank");
+      } else {
+        window.location.href = this.ViponSrc;
+      }
+    },
+    goVipon() {
+      if (process.env.NODE_ENV == "production") {
+        this.ViponSrc = "https://seller.vipona.com/hot/deal";
+      } else if (process.env.NODE_ENV == "development") {
+        this.ViponSrc = "https://hkatest.myvipon.com/hot/deal";
       }
       if (window.localStorage.getItem("token")) {
         localStorage.removeItem("source");

@@ -503,7 +503,7 @@
           <el-input
             v-model="input"
             style="width: 100%"
-            placeholder="请输入达人编号"
+            :placeholder="placeholderspan"
             :disabled="disabled"
           ></el-input>
           <ul
@@ -765,6 +765,7 @@ import * as XLSX from "xlsx";
 export default {
   data() {
     return {
+      placeholderspan: "请输入达人编号",
       checked: false,
       tableDataTitle: true,
       orderData: [
@@ -961,36 +962,35 @@ export default {
         };
         this.$refs[formName].validate((valid) => {
           this.checkRequirement();
-          console.log(this.videoRuleForm.copper);
           if (valid) {
-            if (this.requirementValidator) {
-              if (this.videoRuleForm.copper * 1 >= 350) {
-                create(data).then((res) => {
-                  if (res.code == 1) {
-                    console.log(res);
-                    this.$message({
-                      message: "添加成功",
-                      type: "success",
-                      offset: 400,
-                      center: true,
-                    });
-                    this.reqsearch();
-                    (this.videoRuleForm = {
-                      product: "",
-                      category: "",
-                      selling_point: "",
-                      demand: "",
-                      remarks: "",
-                      copper: "",
-                    }),
-                      (this.videoSubmitDialogVisible = false);
-                  }
-                });
-              } else {
-                console.log(this.$refs.videoRules.fields);
-                this.$refs.videoRules.fields[1].error =
-                  "请输入拍摄预算，不能低于350元";
-              }
+            if (
+              this.requirementValidator &&
+              this.videoRuleForm.copper * 1 >= 350
+            ) {
+              create(data).then((res) => {
+                if (res.code == 1) {
+                  console.log(res);
+                  this.$message({
+                    message: "添加成功",
+                    type: "success",
+                    offset: 400,
+                    center: true,
+                  });
+                  this.reqsearch();
+                  (this.videoRuleForm = {
+                    product: "",
+                    category: "",
+                    selling_point: "",
+                    demand: "",
+                    remarks: "",
+                    copper: "",
+                  }),
+                    (this.videoSubmitDialogVisible = false);
+                }
+              });
+            } else {
+              this.$refs.videoRules.fields[1].error =
+                "请输入拍摄预算，不能低于350元";
             }
           } else {
             console.log("error submit!!");
@@ -1293,7 +1293,7 @@ export default {
       if (this.myArray.length == 1) {
         this.myArray = [];
       } else {
-        this.myArray.splice(index, index);
+        this.myArray.splice(index, 1);
         console.log(this.myArray, index);
       }
     },
@@ -1353,8 +1353,15 @@ export default {
     myArray(newInput) {
       if (newInput.length == 5) {
         this.disabled = true;
+        this.placeholderspan = "";
       } else {
         this.disabled = false;
+        this.placeholderspan = "请输入达人编号";
+      }
+      if (newInput.length == 0) {
+        this.$refs.backgroundD.style.background = "#fff";
+      } else {
+        this.$refs.backgroundD.style.background = "#f6f6f6";
       }
     },
     centerDialogVisible(newVal) {
@@ -1366,13 +1373,6 @@ export default {
     payDepositDialogVisible(newVal) {
       if (newVal == false) {
         this.reqsearch();
-      }
-    },
-    myArray(newVal) {
-      if (newVal.length == 0) {
-        this.$refs.backgroundD.style.background = "#fff";
-      } else {
-        this.$refs.backgroundD.style.background = "#f6f6f6";
       }
     },
   },
@@ -1770,7 +1770,7 @@ export default {
   right: 0;
 }
 .isinfluencerInfoLi:hover .delDiv {
-  display: block;
+  opacity: 1;
 }
 .InfluencerList {
   background-color: white;
@@ -1784,7 +1784,7 @@ export default {
   background: #f4f2ff;
 }
 .delDiv {
-  display: none;
+  opacity: 0;
   width: 10px;
   height: 10px;
   background: red;

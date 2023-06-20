@@ -481,7 +481,7 @@
       <div style="position: absolute; top: 180px; color: red">*</div>
       <div style="position: absolute; top: 230px; color: red">*</div>
       <div style="position: absolute; top: 394px; color: red">*</div>
-      <div style="position: absolute; bottom: 133px; color: red ">*</div>
+      <div style="position: absolute; bottom: 133px; color: red">*</div>
     </el-dialog>
 
     <el-dialog
@@ -957,29 +957,38 @@ export default {
         };
         this.$refs[formName].validate((valid) => {
           this.checkRequirement();
+          console.log(this.videoRuleForm.copper);
           if (valid) {
             if (this.requirementValidator) {
-              create(data).then((res) => {
-                if (res.code == 1) {
-                  console.log(res);
-                  this.$message({
-                    message: "添加成功",
-                    type: "success",
-                    offset: 400,
-                    center: true,
-                  });
-                  this.reqsearch();
-                  (this.videoRuleForm = {
-                    product: "",
-                    category: "",
-                    selling_point: "",
-                    demand: "",
-                    remarks: "",
-                    copper: "",
-                  }),
-                    (this.videoSubmitDialogVisible = false);
-                }
-              });
+              if (this.videoRuleForm.copper * 1 >= 350) {
+                create(data).then((res) => {
+                  if (res.code == 1) {
+                    console.log(res);
+                    this.$message({
+                      message: "添加成功",
+                      type: "success",
+                      offset: 400,
+                      center: true,
+                    });
+                    this.reqsearch();
+                    (this.videoRuleForm = {
+                      product: "",
+                      category: "",
+                      selling_point: "",
+                      demand: "",
+                      remarks: "",
+                      copper: "",
+                    }),
+                      (this.videoSubmitDialogVisible = false);
+                  }
+                });
+              } else {
+                this.$message({
+                  message: "预算金额最低350元",
+                  offset: 400,
+                  center: true,
+                });
+              }
             }
           } else {
             console.log("error submit!!");
@@ -1001,27 +1010,35 @@ export default {
           this.checkRequirement();
           if (valid) {
             if (this.requirementValidator) {
-              needsEdit(data).then((res) => {
-                if (res.code == 1) {
-                  console.log(res);
-                  this.$message({
-                    message: "修改成功",
-                    type: "success",
-                    offset: 400,
-                    center: true,
-                  });
-                  this.reqsearch();
-                  (this.videoRuleForm = {
-                    product: "",
-                    category: "",
-                    selling_point: "",
-                    demand: "",
-                    remarks: "",
-                    copper: "",
-                  }),
-                    (this.videoSubmitDialogVisible = false);
-                }
-              });
+              if (this.videoRuleForm.copper * 1 >= 350) {
+                needsEdit(data).then((res) => {
+                  if (res.code == 1) {
+                    console.log(res);
+                    this.$message({
+                      message: "修改成功",
+                      type: "success",
+                      offset: 400,
+                      center: true,
+                    });
+                    this.reqsearch();
+                    (this.videoRuleForm = {
+                      product: "",
+                      category: "",
+                      selling_point: "",
+                      demand: "",
+                      remarks: "",
+                      copper: "",
+                    }),
+                      (this.videoSubmitDialogVisible = false);
+                  }
+                });
+              } else {
+                this.$message({
+                  message: "预算金额最低350元",
+                  offset: 400,
+                  center: true,
+                });
+              }
             }
           } else {
             console.log("error submit!!");
@@ -2187,12 +2204,12 @@ export default {
 
 
 <style>
-.is-center {
+.el-message.is-center {
   background-color: #000000;
   border-color: #000000;
-  opacity: 0.47;
-  min-width: 140px;
+  min-width: 100px;
   border-radius: 6px;
+  opacity: 0.47;
 }
 .is-center .el-message__content {
   color: white;

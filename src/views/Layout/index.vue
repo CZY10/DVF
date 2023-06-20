@@ -108,7 +108,10 @@ export default {
   watch: {
     $route: function (to, from) {
       // 处理路径变化的逻辑
-      console.log(to.fullPath, "res");
+      console.log(to.fullPath, from.fullPath, "res");
+      if ((to.path == "/Requirement", from.path == "/")) {
+        location.reload();
+      }
       if (
         to.fullPath == "/" ||
         to.fullPath == "/videohome" ||
@@ -117,6 +120,14 @@ export default {
         this.flags = true;
       } else {
         this.flags = false;
+      }
+      if (
+        this.$route.fullPath == "/Requirement" ||
+        this.$route.fullPath == "/Note"
+      ) {
+        this.flag = false;
+      } else {
+        this.flag = true;
       }
     },
   },

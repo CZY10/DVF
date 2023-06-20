@@ -810,7 +810,11 @@ export default {
           { required: true, message: "请选择拍摄类型", trigger: "change" },
         ],
         copper: [
-          { required: true, message: "请输入拍摄预算", trigger: "blur" },
+          {
+            required: true,
+            message: "请输入拍摄预算，不能低于350元",
+            trigger: "blur",
+          },
         ],
         category: [
           { required: true, message: "请选择产品名称", trigger: "blur" },
@@ -983,11 +987,9 @@ export default {
                   }
                 });
               } else {
-                this.$message({
-                  message: "预算金额最低350元",
-                  offset: 400,
-                  center: true,
-                });
+                console.log(this.$refs.videoRules.fields);
+                this.$refs.videoRules.fields[1].error =
+                  "请输入拍摄预算，不能低于350元";
               }
             }
           } else {
@@ -1033,11 +1035,8 @@ export default {
                   }
                 });
               } else {
-                this.$message({
-                  message: "预算金额最低350元",
-                  offset: 400,
-                  center: true,
-                });
+                this.$refs.videoRules.fields[1].error =
+                  "请输入拍摄预算，不能低于350元";
               }
             }
           } else {
@@ -1335,6 +1334,7 @@ export default {
   },
   mounted() {
     this.reqsearch();
+    console.log(this.videoRules.copper[0].required);
   },
   watch: {
     input(newInput) {
@@ -2213,6 +2213,10 @@ export default {
 }
 .is-center .el-message__content {
   color: white;
+}
+
+.el-message .el-icon-success {
+  color: #54dd10;
 }
 </style>
 

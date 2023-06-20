@@ -799,7 +799,7 @@
               placeholder="请输入产品名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="产品亚马逊链接">
+          <el-form-item label="产品链接">
             <p
               style="
                 background: #f5f7fa;
@@ -3446,7 +3446,6 @@ export default {
       font-family: PingFangSC-Regular, PingFang SC;
       color: #999999;
       line-height: 17px;
-      margin-top: 5px;
       margin-bottom: 6px;
     }
 
@@ -3912,5 +3911,11 @@ export default {
 .el-table__row > td > .cell {
   padding-right: 0px;
   padding-left: 0px;
+}
+</style>
+
+<style lang="less" scoped>
+::v-deep .el-form-item--small .el-form-item__label {
+  line-height: 22px;
 }
 </style>

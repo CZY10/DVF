@@ -330,7 +330,7 @@
               placeholder="请输入产品名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="产品亚马逊链接">
+          <el-form-item label="产品链接" style="padding-left: 10px">
             <el-input
               v-model="videoRuleForm.product"
               placeholder="如产品尚未上架，则不用填写"
@@ -431,7 +431,7 @@
               <div class="error_style" v-if="errorShow">{{ errorText }}</div>
             </div>
           </el-form-item>
-          <el-form-item label="其他拍摄说明">
+          <el-form-item label="其他拍摄说明" style="padding-left: 10px">
             <div class="description">未填写则视为无其他未尽事项</div>
             <el-input
               type="textarea"
@@ -449,7 +449,7 @@
               >
             </p>
           </el-form-item>
-          <el-form-item label="是否通过达人账号上传">
+          <el-form-item label="是否通过达人账号上传" style="padding-left: 10px">
             <p class="description">视频通过达人上传会在达人主页展示</p>
             <el-radio v-model="radio" label="1">是</el-radio>
             <el-radio v-model="radio" label="0">否</el-radio>
@@ -2165,8 +2165,11 @@ export default {
 }
 
 ::v-deep .el-form-item__label {
-  line-height: 22px;
   margin-top: 5px;
+}
+
+::v-deep .el-form-item--small .el-form-item__label {
+  line-height: 22px;
 }
 </style>
 

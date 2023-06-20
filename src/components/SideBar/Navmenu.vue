@@ -542,9 +542,9 @@ export default {
     //   vipon自助发帖跳转
     goVipon() {
       if (process.env.NODE_ENV == "production") {
-        this.ViponSrc = "https://seller.vipona.com/hot/deal";
+        this.ViponSrc = "https://seller.vipona.com/hot/fb";
       } else if (process.env.NODE_ENV == "development") {
-        this.ViponSrc = "https://hkatest.myvipon.com/hot/deal";
+        this.ViponSrc = "https://hkatest.myvipon.com/hot/fb";
       }
       if (window.localStorage.getItem("token")) {
         localStorage.removeItem("source");

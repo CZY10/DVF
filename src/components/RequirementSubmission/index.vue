@@ -34,6 +34,7 @@
           :header-cell-style="{
             background: '#F6F6F6',
             color: '#333333',
+            position: 'relative',
           }"
           max-height="600"
           @selection-change="handleSelectionChange"
@@ -330,7 +331,7 @@
               placeholder="请输入产品名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="产品链接" style="padding-left: 10px">
+          <el-form-item label="产品链接">
             <el-input
               v-model="videoRuleForm.product"
               placeholder="如产品尚未上架，则不用填写"
@@ -431,7 +432,7 @@
               <div class="error_style" v-if="errorShow">{{ errorText }}</div>
             </div>
           </el-form-item>
-          <el-form-item label="其他拍摄说明" style="padding-left: 10px">
+          <el-form-item label="其他拍摄说明">
             <div class="description">未填写则视为无其他未尽事项</div>
             <el-input
               type="textarea"
@@ -449,7 +450,7 @@
               >
             </p>
           </el-form-item>
-          <el-form-item label="是否通过达人账号上传" style="padding-left: 10px">
+          <el-form-item label="是否通过达人账号上传">
             <p class="description">视频通过达人上传会在达人主页展示</p>
             <el-radio v-model="radio" label="1">是</el-radio>
             <el-radio v-model="radio" label="0">否</el-radio>
@@ -476,6 +477,11 @@
           >保存</el-button
         >
       </div>
+      <div style="position: absolute; top: 80px; color: red">*</div>
+      <div style="position: absolute; top: 180px; color: red">*</div>
+      <div style="position: absolute; top: 230px; color: red">*</div>
+      <div style="position: absolute; top: 394px; color: red">*</div>
+      <div style="position: absolute; bottom: 133px; color: red ">*</div>
     </el-dialog>
 
     <el-dialog
@@ -2170,6 +2176,12 @@ export default {
 
 ::v-deep .el-form-item--small .el-form-item__label {
   line-height: 22px;
+}
+
+::v-deep
+  .el-form-item.is-required:not(.is-no-asterisk)
+  > .el-form-item__label:before {
+  content: revert;
 }
 </style>
 

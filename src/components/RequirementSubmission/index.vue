@@ -503,7 +503,7 @@
           <el-input
             v-model="input"
             style="width: 100%"
-            placeholder="请输入达人编号"
+            :placeholder="placeholderspan"
             :disabled="disabled"
           ></el-input>
           <ul
@@ -765,6 +765,7 @@ import * as XLSX from "xlsx";
 export default {
   data() {
     return {
+      placeholderspan: "请输入达人编号",
       checked: false,
       tableDataTitle: true,
       orderData: [
@@ -1352,8 +1353,10 @@ export default {
     myArray(newInput) {
       if (newInput.length == 5) {
         this.disabled = true;
+        this.placeholderspan = "";
       } else {
         this.disabled = false;
+        this.placeholderspan = "请输入达人编号";
       }
       if (newInput.length == 0) {
         this.$refs.backgroundD.style.background = "#fff";

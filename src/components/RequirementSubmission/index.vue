@@ -1292,7 +1292,7 @@ export default {
       if (this.myArray.length == 1) {
         this.myArray = [];
       } else {
-        this.myArray.splice(index, index);
+        this.myArray.splice(index, 1);
         console.log(this.myArray, index);
       }
     },
@@ -1355,6 +1355,11 @@ export default {
       } else {
         this.disabled = false;
       }
+      if (newInput.length == 0) {
+        this.$refs.backgroundD.style.background = "#fff";
+      } else {
+        this.$refs.backgroundD.style.background = "#f6f6f6";
+      }
     },
     centerDialogVisible(newVal) {
       console.log(newVal);
@@ -1365,13 +1370,6 @@ export default {
     payDepositDialogVisible(newVal) {
       if (newVal == false) {
         this.reqsearch();
-      }
-    },
-    myArray(newVal) {
-      if (newVal.length == 0) {
-        this.$refs.backgroundD.style.background = "#fff";
-      } else {
-        this.$refs.backgroundD.style.background = "#f6f6f6";
       }
     },
   },

@@ -23,7 +23,8 @@
           position: relative;
           border-radius: 4px;
           border: 1px solid #eeeeee;
-          height: 650px;
+          height: 640px;
+          box-sizing: border-box;
         "
       >
         <el-table
@@ -348,7 +349,6 @@
             prop="selling_point"
           >
             <div class="description">
-              请用英文说明，不超过3个
               <el-tooltip class="item" effect="dark" placement="right">
                 <a href="javascript:;;">示例</a>
                 <p slot="content">
@@ -362,8 +362,9 @@
             <el-input
               type="textarea"
               placeholder="注意： 
-1、请勿填写过多信息，否则在极短的时间内视频将无法凸显重点；
-2、如无特别要求，请填写“自由发挥”，达人将结合产品listing自由创作。"
+1、请用英文说明，不超过3个
+2、请勿填写过多信息，否则在极短的时间内视频将无法凸显重点；
+3、如无特别要求，请填写“自由发挥”，达人将结合产品listing自由创作。"
               show-word-limit
               maxlength="350"
               v-model="videoRuleForm.selling_point"
@@ -1052,7 +1053,6 @@ export default {
             type: "success",
             offset: 400,
             center: true,
-            // duration: 0,
           });
         }
       });
@@ -1922,8 +1922,8 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     color: #999999;
     line-height: 17px;
-    margin-top: 5px;
     margin-bottom: 6px;
+    margin-top: 5px;
   }
   .item_check_style {
     display: flex;
@@ -2163,18 +2163,23 @@ export default {
   text-align: center;
   line-height: 37px;
 }
+
+::v-deep .el-form-item__label {
+  line-height: 22px;
+  margin-top: 5px;
+}
 </style>
 
 
 <style>
-.el-message--success {
+.is-center {
   background-color: #000000;
   border-color: #000000;
   opacity: 0.47;
   min-width: 140px;
   border-radius: 6px;
 }
-.el-message--success .el-message__content {
+.is-center .el-message__content {
   color: white;
 }
 </style>
@@ -2197,7 +2202,7 @@ export default {
     font-weight: 600;
     color: #333333;
     text-align: center;
-    margin-top: 40px;
+    margin-top: 30px;
   }
   .RequirementWenben {
     display: flex;

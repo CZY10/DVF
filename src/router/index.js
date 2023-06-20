@@ -9,6 +9,9 @@ import Order from "@/views/Manage/Order";
 import Payment from "@/views/Manage/Payment";
 import Personal from "@/views/Manage/Personal";
 import ChatGPT from "@/views/ChatGPT";
+import webDeal from "@/views/webDeal/index.vue"
+import Requirement from "@/components/RequirementSubmission/index.vue"
+import Note from "@/components/RequirementSubmission/note.vue"
 
 Vue.use(VueRouter)
 
@@ -28,6 +31,24 @@ const routes = [
                 name: 'videoHome',
                 meta: {requiresAuth: false},
                 component: VideoHome,
+            },
+            {
+                path: '/webDeal',
+                name: 'webDeal',
+                meta: {requiresAuth: false},
+                component: webDeal,
+            },
+            {
+                path: '/Requirement',
+                name: 'Requirement',
+                meta: {requiresAuth: true},
+                component: Requirement,
+            },
+            {
+                path: '/Note',
+                name: 'Note',
+                meta: {requiresAuth: true},
+                component: Note,
             },
             {
                 path: '/chatgpt',
@@ -117,7 +138,7 @@ VueRouter.prototype.push = function push(location) {
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-    console.log(to,from)
+
     if(to.query.source)localStorage.setItem('source',to.query.source)
     if(to.query.action)localStorage.setItem('action',to.query.action)
     localStorage.setItem('loginFromPath',from.path)

@@ -66,12 +66,13 @@
         ></el-table-column>
         <el-table-column prop="asin" label="产品Asin" min-width="110">
           <template slot-scope="scope">
-            <p>
+            <p v-if="scope.row.url">
               {{ scope.row.asin }}
               <a :href="scope.row.url" target="_blank"
                 ><i class="iconfont icon-fx" style="font-size: 14px"></i
               ></a>
             </p>
+            <p v-else>--</p>
           </template>
         </el-table-column>
         <el-table-column prop="order_type" label="付款类别">

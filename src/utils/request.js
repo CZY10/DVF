@@ -12,8 +12,13 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
+    console.log(config.url)
+    if (config.url == "/api/needs/template") {
+         config.headers['Content-Type'] = 'multipart/form-data'
+    } else {
+         config.headers['Content-Type'] = 'application/json'
+    }
         config.headers['token'] = localStorage.getItem('token')
-        config.headers['Content-Type'] = 'application/json'
     return config
 },
 error => {

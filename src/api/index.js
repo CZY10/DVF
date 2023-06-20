@@ -1,5 +1,6 @@
 //请求方法
 import request,{createAPI} from "@/utils/request";
+import { log } from "video.js";
 
 //post请求
 // export function login(data){
@@ -357,3 +358,108 @@ export function siteRead(data) {
         data
     })
 }
+
+//需求列表
+export function search(data) {
+    return request({
+        url: "/api/needs/search",
+        method: "post",
+        data
+    })
+}
+
+// 提交拍摄需求
+export function create(data) {
+    return request({
+        url: "/api/order/create",
+        method: "post",
+        data
+    })
+}
+
+//编辑拍摄需求
+export function needsEdit(data) {
+    return request({
+        url: "/api/needs/edit",
+        method: "post",
+        data
+    })
+}
+
+//需求克隆
+export function needsCopy(data) {
+    return request({
+        url: "/api/needs/copy",
+        method: "post",
+        data
+    })
+}
+
+//需求删除
+export function needsDelete(data) {
+    return request({
+        url: "/api/needs/delete",
+        method: "post",
+        data
+    })
+}
+
+//勾选达人提交需求
+export function needsSelectInfluencer(data) {
+    return request({
+        url: "/api/needs/selectInfluencer",
+        method: "post",
+        data
+    })
+}
+
+// 删除需求的意向达人
+export function needsRemoveInfluencer(data) {
+    return request({
+        url: "/api/needs/removeInfluencer",
+        method: "post",
+        data
+    })
+}
+
+//网站所有达人列表
+export function needsInfluencerList(data) {
+    return request({
+        url: "/api/needs/influencerList",
+        method: "post",
+        data
+    })
+}
+
+//需求提交
+export function needsSubmit(data) {
+    return request({
+        url: "/api/needs/submit",
+        method: "post",
+        data
+    })
+}
+
+//导入模板
+export function needsTemplate(data) {
+    return request({
+        url: "/api/needs/template",
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        method: "post",
+        data
+    })
+}
+
+
+// export function needsTemplate(data) {
+//     return request({
+//         url: "/api/needs/template",
+//         method: "post",
+//         headers: {
+//             'Content-Type': 'multipart/form-data'
+//         },
+//         data
+//     })
+// }

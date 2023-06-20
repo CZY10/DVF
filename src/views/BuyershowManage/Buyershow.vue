@@ -8,7 +8,6 @@
             <div class="service_item">
               <i class="iconfont icon-fa"></i>
               <div>
-                <p>选择3-5款意向方案</p>
                 <p>提交需求并支付定金</p>
               </div>
               <i class="iconfont icon-bz" style="color: #ffffff"></i>
@@ -464,6 +463,7 @@
           <div class="choice_style">
             已选择：<span>{{ selectedTableData.length }}</span
             >个意向方案
+            <span style="font-size: 12px; color: #999">（非必选）</span>
             <i
               style="
                 color: #796cf3;
@@ -989,6 +989,7 @@ import {
   payOrder,
   checkPayment,
   getShootRequire,
+  needsSelectInfluencer,
 } from "@/api";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.min.css";
@@ -1102,7 +1103,7 @@ export default {
       checkType: [],
       tableData: [],
       selectedTableData: [],
-      isShowSelectedPlan: false,
+      isShowSelectedPlan: true,
       totalNum: 1,
       selectRow: [],
       orderData: {},
@@ -1628,15 +1629,12 @@ export default {
           return;
         });
       } else {
-        val.length > 0
-          ? (this.isShowSelectedPlan = true)
-          : (this.isShowSelectedPlan = false);
         if (val.length > 5) {
           this.selectedTableData = val.splice(0, 5);
           val.splice(0, 5).forEach((item, index) => {
             this.$refs.multipleTable.toggleRowSelection(item, false);
             this.$message({
-              message: "每个需求请选择3~5个意向方案",
+              message: "所选的意向达人不能超过5个",
               type: "warning",
             });
             return;
@@ -1661,16 +1659,28 @@ export default {
     },
     //提交拍摄方案
     handleSubmitSelectedPlan() {
-      if (this.selectedTableData.length < 3) {
-        this.$message({
-          message: "每个需求请选择3~5个意向方案",
-          type: "warning",
+      console.log(this.selectRow);
+      const arr = [];
+      this.selectRow.forEach((item) => {
+        arr.push(item.user_id);
+      });
+      const influencer_ids = arr.join(",");
+      if (this.selectRow.length != 0) {
+        needsSelectInfluencer({
+          influencer_ids: influencer_ids,
+        }).then((res) => {
+          console.log(res);
+          location.reload();
+          window.open(
+            this.$router.resolve({ path: "/Requirement" }).href,
+            "_blank"
+          );
         });
       } else {
-        this.drawer = false;
-        this.isShowSelectedPlan = false;
-        this.videoSubmitDialogVisible = true;
-        this.getShootRequireList();
+        window.open(
+          this.$router.resolve({ path: "/Requirement" }).href,
+          "_blank"
+        );
       }
     },
   },

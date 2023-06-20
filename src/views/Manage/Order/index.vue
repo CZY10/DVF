@@ -70,11 +70,25 @@
           label="订单号"
           min-width="110"
         ></el-table-column>
+        <el-table-column label="意向达人" min-width="40">
+          <template slot-scope="scope">
+            <div v-if="scope.row.influencer_info.length == 0">平台推荐</div>
+            <div v-else>
+              <p>{{ scope.row.influencer_info.length }}个已选</p>
+              <p
+                style="cursor: pointer; color: #796cf3"
+                @click="centerDialogVisibleXinzTan(scope.row.influencer_info)"
+              >
+                查看
+              </p>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
           <template slot-scope="scope">
             <p>
               {{ scope.row.asin }}
-              <a :href="scope.row.url" target="_blank"
+              <a :href="scope.row.url" target="_blank" v-if="scope.row.url"
                 ><i class="iconfont icon-fx"></i
               ></a>
             </p>
@@ -779,34 +793,13 @@
           label-width="125px"
           class="video_ruleForm"
         >
-          <el-form-item label="选择拍摄类型">
-            <div>
-              <el-radio-group v-model="videoForm.shoot" size="small">
-                <el-radio class="radio_style1" label="0" border>
-                  <p class="recommend">推荐</p>
-                  标准化拍摄
-                  <ul>
-                    <li>达人根据产品卖点自行拍摄</li>
-                    <li>匹配快，成功率高</li>
-                    <li>交付周期5天起</li>
-                    <li>费用实惠</li>
-                    <li>重拍需另行收费</li>
-                  </ul>
-                </el-radio>
-                <el-radio class="radio_style2" label="1" border>
-                  定制化拍摄
-                  <ul>
-                    <li>达人按卖家指定方式及场景拍摄</li>
-                    <li>专业拍摄设备及团队</li>
-                    <li>交付周期10天起</li>
-                    <li>费用是标准化拍摄的数倍</li>
-                    <li>重拍需另行收费</li>
-                  </ul>
-                </el-radio>
-              </el-radio-group>
-            </div>
+          <el-form-item label="产品名称" disabled>
+            <el-input
+              v-model="videoRuleForm.category"
+              placeholder="请输入产品名称"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="产品亚马逊链接">
+          <el-form-item label="产品链接">
             <p
               style="
                 background: #f5f7fa;
@@ -831,28 +824,23 @@
             </p>
             <!--                        <el-input v-model="videoForm.url" placeholder="请输入产品亚马逊链接"></el-input>-->
           </el-form-item>
-          <el-form-item label="产品所属品类">
-            <el-select
-              v-model="videoForm.category_id"
-              style="width: 100%"
-              placeholder="请选择产品所属品类"
+          <el-form-item label="拍摄预算 ¥" style="width: 350px">
+            <el-input
+              v-model="videoRuleForm.copper"
+              placeholder="请填写该产品的预算金额"
             >
-              <el-option
-                v-for="(item, index) in categoryList"
-                :label="item.name"
-                :value="item.id"
-                :key="index"
-              ></el-option>
-            </el-select>
+            </el-input>
           </el-form-item>
-          <el-form-item label="产品核心卖点">
+          <el-form-item label="需重点体现的产品卖点/功能/特性">
             <el-input
               type="textarea"
-              placeholder="请输入产品核心卖点"
+              placeholder="注意： 
+1、请勿填写过多信息，否则在极短的时间内视频将无法凸显重点；
+2、如无特别要求，请填写“自由发挥”，达人将结合产品listing自由创作。"
               v-model="videoForm.sellingpoint"
             ></el-input>
           </el-form-item>
-          <el-form-item label="拍摄要求">
+          <el-form-item label="拍摄要素">
             <div>
               <div class="form_item_title">
                 在候选达人匹配失败时，将据此为您推荐其他达人
@@ -888,39 +876,20 @@
               v-model="videoForm.custom"
             ></el-input>
           </el-form-item>
-          <el-form-item label="备注（非必填）">
+          <el-form-item label="其他拍摄说明">
             <el-input
               type="textarea"
-              placeholder="不超过60字，如对达人性别、肤色，小孩或宠物出镜有要求，可备注"
+              placeholder="以下情形请详细说明，如： 
+1、产品仅适配特定配件/型号的；
+2、要求特定场景的，如：汽车、泳池、卧室、海滩等
+3、其他特殊要求，如：需要安装演示、需要3~6岁小孩出镜等"
               v-model="videoForm.description"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="候选达人"
-            style="border-top: 1px solid #eeeeee; padding-top: 14px"
-          >
-            <ul class="candidate_list">
-              <router-link
-                class="list-group-item"
-                v-for="(item, index) in videoForm.influencers"
-                :key="index"
-                target="_blank"
-                :to="{ path: '/homepage:' + item.id }"
-              >
-                <li>
-                  <span class="list-group-index">0{{ ++index }}</span>
-                  <div>
-                    <img :src="item.image" alt="" />
-                  </div>
-                  <p>NO.{{ item.id }}</p>
-                  <span v-if="item.price_type == 0">￥{{ item.price }}</span>
-                  <span v-else-if="item.price_type == 1"
-                    >￥{{ item.lower_price }}-{{ item.highest_price }}</span
-                  >
-                  <span v-else>视产品而定</span>
-                </li>
-              </router-link>
-            </ul>
+          <el-form-item label="是否通过达人账号上传">
+            <p class="description">视频通过达人上传会在达人主页展示</p>
+            <el-radio v-model="videoRuleForm.radio" label="1">是</el-radio>
+            <el-radio v-model="videoRuleForm.radio" label="0">否</el-radio>
           </el-form-item>
         </el-form>
       </div>
@@ -1414,6 +1383,34 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      title="已选达人"
+      :visible.sync="centerDialogVisibleXinz"
+      width="25%"
+      center
+    >
+      <ul style="display: flex; justify-content: center">
+        <li
+          v-for="(item, index) in darList"
+          :key="index"
+          style="
+            margin: 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+          "
+          @click="goDrxqy(darList[index].user_id)"
+        >
+          <img
+            :src="item.image"
+            style="width: 40px; height: 40px; border-radius: 50%"
+          />
+          <p>NO.{{ item.user_id }}</p>
+        </li>
+      </ul>
+    </el-dialog>
   </div>
 </template>
 
@@ -1455,6 +1452,12 @@ export default {
       }
     };
     return {
+      videoRuleForm: {
+        category: "",
+        copper: "",
+        radio: "",
+      },
+      centerDialogVisibleXinz: false,
       orderIdFlex: false,
       centerDialogVisible: false,
       multipleSelection: [],
@@ -1607,6 +1610,7 @@ export default {
       getsite: "",
       backDeposit: 0,
       strArray: [],
+      darList: [],
     };
   },
   created() {
@@ -1622,6 +1626,9 @@ export default {
     this.avatar = localStorage.getItem("avatar");
     this.handlerGetCategory();
     this.getShootRequireList();
+    setTimeout(() => {
+      console.log(this.tableData);
+    }, 1000);
   },
   computed: {
     query() {
@@ -1670,6 +1677,11 @@ export default {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
     handleSelectable(row) {
       return row.category_id == 18 ? false : true;
+    },
+    centerDialogVisibleXinzTan(list) {
+      this.centerDialogVisibleXinz = true;
+      console.log(list);
+      this.darList = list;
     },
     //当选择项发生变化时会触发该事件
     handleSelectionChange(val) {
@@ -1759,6 +1771,10 @@ export default {
       })
         .then((res) => {
           if (res.code == 1) {
+            console.log(res);
+            this.videoRuleForm.category = res.data.title;
+            this.videoRuleForm.copper = res.data.budget;
+            this.videoRuleForm.radio = res.data.method + "";
             this.videoForm = res.data;
           }
         })
@@ -1792,7 +1808,7 @@ export default {
         orderType: this.orderType,
       })
         .then((res) => {
-          // console.log(res, "res");
+          console.log(res, "res");
           if (res.code == 1) {
             this.pageState = true;
             this.tableData = res.data.data;
@@ -2251,6 +2267,13 @@ export default {
     //关闭查看地址
     IselDialogDz() {
       this.centerDialogVisible = false;
+    },
+
+    goDrxqy(id) {
+      window.open(
+        this.$router.resolve({ path: `/homepage:${id}` }).href,
+        "_blank"
+      );
     },
   },
 };
@@ -3423,7 +3446,6 @@ export default {
       font-family: PingFangSC-Regular, PingFang SC;
       color: #999999;
       line-height: 17px;
-      margin-top: 5px;
       margin-bottom: 6px;
     }
 
@@ -3880,10 +3902,20 @@ export default {
   right: 70px;
 }
 </style>
-
+<style lang="less" scoped>
+#order .video_dialog .video_ruleForm[data-v-0d0e0941] {
+  height: auto;
+}
+</style>
 <style>
 .el-table__row > td > .cell {
   padding-right: 0px;
   padding-left: 0px;
+}
+</style>
+
+<style lang="less" scoped>
+::v-deep .el-form-item--small .el-form-item__label {
+  line-height: 22px;
 }
 </style>

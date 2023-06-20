@@ -935,3 +935,9 @@ export default {
   margin-bottom: 16px;
 }
 </style>
+
+<style>
+.el-tabs__item {
+  width: 120px;
+}
+</style>

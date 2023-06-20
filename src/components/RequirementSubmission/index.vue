@@ -961,36 +961,35 @@ export default {
         };
         this.$refs[formName].validate((valid) => {
           this.checkRequirement();
-          console.log(this.videoRuleForm.copper);
           if (valid) {
-            if (this.requirementValidator) {
-              if (this.videoRuleForm.copper * 1 >= 350) {
-                create(data).then((res) => {
-                  if (res.code == 1) {
-                    console.log(res);
-                    this.$message({
-                      message: "添加成功",
-                      type: "success",
-                      offset: 400,
-                      center: true,
-                    });
-                    this.reqsearch();
-                    (this.videoRuleForm = {
-                      product: "",
-                      category: "",
-                      selling_point: "",
-                      demand: "",
-                      remarks: "",
-                      copper: "",
-                    }),
-                      (this.videoSubmitDialogVisible = false);
-                  }
-                });
-              } else {
-                console.log(this.$refs.videoRules.fields);
-                this.$refs.videoRules.fields[1].error =
-                  "请输入拍摄预算，不能低于350元";
-              }
+            if (
+              this.requirementValidator &&
+              this.videoRuleForm.copper * 1 >= 350
+            ) {
+              create(data).then((res) => {
+                if (res.code == 1) {
+                  console.log(res);
+                  this.$message({
+                    message: "添加成功",
+                    type: "success",
+                    offset: 400,
+                    center: true,
+                  });
+                  this.reqsearch();
+                  (this.videoRuleForm = {
+                    product: "",
+                    category: "",
+                    selling_point: "",
+                    demand: "",
+                    remarks: "",
+                    copper: "",
+                  }),
+                    (this.videoSubmitDialogVisible = false);
+                }
+              });
+            } else {
+              this.$refs.videoRules.fields[1].error =
+                "请输入拍摄预算，不能低于350元";
             }
           } else {
             console.log("error submit!!");
@@ -1770,7 +1769,7 @@ export default {
   right: 0;
 }
 .isinfluencerInfoLi:hover .delDiv {
-  display: block;
+  opacity: 1;
 }
 .InfluencerList {
   background-color: white;
@@ -1784,7 +1783,7 @@ export default {
   background: #f4f2ff;
 }
 .delDiv {
-  display: none;
+  opacity: 0;
   width: 10px;
   height: 10px;
   background: red;

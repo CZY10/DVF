@@ -1,12 +1,5 @@
 <template>
   <div class="RequirementBox">
-    <div class="navmenu">
-      <img
-        src="	https://api.viponm.com/uploads/20230208/729c6923d894d9e7689a0ba1137c8918.svg"
-        style="width: 180px; height: 100%; padding: 0 20px; cursor: pointer"
-        @click="goHome"
-      />
-    </div>
     <div class="RequirementBoxBanxin">
       <p class="hearder">提交视频拍摄需求</p>
       <div class="RequirementWenben">
@@ -39,11 +32,11 @@
           max-height="600"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="50" :selectable="selectable">
+          <!-- <el-table-column type="selection" width="50" :selectable="selectable"> -->
+          <!-- </el-table-column> -->
+          <el-table-column type="index" width="49" label="序号">
           </el-table-column>
-          <el-table-column type="index" width="50" label="序号">
-          </el-table-column>
-          <el-table-column label="意向达人" width="275">
+          <el-table-column label="意向达人" width="380">
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
                 <ul class="influencerInfoUl">
@@ -73,6 +66,16 @@
                       "
                     >
                       <span>NO.{{ item.user_id }}</span>
+                    </p>
+                    <p
+                      style="
+                        font-size: 12px;
+                        font-weight: 400;
+                        color: #796cf3;
+                        text-align: center;
+                      "
+                    >
+                      {{ item.price }}
                     </p>
                     <div
                       class="delDiv"
@@ -116,12 +119,17 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="产品信息" width="180">
+          <el-table-column label="产品信息" width="140">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div
                 v-else
-                style="display: flex; align-items: center; cursor: pointer"
+                style="
+                  display: flex;
+                  align-items: center;
+                  cursor: pointer;
+                  justify-content: center;
+                "
               >
                 <div
                   style="height: 60px; width: 60px; border: 1px solid #f0f0f0"
@@ -173,13 +181,20 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄预算/¥" width="160">
+          <el-table-column label="拍摄预算/¥" width="180">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag || scope.row.title == ''">--</div>
-              <div v-else style="width: 100%">{{ scope.row.budget }}</div>
+              <div
+                style="text-align: left; padding-left: 66px"
+                v-if="scope.row.flag || scope.row.title == ''"
+              >
+                --
+              </div>
+              <div style="text-align: left; padding-left: 48px" v-else>
+                {{ scope.row.budget }}
+              </div>
             </template>
           </el-table-column>
-          <el-table-column prop="yesN" label="是否通过达人账号上传" width="180">
+          <el-table-column prop="yesN" label="是否通过达人账号上传" width="170">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div v-else>
@@ -188,7 +203,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄要求" width="100">
+          <el-table-column label="拍摄要求" width="90">
             <template slot-scope="scope">
               <div v-if="scope.row.flag == 1 || scope.row.title == ''">--</div>
               <div
@@ -272,7 +287,7 @@
           未选意向达人情况下，默认为 平台推荐达人
           <div class="triangle"></div>
         </div>
-        <div @click="deleteList" class="delList">删除</div>
+        <!-- <div @click="deleteList" class="delList">删除</div> -->
       </div>
       <div class="RequirementBtn">
         <button
@@ -560,6 +575,7 @@
               <div class="itemElement">
                 <img :src="element.image" class="item-img" />
                 <p class="item-p">NO.{{ element.user_id }}</p>
+                <div class="item-div">{{ element.price }}</div>
                 <div class="item-index1" v-if="index == 0">01</div>
                 <div class="item-index2" v-if="index == 1">02</div>
                 <div class="item-index3" v-if="index == 2">03</div>
@@ -1147,6 +1163,7 @@ export default {
     },
     //添加达人
     addDrs(influencer_info, id) {
+      console.log(influencer_info);
       this.myArray = influencer_info;
       this.ispersonid = id;
       this.centerDialogVisible = true;
@@ -1199,7 +1216,12 @@ export default {
     },
     //提交
     submitTo() {
-      this.payDepositDialogVisible = true;
+      this.$message({
+        message: "提交成功",
+        type: "success",
+        offset: 400,
+        center: true,
+      });
       const arr = [];
       this.tableData.forEach((item) => {
         if (item.id && item.title != "") {
@@ -1211,6 +1233,7 @@ export default {
       needsSubmit({
         id: id,
       }).then((res) => {
+        this.payDepositDialogVisible = true;
         console.log(res.data.order[1].order.qrcode);
         setTimeout(() => {
           console.log(this.$refs.alipayQrCodeUrl);
@@ -1301,24 +1324,24 @@ export default {
       this.handleSelectionChangeList = val;
       console.log(val);
     },
-    selectable(row) {
-      if (row.flag == 1) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-    deleteList() {
-      if (this.handleSelectionChangeList.length > 0) {
-        var idList = [];
-        this.handleSelectionChangeList.forEach((item) => {
-          idList.push(item.id);
-        });
-        const influencer_ids = idList.join(",");
-        this.centerDialogVisibles = true;
-        this.formId = influencer_ids;
-      }
-    },
+    // selectable(row) {
+    //   if (row.flag == 1) {
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // },
+    // deleteList() {
+    //   if (this.handleSelectionChangeList.length > 0) {
+    //     var idList = [];
+    //     this.handleSelectionChangeList.forEach((item) => {
+    //       idList.push(item.id);
+    //     });
+    //     const influencer_ids = idList.join(",");
+    //     this.centerDialogVisibles = true;
+    //     this.formId = influencer_ids;
+    //   }
+    // },
     tiso() {
       this.$message("您还没有添加任何需求，请添加需求再提交");
     },
@@ -1328,9 +1351,6 @@ export default {
     tiss() {
       this.$message("请先阅读并同意《视频拍摄服务及售后说明》");
     },
-    goHome() {
-      this.$router.push("/");
-    },
   },
   mounted() {
     this.reqsearch();
@@ -1339,14 +1359,47 @@ export default {
   watch: {
     input(newInput) {
       if (newInput == "") {
-        this.InfluencerList = [];
+        setTimeout(() => {
+          this.InfluencerList = [];
+        }, 400);
       } else {
         needsInfluencerList().then((res) => {
           const arr = res.data.data.filter((item) => {
-            const str = item.user_id.toString().includes(newInput);
-            return str;
+            return item.user_id.toString().includes(newInput);
           });
-          this.InfluencerList = arr;
+
+          if (this.myArray.length == 1) {
+            var isArr = arr.filter(
+              (item) => item.user_id != this.myArray[0].user_id
+            );
+          }
+          if (this.myArray.length == 2) {
+            var isArr = arr
+              .filter((item) => item.user_id != this.myArray[0].user_id)
+              .filter((item) => item.user_id != this.myArray[1].user_id);
+          }
+          if (this.myArray.length == 3) {
+            var isArr = arr
+              .filter((item) => item.user_id != this.myArray[0].user_id)
+              .filter((item) => item.user_id != this.myArray[1].user_id)
+              .filter((item) => item.user_id != this.myArray[2].user_id);
+          }
+          if (this.myArray.length == 4) {
+            var isArr = arr
+              .filter((item) => item.user_id != this.myArray[0].user_id)
+              .filter((item) => item.user_id != this.myArray[1].user_id)
+              .filter((item) => item.user_id != this.myArray[2].user_id)
+              .filter((item) => item.user_id != this.myArray[3].user_id);
+          }
+          if (this.myArray.length == 5) {
+            var isArr = arr
+              .filter((item) => item.user_id != this.myArray[0].user_id)
+              .filter((item) => item.user_id != this.myArray[1].user_id)
+              .filter((item) => item.user_id != this.myArray[2].user_id)
+              .filter((item) => item.user_id != this.myArray[3].user_id)
+              .filter((item) => item.user_id != this.myArray[4].user_id);
+          }
+          this.InfluencerList = isArr;
         });
       }
     },
@@ -1371,8 +1424,12 @@ export default {
       }
     },
     payDepositDialogVisible(newVal) {
+      const _this = this;
+      console.log(this);
       if (newVal == false) {
-        this.reqsearch();
+        clearInterval(_this.checkWechatPaymentVal);
+        clearInterval(_this.checkAlipayPaymentVal);
+        this.$router.push("/manage/order");
       }
     },
   },
@@ -1673,7 +1730,6 @@ export default {
 }
 .itemElement {
   width: 88px;
-  height: 88px;
   background: #ffffff;
   box-shadow: 0px 6px 6px 0px rgba(0, 0, 0, 0.05);
   border-radius: 3px;
@@ -1712,6 +1768,14 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #666666 !important;
+}
+.item-div {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #796cf3;
+  text-align: center;
+  margin-top: 4px;
 }
 .item-index1 {
   width: 20px;
@@ -1791,7 +1855,7 @@ export default {
   border-radius: 50%;
   position: absolute;
   top: 0;
-  left: 35px;
+  left: 45px;
   color: white !important;
   font-size: 12px;
   line-height: 6px;
@@ -1861,7 +1925,7 @@ export default {
   align-items: center;
 }
 .el-table__body-wrapper {
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .el-textarea__inner {
@@ -1927,7 +1991,7 @@ export default {
 .el-icon-question {
   position: absolute;
   top: 13px;
-  left: 278px;
+  left: 275px;
   cursor: pointer;
 }
 </style>
@@ -2277,7 +2341,7 @@ export default {
     border-radius: 5px;
     position: absolute;
     top: -60px;
-    left: 195px;
+    left: 193px;
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;

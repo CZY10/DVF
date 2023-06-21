@@ -1387,7 +1387,7 @@
     <el-dialog
       title="已选达人"
       :visible.sync="centerDialogVisibleXinz"
-      width="25%"
+      width="28%"
       center
     >
       <ul style="display: flex; justify-content: center">
@@ -1408,6 +1408,7 @@
             style="width: 40px; height: 40px; border-radius: 50%"
           />
           <p>NO.{{ item.user_id }}</p>
+          <p style="color: #796cf3; margin-top: 4px">{{ item.price }}</p>
         </li>
       </ul>
     </el-dialog>

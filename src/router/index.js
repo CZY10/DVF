@@ -159,10 +159,6 @@ router.beforeEach((to, from, next) => {
     } else {
         next()
     }
-    if (to.path == "/manage/order" && from.path == "/buyershow") {
-        window.localStorage.setItem("ismessage", 1)
-        location.reload();
-    }
 })
 
 export default router

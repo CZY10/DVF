@@ -268,7 +268,7 @@ export default {
     return {
       dialog: false,
       isLogin: true,
-      avatar: localStorage.getItem("avatar"),
+      avatar: localStorage.getItem("avatar") || this.$store.state.login.avatar,
       messageCount: 0,
       logoImg: localStorage.getItem("logo"),
       configData: {},
@@ -340,6 +340,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$store.state.login);
     this.getMessage();
 
     if (JSON.parse(localStorage.getItem("configObj")))

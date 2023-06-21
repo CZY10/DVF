@@ -1841,7 +1841,6 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.isMessage = 1;
       if (this.pageState === true) this.getOrderList();
     },
     //删除订单

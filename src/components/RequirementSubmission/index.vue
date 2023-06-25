@@ -45,16 +45,24 @@
                     v-for="(item, index) in scope.row.influencer_info"
                     :key="index"
                   >
-                    <img
-                      :src="item.image"
-                      style="
-                        display: block;
-                        width: 32px;
-                        height: 32px;
-                        border-radius: 50%;
-                      "
-                      @click="gohomepage(item.user_id)"
-                    />
+                    <div style="position: relative">
+                      <img
+                        :src="item.image"
+                        style="
+                          display: block;
+                          width: 32px;
+                          height: 32px;
+                          border-radius: 50%;
+                        "
+                        @click="gohomepage(item.user_id)"
+                      />
+                      <div
+                        class="delDiv"
+                        @click="delDr(item.user_id, scope.row.id)"
+                      >
+                        x
+                      </div>
+                    </div>
                     <p
                       style="
                         font-size: 12px;
@@ -77,12 +85,6 @@
                     >
                       {{ item.price }}
                     </p>
-                    <div
-                      class="delDiv"
-                      @click="delDr(item.user_id, scope.row.id)"
-                    >
-                      x
-                    </div>
                   </li>
                   <li
                     class="influencerInfoLi"
@@ -1859,7 +1861,7 @@ export default {
   border-radius: 50%;
   position: absolute;
   top: 0;
-  left: 45px;
+  left: 30px;
   color: white !important;
   font-size: 12px;
   line-height: 6px;

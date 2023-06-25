@@ -1399,11 +1399,15 @@ export default {
               .filter((item) => item.user_id != this.myArray[3].user_id)
               .filter((item) => item.user_id != this.myArray[4].user_id);
           }
+          if (this.myArray.length == 0) {
+            var isArr = arr;
+          }
           this.InfluencerList = isArr;
         });
       }
     },
     myArray(newInput) {
+      console.log(newInput);
       if (newInput.length == 5) {
         this.disabled = true;
         this.placeholderspan = "";

@@ -787,47 +787,55 @@
         <el-form
           size="small"
           label-position="left"
-          disabled
           :model="videoForm"
           ref="videoRules"
           label-width="125px"
           class="video_ruleForm"
         >
-          <el-form-item label="产品名称" disabled>
+          <el-form-item label="产品名称">
             <el-input
               v-model="videoRuleForm.category"
               placeholder="请输入产品名称"
+              disabled
             ></el-input>
           </el-form-item>
           <el-form-item label="产品链接">
-            <p
-              style="
-                background: #f5f7fa;
-                border: 1px solid #e4e7ed;
-                border-radius: 4px;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-              "
-            >
-              <a
-                :href="videoForm.url"
-                :title="videoForm.url"
+            <div v-if="videoForm.url">
+              <p
                 style="
-                  color: #333333;
-                  padding-left: 15px;
-                  text-decoration: none;
+                  background: #f5f7fa;
+                  border: 1px solid #e4e7ed;
+                  border-radius: 4px;
+                  overflow: hidden;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
                 "
-                target="_blank"
-                >{{ videoForm.url }}</a
               >
-            </p>
+                <a
+                  :href="videoForm.url"
+                  :title="videoForm.url"
+                  style="
+                    color: #333333;
+                    padding-left: 15px;
+                    text-decoration: none;
+                  "
+                  target="_blank"
+                  >{{ videoForm.url }}</a
+                >
+              </p>
+            </div>
+            <el-input
+              v-model="videoRuleForm.url"
+              placeholder=""
+              v-else
+            ></el-input>
             <!--                        <el-input v-model="videoForm.url" placeholder="请输入产品亚马逊链接"></el-input>-->
           </el-form-item>
           <el-form-item label="拍摄预算 ¥" style="width: 350px">
             <el-input
               v-model="videoRuleForm.copper"
               placeholder="请填写该产品的预算金额"
+              disabled
             >
             </el-input>
           </el-form-item>
@@ -838,6 +846,7 @@
 1、请勿填写过多信息，否则在极短的时间内视频将无法凸显重点；
 2、如无特别要求，请填写“自由发挥”，达人将结合产品listing自由创作。"
               v-model="videoForm.sellingpoint"
+              disabled
             ></el-input>
           </el-form-item>
           <el-form-item label="拍摄要素">
@@ -859,10 +868,11 @@
                     v-for="(i, j) in item.list"
                     :key="j"
                     :label="i"
+                    disabled
                   ></el-checkbox>
                 </el-checkbox-group>
                 <el-radio-group v-else v-model="item.checkList">
-                  <el-radio v-for="(i, j) in item.list" :label="i">{{
+                  <el-radio v-for="(i, j) in item.list" :label="i" disabled>{{
                     i
                   }}</el-radio>
                 </el-radio-group>
@@ -874,6 +884,7 @@
               type="textarea"
               placeholder="请输入您的拍摄需求"
               v-model="videoForm.custom"
+              disabled
             ></el-input>
           </el-form-item>
           <el-form-item label="其他拍摄说明">
@@ -884,14 +895,31 @@
 2、要求特定场景的，如：汽车、泳池、卧室、海滩等
 3、其他特殊要求，如：需要安装演示、需要3~6岁小孩出镜等"
               v-model="videoForm.description"
+              disabled
             ></el-input>
           </el-form-item>
           <el-form-item label="是否通过达人账号上传">
             <p class="description">视频通过达人上传会在达人主页展示</p>
-            <el-radio v-model="videoRuleForm.radio" label="1">是</el-radio>
-            <el-radio v-model="videoRuleForm.radio" label="0">否</el-radio>
+            <el-radio v-model="videoRuleForm.radio" label="1" disabled
+              >是</el-radio
+            >
+            <el-radio v-model="videoRuleForm.radio" label="0" disabled
+              >否</el-radio
+            >
           </el-form-item>
         </el-form>
+        <div class="form_button">
+          <button
+            style="
+              background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+            "
+            v-if="!videoForm.url"
+            @click="modifyUrl(videoForm.id)"
+          >
+            保存
+          </button>
+          <button style="background: #ccc" v-else>保存</button>
+        </div>
       </div>
     </el-dialog>
     <!--提交寄送信息-->
@@ -1431,6 +1459,7 @@ import {
   orderStep,
   getShootRequire,
   siteRead,
+  orderEdit,
 } from "@/api";
 import QRCode from "qrcodejs2";
 import { mapMutations } from "vuex";
@@ -1457,6 +1486,7 @@ export default {
         category: "",
         copper: "",
         radio: "",
+        url: "",
       },
       centerDialogVisibleXinz: false,
       orderIdFlex: false,
@@ -2274,6 +2304,18 @@ export default {
         this.$router.resolve({ path: `/homepage:${id}` }).href,
         "_blank"
       );
+    },
+    //修改url
+    modifyUrl(id) {
+      orderEdit({
+        id: id,
+        url: this.videoRuleForm.url,
+      }).then((res) => {
+        if (res.code == 1) {
+          this.checkVideoDialog = false;
+          this.getOrderList();
+        }
+      });
     },
   },
 };
@@ -3183,6 +3225,22 @@ export default {
 }
 </style>
 <style scoped lang="less">
+.form_button {
+  button {
+    margin: auto;
+    display: block;
+    width: 140px;
+    height: 32px;
+    border-radius: 16px;
+    border: none;
+    margin-top: 24px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #ffffff;
+    cursor: pointer;
+  }
+}
+
 #order {
   .item_check_style {
     display: flex;

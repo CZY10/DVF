@@ -340,7 +340,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$store.state.login);
     this.getMessage();
 
     if (JSON.parse(localStorage.getItem("configObj")))

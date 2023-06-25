@@ -24,10 +24,7 @@ export default {
     };
   },
   mounted() {
-    // if (localStorage.getItem("src")) {
-    //   window.open(localStorage.getItem("src"), "_black");
-    //   localStorage.removeItem("src");
-    // }
+    console.log(this.$store.state);
   },
   created() {
     this.source =

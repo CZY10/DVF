@@ -36,7 +36,7 @@
           <!-- </el-table-column> -->
           <el-table-column type="index" width="49" label="序号">
           </el-table-column>
-          <el-table-column label="意向达人" width="370">
+          <el-table-column label="意向达人" width="410">
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
                 <ul class="influencerInfoUl">
@@ -121,7 +121,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="产品信息" width="140">
+          <el-table-column label="产品信息" width="170">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div
@@ -183,7 +183,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄预算/¥" width="180">
+          <el-table-column label="拍摄预算/¥" width="110">
             <template slot-scope="scope">
               <div
                 style="text-align: center"
@@ -191,7 +191,7 @@
               >
                 --
               </div>
-              <div style="text-align: left; margin-left: 50px" v-else>
+              <div style="text-align: center" v-else>
                 {{ scope.row.budget }}
               </div>
             </template>
@@ -217,7 +217,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="200">
             <template slot-scope="scope">
               <ul
                 style="display: flex; justify-content: center"
@@ -1468,7 +1468,7 @@ export default {
       }
     },
     payDepositDialogVisible(newVal) {
-      let _this = this
+      let _this = this;
       if (newVal == false && _this.paymentCompletedDialogVisible == false) {
         clearInterval(_this.checkWechatPaymentVal);
         clearInterval(_this.checkAlipayPaymentVal);
@@ -2051,7 +2051,7 @@ export default {
 .el-icon-question {
   position: absolute;
   top: 13px;
-  left: 275px;
+  left: 289px;
   cursor: pointer;
 }
 </style>
@@ -2452,7 +2452,7 @@ export default {
     border-radius: 5px;
     position: absolute;
     top: -60px;
-    left: 193px;
+    left: 207px;
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;

@@ -36,7 +36,7 @@
           <!-- </el-table-column> -->
           <el-table-column type="index" width="49" label="序号">
           </el-table-column>
-          <el-table-column label="意向达人" width="410">
+          <el-table-column label="意向达人" width="400">
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
                 <ul class="influencerInfoUl">
@@ -1408,40 +1408,47 @@ export default {
             return item.user_id.toString().includes(newInput);
           });
 
-          if (this.myArray.length == 1) {
-            var isArr = arr.filter(
-              (item) => item.user_id != this.myArray[0].user_id
+          // if (this.myArray.length == 1) {
+          //   var isArr = arr.filter(
+          //     (item) => item.user_id != this.myArray[0].user_id
+          //   );
+          // }
+          // if (this.myArray.length == 2) {
+          //   var isArr = arr
+          //     .filter((item) => item.user_id != this.myArray[0].user_id)
+          //     .filter((item) => item.user_id != this.myArray[1].user_id);
+          // }
+          // if (this.myArray.length == 3) {
+          //   var isArr = arr
+          //     .filter((item) => item.user_id != this.myArray[0].user_id)
+          //     .filter((item) => item.user_id != this.myArray[1].user_id)
+          //     .filter((item) => item.user_id != this.myArray[2].user_id);
+          // }
+          // if (this.myArray.length == 4) {
+          //   var isArr = arr
+          //     .filter((item) => item.user_id != this.myArray[0].user_id)
+          //     .filter((item) => item.user_id != this.myArray[1].user_id)
+          //     .filter((item) => item.user_id != this.myArray[2].user_id)
+          //     .filter((item) => item.user_id != this.myArray[3].user_id);
+          // }
+          // if (this.myArray.length == 5) {
+          //   var isArr = arr
+          //     .filter((item) => item.user_id != this.myArray[0].user_id)
+          //     .filter((item) => item.user_id != this.myArray[1].user_id)
+          //     .filter((item) => item.user_id != this.myArray[2].user_id)
+          //     .filter((item) => item.user_id != this.myArray[3].user_id)
+          //     .filter((item) => item.user_id != this.myArray[4].user_id);
+          // }
+          // if (this.myArray.length == 0) {
+          //   var isArr = arr;
+          // }
+          var isArr = arr;
+          for (var i = 0; i < this.myArray.length; i++) {
+            isArr = isArr.filter(
+              (item) => item.user_id != this.myArray[i].user_id
             );
           }
-          if (this.myArray.length == 2) {
-            var isArr = arr
-              .filter((item) => item.user_id != this.myArray[0].user_id)
-              .filter((item) => item.user_id != this.myArray[1].user_id);
-          }
-          if (this.myArray.length == 3) {
-            var isArr = arr
-              .filter((item) => item.user_id != this.myArray[0].user_id)
-              .filter((item) => item.user_id != this.myArray[1].user_id)
-              .filter((item) => item.user_id != this.myArray[2].user_id);
-          }
-          if (this.myArray.length == 4) {
-            var isArr = arr
-              .filter((item) => item.user_id != this.myArray[0].user_id)
-              .filter((item) => item.user_id != this.myArray[1].user_id)
-              .filter((item) => item.user_id != this.myArray[2].user_id)
-              .filter((item) => item.user_id != this.myArray[3].user_id);
-          }
-          if (this.myArray.length == 5) {
-            var isArr = arr
-              .filter((item) => item.user_id != this.myArray[0].user_id)
-              .filter((item) => item.user_id != this.myArray[1].user_id)
-              .filter((item) => item.user_id != this.myArray[2].user_id)
-              .filter((item) => item.user_id != this.myArray[3].user_id)
-              .filter((item) => item.user_id != this.myArray[4].user_id);
-          }
-          if (this.myArray.length == 0) {
-            var isArr = arr;
-          }
+
           this.InfluencerList = isArr;
         });
       }

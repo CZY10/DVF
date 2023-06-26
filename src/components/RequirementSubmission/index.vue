@@ -1208,7 +1208,7 @@ export default {
             title: "",
           });
           this.tableData = res.data.data;
-          console.log(this.tableData);
+          // console.log(this.tableData);
           this.fileDiz = res.data.file;
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
@@ -1232,10 +1232,12 @@ export default {
       });
       const id = arr.join(",");
       console.log(id);
+      setTimeout(() => {
+        this.payDepositDialogVisible = true;
+      }, 500);
       needsSubmit({
         id: id,
       }).then((res) => {
-        this.payDepositDialogVisible = true;
         console.log(res.data.order[1].order.qrcode);
         setTimeout(() => {
           console.log(this.$refs.alipayQrCodeUrl);
@@ -1437,6 +1439,21 @@ export default {
         clearInterval(_this.checkAlipayPaymentVal);
         this.$router.push("/manage/order");
       }
+    },
+    tableData(newVal) {
+      newVal.forEach((item) => {
+        if (item.title == "" && item.influencer_info.length == 0) {
+          if (item.id) {
+            needsDelete({
+              id: item.id,
+            }).then((res) => {
+              if (res.code == 1) {
+                this.reqsearch();
+              }
+            });
+          }
+        }
+      });
     },
   },
 };

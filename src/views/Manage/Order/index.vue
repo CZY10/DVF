@@ -3971,7 +3971,11 @@ export default {
   padding-left: 0px;
 }
 </style>
-
+<style lang="less" scoped>
+::v-deeep .el-form-item__label {
+  text-align: right !important;
+}
+</style>
 <style lang="less" scoped>
 ::v-deep .el-form-item--small .el-form-item__label {
   line-height: 22px;

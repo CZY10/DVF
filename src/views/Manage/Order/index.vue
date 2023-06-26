@@ -145,7 +145,7 @@
             <span v-else>{{ scope.row.price }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="订单状态">
+        <el-table-column prop="status" label="订单状态" width="100">
           <template slot-scope="scope">
             <el-popover
               placement="right"
@@ -226,7 +226,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="hasMessage" label="达人沟通">
+        <el-table-column prop="hasMessage" label="达人沟通" width="150">
           <template slot-scope="scope">
             <el-badge
               is-dot
@@ -3202,7 +3202,7 @@ export default {
 
 .el-table__body-wrapper {
   border: 1px solid #eeeeee;
-  padding: 0 30px;
+  padding: 0 20px;
   width: auto !important;
   border-radius: 4px !important;
   margin-top: 10px;

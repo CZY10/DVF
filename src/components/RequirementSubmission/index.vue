@@ -36,7 +36,7 @@
           <!-- </el-table-column> -->
           <el-table-column type="index" width="49" label="序号">
           </el-table-column>
-          <el-table-column label="意向达人" width="380">
+          <el-table-column label="意向达人" width="370">
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
                 <ul class="influencerInfoUl">
@@ -186,12 +186,12 @@
           <el-table-column label="拍摄预算/¥" width="180">
             <template slot-scope="scope">
               <div
-                style="text-align: left; padding-left: 66px"
+                style="text-align: center"
                 v-if="scope.row.flag || scope.row.title == ''"
               >
                 --
               </div>
-              <div style="text-align: left; padding-left: 48px" v-else>
+              <div style="text-align: left; margin-left: 50px" v-else>
                 {{ scope.row.budget }}
               </div>
             </template>
@@ -759,6 +759,39 @@
         </div>
       </div>
     </el-dialog>
+
+    <!--支付完成-->
+    <el-dialog
+      :title="'定金支付成功'"
+      :visible.sync="paymentCompletedDialogVisible"
+      width="360px"
+      @close="goOrder"
+      :close-on-click-modal="false"
+      class="payment_completed_dialog"
+      center
+    >
+      <div slot="title">
+        <i
+          style="color: rgba(2, 181, 120, 1); font-size: 20px"
+          class="el-icon-success"
+        ></i>
+        定金支付成功
+      </div>
+      <div>
+        <p style="line-height: 24px; text-align: center">
+          平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意
+        </p>
+        <div class="button_box know_btn">
+          <el-button
+            @click="
+              paymentCompletedDialogVisible = false;
+              goOrder();
+            "
+            >我知道了</el-button
+          >
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -795,6 +828,7 @@ export default {
         },
       ],
       payDepositDialogVisible: false,
+      paymentCompletedDialogVisible: false,
       disabled: false,
       flags: false,
       ispersonid: "",
@@ -861,6 +895,8 @@ export default {
     draggable,
   },
   methods: {
+    goOrder() {},
+
     httpRequest(fileLit) {
       const formData = new FormData();
       // for (const key in fileLit.file) {
@@ -1284,7 +1320,7 @@ export default {
                 _this.payDepositDialogVisible = false;
                 clearInterval(_this.checkWechatPaymentVal);
                 clearInterval(_this.checkAlipayPaymentVal);
-                _this.$router.push("/manage/order");
+                _this.paymentCompletedDialogVisible = true;
               }
             }
           })
@@ -1307,7 +1343,7 @@ export default {
                 _this.payDepositDialogVisible = false;
                 clearInterval(_this.checkAlipayPaymentVal);
                 clearInterval(_this.checkWechatPaymentVal);
-                _this.$router.push("/manage/order");
+                _this.paymentCompletedDialogVisible = true;
               }
             }
           })
@@ -1432,11 +1468,15 @@ export default {
       }
     },
     payDepositDialogVisible(newVal) {
-      const _this = this;
-      console.log(this);
-      if (newVal == false) {
+      let _this = this
+      if (newVal == false && _this.paymentCompletedDialogVisible == false) {
         clearInterval(_this.checkWechatPaymentVal);
         clearInterval(_this.checkAlipayPaymentVal);
+        _this.$router.push("/manage/order");
+      }
+    },
+    paymentCompletedDialogVisible(newVal) {
+      if (newVal == false) {
         this.$router.push("/manage/order");
       }
     },
@@ -1947,9 +1987,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.el-table__body-wrapper {
-  padding: 0 10px;
-}
 
 .el-textarea__inner {
   height: 120px;
@@ -2262,6 +2299,57 @@ export default {
 }
 </style>
 
+<style lang="less" scoped>
+::v-deep .el-table__body-wrapper {
+  padding: 0 10px;
+}
+.know_btn {
+  padding-top: 20px;
+
+  button {
+    display: block;
+    margin: auto;
+    background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+    border-radius: 16px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 20px;
+    padding: 5px 41px;
+  }
+}
+
+.button_box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+
+  button {
+    padding: 8px 45px;
+    border-radius: 16px;
+    font-size: 14px;
+  }
+
+  .cancel_style {
+    border: 1px solid #eeeeee;
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #999999;
+  }
+
+  .cancel_style:hover {
+    background: none;
+  }
+
+  .confirm_style {
+    border: none;
+    background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #ffffff;
+  }
+}
+</style>
 
 <style lang="less" scoped>
 ::v-deep .el-table .has-gutter .el-checkbox .el-checkbox__inner {

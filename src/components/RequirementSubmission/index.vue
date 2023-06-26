@@ -2051,7 +2051,7 @@ export default {
 .el-icon-question {
   position: absolute;
   top: 13px;
-  left: 289px;
+  left: 293px;
   cursor: pointer;
 }
 </style>
@@ -2452,7 +2452,7 @@ export default {
     border-radius: 5px;
     position: absolute;
     top: -60px;
-    left: 207px;
+    left: 211px;
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;

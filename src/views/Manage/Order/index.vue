@@ -1324,22 +1324,6 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-        <div class="group_26 flex-row">
-          <div class="image-text_40 flex-row justify-between">
-            <img
-              class="thumbnail_26"
-              referrerpolicy="no-referrer"
-              src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngadd69f7b6dbb5a1080befad2c5168f68a6705b339b5967fdd3f737c59baf4d89"
-            />
-            <div class="text-group_14">
-              <span class="text_98">1、订单支付成功后，</span>
-              <span class="text_99">定金</span>
-              <span class="paragraph_1"
-                >将原路退回至您的「支付宝/微信」账户；<br />2、完成订单支付，代表服务正式生效。在完成交付之前，平台不会将你的款项支付给达人。</span
-              >
-            </div>
-          </div>
-        </div>
         <!--                <ul>-->
         <!--                    <li>-->
         <!--                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>-->

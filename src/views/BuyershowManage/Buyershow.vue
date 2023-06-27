@@ -1400,6 +1400,7 @@ export default {
       };
       getSearchList(data)
         .then((res) => {
+          console.log(res);
           if (res.code === 1) {
             if (this.pageIndex === 1) {
               this.tableData = res.data.data;
@@ -1669,18 +1670,10 @@ export default {
         needsSelectInfluencer({
           influencer_ids: influencer_ids,
         }).then((res) => {
-          console.log(res);
-          location.reload();
-          window.open(
-            this.$router.resolve({ path: "/Requirement" }).href,
-            "_blank"
-          );
+          this.$router.push("/Requirement");
         });
       } else {
-        window.open(
-          this.$router.resolve({ path: "/Requirement" }).href,
-          "_blank"
-        );
+        this.$router.push("/Requirement");
       }
     },
   },
@@ -2124,13 +2117,6 @@ export default {
     color: #666666 !important;
   }
 }
-.el-form-item__label {
-  font-size: 14px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  color: #333333;
-  line-height: 20px;
-  text-align: left !important;
-}
 .el-table__empty-block {
   display: none !important;
 }
@@ -2268,6 +2254,17 @@ export default {
   border: 2px solid rgba(121, 108, 243, 1) !important;
 }
 </style>
+
+<style lang="less" scoped>
+::v-deep .el-form-item__label {
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  color: #333333;
+  line-height: 20px;
+  text-align: left !important;
+}
+</style>
+
 <style lang="less" scoped>
 .payment_completed_dialog {
   p {

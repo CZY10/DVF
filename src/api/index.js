@@ -463,3 +463,12 @@ export function needsTemplate(data) {
 //         data
 //     })
 // }
+
+//修改产品信息url
+export function orderEdit(data) {
+    return request({
+        url: "/api/order/edit",
+        method: "post",
+        data
+    })
+}

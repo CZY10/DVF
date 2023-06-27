@@ -24,10 +24,7 @@ export default {
     };
   },
   mounted() {
-    // if (localStorage.getItem("src")) {
-    //   window.open(localStorage.getItem("src"), "_black");
-    //   localStorage.removeItem("src");
-    // }
+    console.log(this.$store.state);
   },
   created() {
     this.source =
@@ -39,7 +36,6 @@ export default {
     } else {
       this.isToken = false;
     }
-    console.log(this.source);
 
     if (this.isToken == true && this.source == "vipon_deal") {
       const loading = this.$loading({
@@ -54,7 +50,7 @@ export default {
 
       if (this.action == "account/login") {
         localStorage.removeItem("source");
-        localStorage.removeItem("avatar");
+        localStorage.removeItem("action");
         localStorage.removeItem("token");
         this.$store.commit("resetState");
         this.$router.push("/login");
@@ -68,7 +64,7 @@ export default {
           .then((res) => {
             window.location.href = res.data.jump;
             localStorage.removeItem("source");
-            localStorage.removeItem("avatar");
+            localStorage.removeItem("action");
           })
           .catch((res) => {
             console.log(res);

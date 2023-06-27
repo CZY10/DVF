@@ -480,7 +480,6 @@ export default {
             this.setUserInfo(JSON.stringify(res.data.userinfo));
             this.setToken(res.data.userinfo.token);
             this.setAvatar(res.data.userinfo.avatar);
-            console.log("jump", res.data.jump);
             if (res.data.jump) {
               await new Promise((resolve) => {
                 window.open(res.data.jump, "_blank");

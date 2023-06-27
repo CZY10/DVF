@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <Navmenu v-if="flag" />
+      <Navmenu v-if="$store.state.Index.isFalg" />
       <Mycontent />
     </el-col>
 
@@ -59,15 +59,16 @@
 import Mycontent from "@/components/SideBar/Mycontent";
 import Navmenu from "@/components/SideBar/Navmenu";
 import ConsultDialog from "@/components/ConsultDialog";
+import { mapMutations } from "vuex";
 export default {
   name: "home",
   data() {
     return {
-      flag: true,
       remreruKb: false,
       remreruKa: true,
       flags: true,
       isShowComDialog: false,
+      flag: true,
     };
   },
   components: {
@@ -85,16 +86,9 @@ export default {
     } else {
       this.flags = false;
     }
-    if (
-      this.$route.fullPath == "/Requirement" ||
-      this.$route.fullPath == "/Note"
-    ) {
-      this.flag = false;
-    } else {
-      this.flag = true;
-    }
   },
   methods: {
+    ...mapMutations("Index", ["setIsFalg"]),
     remreruK() {
       this.remreruKa = false;
     },
@@ -108,10 +102,6 @@ export default {
   watch: {
     $route: function (to, from) {
       // 处理路径变化的逻辑
-      console.log(to.fullPath, from.fullPath, "res");
-      if ((to.path == "/Requirement", from.path == "/")) {
-        location.reload();
-      }
       if (
         to.fullPath == "/" ||
         to.fullPath == "/videohome" ||
@@ -120,14 +110,6 @@ export default {
         this.flags = true;
       } else {
         this.flags = false;
-      }
-      if (
-        this.$route.fullPath == "/Requirement" ||
-        this.$route.fullPath == "/Note"
-      ) {
-        this.flag = false;
-      } else {
-        this.flag = true;
       }
     },
   },

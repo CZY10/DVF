@@ -872,6 +872,12 @@ export default {
         ],
         category: [
           { required: true, message: "请选择产品名称", trigger: "blur" },
+          {
+            min: 0,
+            max: 30,
+            message: "长度在30个字符以内",
+            trigger: "blur",
+          },
         ],
         selling_point: [
           {

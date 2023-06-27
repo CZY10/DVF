@@ -896,6 +896,7 @@ export default {
       handleSelectionChangeList: [],
       daorid: "",
       fileDiz: "",
+      iscg: false,
     };
   },
   components: {
@@ -1005,6 +1006,7 @@ export default {
         this.isvideoSubmitDialogVisible = 0;
       } else {
         this.isvideoSubmitDialogVisible = 1;
+        this.iscg = true;
         this.formId = id;
       }
     },
@@ -1077,12 +1079,22 @@ export default {
                 needsEdit(data).then((res) => {
                   if (res.code == 1) {
                     console.log(res);
-                    this.$message({
-                      message: "修改成功",
-                      type: "success",
-                      offset: 400,
-                      center: true,
-                    });
+                    if (this.iscg) {
+                      this.$message({
+                        message: "添加成功",
+                        type: "success",
+                        offset: 400,
+                        center: true,
+                      });
+                      this.iscg = false;
+                    } else {
+                      this.$message({
+                        message: "修改成功",
+                        type: "success",
+                        offset: 400,
+                        center: true,
+                      });
+                    }
                     this.reqsearch();
                     (this.videoRuleForm = {
                       product: "",

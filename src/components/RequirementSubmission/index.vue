@@ -1,12 +1,5 @@
 <template>
   <div class="RequirementBox">
-    <div class="navmenu">
-      <img
-        src="	https://api.viponm.com/uploads/20230208/729c6923d894d9e7689a0ba1137c8918.svg"
-        style="width: 180px; height: 100%; padding: 0 20px; cursor: pointer"
-        @click="goHome"
-      />
-    </div>
     <div class="RequirementBoxBanxin">
       <p class="hearder">提交视频拍摄需求</p>
       <div class="RequirementWenben">
@@ -39,11 +32,11 @@
           max-height="600"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="50" :selectable="selectable">
+          <!-- <el-table-column type="selection" width="50" :selectable="selectable"> -->
+          <!-- </el-table-column> -->
+          <el-table-column type="index" width="49" label="序号">
           </el-table-column>
-          <el-table-column type="index" width="50" label="序号">
-          </el-table-column>
-          <el-table-column label="意向达人" width="275">
+          <el-table-column label="意向达人" width="400">
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
                 <ul class="influencerInfoUl">
@@ -52,16 +45,24 @@
                     v-for="(item, index) in scope.row.influencer_info"
                     :key="index"
                   >
-                    <img
-                      :src="item.image"
-                      style="
-                        display: block;
-                        width: 32px;
-                        height: 32px;
-                        border-radius: 50%;
-                      "
-                      @click="gohomepage(item.user_id)"
-                    />
+                    <div style="position: relative">
+                      <img
+                        :src="item.image"
+                        style="
+                          display: block;
+                          width: 32px;
+                          height: 32px;
+                          border-radius: 50%;
+                        "
+                        @click="gohomepage(item.user_id)"
+                      />
+                      <div
+                        class="delDiv"
+                        @click="delDr(item.user_id, scope.row.id)"
+                      >
+                        x
+                      </div>
+                    </div>
                     <p
                       style="
                         font-size: 12px;
@@ -74,12 +75,16 @@
                     >
                       <span>NO.{{ item.user_id }}</span>
                     </p>
-                    <div
-                      class="delDiv"
-                      @click="delDr(item.user_id, scope.row.id)"
+                    <p
+                      style="
+                        font-size: 12px;
+                        font-weight: 400;
+                        color: #796cf3;
+                        text-align: center;
+                      "
                     >
-                      x
-                    </div>
+                      {{ item.price }}
+                    </p>
                   </li>
                   <li
                     class="influencerInfoLi"
@@ -116,12 +121,17 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="产品信息" width="180">
+          <el-table-column label="产品信息" width="170">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div
                 v-else
-                style="display: flex; align-items: center; cursor: pointer"
+                style="
+                  display: flex;
+                  align-items: center;
+                  cursor: pointer;
+                  justify-content: center;
+                "
               >
                 <div
                   style="height: 60px; width: 60px; border: 1px solid #f0f0f0"
@@ -173,13 +183,20 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄预算/¥" width="160">
+          <el-table-column label="拍摄预算/¥" width="110">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag || scope.row.title == ''">--</div>
-              <div v-else style="width: 100%">{{ scope.row.budget }}</div>
+              <div
+                style="text-align: center"
+                v-if="scope.row.flag || scope.row.title == ''"
+              >
+                --
+              </div>
+              <div style="text-align: center" v-else>
+                {{ scope.row.budget }}
+              </div>
             </template>
           </el-table-column>
-          <el-table-column prop="yesN" label="是否通过达人账号上传" width="180">
+          <el-table-column prop="yesN" label="是否通过达人账号上传" width="170">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div v-else>
@@ -188,7 +205,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄要求" width="100">
+          <el-table-column label="拍摄要求" width="90">
             <template slot-scope="scope">
               <div v-if="scope.row.flag == 1 || scope.row.title == ''">--</div>
               <div
@@ -200,7 +217,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="200">
             <template slot-scope="scope">
               <ul
                 style="display: flex; justify-content: center"
@@ -272,7 +289,7 @@
           未选意向达人情况下，默认为 平台推荐达人
           <div class="triangle"></div>
         </div>
-        <div @click="deleteList" class="delList">删除</div>
+        <!-- <div @click="deleteList" class="delList">删除</div> -->
       </div>
       <div class="RequirementBtn">
         <button
@@ -560,6 +577,7 @@
               <div class="itemElement">
                 <img :src="element.image" class="item-img" />
                 <p class="item-p">NO.{{ element.user_id }}</p>
+                <div class="item-div">{{ element.price }}</div>
                 <div class="item-index1" v-if="index == 0">01</div>
                 <div class="item-index2" v-if="index == 1">02</div>
                 <div class="item-index3" v-if="index == 2">03</div>
@@ -741,6 +759,39 @@
         </div>
       </div>
     </el-dialog>
+
+    <!--支付完成-->
+    <el-dialog
+      :title="'定金支付成功'"
+      :visible.sync="paymentCompletedDialogVisible"
+      width="360px"
+      @close="goOrder"
+      :close-on-click-modal="false"
+      class="payment_completed_dialog"
+      center
+    >
+      <div slot="title">
+        <i
+          style="color: rgba(2, 181, 120, 1); font-size: 20px"
+          class="el-icon-success"
+        ></i>
+        定金支付成功
+      </div>
+      <div>
+        <p style="line-height: 24px; text-align: center">
+          平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意
+        </p>
+        <div class="button_box know_btn">
+          <el-button
+            @click="
+              paymentCompletedDialogVisible = false;
+              goOrder();
+            "
+            >我知道了</el-button
+          >
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -777,6 +828,7 @@ export default {
         },
       ],
       payDepositDialogVisible: false,
+      paymentCompletedDialogVisible: false,
       disabled: false,
       flags: false,
       ispersonid: "",
@@ -843,6 +895,8 @@ export default {
     draggable,
   },
   methods: {
+    goOrder() {},
+
     httpRequest(fileLit) {
       const formData = new FormData();
       // for (const key in fileLit.file) {
@@ -1147,6 +1201,7 @@ export default {
     },
     //添加达人
     addDrs(influencer_info, id) {
+      console.log(influencer_info);
       this.myArray = influencer_info;
       this.ispersonid = id;
       this.centerDialogVisible = true;
@@ -1189,7 +1244,7 @@ export default {
             title: "",
           });
           this.tableData = res.data.data;
-          console.log(this.tableData);
+          // console.log(this.tableData);
           this.fileDiz = res.data.file;
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
@@ -1199,7 +1254,12 @@ export default {
     },
     //提交
     submitTo() {
-      this.payDepositDialogVisible = true;
+      this.$message({
+        message: "提交成功",
+        type: "success",
+        offset: 400,
+        center: true,
+      });
       const arr = [];
       this.tableData.forEach((item) => {
         if (item.id && item.title != "") {
@@ -1208,6 +1268,9 @@ export default {
       });
       const id = arr.join(",");
       console.log(id);
+      setTimeout(() => {
+        this.payDepositDialogVisible = true;
+      }, 500);
       needsSubmit({
         id: id,
       }).then((res) => {
@@ -1257,7 +1320,7 @@ export default {
                 _this.payDepositDialogVisible = false;
                 clearInterval(_this.checkWechatPaymentVal);
                 clearInterval(_this.checkAlipayPaymentVal);
-                _this.$router.push("/manage/order");
+                _this.paymentCompletedDialogVisible = true;
               }
             }
           })
@@ -1280,7 +1343,7 @@ export default {
                 _this.payDepositDialogVisible = false;
                 clearInterval(_this.checkAlipayPaymentVal);
                 clearInterval(_this.checkWechatPaymentVal);
-                _this.$router.push("/manage/order");
+                _this.paymentCompletedDialogVisible = true;
               }
             }
           })
@@ -1301,24 +1364,24 @@ export default {
       this.handleSelectionChangeList = val;
       console.log(val);
     },
-    selectable(row) {
-      if (row.flag == 1) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-    deleteList() {
-      if (this.handleSelectionChangeList.length > 0) {
-        var idList = [];
-        this.handleSelectionChangeList.forEach((item) => {
-          idList.push(item.id);
-        });
-        const influencer_ids = idList.join(",");
-        this.centerDialogVisibles = true;
-        this.formId = influencer_ids;
-      }
-    },
+    // selectable(row) {
+    //   if (row.flag == 1) {
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // },
+    // deleteList() {
+    //   if (this.handleSelectionChangeList.length > 0) {
+    //     var idList = [];
+    //     this.handleSelectionChangeList.forEach((item) => {
+    //       idList.push(item.id);
+    //     });
+    //     const influencer_ids = idList.join(",");
+    //     this.centerDialogVisibles = true;
+    //     this.formId = influencer_ids;
+    //   }
+    // },
     tiso() {
       this.$message("您还没有添加任何需求，请添加需求再提交");
     },
@@ -1328,9 +1391,6 @@ export default {
     tiss() {
       this.$message("请先阅读并同意《视频拍摄服务及售后说明》");
     },
-    goHome() {
-      this.$router.push("/");
-    },
   },
   mounted() {
     this.reqsearch();
@@ -1339,18 +1399,62 @@ export default {
   watch: {
     input(newInput) {
       if (newInput == "") {
-        this.InfluencerList = [];
+        setTimeout(() => {
+          this.InfluencerList = [];
+        }, 400);
       } else {
         needsInfluencerList().then((res) => {
           const arr = res.data.data.filter((item) => {
-            const str = item.user_id.toString().includes(newInput);
-            return str;
+            return item.user_id.toString().includes(newInput);
           });
-          this.InfluencerList = arr;
+
+          // if (this.myArray.length == 1) {
+          //   var isArr = arr.filter(
+          //     (item) => item.user_id != this.myArray[0].user_id
+          //   );
+          // }
+          // if (this.myArray.length == 2) {
+          //   var isArr = arr
+          //     .filter((item) => item.user_id != this.myArray[0].user_id)
+          //     .filter((item) => item.user_id != this.myArray[1].user_id);
+          // }
+          // if (this.myArray.length == 3) {
+          //   var isArr = arr
+          //     .filter((item) => item.user_id != this.myArray[0].user_id)
+          //     .filter((item) => item.user_id != this.myArray[1].user_id)
+          //     .filter((item) => item.user_id != this.myArray[2].user_id);
+          // }
+          // if (this.myArray.length == 4) {
+          //   var isArr = arr
+          //     .filter((item) => item.user_id != this.myArray[0].user_id)
+          //     .filter((item) => item.user_id != this.myArray[1].user_id)
+          //     .filter((item) => item.user_id != this.myArray[2].user_id)
+          //     .filter((item) => item.user_id != this.myArray[3].user_id);
+          // }
+          // if (this.myArray.length == 5) {
+          //   var isArr = arr
+          //     .filter((item) => item.user_id != this.myArray[0].user_id)
+          //     .filter((item) => item.user_id != this.myArray[1].user_id)
+          //     .filter((item) => item.user_id != this.myArray[2].user_id)
+          //     .filter((item) => item.user_id != this.myArray[3].user_id)
+          //     .filter((item) => item.user_id != this.myArray[4].user_id);
+          // }
+          // if (this.myArray.length == 0) {
+          //   var isArr = arr;
+          // }
+          var isArr = arr;
+          for (var i = 0; i < this.myArray.length; i++) {
+            isArr = isArr.filter(
+              (item) => item.user_id != this.myArray[i].user_id
+            );
+          }
+
+          this.InfluencerList = isArr;
         });
       }
     },
     myArray(newInput) {
+      console.log(newInput);
       if (newInput.length == 5) {
         this.disabled = true;
         this.placeholderspan = "";
@@ -1371,9 +1475,32 @@ export default {
       }
     },
     payDepositDialogVisible(newVal) {
-      if (newVal == false) {
-        this.reqsearch();
+      let _this = this;
+      if (newVal == false && _this.paymentCompletedDialogVisible == false) {
+        clearInterval(_this.checkWechatPaymentVal);
+        clearInterval(_this.checkAlipayPaymentVal);
+        _this.$router.push("/manage/order");
       }
+    },
+    paymentCompletedDialogVisible(newVal) {
+      if (newVal == false) {
+        this.$router.push("/manage/order");
+      }
+    },
+    tableData(newVal) {
+      newVal.forEach((item) => {
+        if (item.title == "" && item.influencer_info.length == 0) {
+          if (item.id) {
+            needsDelete({
+              id: item.id,
+            }).then((res) => {
+              if (res.code == 1) {
+                this.reqsearch();
+              }
+            });
+          }
+        }
+      });
     },
   },
 };
@@ -1673,7 +1800,6 @@ export default {
 }
 .itemElement {
   width: 88px;
-  height: 88px;
   background: #ffffff;
   box-shadow: 0px 6px 6px 0px rgba(0, 0, 0, 0.05);
   border-radius: 3px;
@@ -1712,6 +1838,14 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #666666 !important;
+}
+.item-div {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #796cf3;
+  text-align: center;
+  margin-top: 4px;
 }
 .item-index1 {
   width: 20px;
@@ -1791,7 +1925,7 @@ export default {
   border-radius: 50%;
   position: absolute;
   top: 0;
-  left: 35px;
+  left: 30px;
   color: white !important;
   font-size: 12px;
   line-height: 6px;
@@ -1860,9 +1994,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.el-table__body-wrapper {
-  padding: 0 20px;
-}
 
 .el-textarea__inner {
   height: 120px;
@@ -1927,7 +2058,7 @@ export default {
 .el-icon-question {
   position: absolute;
   top: 13px;
-  left: 278px;
+  left: 293px;
   cursor: pointer;
 }
 </style>
@@ -2175,6 +2306,57 @@ export default {
 }
 </style>
 
+<style lang="less" scoped>
+::v-deep .el-table__body-wrapper {
+  padding: 0 10px;
+}
+.know_btn {
+  padding-top: 20px;
+
+  button {
+    display: block;
+    margin: auto;
+    background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+    border-radius: 16px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 20px;
+    padding: 5px 41px;
+  }
+}
+
+.button_box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+
+  button {
+    padding: 8px 45px;
+    border-radius: 16px;
+    font-size: 14px;
+  }
+
+  .cancel_style {
+    border: 1px solid #eeeeee;
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #999999;
+  }
+
+  .cancel_style:hover {
+    background: none;
+  }
+
+  .confirm_style {
+    border: none;
+    background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #ffffff;
+  }
+}
+</style>
 
 <style lang="less" scoped>
 ::v-deep .el-table .has-gutter .el-checkbox .el-checkbox__inner {
@@ -2277,7 +2459,7 @@ export default {
     border-radius: 5px;
     position: absolute;
     top: -60px;
-    left: 195px;
+    left: 211px;
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;

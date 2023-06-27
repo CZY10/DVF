@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '@/store'
 import VueRouter from 'vue-router'
 import Layout from "@/views/Layout";
 import Home from "@/views/Home"
@@ -23,56 +24,56 @@ const routes = [
             {
                 path: '/',
                 name: 'home',
-                meta: {requiresAuth: false},
+                meta: { requiresAuth: false },
                 component: Home,
             },
             {
                 path: '/videohome',
                 name: 'videoHome',
-                meta: {requiresAuth: false},
+                meta: { requiresAuth: false },
                 component: VideoHome,
             },
             {
                 path: '/webDeal',
                 name: 'webDeal',
-                meta: {requiresAuth: false},
+                meta: { requiresAuth: false },
                 component: webDeal,
-            },
-            {
-                path: '/Requirement',
-                name: 'Requirement',
-                meta: {requiresAuth: true},
-                component: Requirement,
-            },
-            {
-                path: '/Note',
-                name: 'Note',
-                meta: {requiresAuth: true},
-                component: Note,
             },
             {
                 path: '/chatgpt',
                 name: 'chatgpt',
-                meta: {requiresAuth: true},
+                meta: { requiresAuth: true },
                 component: ChatGPT,
             },
             {
                 path: '/buyershowmanage',
                 name: 'buyershowManage',
-                meta: {requiresAuth: false},
+                meta: { requiresAuth: false },
                 component: BuyershowManage,
                 children: [
                     {
                         path: '/buyershow',
                         name: 'buyershow',
-                        meta: {requiresAuth: false},
+                        meta: { requiresAuth: false },
                         component: () => import('@/views/BuyershowManage/Buyershow.vue'),
                     },
                     {
                         path: '/homepage:id',
                         name: 'homepage',
-                        meta: {requiresAuth: false},
+                        meta: { requiresAuth: false },
                         component: () => import('@/views/BuyershowManage/Homepage.vue'),
+                    },
+                    {
+                        path: '/Requirement',
+                        name: 'Requirement',
+                        meta: { requiresAuth: true },
+                        component: Requirement,
+                    },
+                    {
+                        path: '/Note',
+                        name: 'Note',
+                        meta: { requiresAuth: false },
+                        component: Note,
                     },
                 ]
             },
@@ -80,7 +81,7 @@ const routes = [
             {
                 path: '/manage',
                 name: 'manage',
-                meta: {requiresAuth: true},
+                meta: { requiresAuth: true },
                 component: Manage,
                 redirect: '/manage/order',
                 children: [
@@ -119,7 +120,7 @@ const routes = [
     {
         path: "*",
         component: () => import("@/views/404"),
-        meta:{
+        meta: {
             title: '页面走丢了'
         }
     },
@@ -138,10 +139,16 @@ VueRouter.prototype.push = function push(location) {
 
 //路由拦截
 router.beforeEach((to, from, next) => {
+    if (to.fullPath == "/Note") {
+        store.commit('Index/setIsFalg',false)
+        console.log(store.state.Index.isFalg)
+    }else{
+        store.commit('Index/setIsFalg',true)
+    }
 
-    if(to.query.source)localStorage.setItem('source',to.query.source)
-    if(to.query.action)localStorage.setItem('action',to.query.action)
-    localStorage.setItem('loginFromPath',from.path)
+    if (to.query.source) localStorage.setItem('source', to.query.source)
+    if (to.query.action) localStorage.setItem('action', to.query.action)
+    localStorage.setItem('loginFromPath', from.path)
     let token = localStorage.getItem('token');
     if (to.matched.some(ele => ele.meta.requiresAuth)) {
         if (token) {
@@ -151,10 +158,6 @@ router.beforeEach((to, from, next) => {
         }
     } else {
         next()
-    }
-    if (to.path == "/manage/order" && from.path == "/buyershow") {
-        window.localStorage.setItem("ismessage",1)
-        location.reload();
     }
 })
 

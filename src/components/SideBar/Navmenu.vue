@@ -11,7 +11,7 @@
         text-color="#666666"
       >
         <a
-          href=""
+          href="/"
           style="
             display: flex;
             justify-content: center;
@@ -23,13 +23,8 @@
         /></a>
         <el-menu-item index="/">首页</el-menu-item>
         <el-menu-item index="/videohome">视频服务站</el-menu-item>
-        <!-- "https://seller.vipona.com/account/login" -->
-        <!-- <el-menu-item
-          ><a style="width: 100%" :href="DealHook">海外Deal站</a></el-menu-item
-        > -->
         <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
         <el-menu-item index="/webDeal">海外Deal站</el-menu-item>
-        <!-- href="https://seller.vipona.com/account/login" -->
         <el-menu-item
           ><a target="_blank" style="width: 100%" @click="goVipon"
             >站外推广</a
@@ -154,7 +149,7 @@
             </div>
           </el-popover>
         </el-menu-item>
-        <el-menu-item style="float: right">
+        <el-menu-item style="float: right" index="/Requirement">
           <button
             style="
               width: 148px;
@@ -172,7 +167,6 @@
                 1 1;
               color: #796cf3;
             "
-            @click="goRequirementSubmission"
           >
             <img src="@/assets/images/pens.png" alt="" />
             提交拍摄需求
@@ -274,7 +268,7 @@ export default {
     return {
       dialog: false,
       isLogin: true,
-      avatar: localStorage.getItem("avatar"),
+      avatar: localStorage.getItem("avatar") || this.$store.state.login.avatar,
       messageCount: 0,
       logoImg: localStorage.getItem("logo"),
       configData: {},
@@ -554,12 +548,6 @@ export default {
       } else {
         window.open(this.ViponSrc, "_blank");
       }
-    },
-    goRequirementSubmission() {
-      window.open(
-        this.$router.resolve({ path: "/Requirement" }).href,
-        "_blank"
-      );
     },
   },
 };

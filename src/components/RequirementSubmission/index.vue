@@ -12,6 +12,7 @@
         </div>
       </div>
       <div
+        class="loading-area"
         style="
           position: relative;
           border-radius: 4px;
@@ -651,7 +652,7 @@
 
     <!--支付定金-->
     <el-dialog
-      title="请尽快支付定金"
+      title="已提交成功，请尽快支付定金"
       :visible.sync="payDepositDialogVisible"
       v-if="payDepositDialogVisible"
       width="500px"
@@ -659,7 +660,7 @@
       class="pay_deposit_dialog"
       center
     >
-      <div>
+      <div style="position: relative">
         <el-alert
           title="支付定金后，平台将正式为您对接达人。不满意可随时申请退还定金。"
           center
@@ -741,21 +742,21 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-        <div class="group_26 flex-row">
-          <div class="image-text_40 flex-row justify-between">
-            <img
-              class="thumbnail_26"
-              referrerpolicy="no-referrer"
-              src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngadd69f7b6dbb5a1080befad2c5168f68a6705b339b5967fdd3f737c59baf4d89"
-            />
-            <div class="text-group_14">
-              <span class="text_98">1、订单支付成功后，</span>
-              <span class="text_99">定金</span>
-              <span class="paragraph_1"
-                >将原路退回至您的「支付宝/微信」账户；<br />2、完成订单支付，代表服务正式生效。在完成交付之前，平台不会将你的款项支付给达人。</span
-              >
-            </div>
-          </div>
+
+        <div
+          style="
+            width: 20px;
+            height: 20px;
+            background: #02b578;
+            border-radius: 50%;
+            text-align: center;
+            color: white;
+            position: absolute;
+            top: -34px;
+            left: 88px;
+          "
+        >
+          √
         </div>
       </div>
     </el-dialog>
@@ -871,6 +872,12 @@ export default {
         ],
         category: [
           { required: true, message: "请选择产品名称", trigger: "blur" },
+          {
+            min: 0,
+            max: 30,
+            message: "长度在30个字符以内",
+            trigger: "blur",
+          },
         ],
         selling_point: [
           {
@@ -889,6 +896,7 @@ export default {
       handleSelectionChangeList: [],
       daorid: "",
       fileDiz: "",
+      iscg: false,
     };
   },
   components: {
@@ -998,6 +1006,7 @@ export default {
         this.isvideoSubmitDialogVisible = 0;
       } else {
         this.isvideoSubmitDialogVisible = 1;
+        this.iscg = true;
         this.formId = id;
       }
     },
@@ -1070,12 +1079,22 @@ export default {
                 needsEdit(data).then((res) => {
                   if (res.code == 1) {
                     console.log(res);
-                    this.$message({
-                      message: "修改成功",
-                      type: "success",
-                      offset: 400,
-                      center: true,
-                    });
+                    if (this.iscg) {
+                      this.$message({
+                        message: "添加成功",
+                        type: "success",
+                        offset: 400,
+                        center: true,
+                      });
+                      this.iscg = false;
+                    } else {
+                      this.$message({
+                        message: "修改成功",
+                        type: "success",
+                        offset: 400,
+                        center: true,
+                      });
+                    }
                     this.reqsearch();
                     (this.videoRuleForm = {
                       product: "",
@@ -1254,12 +1273,14 @@ export default {
     },
     //提交
     submitTo() {
-      this.$message({
-        message: "提交成功",
-        type: "success",
-        offset: 400,
-        center: true,
+      const loading = this.$loading({
+        lock: true,
+        text: "提交中...",
+        spinner: "el-icon-loading",
+        background: "#fff",
+        target: document.querySelector(".loading-area"), //设置加载动画区域
       });
+
       const arr = [];
       this.tableData.forEach((item) => {
         if (item.id && item.title != "") {
@@ -1268,38 +1289,42 @@ export default {
       });
       const id = arr.join(",");
       console.log(id);
-      setTimeout(() => {
-        this.payDepositDialogVisible = true;
-      }, 500);
       needsSubmit({
         id: id,
-      }).then((res) => {
-        console.log(res.data.order[1].order.qrcode);
-        setTimeout(() => {
-          console.log(this.$refs.alipayQrCodeUrl);
-          new QRCode(this.$refs.alipayQrCodeUrl, {
-            text: res.data.order[1].order.qrcode,
-            width: 130,
-            height: 130,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H,
+      })
+        .then((res) => {
+          loading.close();
+          this.payDepositDialogVisible = true;
+          console.log(res.data.order[1].order.qrcode);
+          setTimeout(() => {
+            console.log(this.$refs.alipayQrCodeUrl);
+            new QRCode(this.$refs.alipayQrCodeUrl, {
+              text: res.data.order[1].order.qrcode,
+              width: 130,
+              height: 130,
+              colorDark: "#000000",
+              colorLight: "#ffffff",
+              correctLevel: QRCode.CorrectLevel.H,
+            });
+            new QRCode(this.$refs.wechatQrCodeUrl, {
+              text: res.data.order[0].order.qrcode,
+              width: 130,
+              height: 130,
+              colorDark: "#000000",
+              colorLight: "#ffffff",
+              correctLevel: QRCode.CorrectLevel.H,
+            });
           });
-          new QRCode(this.$refs.wechatQrCodeUrl, {
-            text: res.data.order[0].order.qrcode,
-            width: 130,
-            height: 130,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H,
-          });
+          this.orderData = res.data.order;
+          // console.log(this.orderData);
+          // console.log(this.orderData[0].order.price);
+          this.handlerCheckWechatPayment(res.data.order[0].order.out_trade_no);
+          this.handlerCheckAlipayPayment(res.data.order[1].order.out_trade_no);
+        })
+        .catch((res) => {
+          loading.close();
+          this.$message.error(res);
         });
-        this.orderData = res.data.order;
-        // console.log(this.orderData);
-        // console.log(this.orderData[0].order.price);
-        this.handlerCheckWechatPayment(res.data.order[0].order.out_trade_no);
-        this.handlerCheckAlipayPayment(res.data.order[1].order.out_trade_no);
-      });
     },
     //跳转商品详情
     gocommodity(url) {

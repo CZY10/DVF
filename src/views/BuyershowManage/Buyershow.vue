@@ -933,7 +933,7 @@
                   @click="handlePause(index)"
                   v-if="swiperIndex == index && videoUrl"
                 >
-                  <source :src="localhost + videoUrl" type="video/mp4" />
+                  <source :src="videoUrl" type="video/mp4" />
                 </video>
                 <div
                   v-if="swiperIndex == index && isShowBtn"

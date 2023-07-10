@@ -37,7 +37,10 @@
           ></el-menu-item
         >
         <!-- <el-menu-item index="/chatgpt">ChatGPT</el-menu-item> -->
-        <el-menu-item v-if="!isLogin" style="float: right" index="/login"
+        <el-menu-item
+          v-if="!isLogin"
+          style="float: right; margin-left: 20px"
+          index="/login"
           ><el-button class="login_btn" round
             >登陆/注册</el-button
           ></el-menu-item

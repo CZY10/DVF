@@ -64,7 +64,7 @@
 
         <el-menu-item
           class="icon_hover_style"
-          style="float: right; padding: 0; margin-left: 20px"
+          style="float: right; padding: 0; margin: 0 10px 0 0px"
           index="/manage/order"
           @click="changeIsMessage"
         >
@@ -94,7 +94,12 @@
 
         <el-menu-item
           v-if="token"
-          style="float: right; padding-left: 0; width: 100px"
+          style="
+            float: right;
+            padding-left: 0;
+            width: 100px;
+            margin-right: 20px;
+          "
         >
           <el-popover
             placement="bottom"
@@ -944,8 +949,13 @@ export default {
   font-weight: normal;
 }
 .el-menu-demo .el-badge__content.is-fixed {
-  top: 18px;
-  right: 5px;
+  top: 25px;
+  right: 0px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  line-height: 20px;
+  padding: 0;
 }
 .el-menu--popup-bottom-start {
   margin-top: 0;

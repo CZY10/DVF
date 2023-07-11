@@ -412,10 +412,12 @@ export default {
     }
   },
   mounted() {
-    if (JSON.parse(localStorage.getItem("configObj")).video_tutorial) {
+    if (localStorage.getItem("videoUrl")) {
+      console.log(1);
     } else {
       this.getContent();
     }
+
     this.getMessage();
 
     if (JSON.parse(localStorage.getItem("configObj")))

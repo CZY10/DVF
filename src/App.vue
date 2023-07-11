@@ -23,9 +23,7 @@ export default {
       fullscreenLoading: false,
     };
   },
-  mounted() {
-    console.log(this.$store.state);
-  },
+  mounted() {},
   created() {
     this.source =
       this.$route.query.source || localStorage.getItem("source") || "";

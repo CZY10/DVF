@@ -54,10 +54,12 @@
             ><span class="user_info_box"
               ><img :src="avatar" width="36px" height="36px" alt="" /></span
           ></template>
-          <el-menu-item index="/manage/order">订单信息</el-menu-item>
-          <el-menu-item index="/manage/payment">支付记录</el-menu-item>
-          <el-menu-item index="/manage/personal">个人资料</el-menu-item>
-          <el-menu-item @click="handlerLogOut">退出</el-menu-item>
+          <div style="padding: 0 6px">
+            <el-menu-item index="/manage/order">订单信息</el-menu-item>
+            <el-menu-item index="/manage/payment">支付记录</el-menu-item>
+            <el-menu-item index="/manage/personal">个人资料</el-menu-item>
+            <el-menu-item @click="handlerLogOut">退出</el-menu-item>
+          </div>
         </el-submenu>
 
         <el-menu-item
@@ -67,16 +69,15 @@
           @click="changeIsMessage"
         >
           <el-badge
-            style="display: flex; height: 100%; align-items: center"
             :value="messageCount"
             :hidden="messageCount == 0"
             class="item"
           >
             <i
               class="el-icon-chat-dot-round"
-              style="color: #666666; font-size: 22px"
+              style="color: #666666; font-size: 18px; margin-right: 3px"
             ></i>
-            <span> 消息</span>
+            <span>消息</span>
           </el-badge>
         </el-menu-item>
 
@@ -688,6 +689,10 @@ export default {
   background: #f4f2ff !important;
   color: #796cf3;
 }
+
+::v-deep(.el-submenu__icon-arrow) {
+  margin-top: 0px !important;
+}
 </style>
 
 <style lang="less">
@@ -940,7 +945,7 @@ export default {
 }
 .el-menu-demo .el-badge__content.is-fixed {
   top: 18px;
-  right: 18px;
+  right: 5px;
 }
 .el-menu--popup-bottom-start {
   margin-top: 0;
@@ -1003,16 +1008,13 @@ export default {
 }
 
 .el-menu--popup {
-  //box-shadow: none !important;
-}
-.el-menu--popup {
   min-width: 100px !important;
-  padding: 6px !important;
   text-align: center;
 }
 .el-menu--horizontal {
   //background: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%);
   background: #ffffff;
+  border-radius: 4px;
 }
 
 .header {

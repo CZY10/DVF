@@ -188,29 +188,34 @@
           >
         </el-submenu>
 
-        <el-menu-item style="float: right" index="/Requirement">
-          <button
+        <el-menu-item
+          style="float: right; display: flex; align-items: center"
+          index="/Requirement"
+        >
+          <div
             style="
               width: 148px;
               height: 35px;
-              background: #ffffff;
+              padding: 1px;
+              background: linear-gradient(to bottom, #796cf3, #df60f7);
               border-radius: 18px;
-              cursor: pointer;
-              border: none;
-              border: 1px solid rgba(121, 108, 243, 1);
-              border-image: linear-gradient(
-                  180deg,
-                  rgba(121, 108, 243, 1),
-                  rgba(223, 96, 247, 1)
-                )
-                1 1;
-              color: #796cf3;
             "
           >
-            <img src="@/assets/images/pens.png" alt="" />
-            提交拍摄需求
-          </button></el-menu-item
-        >
+            <div
+              style="
+                height: 100%;
+                border-radius: 18px;
+                background: #fff;
+                text-align: center;
+                line-height: 35px;
+                color: #796cf3;
+              "
+            >
+              <img src="@/assets/images/pens.png" alt="" />
+              <span style="margin-left: 10px">提交拍摄需求</span>
+            </div>
+          </div>
+        </el-menu-item>
       </el-menu>
     </div>
 

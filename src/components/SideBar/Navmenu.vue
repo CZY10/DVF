@@ -199,21 +199,23 @@
               padding: 1px;
               background: linear-gradient(to bottom, #796cf3, #df60f7);
               border-radius: 18px;
+              display: flex;
             "
           >
-            <div
+            <button
               style="
+                width: 100%;
                 height: 100%;
                 border-radius: 18px;
                 background: #fff;
-                text-align: center;
-                line-height: 35px;
                 color: #796cf3;
+                border: none;
+                cursor: pointer;
               "
             >
               <img src="@/assets/images/pens.png" alt="" />
               <span style="margin-left: 10px">提交拍摄需求</span>
-            </div>
+            </button>
           </div>
         </el-menu-item>
       </el-menu>

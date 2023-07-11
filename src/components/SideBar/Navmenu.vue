@@ -168,7 +168,7 @@
           </el-popover>
         </el-menu-item>
 
-        <el-submenu style="float: right">
+        <el-submenu style="float: right" index="">
           <template slot="title">
             <i class="el-icon-video-play" style="margin-right: 0px"></i
             ><span>帮助</span></template

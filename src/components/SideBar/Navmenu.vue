@@ -119,7 +119,7 @@
                 :src="serviceInfoList.service_avatar"
                 alt=""
               />
-              VIP服务
+              <span style="padding-top: 1px">VIP服务</span>
             </div>
             <div>
               <div class="avatar_userInfo">

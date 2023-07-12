@@ -21,17 +21,26 @@
           "
           ><img :src="logoImg" style="width: 100%; height: 100%" alt=""
         /></a>
-        <el-menu-item index="/">首页</el-menu-item>
-        <el-menu-item index="/videohome">视频服务站</el-menu-item>
-        <el-menu-item index="/buyershow">拍买家秀</el-menu-item>
-        <el-menu-item index="/webDeal">海外Deal站</el-menu-item>
-        <el-menu-item
+        <el-menu-item index="/" style="margin: 0 20px">首页</el-menu-item>
+        <el-menu-item index="/videohome" style="margin: 0 20px"
+          >视频服务站</el-menu-item
+        >
+        <el-menu-item index="/buyershow" style="margin: 0 20px"
+          >拍买家秀</el-menu-item
+        >
+        <el-menu-item index="/webDeal" style="margin: 0 20px"
+          >海外Deal站</el-menu-item
+        >
+        <el-menu-item style="margin: 0 20px"
           ><a target="_blank" style="width: 100%" @click="goVipon"
             >站外推广</a
           ></el-menu-item
         >
         <!-- <el-menu-item index="/chatgpt">ChatGPT</el-menu-item> -->
-        <el-menu-item v-if="!isLogin" style="float: right" index="/login"
+        <el-menu-item
+          v-if="!isLogin"
+          style="float: right; margin: 0 20px"
+          index="/login"
           ><el-button class="login_btn" round
             >登陆/注册</el-button
           ></el-menu-item
@@ -45,43 +54,52 @@
             ><span class="user_info_box"
               ><img :src="avatar" width="36px" height="36px" alt="" /></span
           ></template>
-          <el-menu-item index="/manage/order">订单信息</el-menu-item>
-          <el-menu-item index="/manage/payment">支付记录</el-menu-item>
-          <el-menu-item index="/manage/personal">个人资料</el-menu-item>
-          <el-menu-item @click="handlerLogOut">退出</el-menu-item>
+          <div style="padding: 0 6px">
+            <el-menu-item index="/manage/order">订单信息</el-menu-item>
+            <el-menu-item index="/manage/payment">支付记录</el-menu-item>
+            <el-menu-item index="/manage/personal">个人资料</el-menu-item>
+            <el-menu-item @click="handlerLogOut">退出</el-menu-item>
+          </div>
         </el-submenu>
+
         <el-menu-item
           class="icon_hover_style"
-          style="float: right; padding: 0"
+          style="float: right; padding: 0; margin: 0 10px 0 0px"
           index="/manage/order"
           @click="changeIsMessage"
         >
           <el-badge
-            style="display: flex; height: 100%; align-items: center"
             :value="messageCount"
             :hidden="messageCount == 0"
             class="item"
           >
             <i
               class="el-icon-chat-dot-round"
-              style="color: #666666; font-size: 22px"
+              style="color: #666666; font-size: 18px; margin-right: 3px"
             ></i>
+            <span>消息</span>
           </el-badge>
         </el-menu-item>
 
-        <el-menu-item style="float: right"
+        <!-- <el-menu-item style="float: right"
           ><a
             href="https://peseeazfwl.feishu.cn/wiki/wikcnMyh2Kpl0beLaynqfWT3Vuc"
             target="_blank"
             >新手指南</a
           ></el-menu-item
-        >
+        > -->
         <!-- <el-menu-item style="float: right" @click="handlerClick"
           >联系我们</el-menu-item
         > -->
+
         <el-menu-item
           v-if="token"
-          style="float: right; padding-left: 0; width: 100px; margin-left: 10px"
+          style="
+            float: right;
+            padding-left: 0;
+            width: 100px;
+            margin-right: 20px;
+          "
         >
           <el-popover
             placement="bottom"
@@ -106,7 +124,7 @@
                 :src="serviceInfoList.service_avatar"
                 alt=""
               />
-              专属账号经理
+              <span style="padding-top: 1px">VIP服务</span>
             </div>
             <div>
               <div class="avatar_userInfo">
@@ -149,29 +167,57 @@
             </div>
           </el-popover>
         </el-menu-item>
-        <el-menu-item style="float: right" index="/Requirement">
-          <button
+
+        <el-submenu style="float: right" index="">
+          <template slot="title">
+            <i class="el-icon-video-play" style="margin-right: 0px"></i
+            ><span>帮助</span></template
+          >
+          <el-menu-item style="width: 139px">
+            <li class="menu-item-li" @click="centerDialogVisible = true">
+              视频教程
+              <i class="el-icon-video-play" style="margin-right: 0px"></i></li
+          ></el-menu-item>
+          <el-menu-item
+            ><li class="menuitemli" @click="goviponltd">
+              操作文档
+            </li></el-menu-item
+          >
+          <el-menu-item @click="gopeseeazfwl"
+            ><li class="menuitemli">常见问题</li></el-menu-item
+          >
+        </el-submenu>
+
+        <el-menu-item
+          style="float: right; display: flex; align-items: center"
+          index="/Requirement"
+        >
+          <div
             style="
               width: 148px;
               height: 35px;
-              background: #ffffff;
+              padding: 1px;
+              background: linear-gradient(to bottom, #796cf3, #df60f7);
               border-radius: 18px;
-              cursor: pointer;
-              border: none;
-              border: 1px solid rgba(121, 108, 243, 1);
-              border-image: linear-gradient(
-                  180deg,
-                  rgba(121, 108, 243, 1),
-                  rgba(223, 96, 247, 1)
-                )
-                1 1;
-              color: #796cf3;
+              display: flex;
             "
           >
-            <img src="@/assets/images/pens.png" alt="" />
-            提交拍摄需求
-          </button></el-menu-item
-        >
+            <button
+              style="
+                width: 100%;
+                height: 100%;
+                border-radius: 18px;
+                background: #fff;
+                color: #796cf3;
+                border: none;
+                cursor: pointer;
+              "
+            >
+              <img src="@/assets/images/pens.png" alt="" />
+              <span style="margin-left: 10px">提交拍摄需求</span>
+            </button>
+          </div>
+        </el-menu-item>
       </el-menu>
     </div>
 
@@ -246,6 +292,22 @@
         </div>
       </div>
     </el-dialog>
+
+    <el-dialog :visible.sync="centerDialogVisible" width="50%" center>
+      <video
+        width="100%"
+        height="100%"
+        autoplay
+        controls
+        preload="none"
+        ref="myVideo"
+        @play="onPlay"
+        @pause="onPause"
+      >
+        <source :src="videoUrl" type="video/mp4" />
+      </video>
+      <div class="video_img" @click="videoplay" v-show="!video_img"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -290,6 +352,9 @@ export default {
       ViponSrc: "",
       DealSrc: "",
       FbSrc: "",
+      centerDialogVisible: false,
+      videoUrl: "" || window.localStorage.getItem("videoUrl"),
+      video_img: true,
     };
   },
   computed: {
@@ -319,6 +384,13 @@ export default {
     logoFn(newVal) {
       this.logoImg = newVal;
     },
+    centerDialogVisible(newVal) {
+      if (newVal == false) {
+        const video = this.$refs.myVideo;
+        video.pause();
+        this.video_img = false;
+      }
+    },
   },
   created() {
     if (this.token) {
@@ -340,6 +412,12 @@ export default {
     }
   },
   mounted() {
+    if (localStorage.getItem("videoUrl")) {
+      console.log(1);
+    } else {
+      this.getContent();
+    }
+
     this.getMessage();
 
     if (JSON.parse(localStorage.getItem("configObj")))
@@ -401,6 +479,35 @@ export default {
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
     ...mapMutations("login", ["setLogo"]),
+
+    //播放视频
+    videoplay() {
+      const video = this.$refs.myVideo;
+      video.play();
+      this.video_img = true;
+    },
+
+    //视频开始播放
+    onPlay() {
+      this.video_img = true;
+    },
+    //视频暂停
+    onPause() {
+      this.video_img = false;
+    },
+
+    gopeseeazfwl() {
+      window.open(
+        "https://peseeazfwl.feishu.cn/wiki/wikcnMyh2Kpl0beLaynqfWT3Vuc",
+        "_branck"
+      );
+    },
+    goviponltd() {
+      window.open(
+        "https://viponltd.feishu.cn/wiki/MOBFw6XAeiFLowkms3GcF5KFnod",
+        "_branck"
+      );
+    },
     //获取企业客服信息
     getServiceInfo() {
       serviceInfo({
@@ -527,6 +634,9 @@ export default {
             localStorage.setItem("logo", res.data.logo);
             localStorage.setItem("configObj", JSON.stringify(res.data));
             this.setLogo(res.data.logo);
+            this.videoUrl = res.data.video_tutorial;
+            window.localStorage.setItem("videoUrl", res.data.video_tutorial);
+            console.log(this.videoUrl);
           }
         })
         .catch((err) => {
@@ -552,6 +662,56 @@ export default {
   },
 };
 </script>
+
+<style lang="less" scoped>
+.video_img:after {
+  box-sizing: border-box;
+  font-family: element-icons;
+  position: absolute;
+  content: "\e791";
+  width: 100px;
+  height: 100px;
+  font-size: 62px;
+  background: #fff;
+  box-shadow: 0 6px 10px 0 rgb(0 0 0 / 7%);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  z-index: 99;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.menu-item-li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+}
+.menu-item-li:hover {
+  background: #f4f2ff !important;
+  color: #796cf3;
+}
+.menu-item-li:hover i {
+  color: #796cf3;
+}
+.menuitemli {
+  text-align: left;
+  padding: 0 12px;
+}
+.menuitemli:hover {
+  background: #f4f2ff !important;
+  color: #796cf3;
+}
+
+::v-deep(.el-submenu__icon-arrow) {
+  margin-top: 0px !important;
+}
+</style>
 
 <style lang="less">
 .menu_popover {
@@ -802,8 +962,13 @@ export default {
   font-weight: normal;
 }
 .el-menu-demo .el-badge__content.is-fixed {
-  top: 18px;
-  right: 18px;
+  top: 25px;
+  right: 0px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  line-height: 20px;
+  padding: 0;
 }
 .el-menu--popup-bottom-start {
   margin-top: 0;
@@ -832,6 +997,7 @@ export default {
 }
 .el-menu-item {
   transition: none !important;
+  padding: 0 0 !important;
 }
 .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
 .el-menu--horizontal .el-menu-item:not(.is-disabled):hover,
@@ -865,16 +1031,13 @@ export default {
 }
 
 .el-menu--popup {
-  //box-shadow: none !important;
-}
-.el-menu--popup {
   min-width: 100px !important;
-  padding: 6px !important;
   text-align: center;
 }
 .el-menu--horizontal {
   //background: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%);
   background: #ffffff;
+  border-radius: 4px;
 }
 
 .header {

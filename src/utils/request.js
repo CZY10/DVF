@@ -2,8 +2,8 @@ import axios from "axios";
 import { Message, MessageBox } from 'element-ui'
 import store from "@/store";
 import config from "../../config";
-import {refreshToken} from "@/api";
-
+import { refreshToken } from "@/api";
+import router from '@/router'
 
 const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_URL,   // api的base_url  自动加在url前面
@@ -50,39 +50,12 @@ service.interceptors.response.use(
         }
     },
     error => {
-        let _this = this;
-        // console.log(22,error,error.request.status)
-        // return error.request.status
-        return Promise.reject(error)
-        if(error.response.data.code === 401){
-            // MessageBox.confirm('重新登录或取消继续留在该页面', '重新登录', {
-            //     confirmButtonText: '重新登录',
-            //     cancelButtonText: '取消',
-            //     offset:100,
-            //     type: 'warning',
-            //     callback(val){
-            //         if(val === 'confirm'){
-            //             store.commit('login/clearUserInfo');
-            //             localStorage.removeItem('userInfo')//删除用户信息
-            //             localStorage.removeItem('token ');//删除token
-            //             localStorage.removeItem('avatar')//删除用户信息
-            //             window.location.href= '/login'
-            //         }else {
-            //             return
-            //         }
-            //     }
-            // })
+        if (error.request.status == 401 && error.response.data.msg == '请登录后操作') {
+            store.commit("login/clearUserInfo");
+            localStorage.clear("serviceInfoList");
+            router.push('/login')
+            Message.error('登录已过期，请重新登录');
         }
-        console.log('err' + error) // for debug
-
-
-        /*Message({
-            message: error.message || error.msg,
-            type: 'error',
-             offset:100,
-            duration: 5 * 1000
-        })*/
-        // return Promise.reject(error)
     }
 )
 export const createAPI = (url, method, data) => {

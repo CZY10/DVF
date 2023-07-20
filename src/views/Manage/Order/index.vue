@@ -1823,7 +1823,6 @@ export default {
         orderType: this.orderType,
       })
         .then((res) => {
-          console.log(res, "res");
           if (res.code == 1) {
             this.pageState = true;
             this.tableData = res.data.data;
@@ -1833,9 +1832,7 @@ export default {
             this.handleSelectable();
           }
         })
-        .catch((err) => {
-          // this.$message.error(err.msg);
-        });
+        .catch((err) => {});
     },
     //初始化列表
     clearOrderList() {

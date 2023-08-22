@@ -622,8 +622,8 @@ export default {
       daorid: "",
       fileDiz: "",
       iscg: false,
-      requesting: true,
-      backgroundD: true
+      backgroundD: true,
+      getneedsInfluencerList: []
     };
   },
   components: {
@@ -632,32 +632,25 @@ export default {
   methods: {
     //防抖处理
     handleInput(event) {
-      //搜索列表请求
-      if (event != '' && this.requesting == true) {
-        this.requesting = false
-        needsInfluencerList().then((res) => {
-          this.requesting = true
-          const arr = res.data.data.filter((item) => {
-            return item.user_id.toString().includes(event);
-          });
+      //搜索列表
+      if (event != '') {
+        const arr = this.getneedsInfluencerList.filter((item) => {
+          return item.user_id.toString().includes(event);
+        });
 
-          var isArr = arr;
-          for (var i = 0; i < this.myArray.length; i++) {
-            isArr = isArr.filter(
-              (item) => item.user_id != this.myArray[i].user_id
-            );
-          }
-          this.InfluencerList = isArr;
-        }).catch(err => {
-          this.requesting = true
-          console.error(err)
-        })
+        var isArr = arr;
+        for (var i = 0; i < this.myArray.length; i++) {
+          isArr = isArr.filter(
+            (item) => item.user_id != this.myArray[i].user_id
+          );
+        }
+        this.InfluencerList = isArr;
       }
     },
     //防抖处理
     debouncedHandleInput: debounce(function (event) {
       this.handleInput(event);
-    }, 500),
+    }, 100),
 
     goOrder() { },
 
@@ -1153,12 +1146,15 @@ export default {
   },
   mounted() {
     this.reqsearch();
+    //搜索列表请求
+    needsInfluencerList().then((res) => {
+      this.getneedsInfluencerList = res.data.data
+      console.log(this.getneedsInfluencerList)
+    }).catch(err => {
+      console.error(err)
+    })
   },
   watch: {
-    requesting(newVal) {
-      if (newVal == true && this.input == '') this.InfluencerList = []
-    },
-
     input(newInput) {
       if (newInput == "") this.InfluencerList = [];
     },

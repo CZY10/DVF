@@ -412,13 +412,9 @@ export default {
     }
   },
   mounted() {
-    if (localStorage.getItem("videoUrl") !== "undefined") {
-      console.log(1);
-    } else {
-      this.getContent();
-    }
+    if (localStorage.getItem("videoUrl") == "undefined") this.getContent();
     if (localStorage.getItem("videoUrl")) {
-      console.log(1);
+      // console.log(1);
     } else {
       this.getContent();
     }

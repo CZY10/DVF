@@ -11,28 +11,18 @@
           </div>
         </div>
       </div>
-      <div
-        class="loading-area"
-        style="
+      <div class="loading-area" style="
           position: relative;
           border-radius: 4px;
           border: 1px solid #eeeeee;
           height: 640px;
           box-sizing: border-box;
-        "
-      >
-        <el-table
-          ref="elTable"
-          :data="tableData"
-          style="width: 100%"
-          :header-cell-style="{
-            background: '#F6F6F6',
-            color: '#333333',
-            position: 'relative',
-          }"
-          max-height="600"
-          @selection-change="handleSelectionChange"
-        >
+        ">
+        <el-table ref="elTable" :data="tableData" style="width: 100%" :header-cell-style="{
+          background: '#F6F6F6',
+          color: '#333333',
+          position: 'relative',
+        }" max-height="600" @selection-change="handleSelectionChange">
           <!-- <el-table-column type="selection" width="50" :selectable="selectable"> -->
           <!-- </el-table-column> -->
           <el-table-column type="index" width="49" label="序号">
@@ -41,60 +31,40 @@
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
                 <ul class="influencerInfoUl">
-                  <li
-                    class="influencerInfoLi isinfluencerInfoLi"
-                    v-for="(item, index) in scope.row.influencer_info"
-                    :key="index"
-                  >
+                  <li class="influencerInfoLi isinfluencerInfoLi" v-for="(item, index) in scope.row.influencer_info"
+                    :key="index">
                     <div style="position: relative">
-                      <img
-                        :src="item.image"
-                        style="
+                      <img :src="item.image" style="
                           display: block;
                           width: 32px;
                           height: 32px;
                           border-radius: 50%;
-                        "
-                        @click="gohomepage(item.user_id)"
-                      />
-                      <div
-                        class="delDiv"
-                        @click="delDr(item.user_id, scope.row.id)"
-                      >
+                        " @click="gohomepage(item.user_id)" />
+                      <div class="delDiv" @click="delDr(item.user_id, scope.row.id)">
                         x
                       </div>
                     </div>
-                    <p
-                      style="
+                    <p style="
                         font-size: 12px;
                         font-family: PingFangSC-Regular, PingFang SC;
                         font-weight: 400;
                         color: #999999;
                         max-width: 50px;
                         white-space: nowrap;
-                      "
-                    >
+                      ">
                       <span>NO.{{ item.user_id }}</span>
                     </p>
-                    <p
-                      style="
+                    <p style="
                         font-size: 12px;
                         font-weight: 400;
                         color: #796cf3;
                         text-align: center;
-                      "
-                    >
+                      ">
                       {{ item.price }}
                     </p>
                   </li>
-                  <li
-                    class="influencerInfoLi"
-                    v-if="scope.row.influencer_info.length != 5"
-                  >
-                    <div
-                      class="influencerInfo3"
-                      @click="addDrs(scope.row.influencer_info, scope.row.id)"
-                    >
+                  <li class="influencerInfoLi" v-if="scope.row.influencer_info.length != 5">
+                    <div class="influencerInfo3" @click="addDrs(scope.row.influencer_info, scope.row.id)">
                       +
                     </div>
                     <div class="influencerInfo2">添加</div>
@@ -110,10 +80,7 @@
                     <div class="influencerInfo2">平台推荐</div>
                   </li>
                   <li class="influencerInfoLi">
-                    <div
-                      class="influencerInfo3"
-                      @click="addDrs(scope.row.influencer_info, scope.row.id)"
-                    >
+                    <div class="influencerInfo3" @click="addDrs(scope.row.influencer_info, scope.row.id)">
                       +
                     </div>
                     <div class="influencerInfo2">添加</div>
@@ -125,33 +92,19 @@
           <el-table-column label="产品信息" width="170">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
-              <div
-                v-else
-                style="
+              <div v-else style="
                   display: flex;
                   align-items: center;
                   cursor: pointer;
                   justify-content: center;
-                "
-              >
-                <div
-                  style="height: 60px; width: 60px; border: 1px solid #f0f0f0"
-                >
-                  <img
-                    :src="scope.row.image"
-                    style="width: 100%; height: 100%"
-                    v-if="scope.row.image"
-                    @click="gocommodity(scope.row.url)"
-                  />
-                  <img
-                    src="@/assets/images/tp.png"
-                    v-else
-                    style="width: 20px; height: 20px; margin-top: 20px"
-                  />
+                ">
+                <div style="height: 60px; width: 60px; border: 1px solid #f0f0f0">
+                  <img :src="scope.row.image" style="width: 100%; height: 100%" v-if="scope.row.image"
+                    @click="gocommodity(scope.row.url)" />
+                  <img src="@/assets/images/tp.png" v-else style="width: 20px; height: 20px; margin-top: 20px" />
                 </div>
                 <div>
-                  <p
-                    style="
+                  <p style="
                       width: 100px;
                       max-height: 3em;
                       overflow: hidden;
@@ -159,25 +112,17 @@
                       -webkit-box-orient: vertical;
                       -webkit-line-clamp: 2;
                       text-overflow: ellipsis;
-                    "
-                  >
+                    ">
                     {{ scope.row.title }}
                   </p>
-                  <p
-                    style="
+                  <p style="
                       font-size: 12px;
                       font-family: PingFangSC-Regular, PingFang SC;
                       font-weight: 400;
                       color: #999999;
-                    "
-                    v-if="scope.row.url"
-                    @click="gocommodity(scope.row.url)"
-                  >
+                    " v-if="scope.row.url" @click="gocommodity(scope.row.url)">
                     {{ scope.row.asin }}
-                    <img
-                      src="@/assets/images/fenx.png"
-                      style="width: 10px; height: 10px"
-                    />
+                    <img src="@/assets/images/fenx.png" style="width: 10px; height: 10px" />
                   </p>
                   <p v-else>--</p>
                 </div>
@@ -186,10 +131,7 @@
           </el-table-column>
           <el-table-column label="拍摄预算/¥" width="110">
             <template slot-scope="scope">
-              <div
-                style="text-align: center"
-                v-if="scope.row.flag || scope.row.title == ''"
-              >
+              <div style="text-align: center" v-if="scope.row.flag || scope.row.title == ''">
                 --
               </div>
               <div style="text-align: center" v-else>
@@ -209,44 +151,20 @@
           <el-table-column label="拍摄要求" width="90">
             <template slot-scope="scope">
               <div v-if="scope.row.flag == 1 || scope.row.title == ''">--</div>
-              <div
-                v-else
-                style="color: #796cf3; cursor: pointer"
-                @click="looksubmitForm(scope.row.id, scope.$index)"
-              >
+              <div v-else style="color: #796cf3; cursor: pointer" @click="looksubmitForm(scope.row.id, scope.$index)">
                 查看
               </div>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <ul
-                style="display: flex; justify-content: center"
-                v-if="scope.row.flag == 1 || scope.row.title == ''"
-              >
-                <li
-                  class="liBtn1"
-                  @mouseover="flags = true"
-                  @mouseout="flags = false"
-                >
-                  <el-tooltip
-                    class="items"
-                    effect="dark"
-                    content="请按模板格式导入,支持多笔需求一同导入"
-                    placement="bottom"
-                  >
-                    <el-upload
-                      action=""
-                      accept=".xls, .xlsx"
-                      :show-file-list="false"
-                      :multiple="false"
-                      :http-request="httpRequest"
-                    >
+              <ul style="display: flex; justify-content: center" v-if="scope.row.flag == 1 || scope.row.title == ''">
+                <li class="liBtn1" @mouseover="flags = true" @mouseout="flags = false">
+                  <el-tooltip class="items" effect="dark" content="请按模板格式导入,支持多笔需求一同导入" placement="bottom">
+                    <el-upload action="" accept=".xls, .xlsx" :show-file-list="false" :multiple="false"
+                      :http-request="httpRequest">
                       <div class="liBtn1div" @click="daoRid(scope.row.id)">
-                        <img
-                          src="@/assets/images/excel4.png"
-                          style="width: 20px; margin-right: 5px"
-                        />
+                        <img src="@/assets/images/excel4.png" style="width: 20px; margin-right: 5px" />
 
                         <span>导入</span>
                       </div>
@@ -259,33 +177,20 @@
               </ul>
 
               <ul v-else style="display: flex; justify-content: center">
-                <li
-                  style="color: #796cf3; cursor: pointer"
-                  @click="modifysubmitForm(scope.row.id, scope.$index)"
-                >
+                <li style="color: #796cf3; cursor: pointer" @click="modifysubmitForm(scope.row.id, scope.$index)">
                   修改
                 </li>
-                <li
-                  style="margin: 0 15px; color: #796cf3; cursor: pointer"
-                  @click="copysubmitForm(scope.row.id)"
-                >
+                <li style="margin: 0 15px; color: #796cf3; cursor: pointer" @click="copysubmitForm(scope.row.id)">
                   克隆
                 </li>
-                <li
-                  style="color: #999999; cursor: pointer"
-                  @click="deletesubmitForm(scope.row.id)"
-                >
+                <li style="color: #999999; cursor: pointer" @click="deletesubmitForm(scope.row.id)">
                   删除
                 </li>
               </ul>
             </template>
           </el-table-column>
         </el-table>
-        <i
-          class="el-icon-question"
-          @mouseover="flag = true"
-          @mouseout="flag = false"
-        ></i>
+        <i class="el-icon-question" @mouseover="flag = true" @mouseout="flag = false"></i>
         <div class="RequirementBox-xinx" v-if="flag">
           未选意向达人情况下，默认为 平台推荐达人
           <div class="triangle"></div>
@@ -293,80 +198,40 @@
         <!-- <div @click="deleteList" class="delList">删除</div> -->
       </div>
       <div class="RequirementBtn">
-        <button
-          v-if="tableData.length == 1"
-          style="background: #cccccc"
-          @click="tiso"
-        >
+        <button v-if="tableData.length == 1" style="background: #cccccc" @click="tiso">
           提交
         </button>
-        <button
-          v-else-if="tableDataTitle"
-          style="background: #cccccc"
-          @click="tist"
-        >
+        <button v-else-if="tableDataTitle" style="background: #cccccc" @click="tist">
           提交
         </button>
-        <button
-          v-else-if="checked == false"
-          style="background: #cccccc"
-          @click="tiss"
-        >
+        <button v-else-if="checked == false" style="background: #cccccc" @click="tiss">
           提交
         </button>
         <button @click="submitTo" v-else>提交</button>
       </div>
       <div class="elIcon">
         <el-checkbox v-model="checked" style="margin-right: 10px"></el-checkbox>
-        <span>我已阅读并同意</span
-        ><span style="cursor: pointer; color: #796cf3" @click="goNote"
-          >《视频拍摄服务及售后说明》</span
-        >
+        <span>我已阅读并同意</span><span style="cursor: pointer; color: #796cf3" @click="goNote">《视频拍摄服务及售后说明》</span>
       </div>
     </div>
 
-    <el-dialog
-      title="视频拍摄需求"
-      :visible.sync="videoSubmitDialogVisible"
-      width="702px"
-      :close-on-click-modal="false"
-      class="video_dialog"
-      center
-    >
+    <el-dialog title="视频拍摄需求" :visible.sync="videoSubmitDialogVisible" width="702px" :close-on-click-modal="false"
+      class="video_dialog" center>
       <div>
-        <el-form
-          size="small"
-          :model="videoRuleForm"
-          :rules="videoRules"
-          ref="videoRules"
-          label-width="125px"
-          class="video_ruleForm"
-          label-position="left"
-        >
+        <el-form size="small" :model="videoRuleForm" :rules="videoRules" ref="videoRules" label-width="125px"
+          class="video_ruleForm" label-position="left">
           <el-form-item label="产品名称" prop="category">
-            <el-input
-              v-model="videoRuleForm.category"
-              placeholder="请输入产品名称"
-            ></el-input>
+            <el-input v-model="videoRuleForm.category" placeholder="请输入产品名称"></el-input>
           </el-form-item>
           <el-form-item label="产品链接">
-            <el-input
-              v-model="videoRuleForm.product"
-              placeholder="如产品尚未上架，则不用填写"
-            ></el-input>
+            <el-input v-model="videoRuleForm.product" placeholder="如产品尚未上架，则不用填写"></el-input>
           </el-form-item>
           <el-form-item label="拍摄预算 ¥" prop="copper" style="width: 350px">
-            <el-input
-              v-model="videoRuleForm.copper"
-              placeholder="请填写该产品的预算金额"
-            >
+            <el-input v-model="videoRuleForm.copper" placeholder="请填写该产品的预算金额">
             </el-input>
           </el-form-item>
           <span style="position: absolute; top: 115px; left: 355px">元</span>
-          <el-form-item
-            label="需重点体现的产品卖点/功能/特性"
-            prop="selling_point"
-          >
+          <el-form-item label="需重点体现的产品卖点/功能/特性" prop="selling_point">
             <div class="description">
               <el-tooltip class="item" effect="dark" placement="right">
                 <a href="javascript:;;">示例</a>
@@ -378,22 +243,13 @@
                 </p>
               </el-tooltip>
             </div>
-            <el-input
-              type="textarea"
-              placeholder="注意： 
+            <el-input type="textarea" placeholder="注意： 
 1、请用英文说明，不超过3个
 2、请勿填写过多信息，否则在极短的时间内视频将无法凸显重点；
-3、如无特别要求，请填写“自由发挥”，达人将结合产品listing自由创作。"
-              show-word-limit
-              maxlength="350"
-              v-model="videoRuleForm.selling_point"
-            ></el-input>
+3、如无特别要求，请填写“自由发挥”，达人将结合产品listing自由创作。" show-word-limit maxlength="350"
+              v-model="videoRuleForm.selling_point"></el-input>
           </el-form-item>
-          <el-form-item
-            label="定制需求"
-            v-if="videoRuleForm.selectedType == 1"
-            prop="demand"
-          >
+          <el-form-item label="定制需求" v-if="videoRuleForm.selectedType == 1" prop="demand">
             <div class="description">
               请具体说明您的拍摄需求
               <el-tooltip class="item" effect="dark" placement="right">
@@ -409,39 +265,19 @@
                 </p>
               </el-tooltip>
             </div>
-            <el-input
-              type="textarea"
-              placeholder="请输入您的拍摄需求"
-              v-model="videoRuleForm.demand"
-            ></el-input>
+            <el-input type="textarea" placeholder="请输入您的拍摄需求" v-model="videoRuleForm.demand"></el-input>
           </el-form-item>
           <el-form-item label="拍摄要素" class="is-required">
             <div>
               <div class="form_item_title">
                 在候选达人匹配失败时，将据此为您推荐其他达人
               </div>
-              <div
-                class="item_check_style"
-                v-for="(item, index) in listArray"
-                :key="index"
-              >
+              <div class="item_check_style" v-for="(item, index) in listArray" :key="index">
                 <div class="label_style">{{ item.title }}</div>
-                <el-checkbox-group
-                  v-if="item.type == 'check'"
-                  v-model="item.checkList"
-                  @change="checkRequirement"
-                >
-                  <el-checkbox
-                    v-for="(i, index) in item.list"
-                    :key="index"
-                    :label="i"
-                  ></el-checkbox>
+                <el-checkbox-group v-if="item.type == 'check'" v-model="item.checkList" @change="checkRequirement">
+                  <el-checkbox v-for="(i, index) in item.list" :key="index" :label="i"></el-checkbox>
                 </el-checkbox-group>
-                <el-radio-group
-                  v-else
-                  v-model="item.checkList"
-                  @change="checkRequirement"
-                >
+                <el-radio-group v-else v-model="item.checkList" @change="checkRequirement">
                   <el-radio v-for="(i, j) in item.list" :label="i">{{
                     i
                   }}</el-radio>
@@ -452,20 +288,12 @@
           </el-form-item>
           <el-form-item label="其他拍摄说明">
             <div class="description">未填写则视为无其他未尽事项</div>
-            <el-input
-              type="textarea"
-              maxlength="100"
-              show-word-limit
-              placeholder="以下情形请详细说明，如： 
+            <el-input type="textarea" maxlength="100" show-word-limit placeholder="以下情形请详细说明，如： 
 1、产品仅适配特定配件/型号的；
 2、要求特定场景的，如：汽车、泳池、卧室、海滩等
-3、其他特殊要求，如：需要安装演示、需要3~6岁小孩出镜等"
-              v-model="videoRuleForm.remarks"
-            ></el-input>
+3、其他特殊要求，如：需要安装演示、需要3~6岁小孩出镜等" v-model="videoRuleForm.remarks"></el-input>
             <p class="description2">
-              <span>注</span>：对于特殊、复杂的需求，如涉及定制化拍摄，将<span
-                >按另行价格收费</span
-              >
+              <span>注</span>：对于特殊、复杂的需求，如涉及定制化拍摄，将<span>按另行价格收费</span>
             </p>
           </el-form-item>
           <el-form-item label="是否通过达人账号上传">
@@ -475,25 +303,14 @@
           </el-form-item>
         </el-form>
       </div>
-      <div
-        class="form_button"
-        v-if="
-          videoRuleForm.category ||
-          videoRuleForm.copper ||
-          videoRuleForm.selling_point
-        "
-      >
-        <el-button size="small" type="primary" @click="submitForm('videoRules')"
-          >保存</el-button
-        >
+      <div class="form_button" v-if="videoRuleForm.category ||
+        videoRuleForm.copper ||
+        videoRuleForm.selling_point
+        ">
+        <el-button size="small" type="primary" @click="submitForm('videoRules')">保存</el-button>
       </div>
       <div class="form_button" v-else>
-        <el-button
-          size="small"
-          type="primary"
-          style="background: rgb(204, 204, 204)"
-          >保存</el-button
-        >
+        <el-button size="small" type="primary" style="background: rgb(204, 204, 204)">保存</el-button>
       </div>
       <div style="position: absolute; top: 80px; color: red">*</div>
       <div style="position: absolute; top: 180px; color: red">*</div>
@@ -502,12 +319,7 @@
       <div style="position: absolute; bottom: 133px; color: red">*</div>
     </el-dialog>
 
-    <el-dialog
-      title="添加意向达人"
-      :visible.sync="centerDialogVisible"
-      width="32%"
-      center
-    >
+    <el-dialog title="添加意向达人" :visible.sync="centerDialogVisible" :close-on-click-modal="false" width="610px" center>
       <div class="elDialogDR">
         <p class="elDialogDR-p">
           <span style="color: #333">注意: </span>
@@ -518,61 +330,33 @@
       <div style="display: flex; align-items: center; margin-top: 22px">
         <p style="margin-right: 20px">添加意向达人</p>
         <div style="width: 300px; position: relative">
-          <el-input
-            v-model="input"
-            style="width: 100%"
-            :placeholder="placeholderspan"
-            :disabled="disabled"
-          ></el-input>
-          <ul
-            style="
+          <el-input v-model="input" style="width: 100%" :placeholder="placeholderspan" :disabled="disabled"
+            @input="debouncedHandleInput"></el-input>
+          <ul style="
               max-height: 200px;
               position: absolute;
               width: 100%;
               overflow: auto;
               z-index: 1000000000;
-            "
-          >
-            <li
-              class="InfluencerList"
-              v-for="(item, index) in InfluencerList"
-              :key="index"
-              @click="addperson(item)"
-            >
-              <img
-                :src="item.image"
-                style="width: 36px; height: 36px; border-radius: 50%"
-              />
-              <span style="margin-left: 12px; font-size: 12px"
-                >NO.{{ item.user_id }}</span
-              >
+            ">
+            <li class="InfluencerList" v-for="(item, index) in InfluencerList" :key="index" @click="addperson(item)">
+              <img :src="item.image" style="width: 36px; height: 36px; border-radius: 50%" />
+              <span style="margin-left: 12px; font-size: 12px">NO.{{ item.user_id }}</span>
             </li>
           </ul>
         </div>
       </div>
 
-      <div
-        style="
+      <div style="
           height: 160px;
-          background: #fff;
           border-radius: 4px;
           margin-top: 40px;
           padding: 20px;
-        "
-        ref="backgroundD"
-      >
+        " :class="{ 'backgroundD': backgroundD }">
         <p style="margin-bottom: 20px" v-show="myArray.length != 0">
-          已选达人<span style="font-size: 12px; color: #999; margin-left: 5px"
-            >默认按以下顺序为您匹配，拖动可调整</span
-          >
+          已选达人<span style="font-size: 12px; color: #999; margin-left: 5px">默认按以下顺序为您匹配，拖动可调整</span>
         </p>
-        <draggable
-          v-model="myArray"
-          group="people"
-          animation="100"
-          @start="onStart"
-          @end="onEnd"
-        >
+        <draggable v-model="myArray" group="people" animation="100" @start="onStart" @end="onEnd">
           <transition-group>
             <div class="item" v-for="(element, index) in myArray" :key="index">
               <div class="itemElement">
@@ -593,8 +377,7 @@
         </draggable>
       </div>
 
-      <button
-        style="
+      <button style="
           width: 140px;
           height: 32px;
           background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
@@ -603,23 +386,15 @@
           color: white;
           cursor: pointer;
           margin: 40px 205px 0;
-        "
-        @click="isaddperson"
-      >
+        " @click="isaddperson">
         保存
       </button>
     </el-dialog>
 
-    <el-dialog
-      title="请确认"
-      :visible.sync="centerDialogVisibles"
-      width="20%"
-      center
-    >
+    <el-dialog title="请确认" :visible.sync="centerDialogVisibles" width="20%" center>
       <p style="text-align: center">是否删除该拍摄需求？</p>
       <span slot="footer" class="dialog-footer">
-        <button
-          style="
+        <button style="
             width: 120px;
             height: 32px;
             border-radius: 16px;
@@ -627,13 +402,10 @@
             cursor: pointer;
             margin: 0 5px;
             color: #999999;
-          "
-          @click="centerDialogVisibles = false"
-        >
+          " @click="centerDialogVisibles = false">
           取 消
         </button>
-        <button
-          style="
+        <button style="
             width: 120px;
             height: 32px;
             background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
@@ -642,41 +414,24 @@
             border: none;
             margin: 0 5px;
             color: #ffffff;
-          "
-          @click="deletecenterDialogVisibles"
-        >
+          " @click="deletecenterDialogVisibles">
           确 定
         </button>
       </span>
     </el-dialog>
 
     <!--支付定金-->
-    <el-dialog
-      title="已提交成功，请尽快支付定金"
-      :visible.sync="payDepositDialogVisible"
-      v-if="payDepositDialogVisible"
-      width="500px"
-      :close-on-click-modal="false"
-      class="pay_deposit_dialog"
-      center
-    >
+    <el-dialog title="已提交成功，请尽快支付定金" :visible.sync="payDepositDialogVisible" v-if="payDepositDialogVisible" width="500px"
+      :close-on-click-modal="false" class="pay_deposit_dialog" center>
       <div style="position: relative">
-        <el-alert
-          title="支付定金后，平台将正式为您对接达人。不满意可随时申请退还定金。"
-          center
-          style="position: relative"
-          :closable="false"
-        >
-          <i
-            class="iconfont icon-tips"
-            style="
+        <el-alert title="支付定金后，平台将正式为您对接达人。不满意可随时申请退还定金。" center style="position: relative" :closable="false">
+          <i class="iconfont icon-tips" style="
               position: absolute;
               top: 8px;
               left: 14px;
               font-size: 18px;
               color: #796cf3;
-            "
-          ></i>
+            "></i>
         </el-alert>
         <h5>¥{{ orderData[0].order.price }}</h5>
         <p>定金金额</p>
@@ -686,23 +441,15 @@
         </p>
         <el-tabs type="border-card">
           <el-tab-pane>
-            <span
-              slot="label"
-              style="
+            <span slot="label" style="
                 display: flex;
                 align-items: center;
                 justify-content: center;
-              "
-              ><i
-                class="iconfont icon-zhifupingtai-weixin"
-                style="
+              "><i class="iconfont icon-zhifupingtai-weixin" style="
                   color: rgba(59, 202, 114, 1);
                   font-size: 20px;
                   margin-right: 6px;
-                "
-              ></i
-              >微信支付</span
-            >
+                "></i>微信支付</span>
             <div>
               <div class="qrcode" ref="wechatQrCodeUrl">
                 <span class="top_left"></span>
@@ -714,23 +461,15 @@
             </div>
           </el-tab-pane>
           <el-tab-pane>
-            <span
-              slot="label"
-              style="
+            <span slot="label" style="
                 display: flex;
                 align-items: center;
                 justify-content: center;
-              "
-              ><i
-                class="iconfont icon-zhifu-zhifubao"
-                style="
+              "><i class="iconfont icon-zhifu-zhifubao" style="
                   color: rgba(2, 169, 241, 1);
                   font-size: 20px;
                   margin-right: 6px;
-                "
-              ></i
-              >支付宝支付</span
-            >
+                "></i>支付宝支付</span>
             <div>
               <div class="qrcode" ref="alipayQrCodeUrl">
                 <span class="top_left"></span>
@@ -743,8 +482,7 @@
           </el-tab-pane>
         </el-tabs>
 
-        <div
-          style="
+        <div style="
             width: 20px;
             height: 20px;
             background: #02b578;
@@ -754,28 +492,17 @@
             position: absolute;
             top: -34px;
             left: 88px;
-          "
-        >
+          ">
           √
         </div>
       </div>
     </el-dialog>
 
     <!--支付完成-->
-    <el-dialog
-      :title="'定金支付成功'"
-      :visible.sync="paymentCompletedDialogVisible"
-      width="360px"
-      @close="goOrder"
-      :close-on-click-modal="false"
-      class="payment_completed_dialog"
-      center
-    >
+    <el-dialog :title="'定金支付成功'" :visible.sync="paymentCompletedDialogVisible" width="360px" @close="goOrder"
+      :close-on-click-modal="false" class="payment_completed_dialog" center>
       <div slot="title">
-        <i
-          style="color: rgba(2, 181, 120, 1); font-size: 20px"
-          class="el-icon-success"
-        ></i>
+        <i style="color: rgba(2, 181, 120, 1); font-size: 20px" class="el-icon-success"></i>
         定金支付成功
       </div>
       <div>
@@ -783,13 +510,10 @@
           平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意
         </p>
         <div class="button_box know_btn">
-          <el-button
-            @click="
-              paymentCompletedDialogVisible = false;
-              goOrder();
-            "
-            >我知道了</el-button
-          >
+          <el-button @click="
+            paymentCompletedDialogVisible = false;
+          goOrder();
+          ">我知道了</el-button>
         </div>
       </div>
     </el-dialog>
@@ -814,6 +538,7 @@ import {
 import draggable from "vuedraggable";
 import QRCode from "qrcodejs2";
 import * as XLSX from "xlsx";
+import { debounce } from 'lodash';
 export default {
   data() {
     return {
@@ -897,27 +622,46 @@ export default {
       daorid: "",
       fileDiz: "",
       iscg: false,
+      backgroundD: true,
+      getneedsInfluencerList: []
     };
   },
   components: {
     draggable,
   },
   methods: {
-    goOrder() {},
+    //防抖处理
+    handleInput(event) {
+      //搜索列表
+      if (event != '') {
+        const arr = this.getneedsInfluencerList.filter((item) => {
+          return item.user_id.toString().includes(event);
+        });
+
+        var isArr = arr;
+        for (var i = 0; i < this.myArray.length; i++) {
+          isArr = isArr.filter(
+            (item) => item.user_id != this.myArray[i].user_id
+          );
+        }
+        this.InfluencerList = isArr;
+      }
+    },
+    //防抖处理
+    debouncedHandleInput: debounce(function (event) {
+      this.handleInput(event);
+    }, 100),
+
+    goOrder() { },
 
     httpRequest(fileLit) {
       const formData = new FormData();
-      // for (const key in fileLit.file) {
-      //   formData.append(key, fileLit.file[key]);
-      // }
-      console.log(fileLit);
       formData.append("file", fileLit.file);
       needsTemplate({
         file: fileLit.file,
         id: this.daorid,
       })
         .then((res) => {
-          console.log(res);
           this.reqsearch();
           if (res.code == 1) {
             this.tableTop();
@@ -1389,24 +1133,7 @@ export default {
       this.handleSelectionChangeList = val;
       console.log(val);
     },
-    // selectable(row) {
-    //   if (row.flag == 1) {
-    //     return false;
-    //   } else {
-    //     return true;
-    //   }
-    // },
-    // deleteList() {
-    //   if (this.handleSelectionChangeList.length > 0) {
-    //     var idList = [];
-    //     this.handleSelectionChangeList.forEach((item) => {
-    //       idList.push(item.id);
-    //     });
-    //     const influencer_ids = idList.join(",");
-    //     this.centerDialogVisibles = true;
-    //     this.formId = influencer_ids;
-    //   }
-    // },
+
     tiso() {
       this.$message("您还没有添加任何需求，请添加需求再提交");
     },
@@ -1419,82 +1146,31 @@ export default {
   },
   mounted() {
     this.reqsearch();
-    console.log(this.videoRules.copper[0].required);
+    //搜索列表请求
+    needsInfluencerList().then((res) => {
+      this.getneedsInfluencerList = res.data.data
+      console.log(this.getneedsInfluencerList)
+    }).catch(err => {
+      console.error(err)
+    })
   },
   watch: {
     input(newInput) {
-      if (newInput == "") {
-        setTimeout(() => {
-          this.InfluencerList = [];
-        }, 400);
-      } else {
-        needsInfluencerList().then((res) => {
-          const arr = res.data.data.filter((item) => {
-            return item.user_id.toString().includes(newInput);
-          });
-
-          // if (this.myArray.length == 1) {
-          //   var isArr = arr.filter(
-          //     (item) => item.user_id != this.myArray[0].user_id
-          //   );
-          // }
-          // if (this.myArray.length == 2) {
-          //   var isArr = arr
-          //     .filter((item) => item.user_id != this.myArray[0].user_id)
-          //     .filter((item) => item.user_id != this.myArray[1].user_id);
-          // }
-          // if (this.myArray.length == 3) {
-          //   var isArr = arr
-          //     .filter((item) => item.user_id != this.myArray[0].user_id)
-          //     .filter((item) => item.user_id != this.myArray[1].user_id)
-          //     .filter((item) => item.user_id != this.myArray[2].user_id);
-          // }
-          // if (this.myArray.length == 4) {
-          //   var isArr = arr
-          //     .filter((item) => item.user_id != this.myArray[0].user_id)
-          //     .filter((item) => item.user_id != this.myArray[1].user_id)
-          //     .filter((item) => item.user_id != this.myArray[2].user_id)
-          //     .filter((item) => item.user_id != this.myArray[3].user_id);
-          // }
-          // if (this.myArray.length == 5) {
-          //   var isArr = arr
-          //     .filter((item) => item.user_id != this.myArray[0].user_id)
-          //     .filter((item) => item.user_id != this.myArray[1].user_id)
-          //     .filter((item) => item.user_id != this.myArray[2].user_id)
-          //     .filter((item) => item.user_id != this.myArray[3].user_id)
-          //     .filter((item) => item.user_id != this.myArray[4].user_id);
-          // }
-          // if (this.myArray.length == 0) {
-          //   var isArr = arr;
-          // }
-          var isArr = arr;
-          for (var i = 0; i < this.myArray.length; i++) {
-            isArr = isArr.filter(
-              (item) => item.user_id != this.myArray[i].user_id
-            );
-          }
-
-          this.InfluencerList = isArr;
-        });
-      }
+      if (newInput == "") this.InfluencerList = [];
     },
     myArray(newInput) {
-      console.log(newInput);
-      if (newInput.length == 5) {
+      if (newInput.length >= 5) {
+        this.InfluencerList = [];
         this.disabled = true;
         this.placeholderspan = "";
       } else {
         this.disabled = false;
         this.placeholderspan = "请输入达人编号";
       }
-      if (newInput.length == 0) {
-        this.$refs.backgroundD.style.background = "#fff";
-      } else {
-        this.$refs.backgroundD.style.background = "#f6f6f6";
-      }
+
+      newInput.length == 0 ? this.backgroundD = false : this.backgroundD = true
     },
     centerDialogVisible(newVal) {
-      console.log(newVal);
       if (newVal == false) {
         this.reqsearch();
       }
@@ -1597,6 +1273,7 @@ export default {
     }
   }
 }
+
 .group_26 {
   background-color: rgba(244, 242, 255, 1);
   border-radius: 4px;
@@ -1616,6 +1293,7 @@ export default {
   width: 15px;
   height: 18px;
 }
+
 .text-group_14 {
   width: 369px;
   height: 66px;
@@ -1663,10 +1341,11 @@ export default {
   text-align: left;
   line-height: 20px;
 }
+
 /*支付尾款弹窗*/
 .payment_dialog,
 .pay_deposit_dialog {
-  .el-tabs--border-card > .el-tabs__content {
+  .el-tabs--border-card>.el-tabs__content {
     padding: 34px 15px 21px 15px;
   }
 
@@ -1724,20 +1403,20 @@ export default {
     margin-top: 15px;
   }
 
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item + .el-tabs__item {
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item+.el-tabs__item {
     margin-left: 0;
   }
 
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item:first-child {
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item:first-child {
     border-right: 1px solid #eeeeee !important;
     margin-left: 0;
   }
 
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item:hover {
     margin-left: 0;
   }
 
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item {
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item {
     color: #999999;
     font-family: PingFangSC-Semibold, PingFang SC;
     border: none;
@@ -1746,8 +1425,8 @@ export default {
     height: 42px;
   }
 
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active,
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item:hover {
     font-weight: 600;
     color: #333333;
     background: #f6f5ff;
@@ -1758,7 +1437,7 @@ export default {
     }
   }
 
-  .el-tabs--border-card > .el-tabs__header {
+  .el-tabs--border-card>.el-tabs__header {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     overflow: hidden;
@@ -1804,25 +1483,30 @@ export default {
 </style>
 
 <style>
-.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
+.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
   border-bottom: 2px solid #aa68e7;
 }
+
 .el-tabs__item {
   width: 220px;
 }
+
 .el-alert__title {
   font-size: 12px !important;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400 !important;
   color: #666666 !important;
 }
+
 .items {
   margin: 4px;
 }
+
 .item {
   cursor: pointer;
   float: left;
 }
+
 .itemElement {
   width: 88px;
   background: #ffffff;
@@ -1832,6 +1516,7 @@ export default {
   margin-right: 10px;
   position: relative;
 }
+
 .delitemElement {
   display: none;
   width: 10px;
@@ -1847,9 +1532,11 @@ export default {
   cursor: pointer;
   text-align: center;
 }
+
 .itemElement:hover .delitemElement {
   display: block;
 }
+
 .item-img {
   width: 44px;
   height: 44px;
@@ -1857,6 +1544,7 @@ export default {
   border-radius: 50%;
   margin: 12px 22px 5px;
 }
+
 .item-p {
   text-align: center;
   font-size: 12px;
@@ -1864,6 +1552,7 @@ export default {
   font-weight: 400;
   color: #666666 !important;
 }
+
 .item-div {
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -1872,6 +1561,7 @@ export default {
   text-align: center;
   margin-top: 4px;
 }
+
 .item-index1 {
   width: 20px;
   height: 14px;
@@ -1886,6 +1576,7 @@ export default {
   top: 0;
   right: 0;
 }
+
 .item-index2 {
   width: 20px;
   height: 14px;
@@ -1900,6 +1591,7 @@ export default {
   top: 0;
   right: 0;
 }
+
 .item-index3 {
   width: 20px;
   height: 14px;
@@ -1914,6 +1606,7 @@ export default {
   top: 0;
   right: 0;
 }
+
 .item-index4 {
   width: 20px;
   height: 14px;
@@ -1928,9 +1621,11 @@ export default {
   top: 0;
   right: 0;
 }
+
 .isinfluencerInfoLi:hover .delDiv {
   opacity: 1;
 }
+
 .InfluencerList {
   background-color: white;
   height: 40px;
@@ -1939,9 +1634,11 @@ export default {
   align-items: center;
   cursor: pointer;
 }
+
 .InfluencerList:hover {
   background: #f4f2ff;
 }
+
 .delDiv {
   opacity: 0;
   width: 10px;
@@ -1970,6 +1667,7 @@ export default {
   padding: 14px;
   box-sizing: border-box;
 }
+
 .elDialogDR-p {
   font-size: 12px;
   font-family: PingFangSC-Semibold, PingFang SC;
@@ -1981,10 +1679,12 @@ export default {
 .el-icon-user-solid {
   color: white;
 }
+
 .influencerInfoUl {
   display: flex;
   justify-content: center;
 }
+
 .influencerInfoLi {
   /* width: 48px; */
   display: flex;
@@ -1994,6 +1694,7 @@ export default {
   position: relative;
   cursor: pointer;
 }
+
 .influencerInfo3 {
   width: 32px;
   height: 32px;
@@ -2010,6 +1711,7 @@ export default {
   font-weight: 400;
   color: #999999 !important;
 }
+
 .influencerInfo {
   width: 32px;
   height: 32px;
@@ -2029,10 +1731,12 @@ export default {
   border-color: #796cf3 !important;
   background-color: #796cf3 !important;
 }
+
 .el-checkbox__input.is-focus .el-checkbox__inner {
   border-color: #796cf3 !important;
 }
-.el-checkbox__input.is-checked + .el-checkbox__label {
+
+.el-checkbox__input.is-checked+.el-checkbox__label {
   color: #796cf3 !important;
 }
 
@@ -2047,6 +1751,7 @@ export default {
   cursor: pointer;
   margin-right: 12px;
 }
+
 .liBtn1div {
   width: 89px;
   height: 40px;
@@ -2057,6 +1762,7 @@ export default {
   cursor: pointer;
   color: #796cf3 !important;
 }
+
 .liBtn2 {
   width: 89px;
   height: 40px;
@@ -2073,13 +1779,16 @@ export default {
   height: 46px;
   padding: 0 20px;
 }
+
 .el-table td.el-table__cell div {
   box-sizing: border-box;
   text-align: center;
 }
-.el-table th.el-table__cell > .cell {
+
+.el-table th.el-table__cell>.cell {
   text-align: center;
 }
+
 .el-icon-question {
   position: absolute;
   top: 13px;
@@ -2096,6 +1805,7 @@ export default {
     font-size: 12px;
     bottom: -18px;
   }
+
   .form_item_title {
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -2104,25 +1814,30 @@ export default {
     margin-bottom: 6px;
     margin-top: 5px;
   }
+
   .item_check_style {
     display: flex;
     align-items: center;
     height: 32px;
-    .el-checkbox__input.is-checked + .el-checkbox__label {
+
+    .el-checkbox__input.is-checked+.el-checkbox__label {
       color: #666666;
     }
+
     .label_style {
       width: 48px;
       text-align: left;
       color: #666666;
       padding-top: 4px;
     }
+
     .el-checkbox-group,
     .el-radio-group {
       width: 100%;
       display: flex;
       justify-content: space-between;
     }
+
     .el-checkbox,
     .el-radio {
       color: #666666;
@@ -2131,32 +1846,39 @@ export default {
       margin-right: 0px;
     }
   }
+
   .video_ruleForm {
     padding-top: 10px;
     padding-right: 10px;
     margin: 0 12px;
     overflow: auto;
     position: relative;
+
     /* 设置滚动条的样式 */
     &::-webkit-scrollbar {
       width: 6px;
     }
+
     /* 滚动槽 */
     &::-webkit-scrollbar-track {
       border-radius: 10px;
     }
+
     /* 滚动条滑块 */
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;
       background: rgba(0, 0, 0, 0.1);
     }
+
     &::-webkit-scrollbar-thumb:window-inactive {
       background: #d8d8d8;
     }
+
     .radio_style1 {
       background: rgba(131, 96, 255, 0.04);
       border: 1px solid rgba(131, 96, 255, 1);
       position: relative;
+
       &:before {
         content: url("../../assets/images/radio_style1_bg.png");
         width: 60px;
@@ -2166,6 +1888,7 @@ export default {
         right: 12px;
         bottom: 12px;
       }
+
       .recommend:before {
         position: absolute;
         content: "";
@@ -2177,6 +1900,7 @@ export default {
         margin-top: -2px;
         left: 8px;
       }
+
       .recommend {
         position: absolute;
         text-align: center;
@@ -2194,10 +1918,12 @@ export default {
         padding-left: 8px;
       }
     }
+
     .radio_style2 {
       position: relative;
       background: rgba(0, 217, 173, 0.04);
       border: 1px solid rgba(0, 217, 173, 1);
+
       &:before {
         width: 60px;
         height: 60px;
@@ -2208,6 +1934,7 @@ export default {
         bottom: 12px;
       }
     }
+
     .description {
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -2216,15 +1943,18 @@ export default {
       line-height: 17px;
       margin-top: 7px;
       margin-bottom: 5px;
+
       span {
         color: #ed4014;
       }
+
       a {
         font-weight: 400;
         color: #796cf3;
         text-decoration: none;
       }
     }
+
     .description2 {
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -2232,14 +1962,18 @@ export default {
       color: rgba(153, 153, 153, 1);
       line-height: 17px;
       padding-bottom: 10px;
+
       span {
         color: #796cf3;
       }
     }
+
     .candidate_list {
       padding-top: 6px;
+
       .list-group-item {
         position: relative;
+
         .list-group-index {
           position: absolute;
           top: 6px;
@@ -2251,22 +1985,26 @@ export default {
           color: #ffffff;
           line-height: 14px;
         }
+
         &:first-child {
           .list-group-index {
             background: #ff2c4c;
           }
         }
+
         &:nth-child(2) {
           .list-group-index {
             background: #ff9c17;
           }
         }
+
         &:nth-child(3) {
           .list-group-index {
             background: #796cf3;
           }
         }
       }
+
       li {
         width: 77px;
         background: #ffffff;
@@ -2276,18 +2014,21 @@ export default {
         padding: 12px 5px;
         float: left;
         margin-right: 6px;
+
         div {
           width: 44px;
           height: 44px;
           border-radius: 26px;
           margin: auto;
           overflow: hidden;
+
           img {
             width: 100%;
             height: 100%;
             object-fit: cover;
           }
         }
+
         p {
           font-size: 12px;
           font-family: PingFangSC-Regular, PingFang SC;
@@ -2297,6 +2038,7 @@ export default {
           text-align: center;
           margin: 4px 0;
         }
+
         span {
           display: block;
           font-size: 12px;
@@ -2306,13 +2048,16 @@ export default {
           line-height: 17px;
           text-align: center;
         }
+
         &:last-child li {
           margin-right: 0;
         }
       }
+
       overflow: auto;
     }
   }
+
   .form_button {
     button {
       margin: auto;
@@ -2335,6 +2080,7 @@ export default {
 ::v-deep .el-table__body-wrapper {
   padding: 0 10px;
 }
+
 .know_btn {
   padding-top: 20px;
 
@@ -2402,9 +2148,7 @@ export default {
   line-height: 22px;
 }
 
-::v-deep
-  .el-form-item.is-required:not(.is-no-asterisk)
-  > .el-form-item__label:before {
+::v-deep .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {
   content: revert;
 }
 </style>
@@ -2418,6 +2162,7 @@ export default {
   border-radius: 6px;
   opacity: 0.47;
 }
+
 .is-center .el-message__content {
   color: white;
 }
@@ -2436,9 +2181,11 @@ export default {
   border-bottom: 1px solid #e9e9e9;
   box-sizing: border-box;
 }
+
 .RequirementBoxBanxin {
   width: 1200px;
   margin: 0 auto;
+
   .hearder {
     font-size: 20px;
     font-family: PingFangSC-Semibold, PingFang SC;
@@ -2447,26 +2194,32 @@ export default {
     text-align: center;
     margin-top: 30px;
   }
+
   .RequirementWenben {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
     margin-bottom: 14px;
+
     .RequirementWenben-div1 {
       font-size: 14px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
     }
+
     .RequirementWenben-div2 {
       display: flex;
+
       .elIcon2 {
         display: flex;
         align-items: center;
+
         img {
           width: 20px;
           margin-right: 5px;
         }
+
         a {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
@@ -2477,6 +2230,7 @@ export default {
       }
     }
   }
+
   .RequirementBox-xinx {
     width: 180px;
     height: 60px;
@@ -2491,6 +2245,7 @@ export default {
     color: #e4e4e4;
     padding: 9px 12px;
     box-sizing: border-box;
+
     .triangle {
       width: 0;
       height: 0;
@@ -2502,10 +2257,12 @@ export default {
       left: 80px;
     }
   }
+
   .RequirementBtn {
     margin-top: 20px;
     display: flex;
     justify-content: center;
+
     button {
       width: 160px;
       height: 42px;
@@ -2517,6 +2274,7 @@ export default {
       color: white;
     }
   }
+
   .delList {
     font-size: 12px;
     width: 24px;
@@ -2541,6 +2299,7 @@ export default {
     display: flex;
     justify-content: end;
     margin-top: 5px;
+
     .tableBtn1 {
       width: 200px;
       height: 46px;
@@ -2551,6 +2310,7 @@ export default {
       justify-content: center;
       margin-right: 30px;
       cursor: pointer;
+
       div {
         font-size: 12px;
         font-family: PingFangSC-Regular, PingFang SC;
@@ -2559,6 +2319,7 @@ export default {
         margin-left: 5px;
       }
     }
+
     .tableBtn2 {
       width: 200px;
       height: 46px;
@@ -2569,6 +2330,7 @@ export default {
       justify-content: center;
       margin-right: 30px;
       cursor: pointer;
+
       div {
         font-size: 12px;
         font-family: PingFangSC-Regular, PingFang SC;
@@ -2578,5 +2340,9 @@ export default {
       }
     }
   }
+}
+
+.backgroundD {
+  background: #f6f6f6;
 }
 </style>

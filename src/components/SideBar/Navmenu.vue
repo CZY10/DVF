@@ -1,59 +1,27 @@
 <template>
   <div>
     <div class="header">
-      <el-menu
-        :default-active="$route.path"
-        class="el-menu-demo"
-        id="menu_box"
-        router
-        mode="horizontal"
-        active-text-color="#333333"
-        text-color="#666666"
-      >
-        <a
-          href="/"
-          style="
+      <el-menu :default-active="$route.path" class="el-menu-demo" id="menu_box" router mode="horizontal"
+        active-text-color="#333333" text-color="#666666">
+        <a href="/" style="
             display: flex;
             justify-content: center;
             align-items: center;
             width: 180px;
             padding: 0 20px;
-          "
-          ><img :src="logoImg" style="width: 100%; height: 100%" alt=""
-        /></a>
+          "><img :src="logoImg" style="width: 100%; height: 100%" alt="" /></a>
         <el-menu-item index="/" style="margin: 0 20px">首页</el-menu-item>
-        <el-menu-item index="/videohome" style="margin: 0 20px"
-          >视频服务站</el-menu-item
-        >
-        <el-menu-item index="/buyershow" style="margin: 0 20px"
-          >拍买家秀</el-menu-item
-        >
-        <el-menu-item index="/webDeal" style="margin: 0 20px"
-          >海外Deal站</el-menu-item
-        >
-        <el-menu-item style="margin: 0 20px"
-          ><a target="_blank" style="width: 100%" @click="goVipon"
-            >站外推广</a
-          ></el-menu-item
-        >
+        <el-menu-item index="/videohome" style="margin: 0 20px">视频服务站</el-menu-item>
+        <el-menu-item index="/buyershow" style="margin: 0 20px">拍买家秀</el-menu-item>
+        <el-menu-item index="/webDeal" style="margin: 0 20px">海外Deal站</el-menu-item>
+        <el-menu-item style="margin: 0 20px"><a target="_blank" style="width: 100%"
+            @click="goVipon">站外推广</a></el-menu-item>
         <!-- <el-menu-item index="/chatgpt">ChatGPT</el-menu-item> -->
-        <el-menu-item
-          v-if="!isLogin"
-          style="float: right; margin: 0 20px"
-          index="/login"
-          ><el-button class="login_btn" round
-            >登陆/注册</el-button
-          ></el-menu-item
-        >
-        <el-submenu
-          v-else
-          index="/manage"
-          style="float: right; border-radius: 10px"
-        >
-          <template slot="title"
-            ><span class="user_info_box"
-              ><img :src="avatar" width="36px" height="36px" alt="" /></span
-          ></template>
+        <el-menu-item v-if="!isLogin" style="float: right; margin: 0 20px" index="/login"><el-button class="login_btn"
+            round>登陆/注册</el-button></el-menu-item>
+        <el-submenu v-else index="/manage" style="float: right; border-radius: 10px">
+          <template slot="title"><span class="user_info_box"><img :src="avatar" width="36px" height="36px"
+                alt="" /></span></template>
           <div style="padding: 0 6px">
             <el-menu-item index="/manage/order">订单信息</el-menu-item>
             <el-menu-item index="/manage/payment">支付记录</el-menu-item>
@@ -62,21 +30,10 @@
           </div>
         </el-submenu>
 
-        <el-menu-item
-          class="icon_hover_style"
-          style="float: right; padding: 0; margin: 0 10px 0 0px"
-          index="/manage/order"
-          @click="changeIsMessage"
-        >
-          <el-badge
-            :value="messageCount"
-            :hidden="messageCount == 0"
-            class="item"
-          >
-            <i
-              class="el-icon-chat-dot-round"
-              style="color: #666666; font-size: 18px; margin-right: 3px"
-            ></i>
+        <el-menu-item class="icon_hover_style" style="float: right; padding: 0; margin: 0 10px 0 0px"
+          index="/manage/order" @click="changeIsMessage">
+          <el-badge :value="messageCount" :hidden="messageCount == 0" class="item">
+            <i class="el-icon-chat-dot-round" style="color: #666666; font-size: 18px; margin-right: 3px"></i>
             <span>消息</span>
           </el-badge>
         </el-menu-item>
@@ -92,38 +49,24 @@
           >联系我们</el-menu-item
         > -->
 
-        <el-menu-item
-          v-if="token"
-          style="
+        <el-menu-item v-if="token" style="
             float: right;
             padding-left: 0;
             width: 100px;
             margin-right: 20px;
-          "
-        >
-          <el-popover
-            placement="bottom"
-            popper-class="menu_popover"
-            trigger="click"
-          >
-            <div
-              slot="reference"
-              style="
+          ">
+          <el-popover placement="bottom" popper-class="menu_popover" trigger="click">
+            <div slot="reference" style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
-              "
-            >
-              <img
-                style="
+              ">
+              <img style="
                   width: 30px;
                   height: 30px;
                   margin-right: 8px;
                   border-radius: 50%;
-                "
-                :src="serviceInfoList.service_avatar"
-                alt=""
-              />
+                " :src="serviceInfoList.service_avatar" alt="" />
               <span style="padding-top: 1px">VIP服务</span>
             </div>
             <div>
@@ -139,11 +82,8 @@
                     交付订单：<span>{{ serviceInfoList.pay_order }}</span>
                   </li>
                   <li>
-                    客户评价：<el-rate
-                      v-model="serviceInfoList.customer_reviews"
-                      disabled
-                      :colors="['#796CF3', '#796CF3', '#796CF3']"
-                    ></el-rate>
+                    客户评价：<el-rate v-model="serviceInfoList.customer_reviews" disabled
+                      :colors="['#796CF3', '#796CF3', '#796CF3']"></el-rate>
                   </li>
                   <li>
                     客户投诉：<span>{{ serviceInfoList.customer_report }}</span>
@@ -170,40 +110,33 @@
 
         <el-submenu style="float: right" index="">
           <template slot="title">
-            <i class="el-icon-video-play" style="margin-right: 0px"></i
-            ><span>帮助</span></template
-          >
+            <i class="el-icon-video-play" style="margin-right: 0px"></i><span>帮助</span></template>
           <el-menu-item style="width: 139px">
             <li class="menu-item-li" @click="centerDialogVisible = true">
               视频教程
-              <i class="el-icon-video-play" style="margin-right: 0px"></i></li
-          ></el-menu-item>
-          <el-menu-item
-            ><li class="menuitemli" @click="goviponltd">
+              <i class="el-icon-video-play" style="margin-right: 0px"></i>
+            </li>
+          </el-menu-item>
+          <el-menu-item>
+            <li class="menuitemli" @click="goviponltd">
               操作文档
-            </li></el-menu-item
-          >
-          <el-menu-item @click="gopeseeazfwl"
-            ><li class="menuitemli">常见问题</li></el-menu-item
-          >
+            </li>
+          </el-menu-item>
+          <el-menu-item @click="gopeseeazfwl">
+            <li class="menuitemli">常见问题</li>
+          </el-menu-item>
         </el-submenu>
 
-        <el-menu-item
-          style="float: right; display: flex; align-items: center"
-          index="/Requirement"
-        >
-          <div
-            style="
+        <el-menu-item style="float: right; display: flex; align-items: center" index="/Requirement">
+          <div style="
               width: 148px;
               height: 35px;
               padding: 1px;
               background: linear-gradient(to bottom, #796cf3, #df60f7);
               border-radius: 18px;
               display: flex;
-            "
-          >
-            <button
-              style="
+            ">
+            <button style="
                 width: 100%;
                 height: 100%;
                 border-radius: 18px;
@@ -211,8 +144,7 @@
                 color: #796cf3;
                 border: none;
                 cursor: pointer;
-              "
-            >
+              ">
               <img src="@/assets/images/pens.png" alt="" />
               <span style="margin-left: 10px">提交拍摄需求</span>
             </button>
@@ -221,21 +153,9 @@
       </el-menu>
     </div>
 
-    <el-dialog
-      :visible="dialog"
-      :show-close="false"
-      :close-on-press-escape="false"
-      :close-on-click-modal="false"
-      :lock-scroll="false"
-      :fullscreen="true"
-      center
-      class="weComDialog"
-      height="100%"
-      width="100%"
-    >
-      <a
-        href="javascript:;;"
-        style="
+    <!-- <el-dialog :visible="dialog" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false"
+      :lock-scroll="false" :fullscreen="true" center class="weComDialog" height="100%" width="100%">
+      <a href="javascript:;;" style="
           padding: 22px 0 0 30px;
           position: fixed;
           left: 0;
@@ -245,9 +165,7 @@
           justify-content: center;
           align-items: center;
           width: 180px;
-        "
-        ><img :src="logoWhite" style="width: 100%; height: 100%" alt=""
-      /></a>
+        "><img :src="logoWhite" style="width: 100%; height: 100%" alt="" /></a>
       <div class="content">
         <div>
           <p class="head">
@@ -261,16 +179,13 @@
                 <div class="weChatcode">
                   <img :src="contactMeQr" alt="" />
                 </div>
-                <div
-                  style="
+                <div style="
                     text-align: center;
                     color: #ffffff;
                     padding-top: 24px;
                     font-size: 16px;
-                  "
-                >
-                  扫码添加后，等待<span style="color: #fffa00">3-5s</span
-                  >即可自动跳转
+                  ">
+                  扫码添加后，等待<span style="color: #fffa00">3-5s</span>即可自动跳转
                 </div>
               </div>
               <div>
@@ -291,19 +206,10 @@
           </div>
         </div>
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
     <el-dialog :visible.sync="centerDialogVisible" width="50%" center>
-      <video
-        width="100%"
-        height="100%"
-        autoplay
-        controls
-        preload="none"
-        ref="myVideo"
-        @play="onPlay"
-        @pause="onPause"
-      >
+      <video width="100%" height="100%" autoplay controls preload="none" ref="myVideo" @play="onPlay" @pause="onPause">
         <source :src="videoUrl" type="video/mp4" />
       </video>
       <div class="video_img" @click="videoplay" v-show="!video_img"></div>
@@ -547,7 +453,9 @@ export default {
               .classList.remove("el-popup-parent--hidden");
           }
           if (res.code == 1) {
-            localStorage.setItem("isBindEnterpriseQr", res.data.pop_ups);
+            //取消推广页显示
+            localStorage.setItem("isBindEnterpriseQr", 0);
+            // localStorage.setItem("isBindEnterpriseQr", res.data.pop_ups);
             localStorage.setItem("serviceInfoQrCode", res.data.qr_code);
             this.contactMeQr = res.data.qr_code;
           }
@@ -593,7 +501,7 @@ export default {
           }
           this.reload();
         })
-        .catch((err) => {});
+        .catch((err) => { });
     },
     //检测是否添加企业微信
     handleCheckEnterpriseQr() {
@@ -693,17 +601,21 @@ export default {
   align-items: center;
   padding: 0 12px;
 }
+
 .menu-item-li:hover {
   background: #f4f2ff !important;
   color: #796cf3;
 }
+
 .menu-item-li:hover i {
   color: #796cf3;
 }
+
 .menuitemli {
   text-align: left;
   padding: 0 12px;
 }
+
 .menuitemli:hover {
   background: #f4f2ff !important;
   color: #796cf3;
@@ -716,46 +628,52 @@ export default {
 
 <style lang="less">
 .menu_popover {
-  background: linear-gradient(
-    180deg,
-    #f2f0fe 0%,
-    #ffffff 43%,
-    #ffffff 100%
-  ) !important;
+  background: linear-gradient(180deg,
+      #f2f0fe 0%,
+      #ffffff 43%,
+      #ffffff 100%) !important;
   padding: 24px !important;
   margin-top: -6px !important;
+
   .el-rate__icon {
     margin-right: 0 !important;
   }
+
   .avatar_userInfo {
     display: flex;
+
     .avatar {
       width: 114px;
       height: 114px;
       background: #ffffff;
       margin-right: 20px;
       border-radius: 50%;
+
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
     }
+
     ul li {
       font-size: 14px;
       color: #666666;
       line-height: 20px;
       padding-bottom: 12px;
       display: flex;
+
       span {
         font-weight: 600;
         color: #333333;
       }
+
       &:last-child {
         padding-bottom: 0;
       }
     }
   }
+
   .service_info {
     display: flex;
     width: 256px;
@@ -765,6 +683,7 @@ export default {
     border: 1px solid #eeeeee;
     padding: 15px 20px;
     margin-top: 25px;
+
     .service_qr {
       width: 98px;
       height: 98px;
@@ -774,6 +693,7 @@ export default {
       margin-right: 28px;
       position: relative;
       padding: 5px;
+
       &:before {
         content: "";
         width: 1px;
@@ -782,12 +702,14 @@ export default {
         position: absolute;
         right: -14px;
       }
+
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
     }
+
     .service_qr_description {
       font-size: 12px;
       color: #333333;
@@ -796,9 +718,11 @@ export default {
       margin-right: 28px;
       margin-top: 6px;
     }
+
     ul {
       padding-top: 3px;
     }
+
     li {
       font-size: 14px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -808,9 +732,11 @@ export default {
       padding-bottom: 10px;
       display: flex;
       align-items: center;
+
       &:last-child {
         padding-bottom: 0;
       }
+
       i {
         width: 24px;
         height: 24px;
@@ -825,18 +751,23 @@ export default {
     }
   }
 }
+
 .el-popup-parent--hidden {
   overflow: hidden;
 }
+
 .weComDialog {
   border-radius: 0;
+
   .el-dialog__header {
     display: none;
   }
+
   .el-dialog__body {
     height: 100%;
     padding: 0 !important;
   }
+
   .el-dialog.is-fullscreen {
     border-radius: 0 !important;
     background: #1d255a;
@@ -844,12 +775,14 @@ export default {
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }
+
   .content {
     background: #1d255a;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+
     .head {
       font-size: 32px;
       font-family: GothamHTF, "微软雅黑", Verdana, Arial, Helvetica, sans-serif;
@@ -858,10 +791,12 @@ export default {
       line-height: 34px;
       padding-bottom: 50px;
       text-align: center;
+
       span {
         color: #ff9c17;
       }
     }
+
     .body {
       max-width: 890px;
       background-image: url("../../assets/images/body_bg.png");
@@ -872,13 +807,16 @@ export default {
       justify-content: space-between;
       align-items: center;
       padding: 0 40px 0 70px;
+
       .weCom_img {
         padding-left: 19px;
+
         img {
           width: 100%;
           height: 100%;
         }
       }
+
       .weChatcode {
         box-sizing: border-box;
         width: 354px;
@@ -886,18 +824,21 @@ export default {
         border-radius: 8px;
         border: 2px solid rgba(255, 255, 255, 0.17);
         padding: 17px;
+
         img {
           width: 100%;
           height: 100%;
           border-radius: 10px;
         }
       }
+
       .weCom_description {
         background-image: url("../../assets/images/weCom_bg.png");
         background-repeat: no-repeat;
         background-size: 100% 100%;
         width: 457px;
         height: 312px;
+
         p {
           text-align: center;
           font-size: 22px;
@@ -908,9 +849,11 @@ export default {
           margin: 0 48px 0 69px;
           border-bottom: 1px dashed #ffffff;
         }
+
         ul {
           padding-top: 23px;
           padding-left: 103px;
+
           li {
             font-size: 16px;
             font-weight: 400;
@@ -918,9 +861,11 @@ export default {
             line-height: 22px;
             padding-bottom: 12px;
             position: relative;
+
             span {
               color: rgba(255, 250, 0, 1);
             }
+
             &:before {
               content: url("../../assets/images/right.png");
               width: 16px;
@@ -933,6 +878,7 @@ export default {
           }
         }
       }
+
       .title {
         font-size: 24px;
         font-weight: 600;
@@ -941,6 +887,7 @@ export default {
         padding-bottom: 8px;
         text-align: center;
       }
+
       .description {
         font-size: 14px;
         color: #ffffff;
@@ -951,17 +898,20 @@ export default {
     }
   }
 }
+
 .icon_hover_style:hover {
   i {
     color: #333333 !important;
     font-weight: bold;
   }
 }
+
 .el-menu-demo .el-badge__content {
   height: 14px;
   line-height: 14px;
   font-weight: normal;
 }
+
 .el-menu-demo .el-badge__content.is-fixed {
   top: 25px;
   right: 0px;
@@ -971,11 +921,13 @@ export default {
   line-height: 20px;
   padding: 0;
 }
+
 .el-menu--popup-bottom-start {
   margin-top: 0;
 }
+
 .el-menu--horizontal .el-menu .el-menu-item.is-active,
-.el-menu--horizontal .el-menu .el-submenu.is-active > .el-submenu__title {
+.el-menu--horizontal .el-menu .el-submenu.is-active>.el-submenu__title {
   background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%) !important;
   border-radius: 6px;
   font-size: 14px;
@@ -988,25 +940,30 @@ export default {
 .el-menu--horizontal .el-menu .el-menu-item {
   background: none !important;
 }
-.el-menu--horizontal > .el-submenu.is-active .el-submenu__title,
-.el-menu--horizontal > .el-menu-item.is-active,
+
+.el-menu--horizontal>.el-submenu.is-active .el-submenu__title,
+.el-menu--horizontal>.el-menu-item.is-active,
 .el-menu.el-menu--horizontal {
   border-bottom: 1px solid #eeeeee;
 }
-.el-menu--horizontal > .el-menu-item.is-active {
+
+.el-menu--horizontal>.el-menu-item.is-active {
   border-bottom: none !important;
 }
+
 .el-menu-item {
   transition: none !important;
   padding: 0 0 !important;
 }
+
 .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
 .el-menu--horizontal .el-menu-item:not(.is-disabled):hover,
-.el-menu--horizontal > .el-menu-item.is-active {
+.el-menu--horizontal>.el-menu-item.is-active {
   color: #333333 !important;
   font-weight: bold;
   background: none !important;
 }
+
 .el-menu--horizontal .el-menu .el-menu-item:hover,
 .el-menu--horizontal .el-menu .el-menu-item:focus,
 .el-menu--horizontal .el-menu .el-menu-item:active {
@@ -1017,12 +974,14 @@ export default {
   font-weight: 400;
   color: #ffffff !important;
 }
-.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
+
+.el-menu--horizontal>.el-submenu .el-submenu__title:hover {
   background: none !important;
 }
-.el-menu--horizontal > .el-submenu .el-submenu__title,
+
+.el-menu--horizontal>.el-submenu .el-submenu__title,
 .el-submenu.is-active .el-submenu__title,
-.el-menu--horizontal > .el-menu-item {
+.el-menu--horizontal>.el-menu-item {
   height: 66px !important;
   line-height: 66px !important;
 }
@@ -1035,6 +994,7 @@ export default {
   min-width: 100px !important;
   text-align: center;
 }
+
 .el-menu--horizontal {
   //background: linear-gradient(233deg, #FFA373 0%, #EA5EF7 48%, #776CF3 100%);
   background: #ffffff;
@@ -1048,6 +1008,7 @@ export default {
   right: 0;
   top: 0;
   z-index: 999;
+
   .user_info_box {
     display: inline-flex;
     width: 36px;
@@ -1055,16 +1016,19 @@ export default {
     border: 1px solid #ffffff;
     border-radius: 50%;
     overflow: hidden;
+
     img {
       width: 100%;
       height: auto;
     }
   }
-  > ul {
+
+  >ul {
     //max-width: 1200px;
     margin: 0 10px;
     align-items: center;
     border-bottom: none;
+
     a {
       float: left;
       height: 66px;
@@ -1073,44 +1037,51 @@ export default {
       text-decoration: none;
       color: #ffffff;
     }
+
     li {
       font-family: PingFangSC-Semibold, PingFang SC;
       line-height: 66px;
       height: 66px;
+
       .login_btn {
         color: #ffffff;
-        background: #001238
-          linear-gradient(233deg, #ffa373 0%, #ea5ef7 48%, #776cf3 100%);
+        background: #001238 linear-gradient(233deg, #ffa373 0%, #ea5ef7 48%, #776cf3 100%);
         padding: 10px 28px;
         border: none;
       }
     }
   }
 }
+
 @media screen and (max-width: 600px) {
-  .header > ul {
+  .header>ul {
     margin: 10px;
     padding-bottom: 10px;
     margin-bottom: 0;
   }
-  .header > ul li {
+
+  .header>ul li {
     height: 40px !important;
     line-height: 40px !important;
   }
-  .header > ul a {
+
+  .header>ul a {
     height: 40px !important;
     line-height: 40px !important;
     padding: 0 10px !important;
   }
+
   .el-menu-item {
     padding: 0 6px !important;
   }
-  .el-menu--horizontal > .el-submenu .el-submenu__title,
+
+  .el-menu--horizontal>.el-submenu .el-submenu__title,
   .el-submenu.is-active .el-submenu__title,
-  .el-menu--horizontal > .el-menu-item {
+  .el-menu--horizontal>.el-menu-item {
     height: 40px !important;
     line-height: 40px !important;
   }
+
   .el-menu.el-menu--horizontal {
     border-bottom: none;
   }

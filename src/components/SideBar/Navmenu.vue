@@ -250,7 +250,7 @@ export default {
         customer_report: "",
         pay_order: "",
         qr_code: "",
-        service_avatar: require("../../assets/images/customer_header.png"),
+        service_avatar: require('../../assets/images/customer_header.png'),
         service_name: "",
       },
       contactMeQr: "",
@@ -364,6 +364,8 @@ export default {
     } else if (this.token) {
       this.handleAddWeCom();
     }
+
+    //渲染客服信息
     if (JSON.parse(localStorage.getItem("serviceInfoList"))) {
       this.serviceInfoList = JSON.parse(
         localStorage.getItem("serviceInfoList")
@@ -422,6 +424,7 @@ export default {
       })
         .then((res) => {
           if (res.code == 1) {
+            console.log(res.data)
             this.serviceInfoList = res.data;
             localStorage.setItem("serviceInfoList", JSON.stringify(res.data));
           }
@@ -432,37 +435,37 @@ export default {
     },
     //引导添加企业微信
     handleAddWeCom() {
-      let _this = this;
-      if (JSON.parse(localStorage.getItem("userInfo"))) {
-        _this.userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
-      }
-      addWeCom({
-        id: _this.userId,
-      })
-        .then((res) => {
-          if (res.code == 1 && res.data.pop_ups == 1) {
-            _this.dialog = true;
-            _this.handleCheckEnterpriseQr();
-            document
-              .querySelector("body,html")
-              .classList.add("el-popup-parent--hidden");
-          } else {
-            _this.dialog = false;
-            document
-              .querySelector("body,html")
-              .classList.remove("el-popup-parent--hidden");
-          }
-          if (res.code == 1) {
-            //取消推广页显示
-            localStorage.setItem("isBindEnterpriseQr", 0);
-            // localStorage.setItem("isBindEnterpriseQr", res.data.pop_ups);
-            localStorage.setItem("serviceInfoQrCode", res.data.qr_code);
-            this.contactMeQr = res.data.qr_code;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      //取消推广页显示
+      localStorage.setItem("isBindEnterpriseQr", 0);
+      // let _this = this;
+      // if (JSON.parse(localStorage.getItem("userInfo"))) {
+      //   _this.userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
+      // }
+      // addWeCom({
+      //   id: _this.userId,
+      // })
+      //   .then((res) => {
+      //     if (res.code == 1 && res.data.pop_ups == 1) {
+      //       _this.dialog = true;
+      //       _this.handleCheckEnterpriseQr();
+      //       document
+      //         .querySelector("body,html")
+      //         .classList.add("el-popup-parent--hidden");
+      //     } else {
+      //       _this.dialog = false;
+      //       document
+      //         .querySelector("body,html")
+      //         .classList.remove("el-popup-parent--hidden");
+      //     }
+      //     if (res.code == 1) {
+      //       localStorage.setItem("isBindEnterpriseQr", res.data.pop_ups);
+      //       localStorage.setItem("serviceInfoQrCode", res.data.qr_code);
+      //       this.contactMeQr = res.data.qr_code;
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     },
     //获取消息条数
     getMessage() {
@@ -504,36 +507,36 @@ export default {
         .catch((err) => { });
     },
     //检测是否添加企业微信
-    handleCheckEnterpriseQr() {
-      var timer = 0;
-      let _this = this;
-      if (JSON.parse(localStorage.getItem("userInfo"))) {
-        _this.userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
-      }
-      _this.checkEnterpriseQr = setInterval(() => {
-        checkEnterpriseQr({
-          id: _this.userId,
-        })
-          .then((res) => {
-            if (res.code === 1 && res.data.static === 0) {
-              //请等待扫码
-              timer++;
-              _this.dialog = true;
-            } else if (res.code === 1 && res.data.static === 1) {
-              //扫码成功
-              //渲染绑定手机页面
-              _this.dialog = false;
-              this.getServiceInfo();
-              //清除定时脚本
-              clearInterval(_this.checkEnterpriseQr);
-              localStorage.setItem("isBindEnterpriseQr", 0);
-            }
-          })
-          .catch((err) => {
-            this.$message.error(err.msg);
-          });
-      }, 3000);
-    },
+    // handleCheckEnterpriseQr() {
+    //   var timer = 0;
+    //   let _this = this;
+    //   if (JSON.parse(localStorage.getItem("userInfo"))) {
+    //     _this.userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
+    //   }
+    //   _this.checkEnterpriseQr = setInterval(() => {
+    //     checkEnterpriseQr({
+    //       id: _this.userId,
+    //     })
+    //       .then((res) => {
+    //         if (res.code === 1 && res.data.static === 0) {
+    //           //请等待扫码
+    //           timer++;
+    //           _this.dialog = true;
+    //         } else if (res.code === 1 && res.data.static === 1) {
+    //           //扫码成功
+    //           //渲染绑定手机页面
+    //           _this.dialog = false;
+    //           this.getServiceInfo();
+    //           //清除定时脚本
+    //           clearInterval(_this.checkEnterpriseQr);
+    //           localStorage.setItem("isBindEnterpriseQr", 0);
+    //         }
+    //       })
+    //       .catch((err) => {
+    //         this.$message.error(err.msg);
+    //       });
+    //   }, 3000);
+    // },
     //获取公共配置信息
     getContent() {
       getConfig()

@@ -1,18 +1,23 @@
 export default {
-    namespaced:true,
-    state:{
-        isFalg:true
+    namespaced: true,
+    state: {
+        isFalg: true,
+        RequirementList: []
     },
-    mutations:{
-        setIsFalg(state,payload){
+    mutations: {
+        setIsFalg(state, payload) {
             state.isFalg = payload;
         },
+        //需求列表
+        setRequirementList(state, payload) {
+            state.RequirementList = payload
+        }
 
     },
-    actions:{
+    actions: {
 
     },
-    getters:{
+    getters: {
 
     }
 }

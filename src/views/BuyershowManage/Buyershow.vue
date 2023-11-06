@@ -7,8 +7,9 @@
           v-model="searchforval"
           placeholder="输入产品名称/品类/红人编号"
           class="inp"
+          @keyup.enter.native="RenderingData"
         ></el-input>
-        <el-button class="searchforbtn">搜索</el-button>
+        <el-button class="searchforbtn" @click="RenderingData">搜索</el-button>
       </div>
 
       <!-- 筛选 -->
@@ -18,7 +19,7 @@
             <span>达人性别</span>
             <el-radio-group
               v-model="genderValue"
-              @change="handlerSearchList('reset')"
+              @change="handlerSearchList('genderdata', genderValue)"
             >
               <el-radio-button label="">全部</el-radio-button>
               <el-radio-button label="male">男性</el-radio-button>
@@ -29,7 +30,7 @@
             <span>产品品类</span>
             <el-radio-group
               v-model="categoryValue"
-              @change="handlerSearchList('reset')"
+              @change="handlerSearchList('category_id', categoryValue)"
             >
               <el-radio-button label="">全部</el-radio-button>
               <el-radio-button
@@ -46,7 +47,7 @@
             <span>主题专区</span>
             <el-radio-group
               v-model="themeValue"
-              @change="handlerSearchList('reset')"
+              @change="handlerSearchList('theme_id', themeValue)"
             >
               <el-radio-button label=""> 全部 </el-radio-button>
               <el-radio-button
@@ -73,7 +74,11 @@
           <div class="seek_div_span">找到 {{ total }} 个</div>
           <div class="seek_divd">
             <span>价格 ≤</span>
-            <el-input v-model="priceval" class="priceinp"></el-input>
+            <el-input
+              v-model="priceval"
+              class="priceinp"
+              @change="RenderingData"
+            ></el-input>
             <span>元</span>
           </div>
         </div>
@@ -82,7 +87,11 @@
       <!-- 分类产品 -->
       <div class="product">
         <ul class="product_ul">
-          <li class="product_li" v-for="item in datalist" :key="item.id">
+          <li
+            class="product_li"
+            v-for="(item, index) in datalist"
+            :key="item.id"
+          >
             <div class="product_li_img"><img :src="item.image" /></div>
             <div class="product_list">
               <div class="product_list_div1">
@@ -146,9 +155,13 @@
               ></div>
 
               <ul class="product_list_videos">
-                <li v-for="item in item.videos" :key="item.id">
+                <li
+                  v-for="(items, indexviedeos) in item.videos"
+                  :key="items.id"
+                  @click="openVideos(item.videos, indexviedeos)"
+                >
                   <i class="el-icon-video-play" style="font-size: 14px"></i>
-                  <span> {{ item.desc }}</span>
+                  <span> {{ items.desc }}</span>
                 </li>
 
                 <li
@@ -170,10 +183,14 @@
                 </li>
               </ul>
             </div>
-            <div class="product_btn">
+            <div
+              @click="addlist(item, index)"
+              :class="{ product_btn: true }"
+              ref="addbtndom"
+            >
               <span class="icon">+</span>
               <i class="el-icon-shopping-cart-2"></i>
-              <span>选择</span>
+              <span class="test1">选择</span>
             </div>
           </li>
         </ul>
@@ -194,6 +211,41 @@
           </el-pagination></div
       ></template>
     </div>
+
+    <el-dialog
+      :title="videoslist[videoslistindex]?.desc"
+      :visible.sync="dialogVisible"
+      width="880px"
+      :close-on-click-modal="false"
+    >
+      <div class="eldialogVisble">
+        <div class="leftVis">
+          <video
+            autoplay
+            controls
+            preload="none"
+            ref="myVideo"
+            @play="video_img = true"
+            @pause="video_img = false"
+          >
+            <source :src="videoslist[videoslistindex]?.file" type="video/mp4" />
+          </video>
+          <div class="video_img" @click="videoplay" v-show="!video_img"></div>
+        </div>
+        <div class="rigthlist">
+          <p class="rigthlist_p">作品案例</p>
+          <p
+            v-for="(item, index) in videoslist"
+            :key="item.id"
+            :class="{ videoslistcss: item.videoslistcss, falg: true }"
+            @click="SwitchVideo(videoslist, index)"
+          >
+            <i class="el-icon-video-play" style="font-size: 16px"></i>
+            {{ item.desc }}
+          </p>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -206,6 +258,7 @@ import {
   getShootRequire,
   needsSelectInfluencer,
 } from "@/api";
+import store from "@/store";
 
 export default {
   name: "buyershow",
@@ -222,6 +275,12 @@ export default {
       priceval: "",
       datalist: [],
       currentPage: 1,
+      pageSize: 12,
+      dialogVisible: false,
+      video_img: true,
+      videoslist: [],
+      videoslistindex: 0,
+      requirementlist: [],
     };
   },
   components: {},
@@ -233,7 +292,7 @@ export default {
     )[0].childNodes[0].nodeValue = "跳转";
     this.handlerGetCategory("influencer");
     this.handlerGetCategory("theme_area");
-    this.getdata();
+    this.RenderingData();
   },
   beforeUpdate() {},
   methods: {
@@ -260,22 +319,58 @@ export default {
     },
 
     //搜索列表
-    handlerSearchList(value) {
+    handlerSearchList(type, value) {
       console.log(value);
+      switch (type) {
+        case "genderdata":
+          this.genderValue = value;
+          break;
+        case "category_id":
+          this.categoryValue = value;
+          break;
+        case "theme_id":
+          this.themeValue = value;
+          break;
+        default:
+          break;
+      }
+      this.RenderingData();
+    },
+
+    //渲染数据
+    RenderingData() {
+      this.getdata(
+        this.currentPage,
+        this.pageSize,
+        this.genderValue,
+        this.categoryValue,
+        this.themeValue,
+        this.priceval,
+        this.searchforval
+      );
     },
 
     //获取数据
-    getdata() {
+    getdata(
+      page,
+      pageSize,
+      genderdata,
+      categoryValue,
+      theme_id,
+      price,
+      keyword
+    ) {
       let data = {
-        keyword: "",
-        genderdata: "",
+        keyword: keyword,
+        genderdata: genderdata,
         type: [],
-        price: "",
-        category_id: "",
-        page: 1,
-        pageSize: 12,
+        price: price,
+        category_id: categoryValue,
+        page: page,
+        pageSize: pageSize,
         order: "",
         orderType: "",
+        theme_id: theme_id,
       };
       getSearchList(data)
         .then((res) => {
@@ -283,7 +378,8 @@ export default {
             this.total = res.data.total;
             this.per_page = res.data.per_page;
             this.datalist = res.data.data;
-            console.log(this.datalist);
+            this.currentPage = res.data.current_page;
+            // console.log(this.datalist);
           }
         })
         .catch((err) => {
@@ -291,20 +387,70 @@ export default {
         });
     },
 
+    //打开视频
+    openVideos(videos, index) {
+      this.dialogVisible = true;
+      this.videoslistindex = index;
+      videos.forEach((item) => (item.videoslistcss = false));
+      this.videoslist = videos;
+      this.videoslist[index].videoslistcss = true;
+    },
+
+    //切换视频
+    SwitchVideo(videos, index) {
+      const video = this.$refs.myVideo;
+      video.pause();
+      video.load();
+      video.play();
+      this.videoslistindex = index;
+      videos.forEach((item) => (item.videoslistcss = false));
+      this.videoslist = videos;
+      this.videoslist[index].videoslistcss = true;
+    },
+
+    //添加需求
+    addlist(item, index) {
+      this.$refs.addbtndom[index].classList.add("addlistbj");
+      this.$refs.addbtndom[index].querySelector(".test1").textContent =
+        "已选择";
+      this.requirementlist.push(item);
+
+      store.commit("Index/setRequirementList", this.requirementlist);
+    },
+
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pageSize = val;
+      this.RenderingData();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.RenderingData();
+    },
+
+    //播放视频
+    videoplay() {
+      const video = this.$refs.myVideo;
+      video.play();
+      this.video_img = true;
     },
   },
-  watch: {},
+  watch: {
+    dialogVisible(newval) {
+      if (newval == false) {
+        const video = this.$refs.myVideo;
+        video.pause();
+        video.load();
+        video.play();
+      }
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
 #buyershow {
   background: #f7f8fa;
+  position: relative;
 
   .banxin {
     width: 1200px;
@@ -407,8 +553,6 @@ export default {
         margin-top: 20px;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
-
         .product_li {
           height: 448px;
 
@@ -418,6 +562,7 @@ export default {
           background: white;
           overflow: hidden;
           position: relative;
+          margin-left: 20px;
 
           .product_li_img {
             width: 100%;
@@ -571,6 +716,10 @@ export default {
             }
           }
 
+          .addlistbj {
+            background: #ccc;
+            transition: all 0.3s;
+          }
           .product_btn:hover .icon {
             opacity: 1;
           }
@@ -587,6 +736,70 @@ export default {
       justify-content: center;
       align-items: center;
       margin-bottom: 40px;
+    }
+  }
+
+  .eldialogVisble {
+    display: flex;
+    .leftVis {
+      width: 650px;
+      height: 366px;
+      position: relative;
+      video {
+        width: 100%;
+        height: 100%;
+      }
+
+      .video_img:after {
+        box-sizing: border-box;
+        font-family: element-icons;
+        position: absolute;
+        content: "\e791";
+        width: 60px;
+        height: 60px;
+        font-size: 62px;
+        background: #fff;
+        box-shadow: 0 6px 10px 0 rgb(0 0 0 / 7%);
+        border: 2px solid #fff;
+        border-radius: 50%;
+        left: 50%;
+        top: 50%;
+        display: flex;
+        z-index: 99;
+        justify-content: center;
+        align-items: center;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+      }
+    }
+    .rigthlist {
+      width: 156px;
+      height: 366px;
+      margin-left: 34px;
+      overflow: auto;
+      .rigthlist_p {
+        padding: 9px 0 9px 14px;
+        font-family: PingFangSC-Semibold, PingFang SC;
+        font-weight: 600;
+        color: #333333;
+      }
+      p {
+        white-space: nowrap;
+        width: 130px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        margin-bottom: 17px;
+      }
+      .videoslistcss {
+        color: #d161f6;
+      }
+      .falg {
+        transition: all 0.5s !important;
+      }
+      .falg:hover {
+        color: #d161f6 !important;
+      }
     }
   }
 }
@@ -648,6 +861,10 @@ export default {
 ::v-deep(.el-pagination__jump) {
   margin-left: 0;
 }
+
+::v-deep(.el-radio-button:focus:not(.is-focus):not(:active):not(.is-disabled)) {
+  box-shadow: none;
+}
 </style>
 
 <style>
@@ -657,5 +874,26 @@ export default {
 
 .el-input__inner:hover {
   border: 1px solid #d161f6 !important;
+}
+
+/* 定义滚动条的宽度 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* 定义滚动条轨道的样式 */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* 定义滚动条滑块的样式 */
+::-webkit-scrollbar-thumb {
+  background: #cecece;
+  border-radius: 10px;
+}
+
+/* 定义滚动条滑块在鼠标悬停时的样式 */
+::-webkit-scrollbar-thumb:hover {
+  background: #bdbdbd;
 }
 </style>

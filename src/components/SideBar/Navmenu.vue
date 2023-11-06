@@ -1,27 +1,59 @@
 <template>
   <div>
     <div class="header">
-      <el-menu :default-active="$route.path" class="el-menu-demo" id="menu_box" router mode="horizontal"
-        active-text-color="#333333" text-color="#666666">
-        <a href="/" style="
+      <el-menu
+        :default-active="$route.path"
+        class="el-menu-demo"
+        id="menu_box"
+        router
+        mode="horizontal"
+        active-text-color="#333333"
+        text-color="#666666"
+      >
+        <a
+          href="/"
+          style="
             display: flex;
             justify-content: center;
             align-items: center;
             width: 180px;
             padding: 0 20px;
-          "><img :src="logoImg" style="width: 100%; height: 100%" alt="" /></a>
+          "
+          ><img :src="logoImg" style="width: 100%; height: 100%" alt=""
+        /></a>
         <el-menu-item index="/" style="margin: 0 20px">首页</el-menu-item>
-        <el-menu-item index="/videohome" style="margin: 0 20px">视频服务站</el-menu-item>
-        <el-menu-item index="/buyershow" style="margin: 0 20px">拍买家秀</el-menu-item>
-        <el-menu-item index="/webDeal" style="margin: 0 20px">海外Deal站</el-menu-item>
-        <el-menu-item style="margin: 0 20px"><a target="_blank" style="width: 100%"
-            @click="goVipon">站外推广</a></el-menu-item>
+        <el-menu-item index="/videohome" style="margin: 0 20px"
+          >视频服务站</el-menu-item
+        >
+        <el-menu-item index="/buyershow" style="margin: 0 20px"
+          >拍买家秀</el-menu-item
+        >
+        <el-menu-item index="/webDeal" style="margin: 0 20px"
+          >海外Deal站</el-menu-item
+        >
+        <el-menu-item style="margin: 0 20px"
+          ><a target="_blank" style="width: 100%" @click="goVipon"
+            >站外推广</a
+          ></el-menu-item
+        >
         <!-- <el-menu-item index="/chatgpt">ChatGPT</el-menu-item> -->
-        <el-menu-item v-if="!isLogin" style="float: right; margin: 0 20px" index="/login"><el-button class="login_btn"
-            round>登陆/注册</el-button></el-menu-item>
-        <el-submenu v-else index="/manage" style="float: right; border-radius: 10px">
-          <template slot="title"><span class="user_info_box"><img :src="avatar" width="36px" height="36px"
-                alt="" /></span></template>
+        <el-menu-item
+          v-if="!isLogin"
+          style="float: right; margin: 0 20px"
+          index="/login"
+          ><el-button class="login_btn" round
+            >登陆/注册</el-button
+          ></el-menu-item
+        >
+        <el-submenu
+          v-else
+          index="/manage"
+          style="float: right; border-radius: 10px"
+        >
+          <template slot="title"
+            ><span class="user_info_box"
+              ><img :src="avatar" width="36px" height="36px" alt="" /></span
+          ></template>
           <div style="padding: 0 6px">
             <el-menu-item index="/manage/order">订单信息</el-menu-item>
             <el-menu-item index="/manage/payment">支付记录</el-menu-item>
@@ -30,43 +62,57 @@
           </div>
         </el-submenu>
 
-        <el-menu-item class="icon_hover_style" style="float: right; padding: 0; margin: 0 10px 0 0px"
-          index="/manage/order" @click="changeIsMessage">
-          <el-badge :value="messageCount" :hidden="messageCount == 0" class="item">
-            <i class="el-icon-chat-dot-round" style="color: #666666; font-size: 18px; margin-right: 3px"></i>
+        <el-menu-item
+          class="icon_hover_style"
+          style="float: right; padding: 0; margin: 0 10px 0 0px"
+          index="/manage/order"
+          @click="changeIsMessage"
+        >
+          <el-badge
+            :value="messageCount"
+            :hidden="messageCount == 0"
+            class="item"
+          >
+            <i
+              class="el-icon-chat-dot-round"
+              style="color: #666666; font-size: 18px; margin-right: 3px"
+            ></i>
             <span>消息</span>
           </el-badge>
         </el-menu-item>
 
-        <!-- <el-menu-item style="float: right"
-          ><a
-            href="https://peseeazfwl.feishu.cn/wiki/wikcnMyh2Kpl0beLaynqfWT3Vuc"
-            target="_blank"
-            >新手指南</a
-          ></el-menu-item
-        > -->
-        <!-- <el-menu-item style="float: right" @click="handlerClick"
-          >联系我们</el-menu-item
-        > -->
-
-        <el-menu-item v-if="token" style="
+        <el-menu-item
+          v-if="token"
+          style="
             float: right;
             padding-left: 0;
             width: 100px;
             margin-right: 20px;
-          ">
-          <el-popover placement="bottom" popper-class="menu_popover" trigger="click">
-            <div slot="reference" style="
+          "
+        >
+          <el-popover
+            placement="bottom"
+            popper-class="menu_popover"
+            trigger="click"
+          >
+            <div
+              slot="reference"
+              style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
-              ">
-              <img style="
+              "
+            >
+              <img
+                style="
                   width: 30px;
                   height: 30px;
                   margin-right: 8px;
                   border-radius: 50%;
-                " :src="serviceInfoList.service_avatar" alt="" />
+                "
+                :src="serviceInfoList.service_avatar"
+                alt=""
+              />
               <span style="padding-top: 1px">VIP服务</span>
             </div>
             <div>
@@ -82,8 +128,11 @@
                     交付订单：<span>{{ serviceInfoList.pay_order }}</span>
                   </li>
                   <li>
-                    客户评价：<el-rate v-model="serviceInfoList.customer_reviews" disabled
-                      :colors="['#796CF3', '#796CF3', '#796CF3']"></el-rate>
+                    客户评价：<el-rate
+                      v-model="serviceInfoList.customer_reviews"
+                      disabled
+                      :colors="['#796CF3', '#796CF3', '#796CF3']"
+                    ></el-rate>
                   </li>
                   <li>
                     客户投诉：<span>{{ serviceInfoList.customer_report }}</span>
@@ -110,7 +159,9 @@
 
         <el-submenu style="float: right" index="">
           <template slot="title">
-            <i class="el-icon-video-play" style="margin-right: 0px"></i><span>帮助</span></template>
+            <i class="el-icon-video-play" style="margin-right: 0px"></i
+            ><span>帮助</span></template
+          >
           <el-menu-item style="width: 139px">
             <li class="menu-item-li" @click="centerDialogVisible = true">
               视频教程
@@ -118,98 +169,42 @@
             </li>
           </el-menu-item>
           <el-menu-item>
-            <li class="menuitemli" @click="goviponltd">
-              操作文档
-            </li>
+            <li class="menuitemli" @click="goviponltd">操作文档</li>
           </el-menu-item>
           <el-menu-item @click="gopeseeazfwl">
             <li class="menuitemli">常见问题</li>
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item style="float: right; display: flex; align-items: center" index="/Requirement">
-          <div style="
-              width: 148px;
-              height: 35px;
-              padding: 1px;
-              background: linear-gradient(to bottom, #796cf3, #df60f7);
-              border-radius: 18px;
-              display: flex;
-            ">
-            <button style="
-                width: 100%;
-                height: 100%;
-                border-radius: 18px;
-                background: #fff;
-                color: #796cf3;
-                border: none;
-                cursor: pointer;
-              ">
-              <img src="@/assets/images/pens.png" alt="" />
-              <span style="margin-left: 10px">提交拍摄需求</span>
-            </button>
-          </div>
+        <el-menu-item
+          index="/Requirement"
+          style="float: right; display: flex; align-items: center"
+        >
+          <el-popover placement="top-start" width="340" trigger="hover">
+            <div class="elmenuitembox">
+              <img src="../../assets/images/empty_img.png" alt="" />
+              <p>每个视频需求可选0～5个意向红人</p>
+              <p>未选择时，将由平台为您推荐最合适的红人</p>
+            </div>
+            <el-button slot="reference" class="elmenuitembtn"
+              >提交需求</el-button
+            >
+          </el-popover>
         </el-menu-item>
       </el-menu>
     </div>
 
-    <!-- <el-dialog :visible="dialog" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false"
-      :lock-scroll="false" :fullscreen="true" center class="weComDialog" height="100%" width="100%">
-      <a href="javascript:;;" style="
-          padding: 22px 0 0 30px;
-          position: fixed;
-          left: 0;
-          top: 0;
-          right: 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 180px;
-        "><img :src="logoWhite" style="width: 100%; height: 100%" alt="" /></a>
-      <div class="content">
-        <div>
-          <p class="head">
-            为提升服务体验，保障交付质量，请您扫码<span>添加专属账号经理</span>
-          </p>
-          <div style="display: flex; justify-content: center">
-            <div class="body">
-              <div style="margin-right: 40px">
-                <p class="title">微信扫码</p>
-                <p class="description">添加专属账号经理</p>
-                <div class="weChatcode">
-                  <img :src="contactMeQr" alt="" />
-                </div>
-                <div style="
-                    text-align: center;
-                    color: #ffffff;
-                    padding-top: 24px;
-                    font-size: 16px;
-                  ">
-                  扫码添加后，等待<span style="color: #fffa00">3-5s</span>即可自动跳转
-                </div>
-              </div>
-              <div>
-                <div class="weCom_img">
-                  <img src="../../assets/images/weCom.png" alt="" />
-                </div>
-                <div class="weCom_description">
-                  <p>通过后，您还将获得以下福利</p>
-                  <ul>
-                    <li>首单优惠 <span>¥50.00</span></li>
-                    <li>团购买10单 <span>免1单</span></li>
-                    <li>最新AI教程资料，<span>免费赠送</span></li>
-                    <li>VIP专属 <span>1对1</span> 服务</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-dialog> -->
-
     <el-dialog :visible.sync="centerDialogVisible" width="50%" center>
-      <video width="100%" height="100%" autoplay controls preload="none" ref="myVideo" @play="onPlay" @pause="onPause">
+      <video
+        width="100%"
+        height="100%"
+        autoplay
+        controls
+        preload="none"
+        ref="myVideo"
+        @play="onPlay"
+        @pause="onPause"
+      >
         <source :src="videoUrl" type="video/mp4" />
       </video>
       <div class="video_img" @click="videoplay" v-show="!video_img"></div>
@@ -250,7 +245,7 @@ export default {
         customer_report: "",
         pay_order: "",
         qr_code: "",
-        service_avatar: require('../../assets/images/customer_header.png'),
+        service_avatar: require("../../assets/images/customer_header.png"),
         service_name: "",
       },
       contactMeQr: "",
@@ -272,6 +267,9 @@ export default {
     },
     logoFn() {
       return this.$store.state.login.logo;
+    },
+    RequirementList() {
+      return store.state.Index.RequirementList;
     },
   },
   watch: {
@@ -296,6 +294,9 @@ export default {
         video.pause();
         this.video_img = false;
       }
+    },
+    RequirementList(newVal) {
+      console.log(newVal, "newval");
     },
   },
   created() {
@@ -424,7 +425,7 @@ export default {
       })
         .then((res) => {
           if (res.code == 1) {
-            console.log(res.data)
+            console.log(res.data);
             this.serviceInfoList = res.data;
             localStorage.setItem("serviceInfoList", JSON.stringify(res.data));
           }
@@ -437,7 +438,6 @@ export default {
     handleAddWeCom() {
       //取消推广页显示
       localStorage.setItem("isBindEnterpriseQr", 0);
-      // let _this = this;
       // if (JSON.parse(localStorage.getItem("userInfo"))) {
       //   _this.userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
       // }
@@ -504,39 +504,9 @@ export default {
           }
           this.reload();
         })
-        .catch((err) => { });
+        .catch((err) => {});
     },
-    //检测是否添加企业微信
-    // handleCheckEnterpriseQr() {
-    //   var timer = 0;
-    //   let _this = this;
-    //   if (JSON.parse(localStorage.getItem("userInfo"))) {
-    //     _this.userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
-    //   }
-    //   _this.checkEnterpriseQr = setInterval(() => {
-    //     checkEnterpriseQr({
-    //       id: _this.userId,
-    //     })
-    //       .then((res) => {
-    //         if (res.code === 1 && res.data.static === 0) {
-    //           //请等待扫码
-    //           timer++;
-    //           _this.dialog = true;
-    //         } else if (res.code === 1 && res.data.static === 1) {
-    //           //扫码成功
-    //           //渲染绑定手机页面
-    //           _this.dialog = false;
-    //           this.getServiceInfo();
-    //           //清除定时脚本
-    //           clearInterval(_this.checkEnterpriseQr);
-    //           localStorage.setItem("isBindEnterpriseQr", 0);
-    //         }
-    //       })
-    //       .catch((err) => {
-    //         this.$message.error(err.msg);
-    //       });
-    //   }, 3000);
-    // },
+
     //获取公共配置信息
     getContent() {
       getConfig()
@@ -629,12 +599,55 @@ export default {
 }
 </style>
 
+<style lang="less" scoped>
+.elmenuitembox {
+  img {
+    width: 183px;
+    display: block;
+    margin: 42px auto 0;
+  }
+  p {
+    text-align: center;
+    font-size: 12px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #666666;
+    margin-bottom: 7px;
+  }
+}
+
+.elmenuitembtn {
+  width: 96px;
+  height: 34px;
+  background: #d161f6;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 1px;
+}
+
+.elmenuitembtn:hover {
+  background: #d161f6 !important;
+  color: #ffffff !important;
+}
+
+::v-deep(.el-button:focus, .el-button:hover) {
+  background: #d161f6 !important;
+  color: #ffffff !important;
+  border-color: #ecb8fd;
+}
+</style>
+
 <style lang="less">
 .menu_popover {
-  background: linear-gradient(180deg,
-      #f2f0fe 0%,
-      #ffffff 43%,
-      #ffffff 100%) !important;
+  background: linear-gradient(
+    180deg,
+    #f2f0fe 0%,
+    #ffffff 43%,
+    #ffffff 100%
+  ) !important;
   padding: 24px !important;
   margin-top: -6px !important;
 
@@ -930,7 +943,7 @@ export default {
 }
 
 .el-menu--horizontal .el-menu .el-menu-item.is-active,
-.el-menu--horizontal .el-menu .el-submenu.is-active>.el-submenu__title {
+.el-menu--horizontal .el-menu .el-submenu.is-active > .el-submenu__title {
   background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%) !important;
   border-radius: 6px;
   font-size: 14px;
@@ -944,13 +957,13 @@ export default {
   background: none !important;
 }
 
-.el-menu--horizontal>.el-submenu.is-active .el-submenu__title,
-.el-menu--horizontal>.el-menu-item.is-active,
+.el-menu--horizontal > .el-submenu.is-active .el-submenu__title,
+.el-menu--horizontal > .el-menu-item.is-active,
 .el-menu.el-menu--horizontal {
   border-bottom: 1px solid #eeeeee;
 }
 
-.el-menu--horizontal>.el-menu-item.is-active {
+.el-menu--horizontal > .el-menu-item.is-active {
   border-bottom: none !important;
 }
 
@@ -961,7 +974,7 @@ export default {
 
 .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
 .el-menu--horizontal .el-menu-item:not(.is-disabled):hover,
-.el-menu--horizontal>.el-menu-item.is-active {
+.el-menu--horizontal > .el-menu-item.is-active {
   color: #333333 !important;
   font-weight: bold;
   background: none !important;
@@ -978,13 +991,13 @@ export default {
   color: #ffffff !important;
 }
 
-.el-menu--horizontal>.el-submenu .el-submenu__title:hover {
+.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
   background: none !important;
 }
 
-.el-menu--horizontal>.el-submenu .el-submenu__title,
+.el-menu--horizontal > .el-submenu .el-submenu__title,
 .el-submenu.is-active .el-submenu__title,
-.el-menu--horizontal>.el-menu-item {
+.el-menu--horizontal > .el-menu-item {
   height: 66px !important;
   line-height: 66px !important;
 }
@@ -1026,7 +1039,7 @@ export default {
     }
   }
 
-  >ul {
+  > ul {
     //max-width: 1200px;
     margin: 0 10px;
     align-items: center;
@@ -1048,7 +1061,8 @@ export default {
 
       .login_btn {
         color: #ffffff;
-        background: #001238 linear-gradient(233deg, #ffa373 0%, #ea5ef7 48%, #776cf3 100%);
+        background: #001238
+          linear-gradient(233deg, #ffa373 0%, #ea5ef7 48%, #776cf3 100%);
         padding: 10px 28px;
         border: none;
       }
@@ -1057,18 +1071,18 @@ export default {
 }
 
 @media screen and (max-width: 600px) {
-  .header>ul {
+  .header > ul {
     margin: 10px;
     padding-bottom: 10px;
     margin-bottom: 0;
   }
 
-  .header>ul li {
+  .header > ul li {
     height: 40px !important;
     line-height: 40px !important;
   }
 
-  .header>ul a {
+  .header > ul a {
     height: 40px !important;
     line-height: 40px !important;
     padding: 0 10px !important;
@@ -1078,9 +1092,9 @@ export default {
     padding: 0 6px !important;
   }
 
-  .el-menu--horizontal>.el-submenu .el-submenu__title,
+  .el-menu--horizontal > .el-submenu .el-submenu__title,
   .el-submenu.is-active .el-submenu__title,
-  .el-menu--horizontal>.el-menu-item {
+  .el-menu--horizontal > .el-menu-item {
     height: 40px !important;
     line-height: 40px !important;
   }

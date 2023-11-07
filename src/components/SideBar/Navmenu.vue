@@ -177,18 +177,46 @@
         </el-submenu>
 
         <el-menu-item
-          index="/Requirement"
           style="float: right; display: flex; align-items: center"
+          @click="SubmitRequirements"
         >
           <el-popover placement="top-start" width="340" trigger="hover">
-            <div class="elmenuitembox">
+            <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
               <p>每个视频需求可选0～5个意向红人</p>
               <p>未选择时，将由平台为您推荐最合适的红人</p>
             </div>
-            <el-button slot="reference" class="elmenuitembtn"
-              >提交需求</el-button
-            >
+            <div class="requirementListul" v-else>
+              <ul>
+                <li
+                  v-for="(item, index) in RequirementLists"
+                  :key="item.user_id"
+                >
+                  <span class="span1">{{ index + 1 }}</span>
+                  <img :src="item.image" alt="" />
+                  <span class="span2">NO.{{ item.user_id }}</span>
+                  <span class="span3">￥{{ item.price }}</span>
+                  <i
+                    class="el-icon-delete"
+                    @click="deletelist(item, index)"
+                  ></i>
+                </li>
+              </ul>
+
+              <div class="prompt">
+                <span>*</span>
+                <p>
+                  每一个视频可选0～5个意向红人，未选择时，将由平台为您推荐最合适的红人
+                </p>
+              </div>
+            </div>
+
+            <el-button slot="reference" class="elmenuitembtn">
+              <span>提交需求</span>
+              <div class="number" v-if="RequirementListlength !== 0">
+                {{ RequirementListlength }}
+              </div>
+            </el-button>
           </el-popover>
         </el-menu-item>
       </el-menu>
@@ -221,8 +249,11 @@ import {
   checkEnterpriseQr,
   serviceInfo,
   getConfig,
+  carList,
+  carOperate,
 } from "../../api/index";
 import store from "@/store";
+import router from "@/router";
 
 export default {
   name: "NavMenu",
@@ -256,6 +287,8 @@ export default {
       centerDialogVisible: false,
       videoUrl: "" || window.localStorage.getItem("videoUrl"),
       video_img: true,
+      RequirementListlength: 0,
+      RequirementLists: [],
     };
   },
   computed: {
@@ -296,7 +329,8 @@ export default {
       }
     },
     RequirementList(newVal) {
-      console.log(newVal, "newval");
+      this.RequirementLists = newVal;
+      this.RequirementListlength = newVal.length;
     },
   },
   created() {
@@ -385,6 +419,8 @@ export default {
           document.getElementById("menu_box").offsetHeight + "px";
       })();
     };
+
+    this.getcarList();
   },
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
@@ -541,6 +577,34 @@ export default {
         window.open(this.ViponSrc, "_blank");
       }
     },
+
+    //删除需求列表某一个
+    deletelist(item, index) {
+      store.commit("Index/setRequiremenitem", item);
+      this.RequirementLists.splice(index, 1);
+      let data = {
+        influencer_id: item.user_id,
+        type: 0,
+      };
+      if (item.istrue !== false) {
+        carOperate(data).then((res) => {
+          console.log(res);
+        });
+      }
+    },
+
+    //提交需求
+    SubmitRequirements() {
+      router.push("/Requirement");
+    },
+
+    //获取购物车列表接口
+    getcarList() {
+      carList().then((res) => {
+        store.commit("Index/setRequirementList", res.data.list);
+        this.RequirementLists = res.data.list;
+      });
+    },
   },
 };
 </script>
@@ -616,6 +680,64 @@ export default {
   }
 }
 
+.requirementListul {
+  padding: 4px 10px 4px 20px;
+  width: 340px;
+  ul {
+    width: 310px;
+    max-height: 450px;
+    overflow: auto;
+    li {
+      padding: 16px 0;
+      border-bottom: 1px solid #eeeeee;
+      display: flex;
+      align-items: center;
+      img {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        margin: 0 12px 0 10px;
+      }
+      .span1 {
+        font-size: 14px;
+        color: #999999;
+        width: 20px;
+        display: block;
+      }
+      .span2 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333333;
+        display: block;
+        width: 90px;
+      }
+      .span3 {
+        font-size: 15px;
+        width: 90px;
+        color: #ff2c4c;
+      }
+      i {
+        cursor: pointer;
+        font-size: 14px;
+      }
+    }
+  }
+  .prompt {
+    display: flex;
+    padding: 10px 0;
+    width: 280px;
+    span {
+      color: #ff2c4c;
+      font-size: 12px;
+    }
+    p {
+      color: #999999;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+  }
+}
+
 .elmenuitembtn {
   width: 96px;
   height: 34px;
@@ -626,6 +748,19 @@ export default {
   font-weight: 400;
   color: #ffffff;
   line-height: 1px;
+  position: relative;
+  .number {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 16px;
+    height: 16px;
+    background: #ff2c4c;
+    line-height: 16px;
+    border-radius: 50%;
+    font-size: 12px;
+    transition: all 0.3s;
+  }
 }
 
 .elmenuitembtn:hover {

@@ -157,7 +157,7 @@
               <ul class="product_list_videos">
                 <li
                   v-for="(items, indexviedeos) in item.videos"
-                  :key="items.id"
+                  :key="items.user_id"
                   @click="openVideos(item.videos, indexviedeos)"
                 >
                   <i class="el-icon-video-play" style="font-size: 14px"></i>
@@ -178,13 +178,14 @@
                     border-radius: 4px;
                   "
                   v-if="item.videos.length > 12"
+                  @click="openVideos(item.videos, 0)"
                 >
                   . . .
                 </li>
               </ul>
             </div>
             <div
-              @click="addlist(item, index)"
+              @click="addlist(item, index, item.user_id)"
               :class="{ product_btn: true }"
               ref="addbtndom"
             >
@@ -257,6 +258,7 @@ import {
   checkPayment,
   getShootRequire,
   needsSelectInfluencer,
+  carOperate,
 } from "@/api";
 import store from "@/store";
 
@@ -281,11 +283,23 @@ export default {
       videoslist: [],
       videoslistindex: 0,
       requirementlist: [],
+      addbtndom: this.$refs.addbtndom,
+      prevIndexArr: [],
+      indexArr: [],
     };
   },
   components: {},
-  created() {},
-  computed: {},
+  created() {
+    this.requirementlist = this.RequirementLists;
+  },
+  computed: {
+    RequirementLists() {
+      return store.state.Index.RequirementList;
+    },
+    Requiremenitems() {
+      return store.state.Index.Requiremenitem;
+    },
+  },
   mounted() {
     document.getElementsByClassName(
       "el-pagination__jump"
@@ -293,6 +307,7 @@ export default {
     this.handlerGetCategory("influencer");
     this.handlerGetCategory("theme_area");
     this.RenderingData();
+    window.addEventListener("beforeunload", (e) => this.beforeunloadHandler(e));
   },
   beforeUpdate() {},
   methods: {
@@ -320,7 +335,6 @@ export default {
 
     //搜索列表
     handlerSearchList(type, value) {
-      console.log(value);
       switch (type) {
         case "genderdata":
           this.genderValue = value;
@@ -372,6 +386,7 @@ export default {
         orderType: "",
         theme_id: theme_id,
       };
+      this.datalist = [];
       getSearchList(data)
         .then((res) => {
           if (res.code == 1) {
@@ -380,6 +395,9 @@ export default {
             this.datalist = res.data.data;
             this.currentPage = res.data.current_page;
             // console.log(this.datalist);
+            this.$nextTick(() => {
+              this.InvertList();
+            });
           }
         })
         .catch((err) => {
@@ -409,13 +427,86 @@ export default {
     },
 
     //添加需求
-    addlist(item, index) {
+    addlist(item, index, id) {
+      this.requirementlist = this.RequirementLists;
+      const x = event.clientX - 20;
+      const y = event.clientY - 20;
       this.$refs.addbtndom[index].classList.add("addlistbj");
       this.$refs.addbtndom[index].querySelector(".test1").textContent =
         "已选择";
-      this.requirementlist.push(item);
 
-      store.commit("Index/setRequirementList", this.requirementlist);
+      if (item.istrue != false) {
+        this.requirementlist.push(item);
+        store.commit("Index/setRequirementList", this.requirementlist);
+        this.createBall(x, y);
+      }
+
+      item.istrue = false;
+    },
+
+    //保存需求列表数据
+    SaveData() {
+      let str = this.RequirementLists.map((item) => item.user_id).join(",");
+      let data = {
+        influencer_id: str,
+        type: 1,
+      };
+      if (str !== "") {
+        carOperate(data).then((res) => {
+          console.log(res);
+        });
+      }
+    },
+
+    createBall(left, top) {
+      const bar = document.createElement("ball");
+      bar.style.position = "fixed";
+      bar.style.left = left + "px";
+      bar.style.top = top + "px";
+      bar.style.width = "40px";
+      bar.style.height = "40px";
+      bar.style.borderRadius = "50%";
+      bar.style.backgroundColor = "#d161f6";
+      bar.style.transition =
+        "left .6s linear, top .6s cubic-bezier(0.5, -0.5, 1, 1)";
+      document.body.appendChild(bar);
+      setTimeout(() => {
+        const x = document.body.clientWidth * 0.5 + 500;
+        const y = 0;
+        bar.style.top = y + "px";
+        bar.style.left = x + "px";
+      }, 0);
+      bar.ontransitionend = function () {
+        this.remove();
+      };
+    },
+
+    //反选列表
+    InvertList() {
+      let _this = this;
+      var addbtndom = _this.$refs.addbtndom;
+      _this.RequirementLists.forEach((items) => {
+        var index = _this.datalist.findIndex(
+          (item) => item.id == items.user_id
+        );
+        if (index != -1) {
+          _this.$nextTick(() => {
+            _this.datalist[index].istrue = false;
+            addbtndom[index].classList.add("addlistbj");
+            addbtndom[index].querySelector(".test1").textContent = "已选择";
+          });
+        }
+      });
+    },
+
+    // 同步列表
+    SynchronizeList(index) {
+      var addbtndom = this.$refs.addbtndom;
+      this.$nextTick(() => {
+        this.datalist[index].istrue = true;
+        addbtndom[index].classList.remove("addlistbj");
+        addbtndom[index].querySelector(".test1").textContent = "选择";
+      });
     },
 
     handleSizeChange(val) {
@@ -433,6 +524,16 @@ export default {
       video.play();
       this.video_img = true;
     },
+
+    beforeunloadHandler(e) {
+      console.log("关闭窗口之后");
+      this.SaveData();
+    },
+  },
+  destroyed() {
+    window.removeEventListener("beforeunload", (e) =>
+      this.beforeunloadHandler(e)
+    );
   },
   watch: {
     dialogVisible(newval) {
@@ -443,6 +544,19 @@ export default {
         video.play();
       }
     },
+    RequirementLists(newval) {
+      console.log(newval);
+    },
+    Requiremenitems(newval) {
+      var index = this.datalist.findIndex((item) => item.id == newval.user_id);
+      this.SynchronizeList(index);
+    },
+  },
+
+  beforeRouteLeave(to, from, next) {
+    // 在离开路由之前执行的代码
+    this.SaveData();
+    next();
   },
 };
 </script>
@@ -570,6 +684,7 @@ export default {
             overflow: hidden;
 
             img {
+              object-fit: cover;
               width: 100%;
               height: 100%;
             }
@@ -704,6 +819,7 @@ export default {
             align-items: center;
             color: white;
             cursor: pointer;
+            transition: all 0.3s;
             i {
               margin-right: 5px;
             }
@@ -718,7 +834,6 @@ export default {
 
           .addlistbj {
             background: #ccc;
-            transition: all 0.3s;
           }
           .product_btn:hover .icon {
             opacity: 1;
@@ -818,6 +933,9 @@ export default {
   ::v-deep(.el-input__inner) {
     height: 100%;
   }
+}
+
+.barcss {
 }
 
 ::v-deep(.el-radio-button__orig-radio:checked + .el-radio-button__inner) {

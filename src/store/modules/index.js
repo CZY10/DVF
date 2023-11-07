@@ -2,7 +2,8 @@ export default {
     namespaced: true,
     state: {
         isFalg: true,
-        RequirementList: []
+        RequirementList: [],
+        Requiremenitem: {}
     },
     mutations: {
         setIsFalg(state, payload) {
@@ -11,6 +12,9 @@ export default {
         //需求列表
         setRequirementList(state, payload) {
             state.RequirementList = payload
+        },
+        setRequiremenitem(state, payload) {
+            state.Requiremenitem = payload
         }
 
     },

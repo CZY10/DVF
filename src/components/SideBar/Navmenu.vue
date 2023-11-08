@@ -16,26 +16,39 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 180px;
+            width: 168px;
             padding: 0 20px;
+            height: 30px;
+            margin-top: 16px;
           "
-          ><img :src="logoImg" style="width: 100%; height: 100%" alt=""
+          ><img
+            src="@/assets/images/home/logo.webp"
+            style="width: 100%; height: 100%"
         /></a>
         <el-menu-item index="/" style="margin: 0 20px">首页</el-menu-item>
-        <el-menu-item index="/videohome" style="margin: 0 20px"
+        <!-- <el-menu-item index="/videohome" style="margin: 0 20px"
           >视频服务站</el-menu-item
-        >
+        > -->
         <el-menu-item index="/buyershow" style="margin: 0 20px"
-          >拍买家秀</el-menu-item
+          >红人视频</el-menu-item
         >
-        <el-menu-item index="/webDeal" style="margin: 0 20px"
+        <el-menu-item style="margin: 0 20px" @click="goVipon"
+          >站外推广</el-menu-item
+        >
+        <el-submenu style="float: left" index="1">
+          <template slot="title"><span>联盟介绍</span></template>
+          <div style="width: 99px; padding: 0 6px">
+            <el-menu-item index="/videohome">
+              <li class="menuitemlis">红人站</li>
+            </el-menu-item>
+            <el-menu-item index="/webDeal">
+              <li class="menuitemlis">Deal站</li>
+            </el-menu-item>
+          </div>
+        </el-submenu>
+        <!-- <el-menu-item index="/webDeal" style="margin: 0 20px"
           >海外Deal站</el-menu-item
-        >
-        <el-menu-item style="margin: 0 20px"
-          ><a target="_blank" style="width: 100%" @click="goVipon"
-            >站外推广</a
-          ></el-menu-item
-        >
+        > -->
         <!-- <el-menu-item index="/chatgpt">ChatGPT</el-menu-item> -->
         <el-menu-item
           v-if="!isLogin"
@@ -55,7 +68,9 @@
               ><img :src="avatar" width="36px" height="36px" alt="" /></span
           ></template>
           <div style="padding: 0 6px">
-            <el-menu-item index="/manage/order">订单信息</el-menu-item>
+            <el-menu-item>
+              <span @click="gomanageOrder">订单信息</span>
+            </el-menu-item>
             <el-menu-item index="/manage/payment">支付记录</el-menu-item>
             <el-menu-item index="/manage/personal">个人资料</el-menu-item>
             <el-menu-item @click="handlerLogOut">退出</el-menu-item>
@@ -83,12 +98,7 @@
 
         <el-menu-item
           v-if="token"
-          style="
-            float: right;
-            padding-left: 0;
-            width: 100px;
-            margin-right: 20px;
-          "
+          style="float: right; padding-left: 0; margin-right: 20px"
         >
           <el-popover
             placement="bottom"
@@ -104,16 +114,10 @@
               "
             >
               <img
-                style="
-                  width: 30px;
-                  height: 30px;
-                  margin-right: 8px;
-                  border-radius: 50%;
-                "
-                :src="serviceInfoList.service_avatar"
-                alt=""
+                src="@/assets/images/home/zhixun.webp"
+                style="margin-right: 5px"
               />
-              <span style="padding-top: 1px">VIP服务</span>
+              <span style="padding-top: 1px">咨询</span>
             </div>
             <div>
               <div class="avatar_userInfo">
@@ -176,10 +180,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item
-          style="float: right; display: flex; align-items: center"
-          @click="SubmitRequirements"
-        >
+        <el-menu-item style="float: right; display: flex; align-items: center">
           <el-popover placement="top-start" width="340" trigger="hover">
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
@@ -211,7 +212,11 @@
               </div>
             </div>
 
-            <el-button slot="reference" class="elmenuitembtn">
+            <el-button
+              slot="reference"
+              class="elmenuitembtn"
+              @click="SubmitRequirements"
+            >
               <span>提交需求</span>
               <div class="number" v-if="RequirementListlength !== 0">
                 {{ RequirementListlength }}
@@ -251,6 +256,7 @@ import {
   getConfig,
   carList,
   carOperate,
+  needsSelectInfluencer,
 } from "../../api/index";
 import store from "@/store";
 import router from "@/router";
@@ -264,7 +270,6 @@ export default {
       isLogin: true,
       avatar: localStorage.getItem("avatar") || this.$store.state.login.avatar,
       messageCount: 0,
-      logoImg: localStorage.getItem("logo"),
       configData: {},
       token: localStorage.getItem("token"),
       logoWhite: "",
@@ -317,9 +322,6 @@ export default {
           this.setMessage(this.messageCount);
         }
       }
-    },
-    logoFn(newVal) {
-      this.logoImg = newVal;
     },
     centerDialogVisible(newVal) {
       if (newVal == false) {
@@ -563,6 +565,7 @@ export default {
     },
     //   vipon自助发帖跳转
     goVipon() {
+      router.go(0);
       if (process.env.NODE_ENV == "production") {
         this.ViponSrc = "https://seller.vipona.com/hot/fb";
       } else if (process.env.NODE_ENV == "development") {
@@ -571,7 +574,6 @@ export default {
       if (window.localStorage.getItem("token")) {
         localStorage.removeItem("source");
         localStorage.removeItem("active");
-        // window.location.href = this.ViponSrc;
         window.open(this.ViponSrc, "_blank");
       } else {
         window.open(this.ViponSrc, "_blank");
@@ -595,7 +597,24 @@ export default {
 
     //提交需求
     SubmitRequirements() {
-      router.push("/Requirement");
+      let userIds = this.RequirementLists.map((item) => item.user_id);
+      let result = userIds.join(",");
+      let data = {
+        influencer_ids: result,
+        source: 1,
+      };
+
+      if (this.RequirementLists.length !== 0) {
+        needsSelectInfluencer(data).then((res) => {
+          if (res.code == 1) {
+            this.RequirementLists = [];
+            store.commit("Index/setRequirementList", []);
+            window.location.href = window.location.origin + "/Requirement";
+          }
+        });
+      } else {
+        window.location.href = window.location.origin + "/Requirement";
+      }
     },
 
     //获取购物车列表接口
@@ -604,6 +623,10 @@ export default {
         store.commit("Index/setRequirementList", res.data.list);
         this.RequirementLists = res.data.list;
       });
+    },
+
+    gomanageOrder() {
+      router.push("/manage/order");
     },
   },
 };
@@ -656,6 +679,15 @@ export default {
 .menuitemli:hover {
   background: #f4f2ff !important;
   color: #796cf3;
+}
+.menuitemlis {
+  text-align: left;
+  padding: 0 12px;
+}
+
+.menuitemlis:hover {
+  background: #faeffe !important;
+  color: #d161f6;
 }
 
 ::v-deep(.el-submenu__icon-arrow) {
@@ -749,6 +781,7 @@ export default {
   color: #ffffff;
   line-height: 1px;
   position: relative;
+  margin-top: 10px;
   .number {
     position: absolute;
     top: -5px;
@@ -1079,12 +1112,11 @@ export default {
 
 .el-menu--horizontal .el-menu .el-menu-item.is-active,
 .el-menu--horizontal .el-menu .el-submenu.is-active > .el-submenu__title {
-  background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%) !important;
+  background: #faeffe !important;
   border-radius: 6px;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #ffffff !important;
 }
 
 .el-menu,
@@ -1092,18 +1124,20 @@ export default {
   background: none !important;
 }
 
-.el-menu--horizontal > .el-submenu.is-active .el-submenu__title,
 .el-menu--horizontal > .el-menu-item.is-active,
 .el-menu.el-menu--horizontal {
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 2px solid #eeeeee;
+}
+
+.el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
+  border-bottom-color: #d161f6 !important;
 }
 
 .el-menu--horizontal > .el-menu-item.is-active {
-  border-bottom: none !important;
+  border-bottom-color: #d161f6 !important;
 }
 
 .el-menu-item {
-  transition: none !important;
   padding: 0 0 !important;
 }
 
@@ -1133,7 +1167,7 @@ export default {
 .el-menu--horizontal > .el-submenu .el-submenu__title,
 .el-submenu.is-active .el-submenu__title,
 .el-menu--horizontal > .el-menu-item {
-  height: 66px !important;
+  height: 55px !important;
   line-height: 66px !important;
 }
 

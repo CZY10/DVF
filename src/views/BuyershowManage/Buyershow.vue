@@ -90,9 +90,11 @@
           <li
             class="product_li"
             v-for="(item, index) in datalist"
-            :key="item.id"
+            :key="item.user_id"
           >
-            <div class="product_li_img"><img :src="item.image" /></div>
+            <div class="product_li_img" @click="gohomepage(item.user_id)">
+              <img :src="item.image" />
+            </div>
             <div class="product_list">
               <div class="product_list_div1">
                 <div class="product_list_left">
@@ -136,12 +138,13 @@
               <div
                 class="product_list_div2"
                 v-if="item.category_ids.length <= 5"
+                :title="categoryidarr[index]"
               >
                 <li v-for="(item, index) in item.category_ids" :key="index">
                   {{ item.name }}
                 </li>
               </div>
-              <div v-else style="display: flex">
+              <div v-else style="display: flex" :title="categoryidarr[index]">
                 <div class="product_list_div2">
                   <li v-for="(item, index) in item.category_ids" :key="index">
                     {{ item.name }}
@@ -156,7 +159,7 @@
 
               <ul class="product_list_videos">
                 <li
-                  v-for="(items, indexviedeos) in item.videos"
+                  v-for="(items, indexviedeos) in isvideoslist[index]"
                   :key="items.user_id"
                   @click="openVideos(item.videos, indexviedeos)"
                 >
@@ -177,7 +180,7 @@
                       linear-gradient(270deg, #ffffff 0%, #fcf3ff 100%);
                     border-radius: 4px;
                   "
-                  v-if="item.videos.length > 12"
+                  v-if="item.videos.length >= 12"
                   @click="openVideos(item.videos, 0)"
                 >
                   . . .
@@ -257,10 +260,10 @@ import {
   payOrder,
   checkPayment,
   getShootRequire,
-  needsSelectInfluencer,
   carOperate,
 } from "@/api";
 import store from "@/store";
+import router from "@/router";
 
 export default {
   name: "buyershow",
@@ -286,6 +289,8 @@ export default {
       addbtndom: this.$refs.addbtndom,
       prevIndexArr: [],
       indexArr: [],
+      categoryidarr: [],
+      isvideoslist: [],
     };
   },
   components: {},
@@ -394,7 +399,23 @@ export default {
             this.per_page = res.data.per_page;
             this.datalist = res.data.data;
             this.currentPage = res.data.current_page;
-            // console.log(this.datalist);
+
+            let categoryidarr = [];
+            this.datalist.forEach((item) => {
+              categoryidarr.push(item.category_ids);
+              if (item.videos.length >= 12) {
+                let firstThree = item.videos.slice(0, 10);
+                this.isvideoslist.push(firstThree);
+              } else {
+                this.isvideoslist.push(item.videos);
+              }
+            });
+            categoryidarr.forEach((array) => {
+              let names = array.map((item) => item.name);
+              let result = names.join(" | ");
+              this.categoryidarr.push(result);
+            });
+
             this.$nextTick(() => {
               this.InvertList();
             });
@@ -471,7 +492,7 @@ export default {
         "left .6s linear, top .6s cubic-bezier(0.5, -0.5, 1, 1)";
       document.body.appendChild(bar);
       setTimeout(() => {
-        const x = document.body.clientWidth * 0.5 + 500;
+        const x = document.body.clientWidth * 0.5 + 520;
         const y = 0;
         bar.style.top = y + "px";
         bar.style.left = x + "px";
@@ -509,6 +530,11 @@ export default {
       });
     },
 
+    //去达人详情页
+    gohomepage(id) {
+      window.open(window.location.origin + "/homepage:" + id);
+    },
+
     handleSizeChange(val) {
       this.pageSize = val;
       this.RenderingData();
@@ -527,7 +553,9 @@ export default {
 
     beforeunloadHandler(e) {
       console.log("关闭窗口之后");
-      this.SaveData();
+      if (router.history._startLocation != "/Requirement") {
+        this.SaveData();
+      }
     },
   },
   destroyed() {
@@ -555,7 +583,9 @@ export default {
 
   beforeRouteLeave(to, from, next) {
     // 在离开路由之前执行的代码
-    this.SaveData();
+    if (to.fullPath != "/Requirement") {
+      this.SaveData();
+    }
     next();
   },
 };
@@ -682,6 +712,7 @@ export default {
             width: 100%;
             height: 287px;
             overflow: hidden;
+            cursor: pointer;
 
             img {
               object-fit: cover;
@@ -934,10 +965,6 @@ export default {
     height: 100%;
   }
 }
-
-.barcss {
-}
-
 ::v-deep(.el-radio-button__orig-radio:checked + .el-radio-button__inner) {
   background: rgba(209, 97, 246, 0.1);
   font-size: 14px;

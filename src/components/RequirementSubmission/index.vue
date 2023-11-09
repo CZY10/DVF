@@ -1426,7 +1426,6 @@ export default {
     needsInfluencerList()
       .then((res) => {
         this.getneedsInfluencerList = res.data.data;
-        console.log(this.getneedsInfluencerList);
       })
       .catch((err) => {
         console.error(err);

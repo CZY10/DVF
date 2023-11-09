@@ -34,7 +34,7 @@
         >
         <el-submenu style="float: left" index="1">
           <template slot="title"><span>联盟介绍</span></template>
-          <div style="width: 99px; padding: 0 6px">
+          <div style="width: 99px">
             <el-menu-item index="/videohome">
               <li class="menuitemlis">红人站</li>
             </el-menu-item>
@@ -174,10 +174,13 @@
         </el-submenu>
 
         <el-menu-item style="float: right; display: flex; align-items: center">
-          <el-popover placement="top-start" width="340" trigger="hover">
+          <el-popover placement="top-start" trigger="hover">
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
-              <p>每个视频需求可选0～5个意向红人</p>
+              <p>
+                每个视频需求可选<span style="color: #d161f6">0～5</span
+                >个意向红人
+              </p>
               <p>未选择时，将由平台为您推荐最合适的红人</p>
             </div>
             <div class="requirementListul" v-else>
@@ -688,6 +691,7 @@ export default {
 
 <style lang="less" scoped>
 .elmenuitembox {
+  width: 293px;
   img {
     width: 183px;
     display: block;
@@ -704,12 +708,13 @@ export default {
 }
 
 .requirementListul {
-  padding: 4px 10px 4px 20px;
-  width: 340px;
+  width: 350px;
   ul {
-    width: 310px;
+    width: 350px;
     max-height: 450px;
     overflow: auto;
+    padding: 4px 20px;
+    box-sizing: border-box;
     li {
       padding: 16px 0;
       border-bottom: 1px solid #eeeeee;
@@ -732,7 +737,7 @@ export default {
         font-weight: 600;
         color: #333333;
         display: block;
-        width: 90px;
+        width: 75px;
       }
       .span3 {
         font-size: 15px;
@@ -742,13 +747,18 @@ export default {
       i {
         cursor: pointer;
         font-size: 14px;
+        margin-left: 30px;
       }
+    }
+    li:last-child {
+      border-bottom: none;
     }
   }
   .prompt {
     display: flex;
-    padding: 10px 0;
-    width: 280px;
+    padding: 10px 20px;
+    width: 300px;
+    background: #f8f8f8;
     span {
       color: #ff2c4c;
       font-size: 12px;
@@ -773,6 +783,7 @@ export default {
   line-height: 1px;
   position: relative;
   margin-top: 10px;
+  border: none;
   .number {
     position: absolute;
     top: -5px;
@@ -796,6 +807,13 @@ export default {
   background: #d161f6 !important;
   color: #ffffff !important;
   border-color: #ecb8fd;
+}
+</style>
+
+<style>
+.el-popover {
+  border-radius: 10px !important;
+  padding: 0 !important;
 }
 </style>
 
@@ -1101,15 +1119,6 @@ export default {
   margin-top: 0;
 }
 
-.el-menu--horizontal .el-menu .el-menu-item.is-active,
-.el-menu--horizontal .el-menu .el-submenu.is-active > .el-submenu__title {
-  background: #faeffe !important;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-}
-
 .el-menu,
 .el-menu--horizontal .el-menu .el-menu-item {
   background: none !important;
@@ -1169,6 +1178,7 @@ export default {
 .el-menu--popup {
   min-width: 100px !important;
   text-align: center;
+  border-radius: 5px;
 }
 
 .el-menu--horizontal {

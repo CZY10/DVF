@@ -26,7 +26,10 @@
               <el-radio-button label="female">女性</el-radio-button>
             </el-radio-group>
           </div>
-          <div class="filter_item" style="margin-top: 10px">
+          <div
+            class="filter_item"
+            style="margin-top: 10px; margin-bottom: 12px"
+          >
             <span>产品品类</span>
             <el-radio-group
               v-model="categoryValue"
@@ -58,7 +61,7 @@
                 <div style="display: flex; align-items: center">
                   <img
                     src="@/assets/images/sp.png"
-                    style="margin: 0 3px 3px 0"
+                    style="margin: 0 7px 3px 0"
                   />
                   {{ item.name }}
                 </div>
@@ -181,7 +184,7 @@
                     border-radius: 4px;
                   "
                   v-if="item.videos.length >= 12"
-                  @click="openVideos(item.videos, 0)"
+                  @click="gohomepage(item.user_id)"
                 >
                   . . .
                 </li>
@@ -217,24 +220,31 @@
     </div>
 
     <el-dialog
-      :title="videoslist[videoslistindex]?.desc"
       :visible.sync="dialogVisible"
       width="880px"
       :close-on-click-modal="false"
     >
       <div class="eldialogVisble">
-        <div class="leftVis">
-          <video
-            autoplay
-            controls
-            preload="none"
-            ref="myVideo"
-            @play="video_img = true"
-            @pause="video_img = false"
-          >
-            <source :src="videoslist[videoslistindex]?.file" type="video/mp4" />
-          </video>
-          <div class="video_img" @click="videoplay" v-show="!video_img"></div>
+        <div style="width: 650px">
+          <div class="leftVis">
+            <video
+              autoplay
+              controls
+              preload="none"
+              ref="myVideo"
+              @play="video_img = true"
+              @pause="video_img = false"
+            >
+              <source
+                :src="videoslist[videoslistindex]?.file"
+                type="video/mp4"
+              />
+            </video>
+            <div class="video_img" @click="videoplay" v-show="!video_img"></div>
+          </div>
+          <div class="title" :title="videoslist[videoslistindex]?.desc">
+            {{ videoslist[videoslistindex]?.desc }}
+          </div>
         </div>
         <div class="rigthlist">
           <p class="rigthlist_p">作品案例</p>
@@ -489,7 +499,7 @@ export default {
       bar.style.borderRadius = "50%";
       bar.style.backgroundColor = "#d161f6";
       bar.style.transition =
-        "left .6s linear, top .6s cubic-bezier(0.5, -0.5, 1, 1)";
+        "left .6s linear, top .6s cubic-bezier(0.5, -1, 1, 1)";
       document.body.appendChild(bar);
       setTimeout(() => {
         const x = document.body.clientWidth - 450;
@@ -554,7 +564,7 @@ export default {
 
     beforeunloadHandler(e) {
       console.log("关闭窗口之后");
-      if (router.history._startLocation != "/Requirement") {
+      if (router.history.current.fullPath != "Requirement") {
         this.SaveData();
       }
     },
@@ -595,6 +605,7 @@ export default {
 <style lang="less" scoped>
 #buyershow {
   background: #f7f8fa;
+  min-height: calc(100vh - 67px);
   position: relative;
 
   .banxin {
@@ -639,7 +650,6 @@ export default {
             color: #333333;
             line-height: 20px;
             padding-right: 24px;
-            border-right: 1px solid #eeeeee;
             flex-shrink: 0;
             position: relative;
             top: 5px;
@@ -704,7 +714,7 @@ export default {
           background: white;
           overflow: hidden;
           position: relative;
-          margin-left: 20px;
+          margin-right: 20px;
           transition: all 0.3s;
 
           .product_li_img {
@@ -764,7 +774,7 @@ export default {
                   color: #f44eff;
                   border: 1px solid #f44eff;
                   padding: 0 5px;
-                  border-radius: 5px;
+                  border-radius: 2px;
                   font-size: 11px;
                 }
 
@@ -934,6 +944,17 @@ export default {
         cursor: pointer;
       }
     }
+
+    .title {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #666666;
+      line-height: 24px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
     .rigthlist {
       width: 156px;
       height: 366px;
@@ -943,6 +964,7 @@ export default {
         padding: 9px 0 9px 14px;
         font-family: PingFangSC-Semibold, PingFang SC;
         font-weight: 600;
+        font-size: 15px;
         color: #333333;
       }
       p {
@@ -990,6 +1012,7 @@ export default {
   color: #d161f6;
   border: none;
   box-shadow: none;
+  border-radius: 4px;
 }
 
 ::v-deep(.el-radio-button:first-child .el-radio-button__inner) {
@@ -1006,6 +1029,7 @@ export default {
 
 ::v-deep(.el-pagination.is-background .el-pager li:not(.disabled).active) {
   border: 1px solid #d161f6;
+  color: #d161f6 !important;
 }
 
 ::v-deep(.el-pagination.is-background .el-pager li) {
@@ -1013,7 +1037,7 @@ export default {
 }
 
 ::v-deep(.el-select .el-input.is-focus .el-input__inner) {
-  border-color: #d161f6;
+  border: 1px solid #dcdee2 !important;
 }
 
 ::v-deep(.el-input__inner:focus) {
@@ -1026,6 +1050,14 @@ export default {
 
 ::v-deep(.el-radio-button:focus:not(.is-focus):not(:active):not(.is-disabled)) {
   box-shadow: none;
+}
+
+::v-deep(.el-dialog__body) {
+  padding: 0 20px 30px 20px !important;
+}
+
+::v-deep(.el-pagination__sizes .el-input .el-input__inner:hover) {
+  border-color: #d161f6;
 }
 </style>
 

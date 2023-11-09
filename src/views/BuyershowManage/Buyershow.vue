@@ -492,8 +492,9 @@ export default {
         "left .6s linear, top .6s cubic-bezier(0.5, -0.5, 1, 1)";
       document.body.appendChild(bar);
       setTimeout(() => {
-        const x = document.body.clientWidth * 0.5 + 520;
+        const x = document.body.clientWidth - 450;
         const y = 0;
+        console.log(x);
         bar.style.top = y + "px";
         bar.style.left = x + "px";
       }, 0);
@@ -884,7 +885,18 @@ export default {
       margin-bottom: 40px;
     }
   }
-
+  @media screen and (max-width: 1200px) {
+    .banxin {
+      width: 900px;
+      .product {
+        .product_ul {
+          .product_li {
+            flex: 0 0 calc(31%);
+          }
+        }
+      }
+    }
+  }
   .eldialogVisble {
     display: flex;
     .leftVis {

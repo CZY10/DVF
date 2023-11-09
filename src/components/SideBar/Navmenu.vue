@@ -589,9 +589,7 @@ export default {
         type: 0,
       };
       if (item.istrue !== false) {
-        carOperate(data).then((res) => {
-          console.log(res);
-        });
+        carOperate(data).then((res) => {});
       }
     },
 
@@ -1193,6 +1191,7 @@ export default {
   right: 0;
   top: 0;
   z-index: 999;
+  min-width: 1050px !important;
 
   .user_info_box {
     display: inline-flex;

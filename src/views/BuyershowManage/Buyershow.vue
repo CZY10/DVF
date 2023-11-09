@@ -100,7 +100,7 @@
                 <div class="product_list_left">
                   <div class="product_list_no">NO.{{ item.user_id }}</div>
                   <div
-                    v-if="item.type == 'Amazon Influencer'"
+                    v-if="item.type == '影响力者'"
                     class="product_list_typelv"
                   >
                     {{ item.type }}

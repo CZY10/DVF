@@ -280,7 +280,7 @@ export default {
       priceval: "",
       datalist: [],
       currentPage: 1,
-      pageSize: 12,
+      pageSize: 24,
       dialogVisible: false,
       video_img: true,
       videoslist: [],
@@ -607,7 +607,6 @@ export default {
       height: 46px;
       background: #ffffff;
       border-radius: 6px;
-      border: 1px solid #eeeeee;
       margin-top: 40px;
       display: flex;
 
@@ -623,7 +622,6 @@ export default {
     .screen {
       background: #ffffff;
       border-radius: 10px;
-      border: 1px solid #eeeeee;
       margin-top: 20px;
 
       .filter_header {
@@ -654,7 +652,6 @@ export default {
       height: 60px;
       background: #ffffff;
       border-radius: 10px;
-      border: 1px solid #eeeeee;
       margin-top: 20px;
       padding: 15px 30px;
       box-sizing: border-box;
@@ -708,6 +705,7 @@ export default {
           overflow: hidden;
           position: relative;
           margin-left: 20px;
+          transition: all 0.3s;
 
           .product_li_img {
             width: 100%;
@@ -835,6 +833,11 @@ export default {
                   text-overflow: ellipsis; /* 当文本超出时显示为省略号 */
                   white-space: nowrap; /* 不换行 */
                 }
+                transition: all 0.3s;
+              }
+
+              li:hover {
+                background: rgba(209, 97, 246, 0.12);
               }
             }
           }
@@ -885,13 +888,14 @@ export default {
       margin-bottom: 40px;
     }
   }
-  @media screen and (max-width: 1200px) {
+  @media screen and (max-width: 1280px) {
     .banxin {
       width: 900px;
       .product {
         .product_ul {
           .product_li {
             flex: 0 0 calc(31%);
+            transition: all 0.3s;
           }
         }
       }
@@ -968,6 +972,7 @@ export default {
   .inp {
     ::v-deep(.el-input__inner) {
       height: 100%;
+      border: none;
     }
   }
 }
@@ -1027,10 +1032,6 @@ export default {
 <style>
 .el-select-dropdown__item.selected {
   color: #d161f6 !important;
-}
-
-.el-input__inner:hover {
-  border: 1px solid #d161f6 !important;
 }
 
 /* 定义滚动条的宽度 */

@@ -25,14 +25,11 @@
             src="@/assets/images/home/logo.webp"
             style="width: 100%; height: 100%"
         /></a>
-        <el-menu-item index="/" style="margin: 0 20px">首页</el-menu-item>
-        <!-- <el-menu-item index="/videohome" style="margin: 0 20px"
-          >视频服务站</el-menu-item
-        > -->
-        <el-menu-item index="/buyershow" style="margin: 0 20px"
+        <el-menu-item index="/" class="el-menu-itempadding">首页</el-menu-item>
+        <el-menu-item index="/buyershow" class="el-menu-itempadding"
           >红人视频</el-menu-item
         >
-        <el-menu-item style="margin: 0 20px" @click="goVipon"
+        <el-menu-item class="el-menu-itempadding" @click="goVipon"
           >站外推广</el-menu-item
         >
         <el-submenu style="float: left" index="1">
@@ -46,10 +43,6 @@
             </el-menu-item>
           </div>
         </el-submenu>
-        <!-- <el-menu-item index="/webDeal" style="margin: 0 20px"
-          >海外Deal站</el-menu-item
-        > -->
-        <!-- <el-menu-item index="/chatgpt">ChatGPT</el-menu-item> -->
         <el-menu-item
           v-if="!isLogin"
           style="float: right; margin: 0 20px"
@@ -1234,6 +1227,16 @@ export default {
         padding: 10px 28px;
         border: none;
       }
+    }
+  }
+
+  .el-menu-itempadding {
+    margin: 0 20px !important;
+  }
+
+  @media screen and (max-width: 1280px) {
+    .el-menu-itempadding {
+      margin: 0 15px !important;
     }
   }
 }

@@ -174,6 +174,7 @@
         </el-submenu>
 
         <el-menu-item style="float: right; display: flex; align-items: center">
+          <!-- close-delay="1000000" -->
           <el-popover placement="top-start" trigger="hover">
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
@@ -190,7 +191,7 @@
                   :key="item.user_id"
                 >
                   <span class="span1">{{ index + 1 }}</span>
-                  <img :src="item.image" alt="" />
+                  <div class="img"><img :src="item.image" alt="" /></div>
                   <span class="span2">NO.{{ item.user_id }}</span>
                   <span class="span3" v-if="item.price_type == 0"
                     >￥{{ item.price }}</span
@@ -726,12 +727,21 @@ export default {
       border-bottom: 1px solid #eeeeee;
       display: flex;
       align-items: center;
-      img {
+
+      .img {
         width: 46px;
         height: 46px;
         border-radius: 50%;
         margin: 0 12px 0 10px;
-        object-fit: cover;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+        }
       }
       .span1 {
         font-size: 14px;

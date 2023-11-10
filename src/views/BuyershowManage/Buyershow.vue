@@ -95,7 +95,7 @@
 
       <!-- 分类产品 -->
       <div class="product">
-        <ul class="product_ul">
+        <ul class="product_ul" v-if="datalist.length != 0">
           <li
             class="product_li"
             v-for="(item, index) in datalist"
@@ -207,10 +207,14 @@
             </div>
           </li>
         </ul>
+        <div v-else class="product_div">
+          <img src="@/assets/images/empty_img.png" alt="" />
+          <p>暂无搜索结果</p>
+        </div>
       </div>
 
       <template>
-        <div class="paging">
+        <div class="paging" v-show="datalist.length != 0">
           <el-pagination
             background
             @size-change="handleSizeChange"
@@ -919,6 +923,18 @@ export default {
           .product_list:hover {
             height: 295px;
           }
+        }
+      }
+      .product_div {
+        margin-top: 50px;
+        img {
+          display: block;
+          margin: 0 auto;
+        }
+
+        p {
+          text-align: center;
+          margin: 20px;
         }
       }
     }

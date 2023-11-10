@@ -592,9 +592,7 @@ export default {
         influencer_id: item.user_id,
         type: 0,
       };
-      if (item.istrue !== false) {
-        carOperate(data).then((res) => {});
-      }
+      carOperate(data).then((res) => {});
     },
 
     //提交需求
@@ -666,11 +664,11 @@ export default {
 
 .menu-item-li:hover {
   background: #f4f2ff !important;
-  color: #796cf3;
+  color: #d161f6;
 }
 
 .menu-item-li:hover i {
-  color: #796cf3;
+  color: #d161f6;
 }
 
 .menuitemli {
@@ -679,8 +677,8 @@ export default {
 }
 
 .menuitemli:hover {
-  background: #f4f2ff !important;
-  color: #796cf3;
+  background: #faeffe !important;
+  color: #d161f6;
 }
 .menuitemlis {
   text-align: center;
@@ -733,6 +731,7 @@ export default {
         height: 46px;
         border-radius: 50%;
         margin: 0 12px 0 10px;
+        object-fit: cover;
       }
       .span1 {
         font-size: 14px;
@@ -765,7 +764,7 @@ export default {
   .prompt {
     display: flex;
     padding: 10px 20px;
-    width: 300px;
+    width: 310px;
     background: #f8f8f8;
     span {
       color: #ff2c4c;

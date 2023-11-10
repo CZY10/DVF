@@ -107,7 +107,7 @@
             <div class="product_list">
               <div class="product_list_div1">
                 <div class="product_list_left">
-                  <div class="product_list_no">NO.{{ item.user_id }}</div>
+                  <div class="product_list_no">No.{{ item.user_id }}</div>
                   <div
                     v-if="item.type == '影响力者'"
                     class="product_list_typelv"
@@ -398,12 +398,14 @@ export default {
         (!localStorage.getItem("token") && this.searchforval != "") ||
         (!localStorage.getItem("token") && this.categoryValue != "") ||
         (!localStorage.getItem("token") && this.themeValue != "") ||
-        (!localStorage.getItem("token") && this.genderValue != "")
+        (!localStorage.getItem("token") && this.genderValue != "") ||
+        (!localStorage.getItem("token") && this.priceval != "")
       ) {
         this.dialogVisiblelogin = true;
         this.genderValue = "";
         this.themeValue = "";
         this.categoryValue = "";
+        this.priceval = "";
       } else {
         this.getdata(
           this.currentPage,
@@ -441,6 +443,7 @@ export default {
       };
       this.datalist = [];
       this.isvideoslist = [];
+      this.categoryidarr = [];
       getSearchList(data)
         .then((res) => {
           if (res.code == 1) {
@@ -499,7 +502,6 @@ export default {
 
     //添加需求
     addlist(item, index, id) {
-      console.log(id);
       if (localStorage.getItem("token")) {
         this.requirementlist = this.RequirementLists;
         const x = event.clientX - 20;
@@ -543,12 +545,11 @@ export default {
       bar.style.borderRadius = "50%";
       bar.style.backgroundColor = "#d161f6";
       bar.style.transition =
-        "left .6s linear, top .6s cubic-bezier(0.5, -1, 1, 1)";
+        "left .6s linear, top .6s cubic-bezier(0.5, 0.5, 1, 1)";
       document.body.appendChild(bar);
       setTimeout(() => {
         const x = document.body.clientWidth - 450;
         const y = 0;
-        console.log(x);
         bar.style.top = y + "px";
         bar.style.left = x + "px";
       }, 0);
@@ -735,12 +736,13 @@ export default {
         margin-top: 20px;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        width: 1220px;
         .product_li {
           height: 448px;
 
           flex: 0 0 calc(25% - 20px);
           margin-bottom: 30px;
+          margin-right: 20px;
           border-radius: 6px;
           background: white;
           overflow: hidden;
@@ -933,6 +935,7 @@ export default {
       width: 900px;
       .product {
         .product_ul {
+          width: 920px;
           .product_li {
             flex: 0 0 calc(31%);
             transition: all 0.3s;
@@ -1109,6 +1112,10 @@ export default {
 }
 
 ::v-deep(.el-pagination__editor.el-input .el-input__inner) {
+  color: #999;
+}
+
+:v-deep(.el-pagination .el-select .el-input .el-input__inner) {
   color: #999;
 }
 </style>

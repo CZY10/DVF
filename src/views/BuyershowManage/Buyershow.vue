@@ -477,7 +477,7 @@ export default {
 
     //保存需求列表数据
     SaveData() {
-      let str = this.RequirementLists.map((item) => item.user_id).join(",");
+      let str = this.requirementlist.map((item) => item.user_id).join(",");
       let data = {
         influencer_id: str,
         type: 1,

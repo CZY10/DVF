@@ -192,7 +192,15 @@
                   <span class="span1">{{ index + 1 }}</span>
                   <img :src="item.image" alt="" />
                   <span class="span2">NO.{{ item.user_id }}</span>
-                  <span class="span3">￥{{ item.price }}</span>
+                  <span class="span3" v-if="item.price_type == 0"
+                    >￥{{ item.price }}</span
+                  >
+                  <span class="span3" v-if="item.price_type == 1"
+                    >￥{{ item.lower_price }}-{{ item.highest_price }}</span
+                  >
+                  <span class="span3" v-if="item.price_type == 2"
+                    >视产品而定</span
+                  >
                   <i
                     class="el-icon-delete"
                     @click="deletelist(item, index)"

@@ -499,6 +499,7 @@ export default {
 
     //添加需求
     addlist(item, index, id) {
+      console.log(id);
       if (localStorage.getItem("token")) {
         this.requirementlist = this.RequirementLists;
         const x = event.clientX - 20;
@@ -512,6 +513,7 @@ export default {
           this.createBall(x, y);
         }
         item.istrue = false;
+        this.SaveData(id);
       } else {
         // router.push("/login");
         this.dialogVisiblelogin = true;
@@ -519,13 +521,12 @@ export default {
     },
 
     //保存需求列表数据
-    SaveData() {
-      let str = this.requirementlist.map((item) => item.user_id).join(",");
+    SaveData(id) {
       let data = {
-        influencer_id: str,
+        influencer_id: id,
         type: 1,
       };
-      if (str !== "") {
+      if (id) {
         carOperate(data).then((res) => {
           console.log(res);
         });
@@ -604,18 +605,6 @@ export default {
       video.play();
       this.video_img = true;
     },
-
-    beforeunloadHandler(e) {
-      console.log("关闭窗口之后");
-      if (router.history.current.fullPath != "Requirement") {
-        this.SaveData();
-      }
-    },
-  },
-  destroyed() {
-    window.removeEventListener("beforeunload", (e) =>
-      this.beforeunloadHandler(e)
-    );
   },
   watch: {
     dialogVisible(newval) {
@@ -633,14 +622,6 @@ export default {
       var index = this.datalist.findIndex((item) => item.id == newval.user_id);
       this.SynchronizeList(index);
     },
-  },
-
-  beforeRouteLeave(to, from, next) {
-    // 在离开路由之前执行的代码
-    if (to.fullPath != "/Requirement") {
-      this.SaveData();
-    }
-    next();
   },
 };
 </script>
@@ -754,6 +735,7 @@ export default {
         margin-top: 20px;
         display: flex;
         flex-wrap: wrap;
+        justify-content: space-between;
         .product_li {
           height: 448px;
 
@@ -763,8 +745,7 @@ export default {
           background: white;
           overflow: hidden;
           position: relative;
-          margin-right: 20px;
-          transition: all 0.3s;
+          transition: all 0.5s;
 
           .product_li_img {
             width: 100%;
@@ -1012,7 +993,7 @@ export default {
       margin-left: 34px;
       overflow: auto;
       .rigthlist_p {
-        padding: 9px 0 9px 14px;
+        padding: 9px 0 0;
         font-family: PingFangSC-Semibold, PingFang SC;
         font-weight: 600;
         font-size: 15px;

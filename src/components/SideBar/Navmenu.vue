@@ -1137,10 +1137,6 @@ export default {
   border-bottom: 2px solid #eeeeee;
 }
 
-.el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
-  border-bottom-color: #d161f6 !important;
-}
-
 .el-menu--horizontal > .el-menu-item.is-active {
   border-bottom-color: #d161f6 !important;
 }
@@ -1291,5 +1287,15 @@ export default {
   .el-menu.el-menu--horizontal {
     border-bottom: none;
   }
+}
+</style>
+
+<style lang="less" scoped>
+::v-deep(.el-submenu__title) {
+  border: none !important;
+}
+
+::v-deep(.el-badge) {
+  background: white;
 }
 </style>

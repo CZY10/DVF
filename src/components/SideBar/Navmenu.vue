@@ -34,7 +34,7 @@
         >
         <el-submenu style="float: left" index="1">
           <template slot="title"><span>联盟介绍</span></template>
-          <div style="width: 99px">
+          <div style="width: 100px">
             <el-menu-item index="/videohome">
               <li class="menuitemlis">红人站</li>
             </el-menu-item>
@@ -683,7 +683,7 @@ export default {
   color: #796cf3;
 }
 .menuitemlis {
-  text-align: left;
+  text-align: center;
   padding: 0 12px;
 }
 
@@ -788,7 +788,7 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #ffffff;
-  line-height: 1px;
+  line-height: 2px;
   position: relative;
   margin-top: 10px;
   border: none;

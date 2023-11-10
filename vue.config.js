@@ -13,12 +13,12 @@ module.exports = defineConfig({
   assetsDir: 'static',
   lintOnSave: false,
   productionSourceMap: false,
-  devServer:{
-    host:'localhost',
-    port:port,
-    open:true,
-    https:false,
-    proxy:{
+  devServer: {
+    host: 'localhost',
+    port: port,
+    open: true,
+    https: false,
+    proxy: {
       '/api': {
         target: process.env.VUE_APP_BASE_URL,
         // 如果要代理 websockets
@@ -32,11 +32,11 @@ module.exports = defineConfig({
   },
   configureWebpack: {
     plugins: [
-        new webpack.ProvidePlugin({
-          $:"jquery",
-          jQuery:'jquery',
-          'windows.jQuery':'jquery',
-        })
+      new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: 'jquery',
+        'windows.jQuery': 'jquery',
+      })
       // 开启 BundleAnalyzerPlugin
       // new BundleAnalyzerPlugin(),
     ],

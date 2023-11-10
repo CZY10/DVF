@@ -9,7 +9,7 @@ import 'default-passive-events'
 // import "video.js/dist/video-js.css";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { refreshToken } from '../src/api/index';
-import {mapMutations} from "vuex";
+import { mapMutations } from "vuex";
 // import 'swiper/dist/css/swiper.css'
 
 
@@ -28,21 +28,21 @@ let token = localStorage.getItem('token')
 let nowData = Math.round(new Date() / 1000);
 
 
-if (token){
+if (token) {
   let expiretime = localStorage.getItem('expiretime')
-  store.commit('login/setToken',token)
-  store.commit('login/setUserInfo',localStorage.getItem('userInfo'))
-  if (expiretime - nowData < 24 * 3600 * 10 ){
+  store.commit('login/setToken', token)
+  store.commit('login/setUserInfo', localStorage.getItem('userInfo'))
+  if (expiretime - nowData < 24 * 3600 * 10) {
     refreshToken({
-        token:token
+      token: token
     })
-      .then((res)=>{
+      .then((res) => {
         localStorage.setItem('token', res.data.token);
-        store.commit('login/setToken',res.data.token);
-        localStorage.setItem('expiretime',res.data.expires_in + Number(res.time))
-        store.commit('login/setExpiretime',res.data.expires_in + Number(res.time))
+        store.commit('login/setToken', res.data.token);
+        localStorage.setItem('expiretime', res.data.expires_in + Number(res.time))
+        store.commit('login/setExpiretime', res.data.expires_in + Number(res.time))
       })
-      .catch((err)=>{
+      .catch((err) => {
         console.log(err)
       })
 

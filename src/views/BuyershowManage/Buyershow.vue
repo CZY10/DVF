@@ -58,10 +58,16 @@
                 :key="index"
                 :label="item.id"
               >
-                <div style="display: flex; align-items: center">
+                <div
+                  style="
+                    text-align: center;
+                    position: relative;
+                    padding-left: 23px;
+                  "
+                >
                   <img
                     src="@/assets/images/sp.png"
-                    style="margin: 0 7px 3px 0"
+                    style="position: absolute; left: 0; top: -6px"
                   />
                   {{ item.name }}
                 </div>
@@ -260,6 +266,22 @@
         </div>
       </div>
     </el-dialog>
+
+    <el-dialog
+      title="温馨提示"
+      center
+      :visible.sync="dialogVisiblelogin"
+      width="300px"
+    >
+      <p style="text-align: center; margin-top: 22px; padding-right: 20px">
+        您还没有登录，登录后即可继续操作
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="goLogin" class="dialogVisibleloginbtn"
+          >去登录</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -292,6 +314,7 @@ export default {
       currentPage: 1,
       pageSize: 24,
       dialogVisible: false,
+      dialogVisiblelogin: false,
       video_img: true,
       videoslist: [],
       videoslistindex: 0,
@@ -326,6 +349,9 @@ export default {
   },
   beforeUpdate() {},
   methods: {
+    goLogin() {
+      router.push("/login");
+    },
     //获取搜索分类
     handlerGetCategory(type) {
       getCategory({ type: type })
@@ -368,15 +394,27 @@ export default {
 
     //渲染数据
     RenderingData() {
-      this.getdata(
-        this.currentPage,
-        this.pageSize,
-        this.genderValue,
-        this.categoryValue,
-        this.themeValue,
-        this.priceval,
-        this.searchforval
-      );
+      if (
+        (!localStorage.getItem("token") && this.searchforval != "") ||
+        (!localStorage.getItem("token") && this.categoryValue != "") ||
+        (!localStorage.getItem("token") && this.themeValue != "") ||
+        (!localStorage.getItem("token") && this.genderValue != "")
+      ) {
+        this.dialogVisiblelogin = true;
+        this.genderValue = "";
+        this.themeValue = "";
+        this.categoryValue = "";
+      } else {
+        this.getdata(
+          this.currentPage,
+          this.pageSize,
+          this.genderValue,
+          this.categoryValue,
+          this.themeValue,
+          this.priceval,
+          this.searchforval
+        );
+      }
     },
 
     //获取数据
@@ -402,6 +440,7 @@ export default {
         theme_id: theme_id,
       };
       this.datalist = [];
+      this.isvideoslist = [];
       getSearchList(data)
         .then((res) => {
           if (res.code == 1) {
@@ -420,6 +459,7 @@ export default {
                 this.isvideoslist.push(item.videos);
               }
             });
+
             categoryidarr.forEach((array) => {
               let names = array.map((item) => item.name);
               let result = names.join(" | ");
@@ -459,20 +499,23 @@ export default {
 
     //添加需求
     addlist(item, index, id) {
-      this.requirementlist = this.RequirementLists;
-      const x = event.clientX - 20;
-      const y = event.clientY - 20;
-      this.$refs.addbtndom[index].classList.add("addlistbj");
-      this.$refs.addbtndom[index].querySelector(".test1").textContent =
-        "已选择";
-
-      if (item.istrue != false) {
-        this.requirementlist.push(item);
-        store.commit("Index/setRequirementList", this.requirementlist);
-        this.createBall(x, y);
+      if (localStorage.getItem("token")) {
+        this.requirementlist = this.RequirementLists;
+        const x = event.clientX - 20;
+        const y = event.clientY - 20;
+        this.$refs.addbtndom[index].classList.add("addlistbj");
+        this.$refs.addbtndom[index].querySelector(".test1").textContent =
+          "已选择";
+        if (item.istrue != false) {
+          this.requirementlist.push(item);
+          store.commit("Index/setRequirementList", this.requirementlist);
+          this.createBall(x, y);
+        }
+        item.istrue = false;
+      } else {
+        // router.push("/login");
+        this.dialogVisiblelogin = true;
       }
-
-      item.istrue = false;
     },
 
     //保存需求列表数据
@@ -604,7 +647,13 @@ export default {
 
 <style lang="less" scoped>
 #buyershow {
-  background: #f7f8fa;
+  background: linear-gradient(
+    225deg,
+    #e6e9fe 0%,
+    #f7f8fa 20%,
+    #ecf2ff 60%,
+    #eee5fc 100%
+  );
   min-height: calc(100vh - 67px);
   position: relative;
 
@@ -920,6 +969,8 @@ export default {
       video {
         width: 100%;
         height: 100%;
+        border-radius: 6px;
+        background: black;
       }
 
       .video_img:after {
@@ -956,7 +1007,7 @@ export default {
       overflow: hidden;
     }
     .rigthlist {
-      width: 156px;
+      width: 176px;
       height: 366px;
       margin-left: 34px;
       overflow: auto;
@@ -985,6 +1036,16 @@ export default {
         color: #d161f6 !important;
       }
     }
+  }
+
+  .dialogVisibleloginbtn {
+    width: 120px;
+    height: 32px;
+    background: #d161f6;
+    border-radius: 5px;
+    color: #fff;
+    line-height: 8px;
+    border: none;
   }
 }
 </style>
@@ -1038,6 +1099,7 @@ export default {
 
 ::v-deep(.el-select .el-input.is-focus .el-input__inner) {
   border: 1px solid #dcdee2 !important;
+  color: #999;
 }
 
 ::v-deep(.el-input__inner:focus) {
@@ -1046,6 +1108,7 @@ export default {
 
 ::v-deep(.el-pagination__jump) {
   margin-left: 0;
+  color: #999;
 }
 
 ::v-deep(.el-radio-button:focus:not(.is-focus):not(:active):not(.is-disabled)) {
@@ -1053,11 +1116,19 @@ export default {
 }
 
 ::v-deep(.el-dialog__body) {
-  padding: 0 20px 30px 20px !important;
+  padding: 0 0px 30px 20px !important;
 }
 
 ::v-deep(.el-pagination__sizes .el-input .el-input__inner:hover) {
   border-color: #d161f6;
+}
+
+::v-deep(.el-pagination__total) {
+  color: #999;
+}
+
+::v-deep(.el-pagination__editor.el-input .el-input__inner) {
+  color: #999;
 }
 </style>
 

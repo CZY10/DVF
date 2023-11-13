@@ -758,7 +758,7 @@ export default {
       }
 
       .span2 {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         color: #333333;
         display: block;
@@ -848,6 +848,10 @@ export default {
 .el-popover {
   border-radius: 10px !important;
   padding: 0 !important;
+}
+.el-button--primary {
+  background-color: #d161f6 !important;
+  border-color: #d161f6 !important;
 }
 </style>
 

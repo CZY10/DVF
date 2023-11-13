@@ -683,6 +683,7 @@ export default {
         background: #d161f6;
         border-radius: 0px 6px 6px 0px;
         color: white;
+        border: 1px solid #d161f6;
       }
 
       .searchforbtn:hover {
@@ -1145,12 +1146,17 @@ export default {
     ::v-deep(.el-input__inner) {
       height: 100%;
       border: 1px solid #fff;
+      border-radius: 4px 0 0 4px;
     }
     ::v-deep(.el-input__inner:hover) {
       border-color: #d161f6;
+      border-radius: 4px 0 0 4px;
+      border-right: none;
     }
     ::v-deep(.el-input__inner:focus) {
       border-color: #d161f6;
+      border-radius: 4px 0 0 4px;
+      border-right: none;
     }
   }
 }

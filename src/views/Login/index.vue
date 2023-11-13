@@ -27,7 +27,7 @@
       <el-row class="content_body">
         <el-col :span="12" class="left">
           <div class="content_img">
-            <img id="img" src="../../assets/images/login_banner.png" alt="" />
+            <img id="img" src="../../assets/images/login_banner.webp" alt="" />
           </div>
         </el-col>
 

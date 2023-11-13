@@ -471,8 +471,6 @@ export default {
               }
             });
 
-            console.log(this.isvideoslist);
-
             categoryidarr.forEach((array) => {
               let names = array.map((item) => item.name);
               let result = names.join(" | ");
@@ -523,9 +521,9 @@ export default {
           this.requirementlist.push(item);
           store.commit("Index/setRequirementList", this.requirementlist);
           this.createBall(x, y);
+          this.SaveData(id);
         }
         item.istrue = false;
-        this.SaveData(id);
       } else {
         // router.push("/login");
         this.dialogVisiblelogin = true;
@@ -627,7 +625,7 @@ export default {
       }
     },
     RequirementLists(newval) {
-      console.log(newval);
+      // console.log(newval);
     },
     Requiremenitems(newval) {
       var index = this.datalist.findIndex((item) => item.id == newval.user_id);

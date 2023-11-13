@@ -554,9 +554,7 @@ export default {
         type: 1,
       };
       if (id) {
-        carOperate(data).then((res) => {
-          console.log(res);
-        });
+        carOperate(data).then((res) => {});
       }
     },
 

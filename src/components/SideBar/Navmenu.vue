@@ -21,9 +21,7 @@
             height: 30px;
             margin-top: 16px;
           "
-          ><img
-            src="@/assets/images/home/logo.webp"
-            style="width: 100%; height: 100%"
+          ><img :src="logoImg" style="width: 100%; height: 100%"
         /></a>
         <el-menu-item index="/" class="el-menu-itempadding">首页</el-menu-item>
         <el-menu-item index="/buyershow" class="el-menu-itempadding"
@@ -106,10 +104,7 @@
                 align-items: center;
               "
             >
-              <img
-                src="@/assets/images/home/zhixun.webp"
-                style="margin-right: 5px"
-              />
+              <i class="iconfont icon-kf" style="margin-right: 4px"></i>
               <span style="padding-top: 1px">咨询</span>
             </div>
             <div>
@@ -276,6 +271,9 @@ export default {
       avatar: localStorage.getItem("avatar") || this.$store.state.login.avatar,
       messageCount: 0,
       configData: {},
+      logoImg:
+        localStorage.getItem("logo") ||
+        require("../../assets/images/home/logo.webp"),
       token: localStorage.getItem("token"),
       logoWhite: "",
       rateVal: 3,
@@ -776,6 +774,7 @@ export default {
     padding: 10px 20px;
     width: 310px;
     background: #f8f8f8;
+    border-radius: 0 7px 7px;
     span {
       color: #ff2c4c;
       font-size: 12px;

@@ -1,5 +1,9 @@
 <template>
   <div id="buyershow">
+    <el-backtop target="#buyershow">
+      <i class="el-icon-caret-top"></i
+    ></el-backtop>
+
     <div class="banxin">
       <!-- 搜索 -->
       <div class="searchfor">
@@ -172,7 +176,7 @@
                   :key="items.user_id"
                   @click="openVideos(item.videos, indexviedeos)"
                 >
-                  <i class="el-icon-video-play" style="font-size: 14px"></i>
+                  <i class="iconfont icon-video" style="font-size: 14px"></i>
                   <span> {{ items.desc }}</span>
                 </li>
 
@@ -202,7 +206,7 @@
               ref="addbtndom"
             >
               <span class="icon">+</span>
-              <i class="el-icon-shopping-cart-2"></i>
+              <i class="iconfont icon-gwc" style="font-size: 14px"></i>
               <span class="test1">选择</span>
             </div>
           </li>
@@ -264,7 +268,7 @@
             :class="{ videoslistcss: item.videoslistcss, falg: true }"
             @click="SwitchVideo(videoslist, index)"
           >
-            <i class="el-icon-video-play" style="font-size: 16px"></i>
+            <i class="iconfont icon-video"></i>
             {{ item.desc }}
           </p>
         </div>
@@ -445,11 +449,11 @@ export default {
         orderType: "",
         theme_id: theme_id,
       };
-      this.datalist = [];
-      this.isvideoslist = [];
-      this.categoryidarr = [];
       getSearchList(data)
         .then((res) => {
+          this.datalist = [];
+          this.isvideoslist = [];
+          this.categoryidarr = [];
           if (res.code == 1) {
             this.total = res.data.total;
             this.per_page = res.data.per_page;
@@ -466,6 +470,8 @@ export default {
                 this.isvideoslist.push(item.videos);
               }
             });
+
+            console.log(this.isvideoslist);
 
             categoryidarr.forEach((array) => {
               let names = array.map((item) => item.name);
@@ -640,13 +646,14 @@ export default {
     #ecf2ff 60%,
     #eee5fc 100%
   );
-  min-height: calc(100vh - 67px);
+  height: calc(100vh - 67px);
+  overflow-x: hidden;
   position: relative;
 
   .banxin {
     width: 1200px;
     margin: 0 auto;
-    min-height: 200px;
+    min-height: 100%;
     overflow: hidden;
 
     .searchfor {
@@ -867,6 +874,7 @@ export default {
                 margin: 0 20px 15px 0;
                 cursor: pointer;
                 display: flex;
+                align-items: center;
                 float: left;
                 overflow: hidden;
                 max-width: 103px;
@@ -893,7 +901,7 @@ export default {
             background: #d161f6;
             border-radius: 0px 0px 6px 6px;
             position: absolute;
-            width: 280px;
+            width: 285px;
             bottom: 0;
             display: flex;
             justify-content: center;
@@ -910,6 +918,7 @@ export default {
               margin-bottom: 2px;
               opacity: 0;
               transition: all 0.3s;
+              margin-right: 2px;
             }
           }
 
@@ -1130,10 +1139,6 @@ export default {
 ::v-deep(.el-pagination__editor.el-input .el-input__inner) {
   color: #999;
 }
-
-:v-deep(.el-pagination .el-select .el-input .el-input__inner) {
-  color: #999;
-}
 </style>
 
 <style>
@@ -1160,5 +1165,9 @@ export default {
 /* 定义滚动条滑块在鼠标悬停时的样式 */
 ::-webkit-scrollbar-thumb:hover {
   background: #bdbdbd;
+}
+
+.el-pagination .el-select .el-input .el-input__inner {
+  color: #999;
 }
 </style>

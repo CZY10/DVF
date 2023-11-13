@@ -12,6 +12,8 @@ import { refreshToken } from '../src/api/index';
 import { mapMutations } from "vuex";
 // import 'swiper/dist/css/swiper.css'
 
+import './assets/fonts/iconfont/iconfont.css'
+
 
 
 //一键复制

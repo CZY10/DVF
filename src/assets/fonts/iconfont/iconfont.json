@@ -1,0 +1,30 @@
+{
+  "id": "4327602",
+  "name": "my",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "38051856",
+      "name": "video",
+      "font_class": "video",
+      "unicode": "e678",
+      "unicode_decimal": 59000
+    },
+    {
+      "icon_id": "38051857",
+      "name": "gwc",
+      "font_class": "gwc",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "38052263",
+      "name": "kf",
+      "font_class": "kf",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    }
+  ]
+}

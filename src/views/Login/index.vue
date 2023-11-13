@@ -405,7 +405,7 @@ export default {
     //获取公共配置信息
     getContent() {
       getConfig()
-        .then((res) => {
+        .then((res) => {  
           if (res.code === 1) {
             this.logoImg = res.data.logo;
             localStorage.setItem("logo", res.data.logo);

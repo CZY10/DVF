@@ -216,6 +216,7 @@
               slot="reference"
               class="elmenuitembtn"
               @click="SubmitRequirements"
+              ref="elmenuitembtndom"
             >
               <span>提交需求</span>
               <div class="number" v-if="RequirementListlength !== 0">
@@ -260,6 +261,7 @@ import {
 } from "../../api/index";
 import store from "@/store";
 import router from "@/router";
+// import { shrinkImage } from "shrinkpng";
 
 export default {
   name: "NavMenu",
@@ -679,6 +681,7 @@ export default {
   background: #faeffe !important;
   color: #d161f6;
 }
+
 .menuitemlis {
   text-align: center;
   padding: 0 12px;
@@ -697,11 +700,13 @@ export default {
 <style lang="less" scoped>
 .elmenuitembox {
   width: 293px;
+
   img {
     width: 183px;
     display: block;
     margin: 42px auto 0;
   }
+
   p {
     text-align: center;
     font-size: 12px;
@@ -714,12 +719,14 @@ export default {
 
 .requirementListul {
   width: 350px;
+
   ul {
     width: 350px;
     max-height: 450px;
     overflow: auto;
     padding: 4px 20px;
     box-sizing: border-box;
+
     li {
       padding: 16px 0;
       border-bottom: 1px solid #eeeeee;
@@ -735,18 +742,21 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+
         img {
           object-fit: cover;
           width: 100%;
           height: 100%;
         }
       }
+
       .span1 {
         font-size: 14px;
         color: #999999;
         width: 20px;
         display: block;
       }
+
       .span2 {
         font-size: 16px;
         font-weight: 600;
@@ -754,31 +764,37 @@ export default {
         display: block;
         width: 75px;
       }
+
       .span3 {
         font-size: 15px;
         width: 90px;
         color: #ff2c4c;
       }
+
       i {
         cursor: pointer;
         font-size: 14px;
         margin-left: 30px;
       }
     }
+
     li:last-child {
       border-bottom: none;
     }
   }
+
   .prompt {
     display: flex;
     padding: 10px 20px;
     width: 310px;
     background: #f8f8f8;
     border-radius: 0 7px 7px;
+
     span {
       color: #ff2c4c;
       font-size: 12px;
     }
+
     p {
       color: #999999;
       font-size: 12px;
@@ -800,6 +816,8 @@ export default {
   position: relative;
   margin-top: 10px;
   border: none;
+  transition: all 0.3s;
+
   .number {
     position: absolute;
     top: -5px;
@@ -815,7 +833,7 @@ export default {
 }
 
 .elmenuitembtn:hover {
-  background: #d161f6 !important;
+  background: #ba27eb !important;
   color: #ffffff !important;
 }
 

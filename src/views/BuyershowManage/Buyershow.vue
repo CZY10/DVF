@@ -1,19 +1,23 @@
 <template>
   <div id="buyershow">
     <el-backtop target="#buyershow">
-      <i class="el-icon-caret-top"></i
+      <i class="iconfont icon-fhdb1" style="color: #999"></i
     ></el-backtop>
 
     <div class="banxin">
+      <div class="loading" v-if="isloading"></div>
+
       <!-- 搜索 -->
       <div class="searchfor">
         <el-input
           v-model="searchforval"
           placeholder="输入产品名称/品类/红人编号"
           class="inp"
-          @keyup.enter.native="RenderingData"
+          @keyup.enter.native="getRenderingData"
         ></el-input>
-        <el-button class="searchforbtn" @click="RenderingData">搜索</el-button>
+        <el-button class="searchforbtn" @click="getRenderingData"
+          >搜索</el-button
+        >
       </div>
 
       <!-- 筛选 -->
@@ -30,10 +34,7 @@
               <el-radio-button label="female">女性</el-radio-button>
             </el-radio-group>
           </div>
-          <div
-            class="filter_item"
-            style="margin-top: 10px; margin-bottom: 12px"
-          >
+          <div class="filter_item">
             <span>产品品类</span>
             <el-radio-group
               v-model="categoryValue"
@@ -90,7 +91,7 @@
             <el-input
               v-model="priceval"
               class="priceinp"
-              @change="RenderingData"
+              @change="getRenderingData"
             ></el-input>
             <span>元</span>
           </div>
@@ -175,6 +176,7 @@
                   v-for="(items, indexviedeos) in isvideoslist[index]"
                   :key="items.user_id"
                   @click="openVideos(item.videos, indexviedeos)"
+                  :title="items.desc"
                 >
                   <i class="iconfont icon-video" style="font-size: 14px"></i>
                   <span> {{ items.desc }}</span>
@@ -229,8 +231,9 @@
             layout="total, prev, pager, next, sizes, jumper"
             :total="total"
           >
-          </el-pagination></div
-      ></template>
+          </el-pagination>
+        </div>
+      </template>
     </div>
 
     <el-dialog
@@ -267,6 +270,7 @@
             :key="item.id"
             :class="{ videoslistcss: item.videoslistcss, falg: true }"
             @click="SwitchVideo(videoslist, index)"
+            :title="item.desc"
           >
             <i class="iconfont icon-video"></i>
             {{ item.desc }}
@@ -332,6 +336,7 @@ export default {
       indexArr: [],
       categoryidarr: [],
       isvideoslist: [],
+      isloading: false,
     };
   },
   components: {},
@@ -384,6 +389,7 @@ export default {
 
     //搜索列表
     handlerSearchList(type, value) {
+      this.isloading = true;
       switch (type) {
         case "genderdata":
           this.genderValue = value;
@@ -397,6 +403,12 @@ export default {
         default:
           break;
       }
+      this.RenderingData();
+    },
+
+    //搜索
+    getRenderingData() {
+      this.isloading = true;
       this.RenderingData();
     },
 
@@ -451,6 +463,7 @@ export default {
       };
       getSearchList(data)
         .then((res) => {
+          this.isloading = false;
           this.datalist = [];
           this.isvideoslist = [];
           this.categoryidarr = [];
@@ -515,6 +528,7 @@ export default {
         const x = event.clientX - 20;
         const y = event.clientY - 20;
         this.$refs.addbtndom[index].classList.add("addlistbj");
+        this.$refs.addbtndom[index].classList.remove("product_btn");
         this.$refs.addbtndom[index].querySelector(".test1").textContent =
           "已选择";
         if (item.istrue != false) {
@@ -548,8 +562,8 @@ export default {
       bar.style.position = "fixed";
       bar.style.left = left + "px";
       bar.style.top = top + "px";
-      bar.style.width = "40px";
-      bar.style.height = "40px";
+      bar.style.width = "30px";
+      bar.style.height = "30px";
       bar.style.borderRadius = "50%";
       bar.style.backgroundColor = "#d161f6";
       bar.style.transition =
@@ -590,6 +604,7 @@ export default {
       this.$nextTick(() => {
         this.datalist[index].istrue = true;
         addbtndom[index].classList.remove("addlistbj");
+        this.$refs.addbtndom[index].classList.add("product_btn");
         addbtndom[index].querySelector(".test1").textContent = "选择";
       });
     },
@@ -664,9 +679,13 @@ export default {
       .searchforbtn {
         width: 140px;
         height: 46px;
-        background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%) #d161f6;
+        background: #d161f6;
         border-radius: 0px 6px 6px 0px;
         color: white;
+      }
+
+      .searchforbtn:hover {
+        background: #c034ee;
       }
     }
 
@@ -676,7 +695,7 @@ export default {
       margin-top: 20px;
 
       .filter_header {
-        padding: 16px 30px;
+        padding: 16px 30px 6px 30px;
 
         .filter_item {
           display: flex;
@@ -746,6 +765,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         width: 1220px;
+
         .product_li {
           height: 448px;
 
@@ -781,6 +801,7 @@ export default {
             box-sizing: border-box;
             bottom: 30px;
             padding: 20px 16px;
+
             .product_list_div1 {
               display: flex;
               justify-content: space-between;
@@ -837,6 +858,7 @@ export default {
                 color: #ff2c4c;
               }
             }
+
             .product_list_div2 {
               display: flex;
               white-space: nowrap;
@@ -861,6 +883,7 @@ export default {
               margin-top: 16px;
               height: 185px;
               overflow: hidden;
+
               li {
                 background: linear-gradient(270deg, #ffffff 0%, #f1f0fd 100%),
                   linear-gradient(270deg, #ffffff 0%, #fff0f9 100%),
@@ -876,15 +899,21 @@ export default {
                 float: left;
                 overflow: hidden;
                 max-width: 103px;
+                padding: 3px;
+
                 i {
                   margin: 1px 3px 0 0;
                 }
 
                 span {
-                  overflow: hidden; /* 隐藏超出的部分 */
-                  text-overflow: ellipsis; /* 当文本超出时显示为省略号 */
-                  white-space: nowrap; /* 不换行 */
+                  overflow: hidden;
+                  /* 隐藏超出的部分 */
+                  text-overflow: ellipsis;
+                  /* 当文本超出时显示为省略号 */
+                  white-space: nowrap;
+                  /* 不换行 */
                 }
+
                 transition: all 0.3s;
               }
 
@@ -907,6 +936,7 @@ export default {
             color: white;
             cursor: pointer;
             transition: all 0.3s;
+
             i {
               margin-right: 5px;
             }
@@ -922,9 +952,36 @@ export default {
 
           .addlistbj {
             background: #ccc;
+            border-radius: 0px 0px 6px 6px;
+            position: absolute;
+            width: 285px;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 30px;
+            i {
+              margin-right: 5px;
+            }
+
+            .icon {
+              font-weight: 900;
+              margin-bottom: 2px;
+              opacity: 0;
+              transition: all 0.3s;
+              margin-right: 2px;
+            }
           }
+
           .product_btn:hover .icon {
             opacity: 1;
+          }
+
+          .product_btn:hover {
+            background: #be38eb;
           }
 
           .product_list:hover {
@@ -932,8 +989,10 @@ export default {
           }
         }
       }
+
       .product_div {
         margin-top: 50px;
+
         img {
           display: block;
           margin: 0 auto;
@@ -953,12 +1012,15 @@ export default {
       margin-bottom: 40px;
     }
   }
+
   @media screen and (max-width: 1280px) {
     .banxin {
       width: 900px;
+
       .product {
         .product_ul {
           width: 920px;
+
           .product_li {
             flex: 0 0 calc(31%);
             transition: all 0.3s;
@@ -967,12 +1029,15 @@ export default {
       }
     }
   }
+
   .eldialogVisble {
     display: flex;
+
     .leftVis {
       width: 650px;
       height: 366px;
       position: relative;
+
       video {
         width: 100%;
         height: 100%;
@@ -1013,11 +1078,13 @@ export default {
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+
     .rigthlist {
       width: 176px;
       height: 366px;
       margin-left: 34px;
       overflow: auto;
+
       .rigthlist_p {
         padding: 9px 0 0;
         font-family: PingFangSC-Semibold, PingFang SC;
@@ -1025,6 +1092,7 @@ export default {
         font-size: 15px;
         color: #333333;
       }
+
       p {
         white-space: nowrap;
         width: 130px;
@@ -1033,12 +1101,15 @@ export default {
         cursor: pointer;
         margin-bottom: 17px;
       }
+
       .videoslistcss {
         color: #d161f6;
       }
+
       .falg {
         transition: all 0.5s !important;
       }
+
       .falg:hover {
         color: #d161f6 !important;
       }
@@ -1062,7 +1133,13 @@ export default {
   .inp {
     ::v-deep(.el-input__inner) {
       height: 100%;
-      border: none;
+      border: 1px solid #fff;
+    }
+    ::v-deep(.el-input__inner:hover) {
+      border-color: #d161f6;
+    }
+    ::v-deep(.el-input__inner:focus) {
+      border-color: #d161f6;
     }
   }
 }
@@ -1072,6 +1149,7 @@ export default {
     height: 100%;
   }
 }
+
 ::v-deep(.el-radio-button__orig-radio:checked + .el-radio-button__inner) {
   background: rgba(209, 97, 246, 0.1);
   font-size: 14px;
@@ -1137,6 +1215,19 @@ export default {
 ::v-deep(.el-pagination__editor.el-input .el-input__inner) {
   color: #999;
 }
+
+::v-deep(.el-loading-mask) {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+::v-deep(.el-pagination.is-background .btn-next, .el-pagination.is-background
+    .btn-prev, .el-pagination.is-background .el-pager li) {
+  border-radius: 5px;
+}
+
+::v-deep(.el-radio-button, .el-radio-button__inner) {
+  margin-bottom: 10px;
+}
 </style>
 
 <style>
@@ -1167,5 +1258,48 @@ export default {
 
 .el-pagination .el-select .el-input .el-input__inner {
   color: #999;
+}
+</style>
+
+<style scoped>
+.loading {
+  position: fixed;
+  top: 400px;
+  left: 50%;
+  width: 50px;
+  perspective: 200px;
+  z-index: 10000000;
+}
+
+.loading:before,
+.loading:after {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  content: "";
+  animation: jumping 0.5s infinite alternate;
+  background: #d161f6;
+}
+
+.loading:before {
+  left: 0;
+}
+
+.loading:after {
+  right: 0;
+  animation-delay: 0.15s;
+}
+
+@keyframes jumping {
+  0% {
+    transform: scale(1) translateY(0px) rotateX(0deg);
+    box-shadow: 0 0 0 rgba(153, 153, 153, 0);
+  }
+
+  100% {
+    transform: scale(1.2) translateY(-25px) rotateX(45deg);
+    background: #919191;
+    box-shadow: 0 25px 40px #8b8b8b;
+  }
 }
 </style>

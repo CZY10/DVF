@@ -131,6 +131,9 @@
                   >
                     {{ item.type }}
                   </div>
+                  <div v-if="item.type == '素人'" class="product_list_typechen">
+                    {{ item.type }}
+                  </div>
                 </div>
 
                 <div class="product_list_rigth" v-if="item.price_type == 0">
@@ -826,7 +829,7 @@ export default {
                   color: #00d9ad;
                   border: 1px solid #00d9ad;
                   padding: 0 5px;
-                  border-radius: 5px;
+                  border-radius: 2px;
                   font-size: 11px;
                 }
 
@@ -846,7 +849,17 @@ export default {
                   color: #00b2ff;
                   border: 1px solid #00b2ff;
                   padding: 0 5px;
-                  border-radius: 5px;
+                  border-radius: 2px;
+                  font-size: 11px;
+                }
+
+                .product_list_typechen {
+                  font-family: PingFangSC-Regular, PingFang SC;
+                  font-weight: 400;
+                  color: #f56422;
+                  border: 1px solid #f56422;
+                  padding: 0 5px;
+                  border-radius: 2px;
                   font-size: 11px;
                 }
               }

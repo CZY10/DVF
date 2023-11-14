@@ -507,11 +507,15 @@ export default {
 
     //打开视频
     openVideos(videos, index) {
+      const video = this.$refs.myVideo;
       this.dialogVisible = true;
       this.videoslistindex = index;
       videos.forEach((item) => (item.videoslistcss = false));
       this.videoslist = videos;
       this.videoslist[index].videoslistcss = true;
+      video.pause();
+      video.load();
+      video.play();
     },
 
     //切换视频
@@ -633,7 +637,7 @@ export default {
         const video = this.$refs.myVideo;
         video.pause();
         video.load();
-        video.play();
+        this.videoslistindex = -1;
       }
     },
     RequirementLists(newval) {

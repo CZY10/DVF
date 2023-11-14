@@ -104,7 +104,10 @@
                 align-items: center;
               "
             >
-              <i class="iconfont icon-kf" style="margin-right: 4px"></i>
+              <i
+                class="iconfont icon-kf"
+                style="margin-right: 4px; color: #666666"
+              ></i>
               <span style="padding-top: 1px">咨询</span>
             </div>
             <div>
@@ -187,7 +190,7 @@
                 >
                   <span class="span1">{{ index + 1 }}</span>
                   <div class="img"><img :src="item.image" alt="" /></div>
-                  <span class="span2">NO.{{ item.user_id }}</span>
+                  <span class="span2">No.{{ item.user_id }}</span>
                   <span class="span3" v-if="item.price_type == 0"
                     >￥{{ item.price }}</span
                   >
@@ -700,7 +703,7 @@ export default {
 <style lang="less" scoped>
 .elmenuitembox {
   width: 293px;
-
+  padding: 10px 0 20px;
   img {
     width: 183px;
     display: block;

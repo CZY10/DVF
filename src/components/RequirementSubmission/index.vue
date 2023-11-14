@@ -2434,7 +2434,6 @@ export default {
 }
 </style>
 
-
 <style>
 .el-message.is-center {
   background-color: #000000;

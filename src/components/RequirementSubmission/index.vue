@@ -3,7 +3,11 @@
     <div class="RequirementBoxBanxin">
       <p class="hearder">提交视频拍摄需求</p>
       <div class="RequirementWenben">
-        <div class="RequirementWenben-div1">待提交的需求</div>
+        <div class="RequirementWenben-div1">
+          <span>注意事项</span>
+          <div></div>
+          <span>新手引导</span>
+        </div>
         <div class="RequirementWenben-div2">
           <div class="elIcon2">
             <img src="@/assets/images/excel4.png" />
@@ -24,7 +28,6 @@
         <el-table
           ref="elTable"
           :data="tableData"
-          style="width: 100%"
           :header-cell-style="{
             background: '#F6F6F6',
             color: '#333333',
@@ -33,11 +36,8 @@
           max-height="600"
           @selection-change="handleSelectionChange"
         >
-          <!-- <el-table-column type="selection" width="50" :selectable="selectable"> -->
-          <!-- </el-table-column> -->
-          <el-table-column type="index" width="49" label="序号">
-          </el-table-column>
-          <el-table-column label="意向达人" width="400">
+          <el-table-column type="index" label="序号"></el-table-column>
+          <el-table-column label="意向达人" width="350">
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
                 <ul class="influencerInfoUl">
@@ -122,7 +122,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="产品信息" width="170">
+          <el-table-column label="产品信息">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div
@@ -184,7 +184,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄预算/¥" width="110">
+          <el-table-column label="拍摄预算/¥">
             <template slot-scope="scope">
               <div
                 style="text-align: center"
@@ -197,16 +197,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="yesN" label="是否通过达人账号上传" width="170">
-            <template slot-scope="scope">
-              <div v-if="scope.row.flag || scope.row.title == ''">--</div>
-              <div v-else>
-                <div v-if="scope.row.method == 1">是</div>
-                <div v-else-if="scope.row.method == 0">否</div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="拍摄要求" width="90">
+          <el-table-column label="拍摄要求">
             <template slot-scope="scope">
               <div v-if="scope.row.flag == 1 || scope.row.title == ''">--</div>
               <div
@@ -218,7 +209,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="200">
+          <el-table-column label="操作">
             <template slot-scope="scope">
               <ul
                 style="display: flex; justify-content: center"
@@ -286,7 +277,7 @@
           @mouseover="flag = true"
           @mouseout="flag = false"
         ></i>
-        <div class="RequirementBox-xinx" v-if="flag">
+        <div class="RequirementBox-xinx" v-show="flag">
           未选意向达人情况下，默认为 平台推荐达人
           <div class="triangle"></div>
         </div>
@@ -2054,9 +2045,14 @@ export default {
   color: #796cf3;
 }
 
+.el-table__header-wrapper {
+  margin: 14px 14px 0 14px;
+  width: 1170px;
+}
+
 .el-table__header-wrapper table {
   height: 46px;
-  padding: 0 20px;
+  padding: 0;
 }
 
 .el-table td.el-table__cell div {
@@ -2070,8 +2066,8 @@ export default {
 
 .el-icon-question {
   position: absolute;
-  top: 13px;
-  left: 293px;
+  top: 24px;
+  left: 264px;
   cursor: pointer;
 }
 </style>
@@ -2462,166 +2458,180 @@ export default {
   box-sizing: border-box;
 }
 
-.RequirementBoxBanxin {
-  width: 1200px;
-  margin: 0 auto;
-
-  .hearder {
-    font-size: 20px;
-    font-family: PingFangSC-Semibold, PingFang SC;
-    font-weight: 600;
-    color: #333333;
-    text-align: center;
-    margin-top: 30px;
-  }
-
-  .RequirementWenben {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 14px;
-
-    .RequirementWenben-div1 {
-      font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
+.RequirementBox {
+  background: linear-gradient(
+    225deg,
+    #e6e9fe 0%,
+    #f7f8fa 20%,
+    #ecf2ff 60%,
+    #eee5fc 100%
+  );
+  .RequirementBoxBanxin {
+    width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    .hearder {
+      font-size: 20px;
+      font-family: PingFangSC-Semibold, PingFang SC;
+      font-weight: 600;
+      color: #333333;
+      text-align: center;
+      margin-top: 30px;
     }
 
-    .RequirementWenben-div2 {
+    .RequirementWenben {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      margin-bottom: 14px;
 
-      .elIcon2 {
+      .RequirementWenben-div1 {
+        font-size: 14px;
+        display: flex;
+        color: #a06cf3;
+        div {
+          width: 2px;
+          height: 13px;
+          background: #ba91fc;
+          margin: 3px 7px 0;
+        }
+      }
+
+      .RequirementWenben-div2 {
+        display: flex;
+
+        .elIcon2 {
+          display: flex;
+          align-items: center;
+
+          img {
+            width: 20px;
+            margin-right: 5px;
+          }
+
+          a {
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #796cf3;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    .RequirementBox-xinx {
+      width: 180px;
+      height: 60px;
+      background: #000000;
+      border-radius: 5px;
+      position: absolute;
+      top: -50px;
+      left: 181px;
+      font-size: 12px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #e4e4e4;
+      padding: 9px 12px;
+      box-sizing: border-box;
+      transition: all 0.3s;
+      .triangle {
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid #000;
+        position: absolute;
+        bottom: -10px;
+        left: 80px;
+      }
+    }
+
+    .RequirementBtn {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+
+      button {
+        width: 160px;
+        height: 42px;
+        background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+        border-radius: 21px;
+        cursor: pointer;
+        margin: 0 10px;
+        border: none;
+        color: white;
+      }
+    }
+
+    .delList {
+      font-size: 12px;
+      width: 24px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #999999;
+      cursor: pointer;
+      margin-left: 35px;
+      margin-top: 20px;
+    }
+
+    .delList:hover {
+      color: #796cf3;
+    }
+
+    .elIcon {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .tableBtn {
+      display: flex;
+      justify-content: end;
+      margin-top: 5px;
+
+      .tableBtn1 {
+        width: 200px;
+        height: 46px;
+        border-radius: 4px;
+        border: 1px dashed #796cf3;
         display: flex;
         align-items: center;
+        justify-content: center;
+        margin-right: 30px;
+        cursor: pointer;
 
-        img {
-          width: 20px;
-          margin-right: 5px;
-        }
-
-        a {
-          font-size: 14px;
+        div {
+          font-size: 12px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #796cf3;
-          text-decoration: none;
+          margin-left: 5px;
         }
       }
-    }
-  }
 
-  .RequirementBox-xinx {
-    width: 180px;
-    height: 60px;
-    background: #000000;
-    border-radius: 5px;
-    position: absolute;
-    top: -60px;
-    left: 211px;
-    font-size: 12px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #e4e4e4;
-    padding: 9px 12px;
-    box-sizing: border-box;
+      .tableBtn2 {
+        width: 200px;
+        height: 46px;
+        border-radius: 4px;
+        border: 1px solid #796cf3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 30px;
+        cursor: pointer;
 
-    .triangle {
-      width: 0;
-      height: 0;
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 10px solid #000;
-      position: absolute;
-      bottom: -10px;
-      left: 80px;
-    }
-  }
-
-  .RequirementBtn {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-
-    button {
-      width: 160px;
-      height: 42px;
-      background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-      border-radius: 21px;
-      cursor: pointer;
-      margin: 0 10px;
-      border: none;
-      color: white;
-    }
-  }
-
-  .delList {
-    font-size: 12px;
-    width: 24px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #999999;
-    cursor: pointer;
-    margin-left: 35px;
-    margin-top: 20px;
-  }
-
-  .delList:hover {
-    color: #796cf3;
-  }
-
-  .elIcon {
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  .tableBtn {
-    display: flex;
-    justify-content: end;
-    margin-top: 5px;
-
-    .tableBtn1 {
-      width: 200px;
-      height: 46px;
-      border-radius: 4px;
-      border: 1px dashed #796cf3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 30px;
-      cursor: pointer;
-
-      div {
-        font-size: 12px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #796cf3;
-        margin-left: 5px;
-      }
-    }
-
-    .tableBtn2 {
-      width: 200px;
-      height: 46px;
-      border-radius: 4px;
-      border: 1px solid #796cf3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 30px;
-      cursor: pointer;
-
-      div {
-        font-size: 12px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #796cf3;
-        margin-left: 5px;
+        div {
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #796cf3;
+          margin-left: 5px;
+        }
       }
     }
   }
 }
-
 .backgroundD {
   background: #f6f6f6;
 }

@@ -392,7 +392,9 @@ export default {
 
     //搜索列表
     handlerSearchList(type, value) {
-      this.isloading = true;
+      if (localStorage.getItem("token")) {
+        this.isloading = true;
+      }
       switch (type) {
         case "genderdata":
           this.genderValue = value;
@@ -411,8 +413,10 @@ export default {
 
     //搜索
     getRenderingData() {
-      this.isloading = true;
-      this.RenderingData();
+      if (localStorage.getItem("token")) {
+        this.isloading = true;
+        this.RenderingData();
+      }
     },
 
     //渲染数据
@@ -799,7 +803,7 @@ export default {
             background: #fff;
             transition: all 0.3s ease-in-out;
             position: absolute;
-            width: 280px;
+            width: 285px;
             box-sizing: border-box;
             bottom: 30px;
             padding: 20px 16px;

@@ -187,20 +187,22 @@
               <p>未选择时，将由平台为您推荐最合适的红人</p>
             </div>
             <div class="requirementListul" v-else>
-              <table>
-                <thead>
-                  <td>序号</td>
-                  <td>已选意向达人(可上下左右拖动排序)</td>
-                  <td>操作</td>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="table">
+                <table>
+                  <thead>
+                    <th>序号</th>
+                    <th>已选意向达人(可上下左右拖动排序)</th>
+                    <th>操作</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>2</td>
+                      <td>3</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
               <div class="prompt">
                 <span>*</span>
@@ -717,12 +719,18 @@ export default {
 
 .requirementListul {
   width: 650px;
-  table {
-    width: 100%;
-    thead {
-      height: 46px;
-      background: #f6f6f6;
-      border-radius: 4px;
+  .table {
+    padding: 14px 14px 0 14px;
+    table {
+      width: 100%;
+      thead {
+        height: 46px;
+        background: #f6f6f6;
+        border-radius: 4px;
+        th {
+          text-align: center;
+        }
+      }
     }
   }
 

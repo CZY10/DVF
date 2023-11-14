@@ -564,7 +564,7 @@ export default {
             this.setLogo(res.data.logo);
             this.videoUrl = res.data.video_tutorial;
             window.localStorage.setItem("videoUrl", res.data.video_tutorial);
-            console.log(this.videoUrl);
+            // console.log(this.videoUrl);
           }
         })
         .catch((err) => {

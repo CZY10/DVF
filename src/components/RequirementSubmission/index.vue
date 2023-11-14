@@ -10,8 +10,20 @@
         </div>
         <div class="RequirementWenben-div2">
           <div class="elIcon2">
-            <img src="@/assets/images/excel4.png" />
+            <i class="iconfont icon-fx1"></i>
+            <span>邀请填写</span>
+          </div>
+          <div class="elIcon2">
+            <i class="iconfont icon-yq"></i>
+            <span>批量导入</span>
+          </div>
+          <div class="elIcon2">
+            <i class="iconfont icon-mb"></i>
             <a :href="fileDiz" style="cursor: pointer">下载模板</a>
+          </div>
+          <div class="elIcon2">
+            <i class="iconfont icon-sx"></i>
+            <span>刷新</span>
           </div>
         </div>
       </div>
@@ -36,7 +48,11 @@
           max-height="600"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="index" label="序号"></el-table-column>
+          <el-table-column
+            type="index"
+            label="序号"
+            width="50"
+          ></el-table-column>
           <el-table-column label="意向达人" width="350">
             <template slot-scope="scope">
               <div v-if="scope.row.influencer_info.length != 0">
@@ -122,7 +138,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="产品信息">
+          <el-table-column label="拍摄要求">
             <template slot-scope="scope">
               <div v-if="scope.row.flag || scope.row.title == ''">--</div>
               <div
@@ -181,6 +197,18 @@
                   </p>
                   <p v-else>--</p>
                 </div>
+
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    color: #a06cf3;
+                    margin-left: 10px;
+                  "
+                >
+                  <p style="white-space: nowrap">详情</p>
+                  <i class="iconfont icon-tx" style="margin-left: 5px"></i>
+                </div>
               </div>
             </template>
           </el-table-column>
@@ -234,11 +262,6 @@
                       :http-request="httpRequest"
                     >
                       <div class="liBtn1div" @click="daoRid(scope.row.id)">
-                        <img
-                          src="@/assets/images/excel4.png"
-                          style="width: 20px; margin-right: 5px"
-                        />
-
                         <span>导入</span>
                       </div>
                     </el-upload>
@@ -2047,7 +2070,7 @@ export default {
 
 .el-table__header-wrapper {
   margin: 14px 14px 0 14px;
-  width: 1170px;
+  width: 1170px !important;
 }
 
 .el-table__header-wrapper table {
@@ -2500,22 +2523,18 @@ export default {
 
       .RequirementWenben-div2 {
         display: flex;
-
         .elIcon2 {
           display: flex;
           align-items: center;
-
-          img {
-            width: 20px;
+          color: #a06cf3;
+          font-size: 14px;
+          margin-left: 20px;
+          .iconfont {
             margin-right: 5px;
           }
-
           a {
-            font-size: 14px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
-            color: #796cf3;
             text-decoration: none;
+            color: #a06cf3;
           }
         }
       }

@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "38103493",
+      "name": "fz",
+      "font_class": "fz",
+      "unicode": "e680",
+      "unicode_decimal": 59008
+    },
+    {
+      "icon_id": "38103494",
+      "name": "sx",
+      "font_class": "sx",
+      "unicode": "e67f",
+      "unicode_decimal": 59007
+    },
+    {
+      "icon_id": "38103495",
+      "name": "yq",
+      "font_class": "yq",
+      "unicode": "e67d",
+      "unicode_decimal": 59005
+    },
+    {
+      "icon_id": "38103496",
+      "name": "fx",
+      "font_class": "fx1",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    },
+    {
+      "icon_id": "38103497",
+      "name": "sc",
+      "font_class": "sc",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "38103498",
+      "name": "mb",
+      "font_class": "mb",
+      "unicode": "e67b",
+      "unicode_decimal": 59003
+    },
+    {
+      "icon_id": "38103499",
+      "name": "tx",
+      "font_class": "tx",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
       "icon_id": "7197321",
       "name": "icn_loading",
       "font_class": "loading",

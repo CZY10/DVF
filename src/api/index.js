@@ -1,5 +1,5 @@
 //请求方法
-import request,{createAPI} from "@/utils/request";
+import request, { createAPI } from "@/utils/request";
 import { log } from "video.js";
 
 //post请求
@@ -19,42 +19,42 @@ import { log } from "video.js";
 //     })
 // }
 //生成微信二维码
-export function getQrcode(data){
+export function getQrcode(data) {
     return request({
-        url:'/addons/wechatscanlogin/api/qrcode',
+        url: '/addons/wechatscanlogin/api/qrcode',
         method: 'get',
         data
     })
 }
 //发送验证码
-export function smsSend(data){
+export function smsSend(data) {
     return request({
-        url:'/api/sms/send',
+        url: '/api/sms/send',
         method: 'post',
         data
     })
 }
 //短信登录注册
-export function mobileLogin(data){
+export function mobileLogin(data) {
     return request({
-        url:'/api/user/mobilelogin',
+        url: '/api/user/mobilelogin',
         method: 'post',
         data
     })
 }
 //绑定手机号
-export function bindPhone(data){
+export function bindPhone(data) {
     return request({
-        url:'/addons/wechatscanlogin/api/register',
+        url: '/addons/wechatscanlogin/api/register',
         method: 'post',
         data
     })
 }
 
 //检测是否扫码成功
-export function checkQr(data){
+export function checkQr(data) {
     return request({
-        url:'/addons/wechatscanlogin/api/check',
+        url: '/addons/wechatscanlogin/api/check',
         method: 'post',
         data
     })
@@ -62,280 +62,280 @@ export function checkQr(data){
 
 /*拍买家秀*/
 //搜索分类
-export function getCategory(data){
+export function getCategory(data) {
     return request({
-        url:'/api/category/index',
+        url: '/api/category/index',
         method: 'post',
         data
     })
 }
 //搜索列表
-export function getSearchList(data){
+export function getSearchList(data) {
     return request({
-        url:'/api/influencer/search',
+        url: '/api/influencer/search',
         method: 'post',
         data
     })
 }
 //提交订单
-export function createOrder(data){
+export function createOrder(data) {
     return request({
-        url:'/api/order/create',
+        url: '/api/order/create',
         method: 'post',
         data
     })
 }
 //获取拍摄场景列表
-export function getShootRequire(data){
+export function getShootRequire(data) {
     return request({
-        url:'/api/order/shootrequire',
+        url: '/api/order/shootrequire',
         method: 'post',
         data
     })
 }
 //提交寄送信息
-export function createTransport(data){
+export function createTransport(data) {
     return request({
-        url:'/api/order/transport',
+        url: '/api/order/transport',
         method: 'post',
         data
     })
 }
 //支付定金/尾款
-export function payOrder(data){
+export function payOrder(data) {
     return request({
-        url:'/api/pay/order',
+        url: '/api/pay/order',
         method: 'post',
         data
     })
 }
 //支付状态检测
-export function checkPayment(data){
+export function checkPayment(data) {
     return request({
-        url:'/api/pay/check',
+        url: '/api/pay/check',
         method: 'post',
         data
     })
 }
 //订单记录列表
-export function orderList(data){
+export function orderList(data) {
     return request({
-        url:'/api/order/search',
+        url: '/api/order/search',
         method: 'post',
         data
     })
 }
 //支付记录列表
-export function paymentList(data){
+export function paymentList(data) {
     return request({
-        url:'/api/pay/search',
+        url: '/api/pay/search',
         method: 'post',
         data
     })
 }
 //订单删除
-export function orderDelete(data){
+export function orderDelete(data) {
     return request({
-        url:'/api/order/delete',
+        url: '/api/order/delete',
         method: 'post',
         data
     })
 }
 //退定金
-export function returnFrontMoney(data){
+export function returnFrontMoney(data) {
     return request({
-        url:'/api/order/refunddeposit',
+        url: '/api/order/refunddeposit',
         method: 'post',
         data
     })
 }
 //去评价
-export function commentCreate(data){
+export function commentCreate(data) {
     return request({
-        url:'/api/comment/create',
+        url: '/api/comment/create',
         method: 'post',
         data
     })
 }
 //更新用户信息
-export function userProfile(data){
+export function userProfile(data) {
     return request({
-        url:'/api/user/profile',
+        url: '/api/user/profile',
         method: 'post',
         data
     })
 }
 //获取用户信息
-export function getUserInfo(data){
+export function getUserInfo(data) {
     return request({
-        url:'/api/user/index',
+        url: '/api/user/index',
         method: 'post',
         data
     })
 }
 //修改手机号
-export function updateMobile(data){
+export function updateMobile(data) {
     return request({
-        url:'/api/user/changemobile',
+        url: '/api/user/changemobile',
         method: 'post',
         data
     })
 }
 //后台解绑微信
-export function unBindWechat(data){
+export function unBindWechat(data) {
     return request({
-        url:'/addons/wechatscanlogin/api/unbind',
+        url: '/addons/wechatscanlogin/api/unbind',
         method: 'post',
         data
     })
 }
 //获取聊天列表
-export function getChatList(data){
+export function getChatList(data) {
     return request({
-        url:'/api/chat/index',
+        url: '/api/chat/index',
         method: 'post',
         data
     })
 }
 //获取聊天列表
-export function createChat(data){
+export function createChat(data) {
     return request({
-        url:'/api/chat/create',
+        url: '/api/chat/create',
         method: 'post',
         data
     })
 }
 //刷新Token
-export function refreshToken(data){
+export function refreshToken(data) {
     return request({
-        url:'/api/token/refresh',
+        url: '/api/token/refresh',
         method: 'post',
         data
     })
 }
 //获取消息条数
-export function chatCount(data){
+export function chatCount(data) {
     return request({
-        url:'/api/chat/count',
+        url: '/api/chat/count',
         method: 'post',
         data
     })
 }
 //获取配置信息
-export function getConfig(data){
+export function getConfig(data) {
     return request({
-        url:'/api/config/index',
+        url: '/api/config/index',
         method: 'post',
         data
     })
 }
 //后台绑定微信
-export function bindWechat(){
+export function bindWechat() {
     return request({
-        url:'/addons/wechatscanlogin/api/bind',
+        url: '/addons/wechatscanlogin/api/bind',
         method: 'post',
     })
 }
 //后台绑定微信检测是否绑定成功
-export function checkBindWechat(){
+export function checkBindWechat() {
     return request({
-        url:'/addons/wechatscanlogin/api/checkbind',
+        url: '/addons/wechatscanlogin/api/checkbind',
         method: 'post',
     })
 }
 //达人详情
-export function influencerDetail(data){
+export function influencerDetail(data) {
     return request({
-        url:'/api/influencer/index',
+        url: '/api/influencer/index',
         method: 'post',
         data
     })
 }
 //拍摄方案
-export function takePlanList(data){
+export function takePlanList(data) {
     return request({
-        url:'/api/home/index',
+        url: '/api/home/index',
         method: 'post',
         data
     })
 }
 //订单详情
-export function orderDetail(data){
+export function orderDetail(data) {
     return request({
-        url:'/api/order/detail',
+        url: '/api/order/detail',
         method: 'post',
         data
     })
 }
 //订单步骤
-export function orderStep(data){
+export function orderStep(data) {
     return request({
-        url:'/api/order/step',
+        url: '/api/order/step',
         method: 'post',
         data
     })
 }
 //获取chatGPT列表
-export function chatgptList(data){
+export function chatgptList(data) {
     return request({
-        url:'/api/chatgpt/index',
+        url: '/api/chatgpt/index',
         method: 'post',
         data
     })
 }
 //chatGPT消息发送
-export function createChatgpt(data){
+export function createChatgpt(data) {
     return request({
-        url:'/api/chatgpt/create',
+        url: '/api/chatgpt/create',
         method: 'post',
         data
     })
 }
 //引导添加企业微信
-export function addWeCom(data){
+export function addWeCom(data) {
     return request({
-        url:'/api/home/qrcode',
+        url: '/api/home/qrcode',
         method: 'post',
         data
     })
 }
 //检测企业微信是否添加成功
-export function checkEnterpriseQr(data){
+export function checkEnterpriseQr(data) {
     return request({
-        url:'/api/enterprise_wechat/check',
+        url: '/api/enterprise_wechat/check',
         method: 'post',
         data
     })
 }
 //获取企业客服信息
-export function serviceInfo(data){
+export function serviceInfo(data) {
     return request({
-        url:'/api/home/serviceInfo',
+        url: '/api/home/serviceInfo',
         method: 'post',
         data
     })
 }
 
 //获取FB群组
-export function fbData(data){
+export function fbData(data) {
     return request({
-        url:'/api/home/fbData',
+        url: '/api/home/fbData',
         method: 'post',
         data
     })
 }
 //获取达人数据
-export function influenceData(data){
+export function influenceData(data) {
     return request({
-        url:'/api/home/influenceData',
+        url: '/api/home/influenceData',
         method: 'post',
         data
     })
 }
 //获取DEAL数据
-export function dealData(data){
+export function dealData(data) {
     return request({
-        url:'/api/home/dealData',
+        url: '/api/home/dealData',
         method: 'post',
         data
     })
@@ -470,5 +470,22 @@ export function orderEdit(data) {
         url: "/api/order/edit",
         method: "post",
         data
+    })
+}
+
+//意向红人购物车操作
+export function carOperate(data) {
+    return request({
+        url: "/api/influencer/carOperate",
+        method: "post",
+        data
+    })
+}
+
+//意向红人购物车列表
+export function carList() {
+    return request({
+        url: "/api/influencer/carList",
+        method: "post"
     })
 }

@@ -10,7 +10,7 @@
         text-color="#666666"
       >
         <el-menu-item index="/" style="width: 237px"
-          ><img :src="logoImg" alt="" style="width: 100%"
+          ><img src="@/assets/images/home/logo.webp" alt=""
         /></el-menu-item>
 
         <el-menu-item style="float: right" @click="dialogVisible = true"
@@ -27,7 +27,7 @@
       <el-row class="content_body">
         <el-col :span="12" class="left">
           <div class="content_img">
-            <img id="img" src="../../assets/images/login_banner.png" alt="" />
+            <img id="img" src="../../assets/images/login_banner.webp" alt="" />
           </div>
         </el-col>
 
@@ -300,6 +300,7 @@ import {
 } from "@/api/index";
 import login from "@/store/modules/login";
 import { log } from "video.js";
+import router from "@/router";
 export default {
   name: "login",
   data() {
@@ -404,7 +405,7 @@ export default {
     //获取公共配置信息
     getContent() {
       getConfig()
-        .then((res) => {
+        .then((res) => {  
           if (res.code === 1) {
             this.logoImg = res.data.logo;
             localStorage.setItem("logo", res.data.logo);
@@ -469,7 +470,6 @@ export default {
             //清除定时脚本
             clearInterval(_this.checkQrCode);
           } else if (res.code === 1 && res.data.status === 2) {
-            let hrefLink = "https://www.viponm.com";
             //登录成功,即将跳转
             clearInterval(_this.checkQrCode);
             localStorage.setItem("userInfo", JSON.stringify(res.data.userinfo));
@@ -488,20 +488,10 @@ export default {
                 }, 1000);
               });
             } else {
-              this.$router.push(this.fromPath);
+              router.push(this.fromPath);
             }
-
-            if (process.env.NODE_ENV == "production") {
-              hrefLink = `https://www.viponm.com`;
-            } else if (process.env.NODE_ENV == "development") {
-              hrefLink = `http://testai.blhltd.com`;
-            } else {
-              hrefLink = `http://localhost:8088`;
-            }
-
             localStorage.removeItem("source");
             localStorage.removeItem("active");
-            window.location.href = hrefLink;
           }
         } catch (err) {
           this.$message.error(err.msg);
@@ -555,7 +545,6 @@ export default {
           });
 
           if (res.code === 1) {
-            let hrefLink = "https://www.viponm.com";
             if (res.data.type == "register") {
               this.$message.success(res.msg);
             }
@@ -568,14 +557,6 @@ export default {
             this.setUserInfo(JSON.stringify(res.data.userinfo));
             this.setToken(res.data.userinfo.token);
             this.setAvatar(res.data.userinfo.avatar);
-
-            if (process.env.NODE_ENV == "production") {
-              hrefLink = `https://www.viponm.com`;
-            } else if (process.env.NODE_ENV == "development") {
-              hrefLink = `http://testai.blhltd.com`;
-            } else {
-              hrefLink = `http://localhost:8088`;
-            }
             if (res.data.jump) {
               await new Promise((resolve) => {
                 window.open(res.data.jump, "_blank");
@@ -584,11 +565,10 @@ export default {
                 }, 1000);
               });
             } else {
-              this.$router.push(this.fromPath);
+              router.push(this.fromPath);
             }
             localStorage.removeItem("source");
             localStorage.removeItem("active");
-            window.location.href = hrefLink;
           }
         } else {
           console.log("error submit!!");

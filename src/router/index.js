@@ -140,10 +140,9 @@ VueRouter.prototype.push = function push(location) {
 //路由拦截
 router.beforeEach((to, from, next) => {
     if (to.fullPath == "/Note") {
-        store.commit('Index/setIsFalg',false)
-        console.log(store.state.Index.isFalg)
-    }else{
-        store.commit('Index/setIsFalg',true)
+        store.commit('Index/setIsFalg', false)
+    } else {
+        store.commit('Index/setIsFalg', true)
     }
 
     if (to.query.source) localStorage.setItem('source', to.query.source)

@@ -173,7 +173,11 @@
 
         <el-menu-item style="float: right; display: flex; align-items: center">
           <!-- close-delay="1000000" -->
-          <el-popover placement="top-start" trigger="hover">
+          <el-popover
+            placement="top-start"
+            trigger="hover"
+            close-delay="100000000"
+          >
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
               <p>
@@ -183,29 +187,20 @@
               <p>未选择时，将由平台为您推荐最合适的红人</p>
             </div>
             <div class="requirementListul" v-else>
-              <ul>
-                <li
-                  v-for="(item, index) in RequirementLists"
-                  :key="item.user_id"
-                >
-                  <span class="span1">{{ index + 1 }}</span>
-                  <div class="img"><img :src="item.image" alt="" /></div>
-                  <span class="span2">No.{{ item.user_id }}</span>
-                  <span class="span3" v-if="item.price_type == 0"
-                    >￥{{ item.price }}</span
-                  >
-                  <span class="span3" v-if="item.price_type == 1"
-                    >￥{{ item.lower_price }}-{{ item.highest_price }}</span
-                  >
-                  <span class="span3" v-if="item.price_type == 2"
-                    >视产品而定</span
-                  >
-                  <i
-                    class="el-icon-delete"
-                    @click="deletelist(item, index)"
-                  ></i>
-                </li>
-              </ul>
+              <table>
+                <thead>
+                  <td>序号</td>
+                  <td>已选意向达人(可上下左右拖动排序)</td>
+                  <td>操作</td>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                  </tr>
+                </tbody>
+              </table>
 
               <div class="prompt">
                 <span>*</span>
@@ -721,78 +716,23 @@ export default {
 }
 
 .requirementListul {
-  width: 350px;
-
-  ul {
-    width: 350px;
-    max-height: 450px;
-    overflow: auto;
-    padding: 4px 20px;
-    box-sizing: border-box;
-
-    li {
-      padding: 16px 0;
-      border-bottom: 1px solid #eeeeee;
-      display: flex;
-      align-items: center;
-
-      .img {
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        margin: 0 12px 0 10px;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        img {
-          object-fit: cover;
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .span1 {
-        font-size: 14px;
-        color: #999999;
-        width: 20px;
-        display: block;
-      }
-
-      .span2 {
-        font-size: 14px;
-        font-weight: 600;
-        color: #333333;
-        display: block;
-        width: 75px;
-      }
-
-      .span3 {
-        font-size: 15px;
-        width: 90px;
-        color: #ff2c4c;
-      }
-
-      i {
-        cursor: pointer;
-        font-size: 14px;
-        margin-left: 30px;
-      }
-    }
-
-    li:last-child {
-      border-bottom: none;
+  width: 650px;
+  table {
+    width: 100%;
+    thead {
+      height: 46px;
+      background: #f6f6f6;
+      border-radius: 4px;
     }
   }
 
   .prompt {
     display: flex;
     padding: 10px 20px;
-    width: 310px;
+    width: 610px;
     background: #f8f8f8;
     border-radius: 0 7px 7px;
-
+    justify-content: center;
     span {
       color: #ff2c4c;
       font-size: 12px;

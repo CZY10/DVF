@@ -207,12 +207,13 @@
             </div>
             <div
               @click="addlist(item, index, item.user_id)"
-              :class="{ product_btn: true }"
+              :class="{ product_btn: true, addlistbj: item.istrue == false }"
               ref="addbtndom"
             >
               <span class="icon">+</span>
               <i class="iconfont icon-gwc" style="font-size: 14px"></i>
-              <span class="test1">选择</span>
+              <span class="test1" v-if="item.istrue == false">已选择</span>
+              <span class="test1" v-else>选择</span>
             </div>
           </li>
         </ul>
@@ -334,7 +335,6 @@ export default {
       videoslist: [],
       videoslistindex: 0,
       requirementlist: [],
-      addbtndom: this.$refs.addbtndom,
       prevIndexArr: [],
       indexArr: [],
       categoryidarr: [],
@@ -497,9 +497,7 @@ export default {
               this.categoryidarr.push(result);
             });
 
-            this.$nextTick(() => {
-              this.InvertList();
-            });
+            this.InvertList();
           }
         })
         .catch((err) => {
@@ -509,11 +507,15 @@ export default {
 
     //打开视频
     openVideos(videos, index) {
+      const video = this.$refs.myVideo;
       this.dialogVisible = true;
       this.videoslistindex = index;
       videos.forEach((item) => (item.videoslistcss = false));
       this.videoslist = videos;
       this.videoslist[index].videoslistcss = true;
+      video.pause();
+      video.load();
+      video.play();
     },
 
     //切换视频
@@ -546,7 +548,6 @@ export default {
         }
         item.istrue = false;
       } else {
-        // router.push("/login");
         this.dialogVisiblelogin = true;
       }
     },
@@ -588,28 +589,23 @@ export default {
     //反选列表
     InvertList() {
       let _this = this;
-      var addbtndom = _this.$refs.addbtndom;
       _this.RequirementLists.forEach((items) => {
-        var index = _this.datalist.findIndex(
+        let index = _this.datalist.findIndex(
           (item) => item.id == items.user_id
         );
         if (index != -1) {
-          _this.$nextTick(() => {
-            _this.datalist[index].istrue = false;
-            addbtndom[index].classList.add("addlistbj");
-            addbtndom[index].querySelector(".test1").textContent = "已选择";
-          });
+          _this.datalist[index].istrue = false;
         }
       });
     },
 
-    // 同步列表
+    // 删除同步列表
     SynchronizeList(index) {
       var addbtndom = this.$refs.addbtndom;
+      this.datalist[index].istrue = true;
       this.$nextTick(() => {
-        this.datalist[index].istrue = true;
         addbtndom[index].classList.remove("addlistbj");
-        this.$refs.addbtndom[index].classList.add("product_btn");
+        addbtndom[index].classList.add("product_btn");
         addbtndom[index].querySelector(".test1").textContent = "选择";
       });
     },
@@ -641,7 +637,7 @@ export default {
         const video = this.$refs.myVideo;
         video.pause();
         video.load();
-        video.play();
+        this.videoslistindex = -1;
       }
     },
     RequirementLists(newval) {
@@ -990,6 +986,10 @@ export default {
               transition: all 0.3s;
               margin-right: 2px;
             }
+          }
+
+          .addlistbj:hover {
+            background: #ccc !important;
           }
 
           .product_btn:hover .icon {

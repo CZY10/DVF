@@ -298,6 +298,25 @@
         >
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="温馨提示"
+      center
+      :visible.sync="dialogVisiblelogins"
+      width="300px"
+    >
+      <p style="text-align: center; margin-top: 22px; padding: 0 20px">
+        每一个视频可选<span style="color: #d161f6">0～5</span>个意向红人
+        未选择时，将由平台为您推荐
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          class="dialogVisibleloginbtn"
+          @click="dialogVisiblelogins = false"
+          >知道了</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -340,6 +359,7 @@ export default {
       categoryidarr: [],
       isvideoslist: [],
       isloading: false,
+      dialogVisiblelogins: true,
     };
   },
   components: {},

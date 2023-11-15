@@ -191,14 +191,44 @@
                 <table>
                   <thead>
                     <th>序号</th>
-                    <th>已选意向达人(可上下左右拖动排序)</th>
+                    <th>
+                      已选意向达人<span style="font-size: 12px; color: #999"
+                        >(可上下左右拖动排序)</span
+                      >
+                    </th>
                     <th>操作</th>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>2</td>
-                      <td>3</td>
+                    <tr
+                      v-for="(item, index) in RequirementLists"
+                      :key="item.user_id"
+                    >
+                      <td>视频{{ index + 1 }}</td>
+                      <td>
+                        <draggable
+                          v-model="myArray"
+                          group="people"
+                          animation="100"
+                          @start="onStart"
+                          @end="onEnd"
+                        >
+                          <transition-group>
+                            <div
+                              class="item"
+                              v-for="(element, index) in myArray"
+                              :key="index"
+                            >
+                              {{ element }}
+                            </div>
+                          </transition-group>
+                        </draggable>
+                      </td>
+                      <td>
+                        <i
+                          class="el-icon-delete"
+                          @click="deletelist(item, index)"
+                        ></i>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -248,6 +278,7 @@
 
 <script>
 import { mapMutations } from "vuex";
+import draggable from "vuedraggable";
 import {
   chatCount,
   addWeCom,
@@ -299,6 +330,8 @@ export default {
       video_img: true,
       RequirementListlength: 0,
       RequirementLists: [],
+      myArray: [1, 2, 3],
+      dialogVisiblelogin: true,
     };
   },
   computed: {
@@ -432,6 +465,16 @@ export default {
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
     ...mapMutations("login", ["setLogo"]),
+
+    // 开始拖拽事件
+    onStart() {
+      // to do
+    },
+    // 拖拽结束事件
+    onEnd() {
+      // to do
+      console.log(this.myArray);
+    },
 
     //播放视频
     videoplay() {
@@ -630,6 +673,7 @@ export default {
       router.push("/manage/order");
     },
   },
+  components: { draggable },
 };
 </script>
 
@@ -721,6 +765,9 @@ export default {
   width: 650px;
   .table {
     padding: 14px 14px 0 14px;
+    max-height: 435px;
+    overflow: auto;
+    overflow-x: hidden;
     table {
       width: 100%;
       thead {
@@ -729,6 +776,18 @@ export default {
         border-radius: 4px;
         th {
           text-align: center;
+          color: #333333;
+        }
+      }
+    }
+    tbody {
+      tr {
+        height: 130px;
+        td {
+          text-align: center;
+          i {
+            cursor: pointer;
+          }
         }
       }
     }

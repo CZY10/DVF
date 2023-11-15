@@ -362,7 +362,7 @@ export default {
       categoryidarr: [],
       isvideoslist: [],
       isloading: false,
-      dialogVisiblelogins: true,
+      dialogVisiblelogins: false,
     };
   },
   components: {},
@@ -378,6 +378,7 @@ export default {
     },
   },
   mounted() {
+    this.isloading = true;
     document.getElementsByClassName(
       "el-pagination__jump"
     )[0].childNodes[0].nodeValue = "跳转";
@@ -1117,6 +1118,7 @@ export default {
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      text-align: center;
     }
 
     .rigthlist {

@@ -206,7 +206,7 @@
                       <td>视频{{ index + 1 }}</td>
                       <td>
                         <draggable
-                          v-model="myArray"
+                          v-model="RequirementLists[index]"
                           group="people"
                           animation="100"
                           @start="onStart"
@@ -215,10 +215,10 @@
                           <transition-group>
                             <div
                               class="item"
-                              v-for="(element, index) in myArray"
+                              v-for="(element, index) in item"
                               :key="index"
                             >
-                              {{ element }}
+                              {{ element.user_id }}
                             </div>
                           </transition-group>
                         </draggable>
@@ -329,8 +329,102 @@ export default {
       videoUrl: "" || window.localStorage.getItem("videoUrl"),
       video_img: true,
       RequirementListlength: 0,
-      RequirementLists: [],
-      myArray: [1, 2, 3],
+      RequirementLists: [
+        [
+          {
+            user_id: 1544,
+            image:
+              "http://api.video.service.com/uploads/20231109/50a511c237cfbf4aac4fe15c82d7a421.png",
+            price_type: 0,
+            lower_price: 0,
+            highest_price: 0,
+            price: "688",
+          },
+          {
+            user_id: 1,
+            image:
+              "http://api.video.service.com/uploads/20231109/cf76fcadc6102a45fcb3dd450f1a3c31.png",
+            price_type: 0,
+            lower_price: 0,
+            highest_price: 0,
+            price: "688",
+          },
+          {
+            user_id: 1000,
+            image:
+              "http://api.video.service.com/uploads/20231109/a864a47150c0402b85f148aa86132622.png",
+            price_type: 0,
+            lower_price: 230,
+            highest_price: 1200,
+            price: "666",
+          },
+          {
+            user_id: 30,
+            image:
+              "http://api.video.service.com/uploads/20231109/00e8ad411980759134e66229ad564e5d.png",
+            price_type: 1,
+            lower_price: 560,
+            highest_price: 780,
+            price: "560-780",
+          },
+          {
+            user_id: 90,
+            image:
+              "http://api.video.service.com/uploads/20221121/7ab2147fce036fe2b94efb7fbb0a1932.jpg",
+            price_type: 1,
+            lower_price: 560,
+            highest_price: 780,
+            price: "560-780",
+          },
+        ],
+        [
+          {
+            user_id: 110,
+            image:
+              "http://api.video.service.com/uploads/20221121/7ab2147fce036fe2b94efb7fbb0a1932.jpg",
+            price_type: 1,
+            lower_price: 560,
+            highest_price: 780,
+            price: "560-780",
+          },
+          {
+            user_id: 29,
+            image:
+              "http://api.video.service.com/uploads/20221121/a99dad5383bc1068039e4ceda2b92373.jpg",
+            price_type: 1,
+            lower_price: 560,
+            highest_price: 880,
+            price: "560-880",
+          },
+          {
+            user_id: 39,
+            image:
+              "http://api.video.service.com/uploads/20221121/a99dad5383bc1068039e4ceda2b92373.jpg",
+            price_type: 1,
+            lower_price: 560,
+            highest_price: 880,
+            price: "560-880",
+          },
+          {
+            user_id: 130,
+            image:
+              "http://api.video.service.com/uploads/20221121/7ab2147fce036fe2b94efb7fbb0a1932.jpg",
+            price_type: 1,
+            lower_price: 560,
+            highest_price: 780,
+            price: "560-780",
+          },
+          {
+            user_id: 140,
+            image:
+              "http://api.video.service.com/uploads/20221121/7ab2147fce036fe2b94efb7fbb0a1932.jpg",
+            price_type: 1,
+            lower_price: 560,
+            highest_price: 780,
+            price: "560-780",
+          },
+        ],
+      ],
       dialogVisiblelogin: true,
     };
   },
@@ -369,7 +463,7 @@ export default {
       }
     },
     RequirementList(newVal) {
-      this.RequirementLists = newVal;
+      // this.RequirementLists = newVal;
       this.RequirementListlength = newVal.length;
     },
   },
@@ -473,7 +567,7 @@ export default {
     // 拖拽结束事件
     onEnd() {
       // to do
-      console.log(this.myArray);
+      console.log(this.RequirementLists);
     },
 
     //播放视频
@@ -665,7 +759,7 @@ export default {
     getcarList() {
       carList().then((res) => {
         store.commit("Index/setRequirementList", res.data.list);
-        this.RequirementLists = res.data.list;
+        // this.RequirementLists = res.data.list;
       });
     },
 
@@ -787,6 +881,10 @@ export default {
           text-align: center;
           i {
             cursor: pointer;
+          }
+          .item {
+            float: left;
+            width: 19%;
           }
         }
       }

@@ -207,7 +207,10 @@
             </div>
             <div
               @click="addlist(item, index, item.user_id)"
-              :class="{ product_btn: true, addlistbj: item.istrue == false }"
+              :class="{
+                product_btn: item.istrue != false,
+                addlistbj: item.istrue == false,
+              }"
               ref="addbtndom"
             >
               <span class="icon">+</span>
@@ -421,6 +424,10 @@ export default {
 
     //渲染数据
     RenderingData() {
+      this.datalist = [];
+      this.isvideoslist = [];
+      this.categoryidarr = [];
+
       if (
         (!localStorage.getItem("token") && this.searchforval != "") ||
         (!localStorage.getItem("token") && this.categoryValue != "") ||
@@ -471,9 +478,6 @@ export default {
       getSearchList(data)
         .then((res) => {
           this.isloading = false;
-          this.datalist = [];
-          this.isvideoslist = [];
-          this.categoryidarr = [];
           if (res.code == 1) {
             this.total = res.data.total;
             this.per_page = res.data.per_page;
@@ -546,7 +550,7 @@ export default {
           this.createBall(x, y);
           this.SaveData(id);
         }
-        item.istrue = false;
+        this.datalist[index].istrue = false;
       } else {
         this.dialogVisiblelogin = true;
       }

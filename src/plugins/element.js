@@ -43,9 +43,11 @@ import {
     MessageBox,
     Message,
     Avatar,
-    Notification
+    Notification,
+    InputNumber
 } from 'element-ui';
 
+Vue.use(InputNumber);
 Vue.use(Pagination);
 Vue.use(Dialog);
 Vue.use(Menu);

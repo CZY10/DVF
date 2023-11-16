@@ -77,7 +77,7 @@
           <el-badge
             :value="messageCount"
             :hidden="messageCount == 0"
-            class="item"
+            style="margin-bottom: 3px"
           >
             <i
               class="el-icon-chat-dot-round"
@@ -1205,7 +1205,7 @@ export default {
 .el-submenu.is-active .el-submenu__title,
 .el-menu--horizontal > .el-menu-item {
   height: 55px !important;
-  line-height: 66px !important;
+  line-height: 64px !important;
 }
 
 .el-submenu__title i {

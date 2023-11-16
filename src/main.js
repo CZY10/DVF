@@ -5,14 +5,10 @@ import store from './store'
 import './plugins/element.js'
 import './assets/css/reset.css'
 import 'default-passive-events'
-// import videojs from "video.js";
-// import "video.js/dist/video-js.css";
 import elTableInfiniteScroll from "el-table-infinite-scroll";
 import { refreshToken } from '../src/api/index';
-import { mapMutations } from "vuex";
-// import 'swiper/dist/css/swiper.css'
-
 import './assets/fonts/iconfont/iconfont.css'
+import '@/utils/directives'
 
 
 

@@ -376,6 +376,9 @@ export default {
     Requiremenitems() {
       return store.state.Index.Requiremenitem;
     },
+    getRequirementFirst() {
+      return store.state.Index.RequirementFirst;
+    },
   },
   mounted() {
     this.isloading = true;
@@ -558,20 +561,28 @@ export default {
     //添加需求
     addlist(item, index, id) {
       if (localStorage.getItem("token")) {
-        this.requirementlist = this.RequirementLists;
-        const x = event.clientX - 20;
-        const y = event.clientY - 20;
-        this.$refs.addbtndom[index].classList.add("addlistbj");
-        this.$refs.addbtndom[index].classList.remove("product_btn");
-        this.$refs.addbtndom[index].querySelector(".test1").textContent =
-          "已选择";
-        if (item.istrue != false) {
-          this.requirementlist.push(item);
-          store.commit("Index/setRequirementList", this.requirementlist);
-          this.createBall(x, y);
-          this.SaveData(id);
+        if (this.getRequirementFirst == 1) {
+          this.dialogVisiblelogins = true;
+          store.commit("Index/setRequirementFirst", 0);
+        } else {
+          this.requirementlist = this.RequirementLists;
+          const x = event.clientX - 20;
+          const y = event.clientY - 20;
+          this.$refs.addbtndom[index].classList.add("addlistbj");
+          this.$refs.addbtndom[index].classList.remove("product_btn");
+          this.$refs.addbtndom[index].querySelector(".test1").textContent =
+            "已选择";
+          if (item.istrue != false) {
+            this.requirementlist[this.requirementlist.length - 1].length < 5
+              ? this.requirementlist[this.requirementlist.length - 1].push(item)
+              : this.requirementlist.push([item]);
+
+            store.commit("Index/setRequirementList", this.requirementlist);
+            this.createBall(x, y);
+            this.SaveData(id);
+          }
+          this.datalist[index].istrue = false;
         }
-        this.datalist[index].istrue = false;
       } else {
         this.dialogVisiblelogin = true;
       }
@@ -614,7 +625,7 @@ export default {
     //反选列表
     InvertList() {
       let _this = this;
-      _this.RequirementLists.forEach((items) => {
+      _this.RequirementLists.flat().forEach((items) => {
         let index = _this.datalist.findIndex(
           (item) => item.id == items.user_id
         );
@@ -664,9 +675,6 @@ export default {
         video.load();
         this.videoslistindex = -1;
       }
-    },
-    RequirementLists(newval) {
-      // console.log(newval);
     },
     Requiremenitems(newval) {
       var index = this.datalist.findIndex((item) => item.id == newval.user_id);
@@ -935,7 +943,7 @@ export default {
                 align-items: center;
                 float: left;
                 overflow: hidden;
-                max-width: 103px;
+                max-width: 100px;
                 padding: 3px;
 
                 i {

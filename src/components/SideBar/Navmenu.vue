@@ -173,11 +173,7 @@
 
         <el-menu-item style="float: right; display: flex; align-items: center">
           <!-- close-delay="1000000" -->
-          <el-popover
-            placement="top-start"
-            trigger="hover"
-            close-delay="100000000"
-          >
+          <el-popover placement="top-start" trigger="hover">
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
               <p>
@@ -190,7 +186,7 @@
               <div class="table">
                 <table>
                   <thead>
-                    <th>序号</th>
+                    <th>视频</th>
                     <th>
                       已选意向达人<span style="font-size: 12px; color: #999"
                         >(可上下左右拖动排序)</span
@@ -209,16 +205,21 @@
                           v-model="RequirementLists[index]"
                           group="people"
                           animation="100"
-                          @start="onStart"
-                          @end="onEnd"
+                          @start="onStart(RequirementLists[index], index)"
+                          @end="onEnd(RequirementLists[index], index)"
                         >
                           <transition-group>
                             <div
-                              class="item"
+                              class="draggableItem"
                               v-for="(element, index) in item"
                               :key="index"
                             >
-                              {{ element.user_id }}
+                              <img :src="element.image" alt="" />
+                              <p class="userp">NO.{{ element.user_id }}</p>
+                              <p class="pricep">
+                                <span v-if="element.price_type != 2">￥</span
+                                >{{ element.price }}
+                              </p>
                             </div>
                           </transition-group>
                         </draggable>
@@ -237,7 +238,7 @@
               <div class="prompt">
                 <span>*</span>
                 <p>
-                  每一个视频可选0～5个意向红人，未选择时，将由平台为您推荐最合适的红人
+                  每一个视频可选0～5个意向红人,按序号顺序匹配,未选择时,将由平台为您推荐最合适的红人
                 </p>
               </div>
             </div>
@@ -292,7 +293,6 @@ import {
 } from "../../api/index";
 import store from "@/store";
 import router from "@/router";
-// import { shrinkImage } from "shrinkpng";
 
 export default {
   name: "NavMenu",
@@ -329,103 +329,11 @@ export default {
       videoUrl: "" || window.localStorage.getItem("videoUrl"),
       video_img: true,
       RequirementListlength: 0,
-      RequirementLists: [
-        [
-          {
-            user_id: 1544,
-            image:
-              "http://api.video.service.com/uploads/20231109/50a511c237cfbf4aac4fe15c82d7a421.png",
-            price_type: 0,
-            lower_price: 0,
-            highest_price: 0,
-            price: "688",
-          },
-          {
-            user_id: 1,
-            image:
-              "http://api.video.service.com/uploads/20231109/cf76fcadc6102a45fcb3dd450f1a3c31.png",
-            price_type: 0,
-            lower_price: 0,
-            highest_price: 0,
-            price: "688",
-          },
-          {
-            user_id: 1000,
-            image:
-              "http://api.video.service.com/uploads/20231109/a864a47150c0402b85f148aa86132622.png",
-            price_type: 0,
-            lower_price: 230,
-            highest_price: 1200,
-            price: "666",
-          },
-          {
-            user_id: 30,
-            image:
-              "http://api.video.service.com/uploads/20231109/00e8ad411980759134e66229ad564e5d.png",
-            price_type: 1,
-            lower_price: 560,
-            highest_price: 780,
-            price: "560-780",
-          },
-          {
-            user_id: 90,
-            image:
-              "http://api.video.service.com/uploads/20221121/7ab2147fce036fe2b94efb7fbb0a1932.jpg",
-            price_type: 1,
-            lower_price: 560,
-            highest_price: 780,
-            price: "560-780",
-          },
-        ],
-        [
-          {
-            user_id: 110,
-            image:
-              "http://api.video.service.com/uploads/20221121/7ab2147fce036fe2b94efb7fbb0a1932.jpg",
-            price_type: 1,
-            lower_price: 560,
-            highest_price: 780,
-            price: "560-780",
-          },
-          {
-            user_id: 29,
-            image:
-              "http://api.video.service.com/uploads/20221121/a99dad5383bc1068039e4ceda2b92373.jpg",
-            price_type: 1,
-            lower_price: 560,
-            highest_price: 880,
-            price: "560-880",
-          },
-          {
-            user_id: 39,
-            image:
-              "http://api.video.service.com/uploads/20221121/a99dad5383bc1068039e4ceda2b92373.jpg",
-            price_type: 1,
-            lower_price: 560,
-            highest_price: 880,
-            price: "560-880",
-          },
-          {
-            user_id: 130,
-            image:
-              "http://api.video.service.com/uploads/20221121/7ab2147fce036fe2b94efb7fbb0a1932.jpg",
-            price_type: 1,
-            lower_price: 560,
-            highest_price: 780,
-            price: "560-780",
-          },
-          {
-            user_id: 140,
-            image:
-              "http://api.video.service.com/uploads/20221121/7ab2147fce036fe2b94efb7fbb0a1932.jpg",
-            price_type: 1,
-            lower_price: 560,
-            highest_price: 780,
-            price: "560-780",
-          },
-        ],
-      ],
+      RequirementLists: [],
       dialogVisiblelogin: true,
+      onStartarr: [],
+      onEndarr: [],
+      differentIndices: [],
     };
   },
   computed: {
@@ -463,8 +371,8 @@ export default {
       }
     },
     RequirementList(newVal) {
-      // this.RequirementLists = newVal;
-      this.RequirementListlength = newVal.length;
+      // console.log(newVal.flat().length);
+      this.RequirementListlength = newVal.flat().length;
     },
   },
   created() {
@@ -561,13 +469,99 @@ export default {
     ...mapMutations("login", ["setLogo"]),
 
     // 开始拖拽事件
-    onStart() {
-      // to do
+    onStart(islist, itemindex) {
+      this.RequirementLists.forEach((item) => {
+        this.onStartarr.push(item.length);
+      });
     },
     // 拖拽结束事件
-    onEnd() {
+    onEnd(islist, itemindex) {
       // to do
-      console.log(this.RequirementLists);
+      let falg = true;
+      this.RequirementLists.forEach((item, isindex) => {
+        this.onEndarr.push(item.length);
+        if (item.length > 5) {
+          falg = false;
+          setTimeout(() => {
+            this.setcarOperate(true);
+            this.RequirementLists.splice(isindex + 1, 0, [
+              item[item.length - 1],
+            ]);
+            this.RequirementLists[isindex].pop();
+          });
+        }
+      });
+
+      for (let i = 0; i < this.onEndarr.length; i++) {
+        if (this.onEndarr[i] !== this.onStartarr[i]) {
+          // console.log(i);
+          this.differentIndices.push(i);
+        }
+      }
+
+      if (falg) this.setcarOperate(itemindex, this.differentIndices.length);
+
+      setTimeout(() => {
+        this.RequirementLists.forEach((item, isindex) => {
+          if (item.length == 0) this.RequirementLists.splice(isindex, 1);
+        });
+      });
+    },
+
+    //保存购物车列表
+    setcarOperate(itemindex, differentIndiceslength) {
+      if (itemindex == true || differentIndiceslength == 2) {
+        let influencerIds1 = this.RequirementLists[this.differentIndices[0]]
+          .map((item) => item.user_id.toString())
+          .join(",");
+
+        let influencerIds2 = this.RequirementLists[this.differentIndices[1]]
+          .map((item) => item.user_id.toString())
+          .join(",");
+
+        let data = {
+          type: 2,
+          list: [
+            {
+              video: this.differentIndices[0],
+              influencer_id: influencerIds1,
+            },
+            {
+              video: this.differentIndices[1],
+              influencer_id: influencerIds2,
+            },
+          ],
+        };
+        console.log(data);
+        carOperate(data).then((res) => {
+          this.differentIndices = [];
+          influencerIds1 = "";
+          influencerIds2 = "";
+          this.differentIndices = [];
+          this.onEndarr = [];
+          this.onStartarr = [];
+        });
+      } else {
+        let influencerIds1 = this.RequirementLists[itemindex]
+          .map((item) => item.user_id.toString())
+          .join(",");
+        let data = {
+          type: 2,
+          list: [
+            {
+              video: itemindex,
+              influencer_id: influencerIds1,
+            },
+          ],
+        };
+        carOperate(data).then((res) => {
+          this.differentIndices = [];
+          influencerIds1 = "";
+          this.differentIndices = [];
+          this.onEndarr = [];
+          this.onStartarr = [];
+        });
+      }
     },
 
     //播放视频
@@ -759,7 +753,9 @@ export default {
     getcarList() {
       carList().then((res) => {
         store.commit("Index/setRequirementList", res.data.list);
-        // this.RequirementLists = res.data.list;
+        store.commit("Index/setRequirementFirst", res.data.first);
+        this.RequirementLists = res.data.list;
+        console.log(this.RequirementLists);
       });
     },
 
@@ -882,9 +878,24 @@ export default {
           i {
             cursor: pointer;
           }
-          .item {
+          .draggableItem {
             float: left;
             width: 19%;
+            height: 88px;
+            cursor: pointer;
+            img {
+              width: 42px;
+              height: 42px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+            .userp {
+              color: #333333;
+            }
+            .pricep {
+              font-size: 12px;
+              color: #ff2c4c;
+            }
           }
         }
       }

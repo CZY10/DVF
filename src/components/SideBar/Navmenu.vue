@@ -173,7 +173,11 @@
 
         <el-menu-item style="float: right; display: flex; align-items: center">
           <!-- close-delay="1000000" -->
-          <el-popover placement="top-start" trigger="hover">
+          <el-popover
+            placement="top-start"
+            trigger="hover"
+            v-model="popovermodel"
+          >
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
               <p>
@@ -211,8 +215,8 @@
                           <transition-group>
                             <div
                               class="draggableItem"
-                              v-for="(element, index) in item"
-                              :key="index"
+                              v-for="(element, elementindex) in item"
+                              :key="elementindex"
                             >
                               <img :src="element.image" alt="" />
                               <p class="userp">NO.{{ element.user_id }}</p>
@@ -220,6 +224,29 @@
                                 <span v-if="element.price_type != 2">￥</span
                                 >{{ element.price }}
                               </p>
+                              <i
+                                class="el-icon-error"
+                                @click="
+                                  deleteitem(
+                                    item,
+                                    element.user_id,
+                                    index,
+                                    elementindex
+                                  )
+                                "
+                              ></i>
+                              <div
+                                :class="{
+                                  indextop: true,
+                                  indextop1: elementindex == 0,
+                                  indextop2: elementindex == 1,
+                                  indextop3: elementindex == 2,
+                                  indextop4: elementindex == 3,
+                                  indextop5: elementindex == 4,
+                                }"
+                              >
+                                {{ elementindex + 1 }}
+                              </div>
                             </div>
                           </transition-group>
                         </draggable>
@@ -334,6 +361,7 @@ export default {
       onStartarr: [],
       onEndarr: [],
       differentIndices: [],
+      popovermodel: false,
     };
   },
   computed: {
@@ -371,8 +399,12 @@ export default {
       }
     },
     RequirementList(newVal) {
-      // console.log(newVal.flat().length);
       this.RequirementListlength = newVal.flat().length;
+      if (this.RequirementListlength == 0) {
+        setTimeout(() => {
+          this.popovermodel = false;
+        }, 2000);
+      }
     },
   },
   created() {
@@ -532,7 +564,6 @@ export default {
             },
           ],
         };
-        console.log(data);
         carOperate(data).then((res) => {
           this.differentIndices = [];
           influencerIds1 = "";
@@ -599,7 +630,6 @@ export default {
       })
         .then((res) => {
           if (res.code == 1) {
-            console.log(res.data);
             this.serviceInfoList = res.data;
             localStorage.setItem("serviceInfoList", JSON.stringify(res.data));
           }
@@ -716,26 +746,54 @@ export default {
       }
     },
 
-    //删除需求列表某一个
+    //删除需求列表某一列
     deletelist(item, index) {
-      store.commit("Index/setRequiremenitem", item);
       this.RequirementLists.splice(index, 1);
+      store.commit("Index/setRequiremenitem", item);
       let data = {
-        influencer_id: item.user_id,
         type: 0,
+        list: [
+          {
+            video: index,
+            influencer_id: "",
+          },
+        ],
+      };
+      carOperate(data).then((res) => {});
+    },
+
+    //删除需求列表某一个
+    deleteitem(item, id, index, elementindex) {
+      // console.log(this.RequirementLists[index]);
+      if (this.RequirementLists[index].length == 1) {
+        this.deletelist(item, index);
+        return;
+      } else {
+        this.RequirementLists[index].splice(elementindex, 1);
+      }
+      let result = item.map((item) => item.user_id).join(",");
+      store.commit("Index/setRequiremenitem", id);
+      let data = {
+        type: 0,
+        list: [
+          {
+            video: index,
+            influencer_id: result,
+          },
+        ],
       };
       carOperate(data).then((res) => {});
     },
 
     //提交需求
     SubmitRequirements() {
-      let userIds = this.RequirementLists.map((item) => item.user_id);
-      let result = userIds.join(",");
+      // let result = this.RequirementLists.flat()
+      //   .map((item) => item.user_id)
+      //   .join(",");
       let data = {
-        influencer_ids: result,
+        // influencer_ids: result,
         source: 1,
       };
-
       if (this.RequirementLists.length !== 0) {
         needsSelectInfluencer(data).then((res) => {
           if (res.code == 1) {
@@ -755,7 +813,6 @@ export default {
         store.commit("Index/setRequirementList", res.data.list);
         store.commit("Index/setRequirementFirst", res.data.first);
         this.RequirementLists = res.data.list;
-        console.log(this.RequirementLists);
       });
     },
 
@@ -855,7 +912,7 @@ export default {
   width: 650px;
   .table {
     padding: 14px 14px 0 14px;
-    max-height: 435px;
+    height: 435px;
     overflow: auto;
     overflow-x: hidden;
     table {
@@ -883,6 +940,7 @@ export default {
             width: 19%;
             height: 88px;
             cursor: pointer;
+            position: relative;
             img {
               width: 42px;
               height: 42px;
@@ -896,6 +954,47 @@ export default {
               font-size: 12px;
               color: #ff2c4c;
             }
+            .el-icon-error {
+              position: absolute;
+              right: 20px;
+              top: 0;
+              opacity: 0;
+              transition: all 0.3s;
+              color: #ed4014;
+            }
+            .indextop {
+              width: 16px;
+              height: 14px;
+              background: #ff9c17;
+              border-radius: 0 7px 7px 0;
+              position: absolute;
+              top: 0;
+              left: 10px;
+              font-size: 12px;
+              color: #ffffff;
+              line-height: 14px;
+              text-align: left;
+              padding-left: 4px;
+              box-sizing: border-box;
+            }
+            .indextop1 {
+              opacity: 1;
+            }
+            .indextop2 {
+              opacity: 0.8;
+            }
+            .indextop3 {
+              opacity: 0.6;
+            }
+            .indextop4 {
+              opacity: 0.4;
+            }
+            .indextop5 {
+              opacity: 0.2;
+            }
+          }
+          .draggableItem:hover .el-icon-error {
+            opacity: 1;
           }
         }
       }

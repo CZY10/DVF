@@ -573,9 +573,15 @@ export default {
           this.$refs.addbtndom[index].querySelector(".test1").textContent =
             "已选择";
           if (item.istrue != false) {
-            this.requirementlist[this.requirementlist.length - 1].length < 5
-              ? this.requirementlist[this.requirementlist.length - 1].push(item)
-              : this.requirementlist.push([item]);
+            if (this.requirementlist.length == 0) {
+              this.requirementlist.push([item]);
+            } else {
+              this.requirementlist[this.requirementlist.length - 1].length < 5
+                ? this.requirementlist[this.requirementlist.length - 1].push(
+                    item
+                  )
+                : this.requirementlist.push([item]);
+            }
 
             store.commit("Index/setRequirementList", this.requirementlist);
             this.createBall(x, y);
@@ -677,8 +683,17 @@ export default {
       }
     },
     Requiremenitems(newval) {
-      var index = this.datalist.findIndex((item) => item.id == newval.user_id);
-      this.SynchronizeList(index);
+      if (!Array.isArray(newval)) {
+        var index = this.datalist.findIndex((item) => item.id == newval);
+        this.SynchronizeList(index);
+      } else {
+        newval.forEach((isitem) => {
+          var index = this.datalist.findIndex(
+            (item) => item.id == isitem.user_id
+          );
+          this.SynchronizeList(index);
+        });
+      }
     },
   },
 };
@@ -803,7 +818,6 @@ export default {
 
         .product_li {
           height: 448px;
-
           flex: 0 0 calc(25% - 20px);
           margin-bottom: 30px;
           margin-right: 20px;

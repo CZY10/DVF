@@ -177,6 +177,7 @@
             placement="top-start"
             trigger="hover"
             v-model="popovermodel"
+            close-delay="1000000"
           >
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
@@ -215,7 +216,7 @@
                           chosenClass="chosen"
                           :forceFallback="true"
                         >
-                          <transition-group>
+                          <transition-group :style="style">
                             <div
                               class="draggableItem"
                               v-for="(element, elementindex) in item"
@@ -264,12 +265,14 @@
                   </tbody>
                 </table>
               </div>
-
               <div class="prompt">
-                <span>*</span>
-                <p>
-                  每一个视频可选0～5个意向红人,按序号顺序匹配,未选择时,将由平台为您推荐最合适的红人
-                </p>
+                <i class="el-icon-circle-plus" @click="addLlistitem"></i>
+                <div class="prompttext">
+                  <span>*</span>
+                  <p>
+                    每一个视频可选0～5个意向红人,按序号顺序匹配,未选择时,将由平台为您推荐最合适的红人
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -365,6 +368,7 @@ export default {
       onEndarr: [],
       differentIndices: [],
       popovermodel: false,
+      style: "min-height:130px;display: block;",
     };
   },
   computed: {
@@ -503,6 +507,10 @@ export default {
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
     ...mapMutations("login", ["setLogo"]),
+    addLlistitem() {
+      this.RequirementLists.push([]);
+    },
+
     // 开始拖拽事件
     onStart(islist, itemindex) {
       this.RequirementLists.forEach((item) => {
@@ -942,6 +950,7 @@ export default {
           .draggableItem {
             float: left;
             width: 19%;
+            margin-top: 30px;
             height: 88px;
             cursor: pointer;
             position: relative;
@@ -1005,7 +1014,7 @@ export default {
             opacity: 0;
           }
           .chosen {
-            background-color: rgba(255, 255, 255, 1);
+            background-color: rgba(255, 255, 255, 0.1);
           }
         }
       }
@@ -1013,22 +1022,53 @@ export default {
   }
 
   .prompt {
-    display: flex;
-    padding: 10px 20px;
+    padding: 0 20px 10px;
     width: 610px;
     background: #f8f8f8;
     border-radius: 0 7px 7px;
-    justify-content: center;
-    span {
-      color: #ff2c4c;
-      font-size: 12px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid #eeeeee;
+    height: 47px;
+    .el-icon-circle-plus {
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 100;
+      color: #eccaf8;
+      transition: all 0.3s;
+    }
+    .el-icon-circle-plus:hover {
+      color: #d161f6;
     }
 
-    p {
-      color: #999999;
-      font-size: 12px;
-      margin-left: 5px;
+    .prompttext {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      span {
+        color: #ff2c4c;
+        font-size: 12px;
+      }
+
+      p {
+        color: #999999;
+        font-size: 12px;
+        margin-left: 5px;
+      }
     }
+  }
+  .prompt:before {
+    content: "";
+    width: 48px;
+    height: 24px;
+    position: absolute;
+    bottom: 35px;
+    margin: auto;
+    border-radius: 0 0 24px 24px;
+    border: 1px solid #eeeeee;
+    background: #fff;
+    border-top: none;
   }
 }
 

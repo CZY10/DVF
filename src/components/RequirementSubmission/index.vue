@@ -60,7 +60,11 @@
                   <draggable
                     v-model="scope.row.influencer_info"
                     animation="100"
-                    @end="influencer_infoOnEnd"
+                    @end="influencer_infoOnEnd(tableData)"
+                    ghostClass="ghost"
+                    chosenClass="chosen"
+                    :forceFallback="true"
+                    group="people"
                   >
                     <transition-group>
                       <li
@@ -79,12 +83,10 @@
                             "
                             @click="gohomepage(item.user_id)"
                           />
-                          <div
-                            class="delDiv"
+                          <i
+                            class="el-icon-error delDiv"
                             @click="delDr(item.user_id, scope.row.id)"
-                          >
-                            x
-                          </div>
+                          ></i>
                         </div>
                         <p
                           style="
@@ -550,8 +552,14 @@ export default {
     },
 
     //列表达人拖拽结束
-    influencer_infoOnEnd() {
-      console.log(this.tableData);
+    influencer_infoOnEnd(list) {
+      console.log(list);
+      list.forEach((item) => {
+        console.log(item.influencer_info);
+        if (item.influencer_info.length > 5) {
+          item.influencer_info.pop();
+        }
+      });
     },
   },
   mounted() {
@@ -870,18 +878,12 @@ export default {
 
       .delDiv {
         opacity: 0;
-        width: 10px;
-        height: 10px;
-        background: red;
-        border-radius: 50%;
         position: absolute;
         top: 0;
-        left: 30px;
-        color: white !important;
-        font-size: 12px;
-        line-height: 6px;
+        left: 25px;
         cursor: pointer;
         transition: all 0.3s;
+        color: red;
       }
 
       .isinfluencerInfoLi:hover .delDiv {
@@ -945,5 +947,13 @@ export default {
   position: absolute;
   top: -8px;
   right: 45px;
+}
+
+.ghost {
+  opacity: 0;
+}
+
+.chosen {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>

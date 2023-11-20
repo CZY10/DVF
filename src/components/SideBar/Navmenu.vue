@@ -173,7 +173,11 @@
 
         <el-menu-item style="float: right; display: flex; align-items: center">
           <!-- close-delay="1000000" -->
-          <el-popover placement="top-start" trigger="hover">
+          <el-popover
+            placement="top-start"
+            trigger="hover"
+            v-model="popovermodel"
+          >
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
               <p>
@@ -183,35 +187,101 @@
               <p>未选择时，将由平台为您推荐最合适的红人</p>
             </div>
             <div class="requirementListul" v-else>
-              <ul>
-                <li
-                  v-for="(item, index) in RequirementLists"
-                  :key="item.user_id"
-                >
-                  <span class="span1">{{ index + 1 }}</span>
-                  <div class="img"><img :src="item.image" alt="" /></div>
-                  <span class="span2">No.{{ item.user_id }}</span>
-                  <span class="span3" v-if="item.price_type == 0"
-                    >￥{{ item.price }}</span
-                  >
-                  <span class="span3" v-if="item.price_type == 1"
-                    >￥{{ item.lower_price }}-{{ item.highest_price }}</span
-                  >
-                  <span class="span3" v-if="item.price_type == 2"
-                    >视产品而定</span
-                  >
-                  <i
-                    class="el-icon-delete"
-                    @click="deletelist(item, index)"
-                  ></i>
-                </li>
-              </ul>
-
+              <div class="table">
+                <table>
+                  <thead>
+                    <th>视频</th>
+                    <th>
+                      已选意向达人<span style="font-size: 12px; color: #999"
+                        >(可上下左右拖动排序)</span
+                      >
+                    </th>
+                    <th>操作</th>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(item, index) in RequirementLists"
+                      :key="item.user_id"
+                    >
+                      <td>视频{{ index + 1 }}</td>
+                      <td>
+                        <draggable
+                          v-model="RequirementLists[index]"
+                          group="people"
+                          animation="300"
+                          @start="onStart"
+                          @end="
+                            onEnd(
+                              RequirementLists[index],
+                              index,
+                              RequirementLists
+                            )
+                          "
+                          ghostClass="ghost"
+                          chosenClass="chosen"
+                          :forceFallback="true"
+                        >
+                          <transition-group :style="style">
+                            <div
+                              class="draggableItem"
+                              v-for="(element, elementindex) in item"
+                              :key="elementindex"
+                              @mousedown="
+                                itemmousedown(RequirementLists, element)
+                              "
+                            >
+                              <img :src="element.image" alt="" />
+                              <p class="userp">NO.{{ element.user_id }}</p>
+                              <p class="pricep">
+                                <span v-if="element.price_type != 2">￥</span
+                                >{{ element.price }}
+                              </p>
+                              <i
+                                class="el-icon-error"
+                                @click="
+                                  deleteitem(
+                                    item,
+                                    element.user_id,
+                                    index,
+                                    elementindex
+                                  )
+                                "
+                              ></i>
+                              <div
+                                :class="{
+                                  indextop: true,
+                                  indextop1: elementindex == 0,
+                                  indextop2: elementindex == 1,
+                                  indextop3: elementindex == 2,
+                                  indextop4: elementindex == 3,
+                                  indextop5: elementindex == 4,
+                                }"
+                                ref="iftop"
+                              >
+                                {{ elementindex + 1 }}
+                              </div>
+                            </div>
+                          </transition-group>
+                        </draggable>
+                      </td>
+                      <td>
+                        <i
+                          class="el-icon-delete"
+                          @click="deletelist(item, index)"
+                        ></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div class="prompt">
-                <span>*</span>
-                <p>
-                  每一个视频可选0～5个意向红人，未选择时，将由平台为您推荐最合适的红人
-                </p>
+                <i class="el-icon-circle-plus" @click="addLlistitem"></i>
+                <div class="prompttext">
+                  <span>*</span>
+                  <p>
+                    每一个视频可选0～5个意向红人,按序号顺序匹配,未选择时,将由平台为您推荐最合适的红人
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -251,6 +321,7 @@
 
 <script>
 import { mapMutations } from "vuex";
+import draggable from "vuedraggable";
 import {
   chatCount,
   addWeCom,
@@ -264,7 +335,6 @@ import {
 } from "../../api/index";
 import store from "@/store";
 import router from "@/router";
-// import { shrinkImage } from "shrinkpng";
 
 export default {
   name: "NavMenu",
@@ -302,6 +372,12 @@ export default {
       video_img: true,
       RequirementListlength: 0,
       RequirementLists: [],
+      dialogVisiblelogin: true,
+      onStartarr: [],
+      onEndarr: [],
+      differentIndices: [],
+      popovermodel: false,
+      style: "min-height:130px;display: block;",
     };
   },
   computed: {
@@ -340,7 +416,12 @@ export default {
     },
     RequirementList(newVal) {
       this.RequirementLists = newVal;
-      this.RequirementListlength = newVal.length;
+      this.RequirementListlength = newVal.flat().length;
+      if (this.RequirementListlength == 0) {
+        setTimeout(() => {
+          this.popovermodel = false;
+        }, 1000);
+      }
     },
   },
   created() {
@@ -435,6 +516,116 @@ export default {
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
     ...mapMutations("login", ["setLogo"]),
+    addLlistitem() {
+      this.RequirementLists.push([]);
+    },
+
+    itemmousedown(list, isitem) {
+      let flatArr = list.flat(Infinity); // 将二维数组变成一维数组
+      let index = flatArr.findIndex((item) => item.user_id === isitem.user_id); // 找到在那个下标
+      this.$refs.iftop[index].style.opacity = "0";
+    },
+    // 开始拖拽事件
+    onStart(evt) {
+      this.RequirementLists.forEach((item) => {
+        this.onStartarr.push(item.length);
+      });
+    },
+    // 拖拽结束事件
+    onEnd(islist, itemindex, listarr) {
+      let flatArr = listarr.flat(Infinity); // 将二维数组变成一维数组
+      for (let index = 0; index < flatArr.length; index++) {
+        this.$refs.iftop[index].style.opacity = "1";
+      }
+
+      // to do
+      let falg = true;
+      this.RequirementLists.forEach((item, isindex) => {
+        this.onEndarr.push(item.length);
+        if (item.length > 5) {
+          falg = false;
+          setTimeout(() => {
+            this.setcarOperate("true");
+            this.RequirementLists.splice(isindex + 1, 0, [
+              item[item.length - 1],
+            ]);
+            this.RequirementLists[isindex].pop();
+          });
+        }
+      });
+
+      for (let i = 0; i < this.onEndarr.length; i++) {
+        if (this.onEndarr[i] !== this.onStartarr[i]) {
+          // console.log(i);
+          this.differentIndices.push(i);
+        }
+      }
+
+      if (falg) this.setcarOperate(itemindex, this.differentIndices.length);
+
+      setTimeout(() => {
+        this.RequirementLists.forEach((item, isindex) => {
+          if (item.length == 0) this.RequirementLists.splice(isindex, 1);
+        });
+      });
+    },
+
+    //保存购物车列表
+    setcarOperate(itemindex, differentIndiceslength) {
+      // console.log(itemindex, differentIndiceslength);
+      if (itemindex == "true" || differentIndiceslength == 2) {
+        let influencerIds1 = this.RequirementLists[this.differentIndices[0]]
+          .map((item) => item.user_id.toString())
+          .join(",");
+
+        let influencerIds2 = this.RequirementLists[this.differentIndices[1]]
+          .map((item) => item.user_id.toString())
+          .join(",");
+        let data = {
+          type: 2,
+          list: [
+            {
+              video: this.differentIndices[0],
+              influencer_id: influencerIds1,
+            },
+            {
+              video: this.differentIndices[1],
+              influencer_id: influencerIds2,
+            },
+          ],
+        };
+        carOperate(data).then((res) => {
+          this.differentIndices = [];
+          influencerIds1 = "";
+          influencerIds2 = "";
+          this.differentIndices = [];
+          this.onEndarr = [];
+          this.onStartarr = [];
+          // this.getcarList();
+        });
+      } else {
+        let influencerIds1 = this.RequirementLists[itemindex]
+          .map((item) => item.user_id.toString())
+          .join(",");
+        console.log(influencerIds1);
+        let data = {
+          type: 2,
+          list: [
+            {
+              video: itemindex,
+              influencer_id: influencerIds1,
+            },
+          ],
+        };
+        carOperate(data).then((res) => {
+          this.differentIndices = [];
+          influencerIds1 = "";
+          this.differentIndices = [];
+          this.onEndarr = [];
+          this.onStartarr = [];
+        });
+      }
+    },
 
     //播放视频
     videoplay() {
@@ -471,7 +662,6 @@ export default {
       })
         .then((res) => {
           if (res.code == 1) {
-            console.log(res.data);
             this.serviceInfoList = res.data;
             localStorage.setItem("serviceInfoList", JSON.stringify(res.data));
           }
@@ -588,26 +778,54 @@ export default {
       }
     },
 
-    //删除需求列表某一个
+    //删除需求列表某一列
     deletelist(item, index) {
-      store.commit("Index/setRequiremenitem", item);
       this.RequirementLists.splice(index, 1);
+      store.commit("Index/setRequiremenitem", item);
       let data = {
-        influencer_id: item.user_id,
         type: 0,
+        list: [
+          {
+            video: index,
+            influencer_id: "",
+          },
+        ],
+      };
+      carOperate(data).then((res) => {});
+    },
+
+    //删除需求列表某一个
+    deleteitem(item, id, index, elementindex) {
+      // console.log(this.RequirementLists[index]);
+      if (this.RequirementLists[index].length == 1) {
+        this.deletelist(item, index);
+        return;
+      } else {
+        this.RequirementLists[index].splice(elementindex, 1);
+      }
+      let result = item.map((item) => item.user_id).join(",");
+      store.commit("Index/setRequiremenitem", id);
+      let data = {
+        type: 0,
+        list: [
+          {
+            video: index,
+            influencer_id: result,
+          },
+        ],
       };
       carOperate(data).then((res) => {});
     },
 
     //提交需求
     SubmitRequirements() {
-      let userIds = this.RequirementLists.map((item) => item.user_id);
-      let result = userIds.join(",");
+      // let result = this.RequirementLists.flat()
+      //   .map((item) => item.user_id)
+      //   .join(",");
       let data = {
-        influencer_ids: result,
+        // influencer_ids: result,
         source: 1,
       };
-
       if (this.RequirementLists.length !== 0) {
         needsSelectInfluencer(data).then((res) => {
           if (res.code == 1) {
@@ -625,6 +843,7 @@ export default {
     getcarList() {
       carList().then((res) => {
         store.commit("Index/setRequirementList", res.data.list);
+        store.commit("Index/setRequirementFirst", res.data.first);
         this.RequirementLists = res.data.list;
       });
     },
@@ -633,6 +852,7 @@ export default {
       router.push("/manage/order");
     },
   },
+  components: { draggable },
 };
 </script>
 
@@ -721,88 +941,154 @@ export default {
 }
 
 .requirementListul {
-  width: 350px;
-
-  ul {
-    width: 350px;
-    max-height: 450px;
+  width: 650px;
+  .table {
+    padding: 14px 14px 0 14px;
+    height: 435px;
     overflow: auto;
-    padding: 4px 20px;
-    box-sizing: border-box;
-
-    li {
-      padding: 16px 0;
-      border-bottom: 1px solid #eeeeee;
-      display: flex;
-      align-items: center;
-
-      .img {
-        width: 46px;
+    overflow-x: hidden;
+    table {
+      width: 100%;
+      thead {
         height: 46px;
-        border-radius: 50%;
-        margin: 0 12px 0 10px;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        img {
-          object-fit: cover;
-          width: 100%;
-          height: 100%;
+        background: #f6f6f6;
+        border-radius: 4px;
+        th {
+          text-align: center;
+          color: #333333;
         }
       }
-
-      .span1 {
-        font-size: 14px;
-        color: #999999;
-        width: 20px;
-        display: block;
-      }
-
-      .span2 {
-        font-size: 14px;
-        font-weight: 600;
-        color: #333333;
-        display: block;
-        width: 75px;
-      }
-
-      .span3 {
-        font-size: 15px;
-        width: 90px;
-        color: #ff2c4c;
-      }
-
-      i {
-        cursor: pointer;
-        font-size: 14px;
-        margin-left: 30px;
-      }
     }
+    tbody {
+      tr {
+        height: 130px;
+        td {
+          text-align: center;
+          i {
+            cursor: pointer;
+          }
+          .draggableItem {
+            float: left;
+            width: 19%;
+            margin-top: 30px;
+            height: 88px;
+            cursor: pointer;
+            position: relative;
+            img {
+              width: 42px;
+              height: 42px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+            .userp {
+              color: #333333;
+            }
+            .pricep {
+              font-size: 12px;
+              color: #ff2c4c;
+            }
+            .el-icon-error {
+              position: absolute;
+              right: 20px;
+              top: 0;
+              opacity: 0;
+              transition: all 0.3s;
+              color: #ed4014;
+            }
+            .indextop {
+              width: 16px;
+              height: 14px;
+              background: #ff9c17;
+              border-radius: 0 7px 7px 0;
+              position: absolute;
+              top: 0;
+              left: 10px;
+              font-size: 12px;
+              color: #ffffff;
+              line-height: 14px;
+              text-align: left;
+              padding-left: 4px;
+              box-sizing: border-box;
+            }
+            .indextop1 {
+              opacity: 1;
+            }
+            .indextop2 {
+              opacity: 0.8;
+            }
+            .indextop3 {
+              opacity: 0.6;
+            }
+            .indextop4 {
+              opacity: 0.4;
+            }
+            .indextop5 {
+              opacity: 0.2;
+            }
+          }
+          .draggableItem:hover .el-icon-error {
+            opacity: 1;
+          }
 
-    li:last-child {
-      border-bottom: none;
+          .ghost {
+            opacity: 0;
+          }
+          .chosen {
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
     }
   }
 
   .prompt {
-    display: flex;
-    padding: 10px 20px;
-    width: 310px;
+    padding: 0 20px 10px;
+    width: 610px;
     background: #f8f8f8;
     border-radius: 0 7px 7px;
-
-    span {
-      color: #ff2c4c;
-      font-size: 12px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid #eeeeee;
+    height: 47px;
+    .el-icon-circle-plus {
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 100;
+      color: #eccaf8;
+      transition: all 0.3s;
+    }
+    .el-icon-circle-plus:hover {
+      color: #d161f6;
     }
 
-    p {
-      color: #999999;
-      font-size: 12px;
-      margin-left: 5px;
+    .prompttext {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      span {
+        color: #ff2c4c;
+        font-size: 12px;
+      }
+
+      p {
+        color: #999999;
+        font-size: 12px;
+        margin-left: 5px;
+      }
     }
+  }
+  .prompt:before {
+    content: "";
+    width: 48px;
+    height: 24px;
+    position: absolute;
+    bottom: 35px;
+    margin: auto;
+    border-radius: 0 0 24px 24px;
+    border: 1px solid #eeeeee;
+    background: #fff;
+    border-top: none;
   }
 }
 

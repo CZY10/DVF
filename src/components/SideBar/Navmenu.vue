@@ -238,7 +238,7 @@
                               "
                             >
                               <img :src="element.image" alt="" />
-                              <p class="userp">NO.{{ element.user_id }}</p>
+                              <p class="userp">No.{{ element.user_id }}</p>
                               <p class="pricep">
                                 <span v-if="element.price_type != 2">￥</span
                                 >{{ element.price }}
@@ -286,7 +286,7 @@
                 <div class="prompttext">
                   <span>*</span>
                   <p>
-                    每一个视频可选0～5个意向红人,按序号顺序匹配,未选择时,将由平台为您推荐最合适的红人
+                    每一个视频可选0～5个意向红人，按序号顺序匹配，未选择时，将由平台为您推荐最合适的红人
                   </p>
                 </div>
               </div>
@@ -955,7 +955,7 @@ export default {
 .requirementListul {
   width: 650px;
   .table {
-    padding: 14px 14px 0 14px;
+    padding: 14px 17px 0 14px;
     height: 435px;
     overflow: auto;
     overflow-x: hidden;
@@ -974,6 +974,7 @@ export default {
     tbody {
       tr {
         height: 130px;
+        border-bottom: 1px solid #eee;
         td {
           text-align: center;
           i {
@@ -1050,6 +1051,10 @@ export default {
           }
         }
       }
+
+      tr:last-child {
+        border-bottom: none;
+      }
     }
   }
 
@@ -1058,24 +1063,25 @@ export default {
     width: 610px;
     background: #f8f8f8;
     border-radius: 0 7px 7px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
     border: 1px solid #eeeeee;
     height: 47px;
+    text-align: center;
+    position: relative;
     .el-icon-circle-plus {
-      font-size: 20px;
+      font-size: 25px;
       cursor: pointer;
-      z-index: 100;
       color: #eccaf8;
       transition: all 0.3s;
+      position: absolute;
+      top: -10px;
+      left: calc(50% + 4px);
     }
     .el-icon-circle-plus:hover {
       color: #d161f6;
     }
 
     .prompttext {
-      margin-top: 10px;
+      margin-top: 25px;
       display: flex;
       justify-content: center;
       span {
@@ -1092,10 +1098,10 @@ export default {
   }
   .prompt:before {
     content: "";
-    width: 48px;
-    height: 24px;
+    width: 32px;
+    height: 18px;
     position: absolute;
-    bottom: 35px;
+    bottom: 39px;
     margin: auto;
     border-radius: 0 0 24px 24px;
     border: 1px solid #eeeeee;

@@ -209,7 +209,7 @@
                           v-model="RequirementLists[index]"
                           group="people"
                           animation="300"
-                          @start="onStart(RequirementLists[index], index)"
+                          @start="onStart"
                           @end="
                             onEnd(
                               RequirementLists[index],
@@ -526,7 +526,7 @@ export default {
       this.$refs.iftop[index].style.opacity = "0";
     },
     // 开始拖拽事件
-    onStart(islist, itemindex) {
+    onStart(evt) {
       this.RequirementLists.forEach((item) => {
         this.onStartarr.push(item.length);
       });
@@ -545,7 +545,7 @@ export default {
         if (item.length > 5) {
           falg = false;
           setTimeout(() => {
-            this.setcarOperate(true);
+            this.setcarOperate("true");
             this.RequirementLists.splice(isindex + 1, 0, [
               item[item.length - 1],
             ]);
@@ -572,7 +572,8 @@ export default {
 
     //保存购物车列表
     setcarOperate(itemindex, differentIndiceslength) {
-      if (itemindex == true || differentIndiceslength == 2) {
+      // console.log(itemindex, differentIndiceslength);
+      if (itemindex == "true" || differentIndiceslength == 2) {
         let influencerIds1 = this.RequirementLists[this.differentIndices[0]]
           .map((item) => item.user_id.toString())
           .join(",");
@@ -580,7 +581,6 @@ export default {
         let influencerIds2 = this.RequirementLists[this.differentIndices[1]]
           .map((item) => item.user_id.toString())
           .join(",");
-
         let data = {
           type: 2,
           list: [
@@ -607,6 +607,7 @@ export default {
         let influencerIds1 = this.RequirementLists[itemindex]
           .map((item) => item.user_id.toString())
           .join(",");
+        console.log(influencerIds1);
         let data = {
           type: 2,
           list: [

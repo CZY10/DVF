@@ -211,7 +211,13 @@
                           group="people"
                           animation="300"
                           @start="onStart(RequirementLists[index], index)"
-                          @end="onEnd(RequirementLists[index], index)"
+                          @end="
+                            onEnd(
+                              RequirementLists[index],
+                              index,
+                              RequirementLists
+                            )
+                          "
                           ghostClass="ghost"
                           chosenClass="chosen"
                           :forceFallback="true"
@@ -221,6 +227,9 @@
                               class="draggableItem"
                               v-for="(element, elementindex) in item"
                               :key="elementindex"
+                              @mousedown="
+                                itemmousedown(RequirementLists, element)
+                              "
                             >
                               <img :src="element.image" alt="" />
                               <p class="userp">NO.{{ element.user_id }}</p>
@@ -248,6 +257,7 @@
                                   indextop4: elementindex == 3,
                                   indextop5: elementindex == 4,
                                 }"
+                                ref="iftop"
                               >
                                 {{ elementindex + 1 }}
                               </div>
@@ -511,6 +521,11 @@ export default {
       this.RequirementLists.push([]);
     },
 
+    itemmousedown(list, isitem) {
+      let flatArr = list.flat(Infinity); // 将二维数组变成一维数组
+      let index = flatArr.findIndex((item) => item.user_id === isitem.user_id); // 找到在那个下标
+      this.$refs.iftop[index].style.opacity = "0";
+    },
     // 开始拖拽事件
     onStart(islist, itemindex) {
       this.RequirementLists.forEach((item) => {
@@ -518,7 +533,12 @@ export default {
       });
     },
     // 拖拽结束事件
-    onEnd(islist, itemindex) {
+    onEnd(islist, itemindex, listarr) {
+      let flatArr = listarr.flat(Infinity); // 将二维数组变成一维数组
+      for (let index = 0; index < flatArr.length; index++) {
+        this.$refs.iftop[index].style.opacity = "1";
+      }
+
       // to do
       let falg = true;
       this.RequirementLists.forEach((item, isindex) => {

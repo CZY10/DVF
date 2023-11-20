@@ -229,6 +229,13 @@
                               @mousedown="
                                 itemmousedown(RequirementLists, element)
                               "
+                              @mouseup="
+                                itemmouseup(
+                                  RequirementLists,
+                                  element,
+                                  elementindex
+                                )
+                              "
                             >
                               <img :src="element.image" alt="" />
                               <p class="userp">NO.{{ element.user_id }}</p>
@@ -525,6 +532,12 @@ export default {
       let index = flatArr.findIndex((item) => item.user_id === isitem.user_id); // 找到在那个下标
       this.$refs.iftop[index].style.opacity = "0";
     },
+    itemmouseup(list, isitem, isindex) {
+      let flatArr = list.flat(Infinity); // 将二维数组变成一维数组
+      let index = flatArr.findIndex((item) => item.user_id === isitem.user_id); // 找到在那个下标
+      this.$refs.iftop[index].style.opacity = "1";
+      // console.log(isindex);
+    },
     // 开始拖拽事件
     onStart(evt) {
       this.RequirementLists.forEach((item) => {
@@ -537,7 +550,6 @@ export default {
       for (let index = 0; index < flatArr.length; index++) {
         this.$refs.iftop[index].style.opacity = "1";
       }
-
       // to do
       let falg = true;
       this.RequirementLists.forEach((item, isindex) => {
@@ -607,7 +619,7 @@ export default {
         let influencerIds1 = this.RequirementLists[itemindex]
           .map((item) => item.user_id.toString())
           .join(",");
-        console.log(influencerIds1);
+        // console.log(influencerIds1);
         let data = {
           type: 2,
           list: [

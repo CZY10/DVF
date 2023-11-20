@@ -728,7 +728,7 @@ export default {
 
 <style lang="less" scoped>
 ::v-deep .el-table__body-wrapper {
-  padding: 0 15px;
+  padding: 0 15px 25px 15px;
   border: none;
 }
 ::v-deep .el-table .has-gutter .el-checkbox .el-checkbox__inner {

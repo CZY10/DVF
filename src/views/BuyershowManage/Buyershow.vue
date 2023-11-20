@@ -308,8 +308,15 @@
       :visible.sync="dialogVisiblelogins"
       width="300px"
     >
-      <p style="text-align: center; margin-top: 22px; padding: 0 20px">
-        每一个视频可选<span style="color: #d161f6">0～5</span>个意向红人
+      <p
+        style="
+          text-align: center;
+          margin-top: 22px;
+          padding: 0 20px;
+          line-height: 1.6;
+        "
+      >
+        每一个视频可选<span style="color: #d161f6">0～5</span>个意向红人 <br />
         未选择时，将由平台为您推荐
       </p>
       <span slot="footer" class="dialog-footer">
@@ -331,6 +338,7 @@ import {
   checkPayment,
   getShootRequire,
   carOperate,
+  carList,
 } from "@/api";
 import store from "@/store";
 import router from "@/router";
@@ -601,7 +609,12 @@ export default {
         type: 1,
       };
       if (id) {
-        carOperate(data).then((res) => {});
+        carOperate(data).then((res) => {
+          carList().then((res) => {
+            store.commit("Index/setRequirementList", res.data.list);
+            store.commit("Index/setRequirementFirst", res.data.first);
+          });
+        });
       }
     },
 

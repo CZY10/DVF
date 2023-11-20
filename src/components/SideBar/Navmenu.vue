@@ -208,9 +208,12 @@
                         <draggable
                           v-model="RequirementLists[index]"
                           group="people"
-                          animation="100"
+                          animation="300"
                           @start="onStart(RequirementLists[index], index)"
                           @end="onEnd(RequirementLists[index], index)"
+                          ghostClass="ghost"
+                          chosenClass="chosen"
+                          :forceFallback="true"
                         >
                           <transition-group>
                             <div
@@ -399,11 +402,12 @@ export default {
       }
     },
     RequirementList(newVal) {
+      this.RequirementLists = newVal;
       this.RequirementListlength = newVal.flat().length;
       if (this.RequirementListlength == 0) {
         setTimeout(() => {
           this.popovermodel = false;
-        }, 2000);
+        }, 1000);
       }
     },
   },
@@ -499,7 +503,6 @@ export default {
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
     ...mapMutations("login", ["setLogo"]),
-
     // 开始拖拽事件
     onStart(islist, itemindex) {
       this.RequirementLists.forEach((item) => {
@@ -571,6 +574,7 @@ export default {
           this.differentIndices = [];
           this.onEndarr = [];
           this.onStartarr = [];
+          // this.getcarList();
         });
       } else {
         let influencerIds1 = this.RequirementLists[itemindex]
@@ -995,6 +999,13 @@ export default {
           }
           .draggableItem:hover .el-icon-error {
             opacity: 1;
+          }
+
+          .ghost {
+            opacity: 0;
+          }
+          .chosen {
+            background-color: rgba(255, 255, 255, 1);
           }
         }
       }

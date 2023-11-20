@@ -177,7 +177,6 @@
             placement="top-start"
             trigger="hover"
             v-model="popovermodel"
-            close-delay="1000000"
           >
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />

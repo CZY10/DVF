@@ -45,7 +45,7 @@
             color: '#333333',
             position: 'relative',
           }"
-          height="600"
+          height="640"
           @selection-change="handleSelectionChange"
         >
           <el-table-column
@@ -554,10 +554,11 @@ export default {
     //列表达人拖拽结束
     influencer_infoOnEnd(list) {
       console.log(list);
-      list.forEach((item) => {
-        console.log(item.influencer_info);
+      list.forEach((item, index) => {
         if (item.influencer_info.length > 5) {
-          item.influencer_info.pop();
+          // this.RequirementLists.splice(index + 1, 0, [item[item.length - 1]]);
+          const itempop = item.influencer_info.pop();
+          console.log(itempop);
         }
       });
     },
@@ -730,6 +731,7 @@ export default {
 ::v-deep .el-table__body-wrapper {
   padding: 0 15px 25px 15px;
   border: none;
+  box-sizing: border-box;
 }
 ::v-deep .el-table .has-gutter .el-checkbox .el-checkbox__inner {
   display: none;

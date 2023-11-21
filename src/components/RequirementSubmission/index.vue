@@ -158,7 +158,7 @@
                     align-items: center;
                   "
                 >
-                  <div class="addbtn">
+                  <div class="addbtn" @click="Fillintherequirements">
                     <i class="iconfont icon-tx"></i>
                     填写
                   </div>
@@ -338,6 +338,12 @@
     <el-dialog :visible.sync="datalistdialogVisible" width="983px">
       <i class="el-icon-full-screen" v-screenfull></i>
     </el-dialog>
+
+    <!-- 填写要求弹窗 -->
+    <FillingRequirementsdialog
+      :isFillingRequirementsdialogVisible="FillingRequirementsdialogVisible"
+      @isFillingRequirementsdialogVisible="getChildMsg"
+    ></FillingRequirementsdialog>
   </div>
 </template>
 
@@ -358,6 +364,7 @@ import {
 } from "@/api";
 import draggable from "vuedraggable";
 import QRCode from "qrcodejs2";
+import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
 export default {
   data() {
     return {
@@ -387,10 +394,12 @@ export default {
       getneedsInfluencerList: [],
       video_num: 0,
       Shootingbudgetinput: "",
+      FillingRequirementsdialogVisible: true,
     };
   },
   components: {
     draggable,
+    FillingRequirementsdialog,
   },
   methods: {
     //删除拍摄需求
@@ -562,6 +571,14 @@ export default {
         }
       });
     },
+
+    Fillintherequirements() {
+      this.FillingRequirementsdialogVisible = true;
+    },
+    //在父组件中声明这个函数，用于接收子组件传回的值
+    getChildMsg(msg) {
+      this.FillingRequirementsdialogVisible = msg;
+    },
   },
   mounted() {
     this.reqsearch();
@@ -651,20 +668,6 @@ export default {
   height: 120px;
 }
 
-.el-checkbox__input.is-checked .el-checkbox__inner,
-.el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  border-color: #796cf3 !important;
-  background-color: #796cf3 !important;
-}
-
-.el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #796cf3 !important;
-}
-
-.el-checkbox__input.is-checked + .el-checkbox__label {
-  color: #796cf3 !important;
-}
-
 .liBtn1 {
   width: 89px;
   height: 40px;
@@ -733,28 +736,11 @@ export default {
   border: none;
   box-sizing: border-box;
 }
-::v-deep .el-table .has-gutter .el-checkbox .el-checkbox__inner {
-  display: none;
-}
 
 ::v-deep .el-table .cell::before {
   content: "";
   text-align: center;
   line-height: 37px;
-}
-
-::v-deep .el-form-item__label {
-  margin-top: 5px;
-}
-
-::v-deep .el-form-item--small .el-form-item__label {
-  line-height: 22px;
-}
-
-::v-deep
-  .el-form-item.is-required:not(.is-no-asterisk)
-  > .el-form-item__label:before {
-  content: revert;
 }
 
 ::v-deep(.el-input-number--mini) {

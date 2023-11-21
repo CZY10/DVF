@@ -207,7 +207,10 @@
             </div>
             <div
               @click="addlist(item, index, item.user_id)"
-              :class="{ product_btn: true, addlistbj: item.istrue == false }"
+              :class="{
+                product_btn: item.istrue != false,
+                addlistbj: item.istrue == false,
+              }"
               ref="addbtndom"
             >
               <span class="icon">+</span>
@@ -298,6 +301,32 @@
         >
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="温馨提示"
+      center
+      :visible.sync="dialogVisiblelogins"
+      width="300px"
+    >
+      <p
+        style="
+          text-align: center;
+          margin-top: 22px;
+          padding: 0 20px;
+          line-height: 1.6;
+        "
+      >
+        每一个视频可选<span style="color: #d161f6">0～5</span>个意向红人 <br />
+        未选择时，将由平台为您推荐
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          class="dialogVisibleloginbtn"
+          @click="dialogVisiblelogins = false"
+          >知道了</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -309,6 +338,7 @@ import {
   checkPayment,
   getShootRequire,
   carOperate,
+  carList,
 } from "@/api";
 import store from "@/store";
 import router from "@/router";
@@ -340,6 +370,7 @@ export default {
       categoryidarr: [],
       isvideoslist: [],
       isloading: false,
+      dialogVisiblelogins: false,
     };
   },
   components: {},
@@ -353,8 +384,12 @@ export default {
     Requiremenitems() {
       return store.state.Index.Requiremenitem;
     },
+    getRequirementFirst() {
+      return store.state.Index.RequirementFirst;
+    },
   },
   mounted() {
+    this.isloading = true;
     document.getElementsByClassName(
       "el-pagination__jump"
     )[0].childNodes[0].nodeValue = "跳转";
@@ -421,6 +456,10 @@ export default {
 
     //渲染数据
     RenderingData() {
+      this.datalist = [];
+      this.isvideoslist = [];
+      this.categoryidarr = [];
+
       if (
         (!localStorage.getItem("token") && this.searchforval != "") ||
         (!localStorage.getItem("token") && this.categoryValue != "") ||
@@ -471,9 +510,6 @@ export default {
       getSearchList(data)
         .then((res) => {
           this.isloading = false;
-          this.datalist = [];
-          this.isvideoslist = [];
-          this.categoryidarr = [];
           if (res.code == 1) {
             this.total = res.data.total;
             this.per_page = res.data.per_page;
@@ -533,20 +569,34 @@ export default {
     //添加需求
     addlist(item, index, id) {
       if (localStorage.getItem("token")) {
-        this.requirementlist = this.RequirementLists;
-        const x = event.clientX - 20;
-        const y = event.clientY - 20;
-        this.$refs.addbtndom[index].classList.add("addlistbj");
-        this.$refs.addbtndom[index].classList.remove("product_btn");
-        this.$refs.addbtndom[index].querySelector(".test1").textContent =
-          "已选择";
-        if (item.istrue != false) {
-          this.requirementlist.push(item);
-          store.commit("Index/setRequirementList", this.requirementlist);
-          this.createBall(x, y);
-          this.SaveData(id);
+        if (this.getRequirementFirst == 1) {
+          this.dialogVisiblelogins = true;
+          store.commit("Index/setRequirementFirst", 0);
+        } else {
+          this.requirementlist = this.RequirementLists;
+          const x = event.clientX - 20;
+          const y = event.clientY - 20;
+          this.$refs.addbtndom[index].classList.add("addlistbj");
+          this.$refs.addbtndom[index].classList.remove("product_btn");
+          this.$refs.addbtndom[index].querySelector(".test1").textContent =
+            "已选择";
+          if (item.istrue != false) {
+            if (this.requirementlist.length == 0) {
+              this.requirementlist.push([item]);
+            } else {
+              this.requirementlist[this.requirementlist.length - 1].length < 5
+                ? this.requirementlist[this.requirementlist.length - 1].push(
+                    item
+                  )
+                : this.requirementlist.push([item]);
+            }
+
+            store.commit("Index/setRequirementList", this.requirementlist);
+            this.createBall(x, y);
+            this.SaveData(id);
+          }
+          this.datalist[index].istrue = false;
         }
-        item.istrue = false;
       } else {
         this.dialogVisiblelogin = true;
       }
@@ -559,7 +609,12 @@ export default {
         type: 1,
       };
       if (id) {
-        carOperate(data).then((res) => {});
+        carOperate(data).then((res) => {
+          carList().then((res) => {
+            store.commit("Index/setRequirementList", res.data.list);
+            store.commit("Index/setRequirementFirst", res.data.first);
+          });
+        });
       }
     },
 
@@ -589,7 +644,7 @@ export default {
     //反选列表
     InvertList() {
       let _this = this;
-      _this.RequirementLists.forEach((items) => {
+      _this.RequirementLists.flat().forEach((items) => {
         let index = _this.datalist.findIndex(
           (item) => item.id == items.user_id
         );
@@ -640,12 +695,18 @@ export default {
         this.videoslistindex = -1;
       }
     },
-    RequirementLists(newval) {
-      // console.log(newval);
-    },
     Requiremenitems(newval) {
-      var index = this.datalist.findIndex((item) => item.id == newval.user_id);
-      this.SynchronizeList(index);
+      if (!Array.isArray(newval)) {
+        var index = this.datalist.findIndex((item) => item.id == newval);
+        this.SynchronizeList(index);
+      } else {
+        newval.forEach((isitem) => {
+          var index = this.datalist.findIndex(
+            (item) => item.id == isitem.user_id
+          );
+          this.SynchronizeList(index);
+        });
+      }
     },
   },
 };
@@ -770,7 +831,6 @@ export default {
 
         .product_li {
           height: 448px;
-
           flex: 0 0 calc(25% - 20px);
           margin-bottom: 30px;
           margin-right: 20px;
@@ -910,7 +970,7 @@ export default {
                 align-items: center;
                 float: left;
                 overflow: hidden;
-                max-width: 103px;
+                max-width: 100px;
                 padding: 3px;
 
                 i {
@@ -1093,6 +1153,7 @@ export default {
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      text-align: center;
     }
 
     .rigthlist {

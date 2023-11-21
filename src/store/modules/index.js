@@ -3,7 +3,8 @@ export default {
     state: {
         isFalg: true,
         RequirementList: [],
-        Requiremenitem: {}
+        Requiremenitem: {},
+        RequirementFirst: 1
     },
     mutations: {
         setIsFalg(state, payload) {
@@ -15,6 +16,9 @@ export default {
         },
         setRequiremenitem(state, payload) {
             state.Requiremenitem = payload
+        },
+        setRequirementFirst(state, payload) {
+            state.RequirementFirst = payload
         }
 
     },

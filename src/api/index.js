@@ -77,7 +77,7 @@ export function getSearchList(data) {
         data
     })
 }
-//提交订单
+//提交订单 改为 修改拍摄要求
 export function createOrder(data) {
     return request({
         url: '/api/order/create',
@@ -487,5 +487,14 @@ export function carList() {
     return request({
         url: "/api/influencer/carList",
         method: "post"
+    })
+}
+
+//拍摄需求填写模板粘贴一键识别
+export function needsPaste(data) {
+    return request({
+        url: "/api/needs/paste",
+        method: "post",
+        data
     })
 }

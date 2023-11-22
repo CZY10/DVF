@@ -3956,4 +3956,8 @@ export default {
 ::v-deep .el-form-item--small .el-form-item__label {
   line-height: 22px;
 }
+
+::v-deep(.el-table__header-wrapper table) {
+  padding: 0 20px;
+}
 </style>

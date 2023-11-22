@@ -330,16 +330,7 @@
   </div>
 </template>
 <script>
-import {
-  getCategory,
-  getSearchList,
-  createOrder,
-  payOrder,
-  checkPayment,
-  getShootRequire,
-  carOperate,
-  carList,
-} from "@/api";
+import { getCategory, getSearchList, carOperate, carList } from "@/api";
 import store from "@/store";
 import router from "@/router";
 

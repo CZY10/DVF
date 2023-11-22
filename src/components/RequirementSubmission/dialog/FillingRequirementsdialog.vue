@@ -52,9 +52,9 @@
                     v-else-if="formradioLink == '2'"
                   >
                     <el-upload
-                      action="#"
+                      :action="localhost + '/api/common/upload'"
+                      :headers="{ token: token }"
                       list-type="picture-card"
-                      :auto-upload="false"
                       :limit="5"
                       :file-list="fileList"
                       :on-change="upload_change"
@@ -128,7 +128,8 @@
                     type="textarea"
                     maxlength="350"
                     v-model="ruleForm.ShootingRequirements"
-                    :autosize="{ minRows: 7 }"
+                    :autosize="{ minRows: 7, maxRows: 7 }"
+                    resize="none"
                     placeholder="1、简要描述视频要体现的要点，不超过3点
 2、特殊情形/要求，请说明：
      ①. 产品特殊，如仅适配特定配件或型号
@@ -188,23 +189,38 @@
           </div>
         </div>
         <div class="box2" v-if="widthVisble == '900px'">
-          <h1>模板填写</h1>
-          <div class="Fillinthetemplate">
-            <textarea
-              id="textarea"
-              v-model="Fillinthetemplateval"
-              placeholder="使用方法：
+          <div v-show="ifwidthVisble">
+            <h1>模板填写</h1>
+            <div class="Fillinthetemplate">
+              <textarea
+                id="textarea"
+                v-model="Fillinthetemplateval"
+                placeholder="使用方法：
 1、复制模板
 2、按格式编辑内容
 3、将内容粘贴到此区域
 4、一键填写"
-            ></textarea>
-          </div>
+              ></textarea>
+            </div>
 
-          <div class="box2btns">
-            <button class="btn1">一键填写</button>
-            <button class="btn1" style="margin: 0 10px">清空</button>
-            <button class="btn2">复制模板</button>
+            <div class="box2btns">
+              <button
+                :class="{ btn1: true, ifbtn1: ifbtn1 }"
+                @click="OneClickFilling(Fillinthetemplateval)"
+              >
+                一键填写
+              </button>
+              <button
+                :class="{ btn1: true, ifbtn1: ifbtn1 }"
+                style="margin: 0 10px"
+                @click="Fillinthetemplateval = ''"
+              >
+                清空
+              </button>
+              <button class="btn2" @click="handleCopy(Fillinthetemplateval)">
+                复制模板
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -213,9 +229,15 @@
 </template>
 
 <script>
+import { createOrder, needsPaste, needsEdit } from "@/api";
 export default {
   name: "FillingRequirementsdialog",
-  props: ["isFillingRequirementsdialogVisible"], //通过props接收父组件传递的值
+  props: [
+    "isFillingRequirementsdialogVisible",
+    "reqsearch",
+    "determine",
+    "RequirementsList",
+  ], //通过props接收父组件传递的值
   data() {
     return {
       widthVisble: "500px",
@@ -234,21 +256,24 @@ export default {
       fileList: [],
       upload_List: [],
       ifsubmitbtn: false,
+      localhost: process.env.VUE_APP_BASE_URL,
+      token: "",
+      ifbtn1: true,
+      ifwidthVisble: false,
+      RequirementID: 0,
     };
   },
   methods: {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     upload_change: function (file, fileList) {
-      //判断格式
       if (file.raw.type == "image/jpeg" || file.raw.type == "image/png") {
-        // 判断 > 1M
+        // 判断 > 5M
         if (file.size > 5242880) {
           fileList.pop();
           let msg_size = `您上传的${file.name}，该文件大于5M，请您重新上传。`;
           this.$message.error(msg_size);
           return false;
         }
-
         // 判断重名文件
         let repeat_judge = this.fileList.find((item) => {
           return item.name == file.name;
@@ -259,8 +284,14 @@ export default {
           this.$message.error(msg_repeat);
           return false;
         }
-        this.fileList = JSON.parse(JSON.stringify(fileList));
-        this.upload_List.push(file);
+        if (file?.response?.code == 1) {
+          this.upload_List.push(file);
+          this.fileList = JSON.parse(JSON.stringify(fileList));
+        } else if (file?.response?.code == 0) {
+          fileList.pop();
+          this.$message.error(file.response.msg);
+          return false;
+        }
       } else {
         this.$message.error("上传头像图片只能是 JPG,PNG 格式!");
         fileList.pop();
@@ -284,17 +315,126 @@ export default {
       this.$emit("isFillingRequirementsdialogVisible", false);
     },
     addwidthVisble() {
-      this.widthVisble == "500px"
-        ? (this.widthVisble = "900px")
-        : (this.widthVisble = "500px");
+      if (this.widthVisble == "500px") {
+        this.widthVisble = "900px";
+        setTimeout(() => {
+          this.ifwidthVisble = true;
+        }, 1000);
+      } else {
+        this.widthVisble = "500px";
+        this.ifwidthVisble = false;
+      }
     },
-    submitForm(formName) {
-      if (this.ifsubmitbtn) {
-        console.log(formName);
+
+    //修改拍摄要求
+    async submitForm(formName) {
+      if (this.ifsubmitbtn && this.determine == 1) {
+        let image = [];
+        this.upload_List.forEach((item) =>
+          image.push(item.response.data.fullurl)
+        );
+        let str = image.join(",");
+        let data = {
+          url: formName.link,
+          description: formName.notes,
+          title: formName.name,
+          photograph_guide: this.formradioRequirements,
+          if_product_link: this.formradioLink,
+          photograph_demand: formName.ShootingRequirements,
+          image: str,
+        };
+
+        const res = await createOrder(data);
+        console.log(res);
+        if (res.code == 1) {
+          this.beforeClose();
+          this.reqsearch();
+        } else {
+          this.$message.error(res.msg);
+        }
+      } else if (this.ifsubmitbtn && this.determine == 2) {
+        let image = [];
+        this.upload_List.forEach((item) => {
+          if (item.response) {
+            image.push(item.response.data.fullurl);
+          } else {
+            image.push(item.url);
+          }
+        });
+        let str = image.join(",");
+        // console.log(image);
+        let data = {
+          id: this.RequirementID,
+          title: formName.name,
+          url: formName.link,
+          description: formName.notes,
+          if_product_link: this.formradioLink,
+          photograph_guide: this.formradioRequirements,
+          photograph_demand: formName.ShootingRequirements,
+          image: str,
+        };
+        const res = await needsEdit(data);
+        if (res.code == 1) {
+          this.beforeClose();
+          this.reqsearch();
+        } else {
+          this.$message.error(res.msg);
+        }
+      }
+    },
+
+    // 一键复制
+    handleCopy(row) {
+      if (row == "") return;
+
+      // 假设你要复制的内容在一个名为content的变量中
+      let content = row;
+
+      // 创建一个textarea元素
+      let textarea = document.createElement("textarea");
+
+      // 将要复制的内容设置为textarea的值
+      textarea.value = content;
+
+      // 将textarea添加到DOM中
+      document.body.appendChild(textarea);
+
+      // 选择textarea中的文本
+      textarea.select();
+
+      // 执行复制命令
+      document.execCommand("copy");
+
+      // 从DOM中移除textarea
+      document.body.removeChild(textarea);
+      this.$message({
+        message: "复制成功",
+        type: "success",
+      });
+    },
+
+    //一键填写
+    async OneClickFilling(text) {
+      if (text != "") {
+        const res = await needsPaste({ str: text });
+        if (res.code == 1) {
+          this.ruleForm.name = res.data.name;
+          this.ruleForm.link = res.data.link;
+          this.ruleForm.ShootingRequirements = res.data.request.replace(
+            /\\n/g,
+            "\n"
+          );
+          this.ruleForm.notes = res.data.desc.replace(/\\n/g, "\n");
+          console.log(this.ruleForm.ShootingRequirements);
+        } else {
+          this.$message.error(res.msg);
+        }
       }
     },
   },
-  mounted() {},
+  mounted() {
+    this.token = localStorage.getItem("token");
+  },
   watch: {
     ruleForm: {
       handler(newVal, oldVal) {
@@ -304,7 +444,24 @@ export default {
           newVal.ShootingRequirements != ""
         ) {
           this.ifsubmitbtn = true;
-          console.log(this.ifsubmitbtn);
+        } else if (
+          newVal.name != "" &&
+          this.upload_List.length != 0 &&
+          this.formradioRequirements != "1"
+        ) {
+          this.ifsubmitbtn = true;
+        } else if (
+          newVal.name != "" &&
+          newVal.link != "" &&
+          this.formradioRequirements != "1"
+        ) {
+          this.ifsubmitbtn = true;
+        } else if (
+          newVal.name != "" &&
+          this.upload_List.length != 0 &&
+          newVal.ShootingRequirements != ""
+        ) {
+          this.ifsubmitbtn = true;
         } else {
           this.ifsubmitbtn = false;
         }
@@ -312,6 +469,74 @@ export default {
       },
       immediate: true,
       deep: true, // 可以深度检测到 obj 对象的属性值的变化
+    },
+    upload_List(newval) {
+      // console.log(newval);
+      if (
+        this.formradioLink == "2" &&
+        newval.length != 0 &&
+        this.ruleForm.name != "" &&
+        this.ruleForm.ShootingRequirements != ""
+      ) {
+        this.ifsubmitbtn = true;
+      } else {
+        this.ifsubmitbtn = false;
+      }
+    },
+    formradioRequirements(newval) {
+      if (
+        newval == "2" &&
+        this.ruleForm.name != "" &&
+        this.ruleForm.link != ""
+      ) {
+        this.ifsubmitbtn = true;
+      } else if (
+        newval == "2" &&
+        this.ruleForm.name != "" &&
+        this.upload_List.length != 0
+      ) {
+        this.ifsubmitbtn = true;
+      } else if (this.ruleForm.ShootingRequirements == "") {
+        this.ifsubmitbtn = false;
+      }
+    },
+    formradioLink(newVal) {
+      if (newVal == "1") {
+        this.upload_List = [];
+        this.fileList = [];
+      } else {
+        this.ruleForm.link = "";
+      }
+    },
+    Fillinthetemplateval(newval) {
+      newval != "" ? (this.ifbtn1 = false) : (this.ifbtn1 = true);
+    },
+    determine(newval) {
+      if (newval == 2) {
+      }
+    },
+    RequirementsList(newval) {
+      if (newval.length != 0) {
+        this.RequirementID = newval.id;
+        this.ruleForm.name = newval.title;
+        this.ruleForm.link = newval.url;
+        this.ruleForm.notes = newval.description;
+        this.ruleForm.ShootingRequirements = newval.photograph_demand;
+        this.formradioLink = newval.if_product_link + "";
+        this.formradioRequirements = newval.photograph_guide + "";
+        if (newval.image != "") {
+          let arr = newval.image.split(",");
+          this.fileList = arr.map((item) => ({ ["url"]: item }));
+          this.upload_List = arr.map((item) => ({ ["url"]: item }));
+        }
+      }
+    },
+    isFillingRequirementsdialogVisible(newval) {
+      if (newval == false) {
+        this.upload_List == [];
+        this.formradioLink = "1";
+        this.formradioRequirements = "1";
+      }
     },
   },
 };
@@ -331,7 +556,7 @@ export default {
 }
 
 ::v-deep(.el-dialog) {
-  transition: all 0.3s !important;
+  transition: all 1s !important;
 }
 
 ::v-deep(.el-form-item) {
@@ -374,6 +599,7 @@ export default {
 
 ::v-deep(.el-form-item__content) {
   line-height: 0;
+  width: 397px;
 }
 
 ::v-deep(.el-radio__input.is-checked .el-radio__inner) {
@@ -540,9 +766,10 @@ export default {
       border-radius: 4px;
       border: 1px solid #eeeeee;
       margin: 10px auto;
+      overflow: hidden;
       #textarea {
         padding: 13px;
-        height: 100%;
+        height: 92%;
         width: 92%;
         resize: none;
         outline: none;
@@ -568,6 +795,11 @@ export default {
       .btn1 {
         background: #d161f6;
         color: #fff;
+        transition: all 0.3s;
+      }
+
+      .ifbtn1 {
+        background: #cccccc !important;
       }
       .btn2 {
         background: #ffffff;

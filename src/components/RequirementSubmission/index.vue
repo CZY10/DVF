@@ -174,11 +174,16 @@
                 "
               >
                 <div
-                  style="height: 60px; width: 60px; border: 1px solid #f0f0f0"
+                  style="
+                    height: 60px;
+                    width: 60px;
+                    border: 1px solid #f0f0f0;
+                    padding: 1px;
+                  "
                 >
                   <img
                     :src="scope.row.image"
-                    style="width: 100%; height: 100%"
+                    style="width: 100%; height: 100%; object-fit: cover"
                     v-if="scope.row.image"
                     @click="gocommodity(scope.row.url)"
                   />
@@ -228,6 +233,7 @@
                     color: #a06cf3;
                     margin-left: 15px;
                   "
+                  @click="openFillingRequirementsdialog(scope.$index)"
                 >
                   <p style="white-space: nowrap">详情</p>
                   <i class="iconfont icon-tx" style="margin-left: 5px"></i>
@@ -238,7 +244,7 @@
           <el-table-column label="视频数量">
             <template slot-scope="scope">
               <el-input-number
-                v-model="video_num"
+                v-model="scope.row.video_num"
                 @change="handleChange"
                 :min="1"
                 :max="10"
@@ -294,6 +300,7 @@
         >
       </div>
     </div>
+
     <el-dialog
       title="请确认"
       :visible.sync="centerDialogVisibles"
@@ -343,7 +350,16 @@
     <FillingRequirementsdialog
       :isFillingRequirementsdialogVisible="FillingRequirementsdialogVisible"
       @isFillingRequirementsdialogVisible="getChildMsg"
+      :reqsearch="reqsearch"
+      :determine="determine"
+      :RequirementsList="RequirementsList"
     ></FillingRequirementsdialog>
+
+    <!-- 温馨提示 -->
+    <Tipsdialog
+      :TipsdialogdialogVisible="TipsdialogdialogVisible"
+      @getTipsdialogMsg="getTipsdialogMsg"
+    ></Tipsdialog>
   </div>
 </template>
 
@@ -352,7 +368,6 @@ import {
   getShootRequire,
   search,
   create,
-  needsEdit,
   needsCopy,
   needsDelete,
   needsRemoveInfluencer,
@@ -365,6 +380,7 @@ import {
 import draggable from "vuedraggable";
 import QRCode from "qrcodejs2";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
+import Tipsdialog from "./dialog/Tipsdialog.vue";
 export default {
   data() {
     return {
@@ -392,14 +408,17 @@ export default {
       fileDiz: "",
       iscg: false,
       getneedsInfluencerList: [],
-      video_num: 0,
       Shootingbudgetinput: "",
-      FillingRequirementsdialogVisible: true,
+      FillingRequirementsdialogVisible: false,
+      determine: 1,
+      RequirementsList: {},
+      TipsdialogdialogVisible: true,
     };
   },
   components: {
     draggable,
     FillingRequirementsdialog,
+    Tipsdialog,
   },
   methods: {
     //删除拍摄需求
@@ -572,12 +591,23 @@ export default {
       });
     },
 
+    //填写需求
     Fillintherequirements() {
       this.FillingRequirementsdialogVisible = true;
+      this.determine = 1;
+    },
+    //修改需求
+    openFillingRequirementsdialog(index) {
+      this.RequirementsList = this.tableData[index];
+      this.FillingRequirementsdialogVisible = true;
+      this.determine = 2;
     },
     //在父组件中声明这个函数，用于接收子组件传回的值
     getChildMsg(msg) {
       this.FillingRequirementsdialogVisible = msg;
+    },
+    getTipsdialogMsg(msg) {
+      this.TipsdialogdialogVisible = msg;
     },
   },
   mounted() {
@@ -607,128 +637,14 @@ export default {
         }
       });
     },
+    FillingRequirementsdialogVisible(newval) {
+      if (newval == false) {
+        this.RequirementsList = [];
+      }
+    },
   },
 };
 </script>
-
-<!-- 列表样式 -->
-<style>
-.dialog-footer {
-  display: flex;
-  justify-content: center;
-}
-
-.el-icon-user-solid {
-  color: white;
-}
-
-.influencerInfoUl {
-  display: flex;
-  justify-content: center;
-}
-
-.influencerInfoLi {
-  margin: 0 7px;
-  position: relative;
-  cursor: pointer;
-  float: left;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.influencerInfo3 {
-  width: 32px;
-  height: 32px;
-  background: #eeeeee;
-  border-radius: 50%;
-  line-height: 32px;
-  cursor: pointer;
-  color: #cccccc !important;
-}
-
-.influencerInfo2 {
-  font-size: 12px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-  color: #999999 !important;
-}
-
-.influencerInfo {
-  width: 32px;
-  height: 32px;
-  background: #796cf3;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.el-textarea__inner {
-  height: 120px;
-}
-
-.liBtn1 {
-  width: 89px;
-  height: 40px;
-  border-radius: 20px;
-  border: 1px solid #796cf3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin-right: 12px;
-}
-
-.liBtn1div {
-  width: 89px;
-  height: 40px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #796cf3 !important;
-}
-
-.liBtn2 {
-  width: 89px;
-  height: 40px;
-  border-radius: 20px;
-  border: 1px solid #796cf3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #796cf3;
-}
-
-.el-table__header-wrapper {
-  margin: 14px 14px 0 14px;
-  width: 1170px !important;
-}
-
-.el-table__header-wrapper table {
-  height: 46px;
-  padding: 0;
-}
-
-.el-table td.el-table__cell div {
-  box-sizing: border-box;
-  text-align: center;
-}
-
-.el-table th.el-table__cell > .cell {
-  text-align: center;
-}
-
-.el-icon-question {
-  position: absolute;
-  top: 24px;
-  left: 285px;
-  cursor: pointer;
-}
-</style>
 
 <style lang="less" scoped>
 ::v-deep .el-table__body-wrapper {
@@ -931,6 +847,121 @@ export default {
 
 <!-- 达人列表 -->
 <style lang="less" scoped>
+::v-deep(.el-table__header-wrapper) {
+  margin: 14px 14px 0 14px;
+  width: 1170px !important;
+}
+
+::v-deep(.dialog-footer) {
+  display: flex;
+  justify-content: center;
+}
+
+::v-deep(.el-icon-user-solid) {
+  color: white;
+}
+
+.influencerInfoUl {
+  display: flex;
+  justify-content: center;
+}
+
+.influencerInfoLi {
+  margin: 0 7px;
+  position: relative;
+  cursor: pointer;
+  float: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.influencerInfo3 {
+  width: 32px;
+  height: 32px;
+  background: #eeeeee;
+  border-radius: 50%;
+  line-height: 32px;
+  cursor: pointer;
+  color: #cccccc !important;
+}
+
+.influencerInfo2 {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #999999 !important;
+}
+
+.influencerInfo {
+  width: 32px;
+  height: 32px;
+  background: #796cf3;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+::v-deep(.el-textarea__inner) {
+  height: 120px;
+}
+
+.liBtn1 {
+  width: 89px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #796cf3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+.liBtn1div {
+  width: 89px;
+  height: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #796cf3 !important;
+}
+
+.liBtn2 {
+  width: 89px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #796cf3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #796cf3;
+}
+
+::v-deep(.el-table__header-wrapper table) {
+  height: 46px;
+  padding: 0;
+}
+
+::v-deep(.el-table td.el-table__cell div) {
+  box-sizing: border-box;
+  text-align: center;
+}
+
+::v-deep(.el-table th.el-table__cell > .cell) {
+  text-align: center;
+}
+
+.el-icon-question {
+  position: absolute;
+  top: 24px;
+  left: 285px;
+  cursor: pointer;
+}
 .el-icon-full-screen {
   position: absolute;
   top: -8px;

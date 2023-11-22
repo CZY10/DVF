@@ -1,19 +1,31 @@
-# videoproject
+# DVF 视频服务
 
-## Project setup
-```
-yarn install
-```
+## 安装项目依赖
 
-### Compiles and hot-reloads for development
 ```
-yarn serve
+npm install
 ```
 
-### Compiles and minifies for production
+### 启动开发服务器
+
 ```
-yarn build
+npm serve
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 启动服务器，但是在生产模式下
+
+```
+npm serve:prod
+```
+
+### 构建用于部署的应用程序(测试包)
+
+```
+npm build
+```
+
+### 生产模式下构建用于部署的应用程序(生产包)
+
+```
+npm build:prod
+```

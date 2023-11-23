@@ -9,7 +9,7 @@
     >
       <div class="dialog">
         <div class="box">
-          <h1>填写产品及拍摄要求</h1>
+          <h1>{{ dialogTitle }}</h1>
           <p class="tiele">
             <span style="color: #ed4014">注</span
             >：请勿遗漏或填错，平台不接受事后补充/变更需求，亦不接受重拍/退款
@@ -176,7 +176,7 @@
                 @click="submitForm(ruleForm)"
                 :class="{ ifsubmitbtn: ifsubmitbtn, submitbtn: true }"
               >
-                确认
+                {{ submitFormText }}
               </button>
             </div>
           </div>
@@ -240,6 +240,8 @@ export default {
   ], //通过props接收父组件传递的值
   data() {
     return {
+      dialogTitle: "填写产品及拍摄要求",
+      submitFormText: "确认",
       widthVisble: "500px",
       ruleForm: {
         name: "",
@@ -261,6 +263,7 @@ export default {
       ifbtn1: true,
       ifwidthVisble: false,
       RequirementID: 0,
+      objold: {},
     };
   },
   methods: {
@@ -343,7 +346,6 @@ export default {
           photograph_demand: formName.ShootingRequirements,
           image: str,
         };
-
         const res = await createOrder(data);
         console.log(res);
         if (res.code == 1) {
@@ -379,6 +381,70 @@ export default {
           this.reqsearch();
         } else {
           this.$message.error(res.msg);
+        }
+      } else if (this.ifsubmitbtn && this.determine == 3) {
+        // console.log(this.objold.description, formName.notes);
+        // console.log(this.objold.url, formName.link);
+        // console.log(this.objold.title, formName.name);
+        // console.log(this.objold.photograph_guide, this.formradioRequirements);
+        // console.log(this.objold.if_product_link, this.formradioLink);
+        // console.log(
+        //   this.objold.photograph_demand,
+        //   formName.ShootingRequirements
+        // );
+        if (
+          this.objold.description == formName.notes &&
+          this.objold.url == formName.link &&
+          this.objold.title == formName.name &&
+          this.objold.photograph_guide == this.formradioRequirements &&
+          this.objold.if_product_link == this.formradioLink &&
+          this.objold.photograph_demand == formName.ShootingRequirements
+        ) {
+          this.ifsubmitbtn = false;
+          const h = this.$createElement;
+          this.$message({
+            message: h("p", null, [
+              h(
+                "span",
+                {
+                  style:
+                    "font-size: 12px;color: #FFFFFF;margin:0 10px 0px 6px;display: block;padding-bottom: 3px;",
+                },
+                "请修改后保存"
+              ),
+            ]),
+            iconClass: "el-icon-warning",
+            offset: 140,
+            customClass: "customClasswarning",
+          });
+          return;
+        } else {
+          let image = [];
+          this.upload_List.forEach((item) => {
+            if (item.response) {
+              image.push(item.response.data.fullurl);
+            } else {
+              image.push(item.url);
+            }
+          });
+          let str = image.join(",");
+          let data = {
+            url: formName.link,
+            description: formName.notes,
+            title: formName.name,
+            photograph_guide: this.formradioRequirements,
+            if_product_link: this.formradioLink,
+            photograph_demand: formName.ShootingRequirements,
+            image: str,
+          };
+          const res = await createOrder(data);
+          console.log(res);
+          if (res.code == 1) {
+            this.beforeClose();
+            this.reqsearch();
+          } else {
+            this.$message.error(res.msg);
+          }
         }
       }
     },
@@ -512,11 +578,21 @@ export default {
       newval != "" ? (this.ifbtn1 = false) : (this.ifbtn1 = true);
     },
     determine(newval) {
-      if (newval == 2) {
+      if (newval == 3) {
+        setTimeout(() => {
+          this.ifsubmitbtn = false;
+          this.dialogTitle = "复制成功，请修改后保存";
+          this.submitFormText = "保存";
+          console.log(this.ifsubmitbtn);
+        }, 100);
+      } else {
+        this.submitFormText = "确认";
+        this.dialogTitle = "填写产品及拍摄要求";
       }
     },
     RequirementsList(newval) {
       if (newval.length != 0) {
+        this.objold = newval;
         this.RequirementID = newval.id;
         this.ruleForm.name = newval.title;
         this.ruleForm.link = newval.url;
@@ -536,6 +612,10 @@ export default {
         this.upload_List == [];
         this.formradioLink = "1";
         this.formradioRequirements = "1";
+        this.ruleForm.name = "";
+        this.ruleForm.link = "";
+        this.ruleForm.notes = "";
+        this.ruleForm.ShootingRequirements = "";
       }
     },
   },

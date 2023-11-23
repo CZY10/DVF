@@ -243,21 +243,49 @@
           </el-table-column>
           <el-table-column label="视频数量">
             <template slot-scope="scope">
-              <el-input-number
-                v-model="scope.row.video_num"
-                @change="handleChange"
-                :min="1"
-                :max="10"
-                size="mini"
-              ></el-input-number>
+              <div style="padding-right: 16px">
+                <el-input-number
+                  v-model="scope.row.video_num"
+                  @change="
+                    handleChange(
+                      scope.row.budget_tip,
+                      scope.row.video_num,
+                      scope.row.id
+                    )
+                  "
+                  :min="1"
+                  :max="10"
+                  size="mini"
+                ></el-input-number>
+              </div>
             </template>
           </el-table-column>
-          <el-table-column label="拍摄预算/¥">
+          <el-table-column label="拍摄预算/¥" width="140">
             <template slot-scope="scope">
-              <el-input
-                v-model="Shootingbudgetinput"
-                style="height: 32px; width: 74px"
-              ></el-input>
+              <div style="padding-right: 20px">
+                <el-form
+                  :model="scope.row"
+                  :ref="'ruleForm' + scope.$index"
+                  class="elform"
+                >
+                  <el-form-item prop="budget">
+                    <el-input
+                      v-model="scope.row.budget"
+                      style="height: 32px; width: 74px"
+                      class="elinput"
+                      @input="
+                        budgetChange(
+                          scope.row.budget,
+                          scope.$index,
+                          scope.row.video_num
+                        )
+                      "
+                      @blur="budgetBlur(scope.row.budget, scope.row.id)"
+                      :disabled="scope.row.title == ''"
+                    ></el-input>
+                  </el-form-item>
+                </el-form>
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -268,12 +296,26 @@
               >
                 --
               </ul>
-              <ul v-else style="display: flex; justify-content: center">
-                <li
-                  style="color: #999999; cursor: pointer"
-                  @click="deletesubmitForm(scope.row.id)"
-                >
-                  删除
+              <ul
+                v-else
+                style="
+                  display: flex;
+                  justify-content: center;
+                  flex-direction: column;
+                "
+              >
+                <li class="operate">
+                  <span class="operate1" @click="operatedialog(scope.$index)">
+                    <i class="iconfont icon-fz"></i> 复制</span
+                  >
+                </li>
+                <li class="operate">
+                  <span
+                    class="operate2"
+                    @click="deletesubmitForm(scope.row.id)"
+                  >
+                    <i class="iconfont icon-sc"></i> 删除</span
+                  >
                 </li>
               </ul>
             </template>
@@ -359,7 +401,152 @@
     <Tipsdialog
       :TipsdialogdialogVisible="TipsdialogdialogVisible"
       @getTipsdialogMsg="getTipsdialogMsg"
+      :video_id="video_id"
+      :reqsearch="reqsearch"
     ></Tipsdialog>
+
+    <!--支付定金-->
+    <el-dialog
+      title="已提交成功，请尽快支付定金"
+      :visible.sync="payDepositDialogVisible"
+      width="500px"
+      :close-on-click-modal="false"
+      class="pay_deposit_dialog"
+      center
+    >
+      <div style="position: relative">
+        <el-alert
+          title="支付定金后，平台将正式为您对接达人。不满意可随时申请退还定金。"
+          center
+          style="position: relative"
+          :closable="false"
+        >
+          <i
+            class="iconfont icon-tips"
+            style="
+              position: absolute;
+              top: 8px;
+              left: 14px;
+              font-size: 18px;
+              color: #796cf3;
+            "
+          ></i>
+        </el-alert>
+        <h5>¥{{ orderData[0].order.price }}</h5>
+        <p>定金金额</p>
+        <p>
+          订单号：
+          <span>{{ orderData[0].order.order_id }}</span>
+        </p>
+        <el-tabs type="border-card">
+          <el-tab-pane>
+            <span
+              slot="label"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+              ><i
+                class="iconfont icon-zhifupingtai-weixin"
+                style="
+                  color: rgba(59, 202, 114, 1);
+                  font-size: 20px;
+                  margin-right: 6px;
+                "
+              ></i
+              >微信支付</span
+            >
+            <div>
+              <div class="qrcode" ref="wechatQrCodeUrl">
+                <span class="top_left"></span>
+                <span class="top_right"></span>
+                <span class="bottom_left"></span>
+                <span class="bottom_right"></span>
+              </div>
+              <p style="padding-top: 8px">可截图给财务人员付款</p>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane>
+            <span
+              slot="label"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+              ><i
+                class="iconfont icon-zhifu-zhifubao"
+                style="
+                  color: rgba(2, 169, 241, 1);
+                  font-size: 20px;
+                  margin-right: 6px;
+                "
+              ></i
+              >支付宝支付</span
+            >
+            <div>
+              <div class="qrcode" ref="alipayQrCodeUrl">
+                <span class="top_left"></span>
+                <span class="top_right"></span>
+                <span class="bottom_left"></span>
+                <span class="bottom_right"></span>
+              </div>
+              <p style="padding-top: 8px">可截图给财务人员付款</p>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+
+        <div
+          style="
+            width: 20px;
+            height: 20px;
+            background: #02b578;
+            border-radius: 50%;
+            text-align: center;
+            color: white;
+            position: absolute;
+            top: -34px;
+            left: 88px;
+          "
+        >
+          √
+        </div>
+      </div>
+    </el-dialog>
+
+    <!--支付完成-->
+    <el-dialog
+      :title="'定金支付成功'"
+      :visible.sync="paymentCompletedDialogVisible"
+      width="360px"
+      @close="goOrder"
+      :close-on-click-modal="false"
+      class="payment_completed_dialog"
+      center
+    >
+      <div slot="title">
+        <i
+          style="color: rgba(2, 181, 120, 1); font-size: 20px"
+          class="el-icon-success"
+        ></i>
+        定金支付成功
+      </div>
+      <div>
+        <p style="line-height: 24px; text-align: center">
+          平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意
+        </p>
+        <div class="button_box know_btn">
+          <el-button
+            @click="
+              paymentCompletedDialogVisible = false;
+              goOrder();
+            "
+            >我知道了</el-button
+          >
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -368,7 +555,6 @@ import {
   getShootRequire,
   search,
   create,
-  needsCopy,
   needsDelete,
   needsRemoveInfluencer,
   needsInfluencerList,
@@ -376,9 +562,10 @@ import {
   needsSubmit,
   checkPayment,
   needsTemplate,
+  needsVideoNumin,
+  needsBudget,
 } from "@/api";
 import draggable from "vuedraggable";
-import QRCode from "qrcodejs2";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
 import Tipsdialog from "./dialog/Tipsdialog.vue";
 export default {
@@ -408,11 +595,23 @@ export default {
       fileDiz: "",
       iscg: false,
       getneedsInfluencerList: [],
-      Shootingbudgetinput: "",
       FillingRequirementsdialogVisible: false,
       determine: 1,
       RequirementsList: {},
-      TipsdialogdialogVisible: true,
+      TipsdialogdialogVisible: false,
+      video_id: "",
+      payDepositDialogVisible: false,
+      paymentCompletedDialogVisible: false,
+      orderData: [
+        {
+          order: {
+            price: "",
+            order_id: "",
+          },
+        },
+      ],
+      iffuleform: false,
+      timer: null,
     };
   },
   components: {
@@ -421,6 +620,7 @@ export default {
     Tipsdialog,
   },
   methods: {
+    goOrder() {},
     //删除拍摄需求
     deletesubmitForm(id) {
       this.centerDialogVisibles = true;
@@ -468,61 +668,73 @@ export default {
             title: "",
           });
           this.tableData = res.data.data;
-          // console.log(this.tableData);
           this.fileDiz = res.data.file;
+          this.tableData.forEach((item, index) => {
+            if (item.title != "" && item.budget * 1 <= item.video_num * 300) {
+              this.tableData[index].budget = item.video_num * 300;
+            } else if (
+              item.title != "" &&
+              item.budget * 1 > item.video_num * 300
+            ) {
+              this.tableData[index].budget = item.budget * 1;
+            } else {
+              this.tableData[index].budget = "";
+            }
+          });
         }
       });
     },
     //提交
     submitTo() {
-      const loading = this.$loading({
-        lock: true,
-        text: "提交中...",
-        spinner: "el-icon-loading",
-        background: "#fff",
-        target: document.querySelector(".loading-area"), //设置加载动画区域
-      });
-
-      const arr = [];
-      this.tableData.forEach((item) => {
-        if (item.id && item.title != "") {
-          arr.push(item.id);
-        }
-      });
-      const id = arr.join(",");
-      console.log(id);
-      needsSubmit({
-        id: id,
-      })
-        .then((res) => {
-          loading.close();
-          console.log(res.data.order[1].order.qrcode);
-          setTimeout(() => {
-            console.log(this.$refs.alipayQrCodeUrl);
-            new QRCode(this.$refs.alipayQrCodeUrl, {
-              text: res.data.order[1].order.qrcode,
-              width: 130,
-              height: 130,
-              colorDark: "#000000",
-              colorLight: "#ffffff",
-              correctLevel: QRCode.CorrectLevel.H,
-            });
-            new QRCode(this.$refs.wechatQrCodeUrl, {
-              text: res.data.order[0].order.qrcode,
-              width: 130,
-              height: 130,
-              colorDark: "#000000",
-              colorLight: "#ffffff",
-              correctLevel: QRCode.CorrectLevel.H,
-            });
-          });
-          this.handlerCheckWechatPayment(res.data.order[0].order.out_trade_no);
-          this.handlerCheckAlipayPayment(res.data.order[1].order.out_trade_no);
-        })
-        .catch((res) => {
-          loading.close();
-          this.$message.error(res);
-        });
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: "提交中...",
+      //   spinner: "el-icon-loading",
+      //   background: "#fff",
+      //   target: document.querySelector(".loading-area"), //设置加载动画区域
+      // });
+      // const arr = [];
+      // this.tableData.forEach((item) => {
+      //   if (item.id && item.title != "") {
+      //     arr.push(item.id);
+      //   }
+      // });
+      // const id = arr.join(",");
+      // console.log(id);
+      // needsSubmit({
+      //   id: id,
+      // })
+      //   .then((res) => {
+      //     loading.close();
+      //     this.payDepositDialogVisible = true;
+      //     console.log(res.data.order[1].order.qrcode);
+      //     setTimeout(() => {
+      //       console.log(this.$refs.alipayQrCodeUrl);
+      //       new QRCode(this.$refs.alipayQrCodeUrl, {
+      //         text: res.data.order[1].order.qrcode,
+      //         width: 130,
+      //         height: 130,
+      //         colorDark: "#000000",
+      //         colorLight: "#ffffff",
+      //         correctLevel: QRCode.CorrectLevel.H,
+      //       });
+      //       new QRCode(this.$refs.wechatQrCodeUrl, {
+      //         text: res.data.order[0].order.qrcode,
+      //         width: 130,
+      //         height: 130,
+      //         colorDark: "#000000",
+      //         colorLight: "#ffffff",
+      //         correctLevel: QRCode.CorrectLevel.H,
+      //       });
+      //     });
+      //     this.orderData = res.data.order;
+      //     this.handlerCheckWechatPayment(res.data.order[0].order.out_trade_no);
+      //     this.handlerCheckAlipayPayment(res.data.order[1].order.out_trade_no);
+      //   })
+      //   .catch((res) => {
+      //     loading.close();
+      //     this.$message.error(res);
+      //   });
     },
     //跳转商品详情
     gocommodity(url) {
@@ -540,8 +752,10 @@ export default {
           .then((res) => {
             if (res.code === 1) {
               if (res.data.status === "success") {
+                _this.payDepositDialogVisible = false;
                 clearInterval(_this.checkWechatPaymentVal);
                 clearInterval(_this.checkAlipayPaymentVal);
+                _this.paymentCompletedDialogVisible = true;
               }
             }
           })
@@ -561,8 +775,10 @@ export default {
           .then((res) => {
             if (res.code === 1) {
               if (res.data.status === "success") {
+                _this.payDepositDialogVisible = false;
                 clearInterval(_this.checkAlipayPaymentVal);
                 clearInterval(_this.checkWechatPaymentVal);
+                _this.paymentCompletedDialogVisible = true;
               }
             }
           })
@@ -575,8 +791,55 @@ export default {
       this.handleSelectionChangeList = val;
       console.log(val);
     },
-    handleChange(value) {
-      console.log(value);
+    handleChange(value, num, id) {
+      if (value == 1) {
+        this.TipsdialogdialogVisible = true;
+        this.video_id = id;
+        this.reqsearch();
+      } else {
+        this.debounce(async () => {
+          const res = await needsVideoNumin({
+            id: id + "",
+            video_num: num + "",
+          });
+          console.log(res);
+          if (res.code == 1) {
+            this.reqsearch();
+          }
+        }, 500);
+      }
+
+      if (num == 10) {
+        const h = this.$createElement;
+        let msg = this.$message({
+          message: h("p", null, [
+            h(
+              "span",
+              { style: "font-size: 12px;color: #FFFFFF;margin:0 10px 0 6px" },
+              "目前一个亚马逊Listing只能上传10个关联视频哦~"
+            ),
+            h(
+              "button",
+              {
+                class: "el-message-btn",
+              },
+              "知道了"
+            ),
+          ]),
+          iconClass: "el-icon-warning",
+          offset: 140,
+          customClass: "customClasswarning",
+        });
+        document
+          .querySelector(".el-message-btn")
+          .addEventListener("click", function () {
+            msg.close();
+          });
+      }
+    },
+    debounce(func, delay) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(func, delay);
     },
 
     //列表达人拖拽结束
@@ -602,12 +865,43 @@ export default {
       this.FillingRequirementsdialogVisible = true;
       this.determine = 2;
     },
+    //复制需求
+    operatedialog(index) {
+      this.RequirementsList = this.tableData[index];
+      this.FillingRequirementsdialogVisible = true;
+      this.determine = 3;
+    },
     //在父组件中声明这个函数，用于接收子组件传回的值
     getChildMsg(msg) {
       this.FillingRequirementsdialogVisible = msg;
     },
     getTipsdialogMsg(msg) {
       this.TipsdialogdialogVisible = msg;
+    },
+
+    //拍摄预算修改
+    budgetChange(val, index, num) {
+      console.log(val);
+      if (val * 1 < 300 * num) {
+        this.$refs[
+          "ruleForm" + index
+        ].fields[0].validateMessage = `请填写预算，不低于${300 * num}`;
+        this.$refs["ruleForm" + index].fields[0].validateState = "error";
+        this.iffuleform = false;
+      } else {
+        this.iffuleform = true;
+        this.$refs["ruleForm" + index].fields[0].validateMessage = "";
+        this.$refs["ruleForm" + index].fields[0].validateState = "";
+      }
+    },
+    async budgetBlur(val, id) {
+      if (this.iffuleform) {
+        const res = await needsBudget({
+          id: id,
+          budget: val,
+        });
+        console.log(res);
+      }
     },
   },
   mounted() {
@@ -640,6 +934,20 @@ export default {
     FillingRequirementsdialogVisible(newval) {
       if (newval == false) {
         this.RequirementsList = [];
+        this.determine = 0;
+      }
+    },
+    payDepositDialogVisible(newVal) {
+      let _this = this;
+      if (newVal == false && _this.paymentCompletedDialogVisible == false) {
+        clearInterval(_this.checkWechatPaymentVal);
+        clearInterval(_this.checkAlipayPaymentVal);
+        _this.$router.push("/manage/order");
+      }
+    },
+    paymentCompletedDialogVisible(newVal) {
+      if (newVal == false) {
+        this.$router.push("/manage/order");
       }
     },
   },
@@ -691,8 +999,12 @@ export default {
   border: none;
 }
 
-::v-deep(.el-input__inner) {
+::v-deep(.elinput > .el-input__inner) {
   height: 100%;
+  text-align: center;
+}
+::v-deep(.el-input__inner:focus) {
+  border-color: #a06cf3;
 }
 
 ::v-deep(.el-table__row:nth-child(1)) {
@@ -705,6 +1017,15 @@ export default {
 
 ::v-deep(.el-dialog) {
   background: #f5f7f9;
+}
+
+::v-deep(.elform > .el-form-item) {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+::v-deep(.el-form-item__error) {
+  width: 100%;
+  color: #f56c6c !important;
 }
 </style>
 
@@ -792,6 +1113,26 @@ export default {
 
       .isinfluencerInfoLi:hover .delDiv {
         opacity: 1;
+      }
+
+      .operate {
+        color: #999999;
+        font-size: 12px;
+        padding-right: 20px;
+        span {
+          cursor: pointer;
+          transition: all 0.3s;
+          .iconfont {
+            font-size: 12px;
+            margin-right: 7px;
+          }
+        }
+        .operate2:hover {
+          color: #f56c6c;
+        }
+        .operate1:hover {
+          color: #a06cf3;
+        }
       }
     }
 
@@ -974,5 +1315,301 @@ export default {
 
 .chosen {
   background-color: rgba(255, 255, 255, 0.1);
+}
+</style>
+
+<style lang="less" scoped>
+.pay_deposit_dialog {
+  h5 {
+    font-size: 22px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: #ff2c4c;
+    line-height: 30px;
+    text-align: center;
+    margin: 18px 0 1px 0;
+  }
+
+  p {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #999999;
+    line-height: 20px;
+    text-align: center;
+    padding: 5px 0;
+
+    span {
+      color: rgba(51, 51, 51, 1);
+    }
+  }
+
+  ul {
+    border-radius: 10px;
+    border: 2px solid #f4f2ff;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 30px;
+    margin: 15px 35px 16px 35px;
+
+    li {
+      div {
+        width: 128px;
+        height: 128px;
+        background: #ffffff;
+        border: 1px solid #eeeeee;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      p {
+        font-size: 14px;
+        font-family: PingFangSC-Semibold, PingFang SC;
+        font-weight: 600;
+        color: #333333;
+        line-height: 20px;
+        margin-top: 10px;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          font-size: 18px;
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+}
+
+.group_26 {
+  background-color: rgba(244, 242, 255, 1);
+  border-radius: 4px;
+  width: 420px;
+  height: 94px;
+}
+
+.image-text_40 {
+  width: 392px;
+  height: 66px;
+  margin: 14px 0 0 14px;
+  display: flex;
+  padding-top: 15px;
+}
+
+.thumbnail_26 {
+  width: 15px;
+  height: 18px;
+}
+
+.text-group_14 {
+  width: 369px;
+  height: 66px;
+  overflow-wrap: break-word;
+  font-size: 0;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  line-height: 20px;
+  margin-left: 9px;
+}
+
+.text_98 {
+  width: 369px;
+  height: 66px;
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  line-height: 20px;
+}
+
+.text_99 {
+  width: 369px;
+  height: 66px;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: left;
+  line-height: 20px;
+}
+
+.paragraph_1 {
+  width: 369px;
+  height: 66px;
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  line-height: 20px;
+}
+
+/*支付尾款弹窗*/
+.payment_dialog,
+.pay_deposit_dialog {
+  .el-tabs--border-card > .el-tabs__content {
+    padding: 34px 15px 21px 15px;
+  }
+
+  .qrcode {
+    position: relative;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 140px;
+    height: 140px;
+    margin: auto;
+    border: 1px solid #eeeeee;
+
+    .top_left,
+    .top_right,
+    .bottom_left,
+    .bottom_right {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+    }
+
+    .top_left {
+      border-top: 1px solid #333333;
+      left: -1px;
+      top: -1px;
+      border-left: 1px solid #333333;
+    }
+
+    .top_right {
+      border-top: 1px solid #333333;
+      right: -1px;
+      top: -1px;
+      border-right: 1px solid #333333;
+    }
+
+    .bottom_left {
+      border-bottom: 1px solid #333333;
+      left: -1px;
+      bottom: -1px;
+      border-left: 1px solid #333333;
+    }
+
+    .bottom_right {
+      border-bottom: 1px solid #333333;
+      right: -1px;
+      bottom: -1px;
+      border-right: 1px solid #333333;
+    }
+  }
+
+  .el-tabs--border-card {
+    border: 1px solid #eeeeee;
+    margin-top: 15px;
+  }
+
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item + .el-tabs__item {
+    margin-left: 0;
+  }
+
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item:first-child {
+    border-right: 1px solid #eeeeee !important;
+    margin-left: 0;
+  }
+
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
+    margin-left: 0;
+  }
+
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item {
+    color: #999999;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    border: none;
+    margin-bottom: 1px;
+    transition: none;
+    height: 42px;
+  }
+
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
+    font-weight: 600;
+    color: #333333;
+    background: #f6f5ff;
+    border-bottom: 2px solid #796cf3;
+
+    i {
+      font-weight: normal;
+    }
+  }
+
+  .el-tabs--border-card > .el-tabs__header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+    border-bottom: 1px solid #eeeeee;
+    background: #ffffff;
+  }
+
+  .el-tabs--border-card {
+    box-shadow: none;
+    border-radius: 10px;
+  }
+
+  .el-tabs__nav {
+    width: 100%;
+    //padding-bottom: 1px;
+  }
+
+  .el-tabs__item {
+    width: 50%;
+    text-align: center;
+  }
+}
+
+/*支付定金弹窗*/
+.pay_deposit_dialog {
+  .el-alert {
+    padding: 7px 0;
+
+    .el-alert__description {
+      margin: 0;
+    }
+  }
+
+  .el-alert__icon {
+    color: #796cf3;
+  }
+
+  .el-alert--info.is-light {
+    background: #f4f2ff;
+    color: #666666;
+  }
+}
+</style>
+
+<style>
+.customClasswarning {
+  width: 373px;
+  height: 40px;
+  background: #000000;
+  border-radius: 6px;
+  opacity: 0.47;
+}
+
+.el-message-btn {
+  width: 48px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  font-size: 12px;
+  color: #ffffff;
+  cursor: pointer;
 }
 </style>

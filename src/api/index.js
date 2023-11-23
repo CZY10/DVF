@@ -77,7 +77,7 @@ export function getSearchList(data) {
         data
     })
 }
-//提交订单 改为 修改拍摄要求
+//提交订单 改为 填写拍摄需求
 export function createOrder(data) {
     return request({
         url: '/api/order/create',
@@ -387,13 +387,13 @@ export function needsEdit(data) {
 }
 
 //需求克隆
-export function needsCopy(data) {
-    return request({
-        url: "/api/needs/copy",
-        method: "post",
-        data
-    })
-}
+// export function needsCopy(data) {
+//     return request({
+//         url: "/api/needs/copy",
+//         method: "post",
+//         data
+//     })
+// }
 
 //需求删除
 export function needsDelete(data) {
@@ -494,6 +494,34 @@ export function carList() {
 export function needsPaste(data) {
     return request({
         url: "/api/needs/paste",
+        method: "post",
+        data
+    })
+}
+
+
+//修改视频数量
+export function needsVideoNumin(data) {
+    return request({
+        url: "/api/needs/videoNum",
+        method: "post",
+        data
+    })
+}
+
+//记录'修改预算'的弹窗状态
+export function needsBudgetTip(data) {
+    return request({
+        url: "/api/needs/budgetTip",
+        method: "post",
+        data
+    })
+}
+
+//修改拍摄预算
+export function needsBudget(data) {
+    return request({
+        url: "/api/needs/budget",
         method: "post",
         data
     })

@@ -243,7 +243,7 @@
           </el-table-column>
           <el-table-column label="视频数量">
             <template slot-scope="scope">
-              <div style="padding-right: 16px">
+              <div>
                 <el-input-number
                   v-model="scope.row.video_num"
                   @change="
@@ -262,7 +262,7 @@
           </el-table-column>
           <el-table-column label="拍摄预算/¥" width="140">
             <template slot-scope="scope">
-              <div style="padding-right: 20px">
+              <div>
                 <el-form
                   :model="scope.row"
                   :ref="'ruleForm' + scope.$index"
@@ -384,9 +384,10 @@
     </el-dialog>
 
     <!-- 达人列表 -->
-    <el-dialog :visible.sync="datalistdialogVisible" width="983px">
-      <i class="el-icon-full-screen" v-screenfull></i>
-    </el-dialog>
+    <ListOfInfluencersdialog
+      :datalistdialogVisible="datalistdialogVisible"
+      @setdatalistdialogVisible="getdatalistlogMsg"
+    ></ListOfInfluencersdialog>
 
     <!-- 填写要求弹窗 -->
     <FillingRequirementsdialog
@@ -568,10 +569,11 @@ import {
 import draggable from "vuedraggable";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
 import Tipsdialog from "./dialog/Tipsdialog.vue";
+import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 export default {
   data() {
     return {
-      datalistdialogVisible: false,
+      datalistdialogVisible: true,
       checked: false,
       flags: false,
       ispersonid: "",
@@ -618,6 +620,7 @@ export default {
     draggable,
     FillingRequirementsdialog,
     Tipsdialog,
+    ListOfInfluencersdialog,
   },
   methods: {
     goOrder() {},
@@ -878,6 +881,9 @@ export default {
     getTipsdialogMsg(msg) {
       this.TipsdialogdialogVisible = msg;
     },
+    getdatalistlogMsg(msg) {
+      this.datalistdialogVisible = msg;
+    },
 
     //拍摄预算修改
     budgetChange(val, index, num) {
@@ -1118,7 +1124,6 @@ export default {
       .operate {
         color: #999999;
         font-size: 12px;
-        padding-right: 20px;
         span {
           cursor: pointer;
           transition: all 0.3s;
@@ -1302,11 +1307,6 @@ export default {
   top: 24px;
   left: 285px;
   cursor: pointer;
-}
-.el-icon-full-screen {
-  position: absolute;
-  top: -8px;
-  right: 45px;
 }
 
 .ghost {

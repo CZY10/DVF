@@ -13,10 +13,8 @@ export default {
         router.push("/Requirement");
         console.log("退出全屏");
         that.fullscreen = false;
-        that.changeScreenStatus(false);
       } else {
         console.log("全屏");
-        that.changeScreenStatus(true);
       }
     };
   },

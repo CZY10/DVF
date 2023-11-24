@@ -101,7 +101,7 @@
             :key="index"
           >
             <div class="product_item_video">
-              <img :src="localhost + item.coverimage" alt="" />
+              <img :src="item.coverimage" alt="" />
               <i class="el-icon-caret-right" @click="handlePlayVideo(item)"></i>
             </div>
             <p :title="item.desc">{{ item.desc }}</p>
@@ -253,7 +253,7 @@ export default {
   },
 };
 </script>
-<style lang="less" >
+<style lang="less">
 #homepage {
   .el-dialog__headerbtn {
     z-index: 999;

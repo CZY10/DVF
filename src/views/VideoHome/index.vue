@@ -38,7 +38,7 @@
                 tab_pane4: currentIndex == 3,
               }"
             >
-              <img src="../../assets/images/tab-pane4.png" alt="" />
+              <img src="../../assets/images/tab-pane4.webp" alt="" />
             </div>
             <div
               :class="{
@@ -48,7 +48,7 @@
                 tab_pane1: currentIndex == 3,
               }"
             >
-              <img src="../../assets/images/tab-pane3.png" alt="" />
+              <img src="../../assets/images/tab-pane3.webp" alt="" />
             </div>
             <div
               :class="{
@@ -58,7 +58,7 @@
                 tab_pane2: currentIndex == 3,
               }"
             >
-              <img src="../../assets/images/tab-pane2.png" alt="" />
+              <img src="../../assets/images/tab-pane2.webp" alt="" />
             </div>
             <div
               :class="{
@@ -68,7 +68,7 @@
                 tab_pane3: currentIndex == 3,
               }"
             >
-              <img src="../../assets/images/tab-pane1.png" alt="" />
+              <img src="../../assets/images/tab-pane1.webp" alt="" />
             </div>
           </div>
         </el-col>
@@ -129,16 +129,16 @@
             @mouseout="mouseout('tabPane2')"
           >
             <div v-show="currentIndex1 == 0">
-              <img src="../../assets/images/buyer_show_tab1.png" alt="" />
+              <img src="../../assets/images/buyer_show_tab1.webp" alt="" />
             </div>
             <div v-show="currentIndex1 == 1">
-              <img src="../../assets/images/buyer_show_tab2.png" alt="" />
+              <img src="../../assets/images/buyer_show_tab2.webp" alt="" />
             </div>
             <div v-show="currentIndex1 == 2">
-              <img src="../../assets/images/buyer_show_tab3.png" alt="" />
+              <img src="../../assets/images/buyer_show_tab3.webp" alt="" />
             </div>
             <div v-show="currentIndex1 == 3">
-              <img src="../../assets/images/buyer_show_tab4.png" alt="" />
+              <img src="../../assets/images/buyer_show_tab4.webp" alt="" />
             </div>
           </div>
         </el-col>
@@ -280,7 +280,9 @@
                         text-overflow: ellipsis;
                       "
                     >
-                      兴趣品类：<span v-for="i in item.category_ids"
+                      兴趣品类：<span
+                        v-for="(i, j) in item.category_ids"
+                        :key="j"
                         >{{ i.name }}、</span
                       >
                     </li>
@@ -470,8 +472,7 @@
 </template>
 
 <script>
-import { getQrcode, takePlanList } from "@/api";
-import { mapMutations } from "vuex";
+import { takePlanList } from "@/api";
 import Footer from "@/components/Footer";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";

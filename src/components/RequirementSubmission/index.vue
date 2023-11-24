@@ -119,7 +119,9 @@
                   >
                     <div
                       class="influencerInfo3"
-                      @click="datalistdialogVisible = true"
+                      @click="
+                        Addinfluencers(scope.row.influencer_info, scope.row.id)
+                      "
                     >
                       +
                     </div>
@@ -138,7 +140,9 @@
                   <li class="influencerInfoLi">
                     <div
                       class="influencerInfo3"
-                      @click="datalistdialogVisible = true"
+                      @click="
+                        Addinfluencers(scope.row.influencer_info, scope.row.id)
+                      "
                     >
                       +
                     </div>
@@ -387,6 +391,9 @@
     <ListOfInfluencersdialog
       :datalistdialogVisible="datalistdialogVisible"
       @setdatalistdialogVisible="getdatalistlogMsg"
+      :influencersList="influencersList"
+      :influencersListid="influencersListid"
+      @getlist="getlist"
     ></ListOfInfluencersdialog>
 
     <!-- 填写要求弹窗 -->
@@ -559,7 +566,6 @@ import {
   needsDelete,
   needsRemoveInfluencer,
   needsInfluencerList,
-  needsSelectInfluencer,
   needsSubmit,
   checkPayment,
   needsTemplate,
@@ -573,7 +579,7 @@ import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 export default {
   data() {
     return {
-      datalistdialogVisible: true,
+      datalistdialogVisible: false,
       checked: false,
       flags: false,
       ispersonid: "",
@@ -614,6 +620,8 @@ export default {
       ],
       iffuleform: false,
       timer: null,
+      influencersList: [],
+      influencersListid: 0,
     };
   },
   components: {
@@ -884,6 +892,11 @@ export default {
     getdatalistlogMsg(msg) {
       this.datalistdialogVisible = msg;
     },
+    getlist(msg) {
+      if (msg) {
+        this.reqsearch();
+      }
+    },
 
     //拍摄预算修改
     budgetChange(val, index, num) {
@@ -908,6 +921,11 @@ export default {
         });
         console.log(res);
       }
+    },
+    Addinfluencers(list, id) {
+      this.influencersList = list;
+      this.influencersListid = id;
+      this.datalistdialogVisible = true;
     },
   },
   mounted() {

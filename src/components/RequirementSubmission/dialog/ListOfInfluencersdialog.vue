@@ -315,11 +315,10 @@
 </template>
 
 <script>
-import { getCategory, getSearchList, carOperate, carList } from "@/api";
+import { getCategory, getSearchList, needsSelectInfluencer } from "@/api";
 import store from "@/store";
-import router from "@/router";
 export default {
-  props: ["datalistdialogVisible"], //通过props接收父组件传递的值
+  props: ["datalistdialogVisible", "influencersList", "influencersListid"], //通过props接收父组件传递的值
   data() {
     return {
       searchforval: "",
@@ -338,24 +337,12 @@ export default {
       video_img: true,
       videoslist: [],
       videoslistindex: 0,
-      requirementlist: [],
       prevIndexArr: [],
       indexArr: [],
       categoryidarr: [],
       isvideoslist: [],
       isloading: false,
     };
-  },
-  created() {
-    this.requirementlist = this.RequirementLists;
-  },
-  computed: {
-    RequirementLists() {
-      return store.state.Index.RequirementList;
-    },
-    Requiremenitems() {
-      return store.state.Index.Requiremenitem;
-    },
   },
   mounted() {
     this.isloading = true;
@@ -533,64 +520,51 @@ export default {
     },
 
     //添加需求
-    addlist(item, index, id) {
-      this.requirementlist = this.RequirementLists;
+    async addlist(item, index, id) {
       this.$refs.addbtndom[index].classList.add("addlistbj");
       this.$refs.addbtndom[index].classList.remove("product_btn");
       this.$refs.addbtndom[index].querySelector(".test1").textContent =
         "已选择";
       if (item.istrue != false) {
-        if (this.requirementlist.length == 0) {
-          this.requirementlist.push([item]);
-        } else {
-          this.requirementlist[this.requirementlist.length - 1].length < 5
-            ? this.requirementlist[this.requirementlist.length - 1].push(item)
-            : this.requirementlist.push([item]);
+        this.influencersList.push(item);
+        let result = this.influencersList
+          .flat()
+          .map((item) => item.user_id)
+          .join(",");
+        const res = await needsSelectInfluencer({
+          id: this.influencersListid,
+          influencer_ids: result,
+        });
+        if (res.code == 1) {
+          this.$emit("getlist", true);
+          const h = this.$createElement;
+          this.$message({
+            message: h("p", null, [
+              h(
+                "span",
+                { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
+                "添加成功"
+              ),
+            ]),
+            iconClass: "el-icon-success",
+            offset: 140,
+            customClass: "customClasssuccess",
+          });
         }
-
-        store.commit("Index/setRequirementList", this.requirementlist);
-        this.SaveData(id);
       }
       this.datalist[index].istrue = false;
-    },
-
-    //保存需求列表数据
-    SaveData(id) {
-      let data = {
-        influencer_id: id,
-        type: 1,
-      };
-      if (id) {
-        carOperate(data).then((res) => {
-          carList().then((res) => {
-            store.commit("Index/setRequirementList", res.data.list);
-            store.commit("Index/setRequirementFirst", res.data.first);
-          });
-        });
-      }
     },
 
     //反选列表
     InvertList() {
       let _this = this;
-      _this.RequirementLists.flat().forEach((items) => {
+      _this.influencersList.flat().forEach((items) => {
         let index = _this.datalist.findIndex(
           (item) => item.id == items.user_id
         );
         if (index != -1) {
           _this.datalist[index].istrue = false;
         }
-      });
-    },
-
-    // 删除同步列表
-    SynchronizeList(index) {
-      var addbtndom = this.$refs.addbtndom;
-      this.datalist[index].istrue = true;
-      this.$nextTick(() => {
-        addbtndom[index].classList.remove("addlistbj");
-        addbtndom[index].classList.add("product_btn");
-        addbtndom[index].querySelector(".test1").textContent = "选择";
       });
     },
 
@@ -624,17 +598,10 @@ export default {
         this.videoslistindex = -1;
       }
     },
-    Requiremenitems(newval) {
-      if (!Array.isArray(newval)) {
-        var index = this.datalist.findIndex((item) => item.id == newval);
-        this.SynchronizeList(index);
-      } else {
-        newval.forEach((isitem) => {
-          var index = this.datalist.findIndex(
-            (item) => item.id == isitem.user_id
-          );
-          this.SynchronizeList(index);
-        });
+    datalistdialogVisible(newval) {
+      if (newval == true) {
+        this.isloading = true;
+        this.RenderingData();
       }
     },
   },
@@ -1238,6 +1205,14 @@ export default {
 </style>
 
 <style>
+.customClasssuccess {
+  min-width: 100px;
+  height: 40px;
+  background: #000000;
+  border-radius: 6px;
+  opacity: 0.47;
+}
+
 .el-select-dropdown__item.selected {
   color: #d161f6 !important;
 }

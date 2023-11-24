@@ -534,15 +534,17 @@ export default {
 
     //打开视频
     openVideos(videos, index) {
-      const video = this.$refs.myVideo;
       this.dialogVisible = true;
       this.videoslistindex = index;
       videos.forEach((item) => (item.videoslistcss = false));
       this.videoslist = videos;
       this.videoslist[index].videoslistcss = true;
-      video.pause();
-      video.load();
-      video.play();
+      this.$nextTick(() => {
+        const video = this.$refs.myVideo;
+        video.pause();
+        video.load();
+        video.play();
+      });
     },
 
     //切换视频
@@ -662,10 +664,12 @@ export default {
     },
 
     handleSizeChange(val) {
+      this.isloading = true;
       this.pageSize = val;
       this.RenderingData();
     },
     handleCurrentChange(val) {
+      this.isloading = true;
       this.currentPage = val;
       this.RenderingData();
     },

@@ -267,6 +267,8 @@
           :visible.sync="dialogVisible"
           width="880px"
           :close-on-click-modal="false"
+          :append-to-body="true"
+          custom-class="my-dialog"
         >
           <div class="eldialogVisble">
             <div style="width: 650px">
@@ -349,11 +351,6 @@ export default {
     this.handlerGetCategory("influencer");
     this.handlerGetCategory("theme_area");
     this.RenderingData();
-    setTimeout(() => {
-      document.getElementsByClassName(
-        "el-pagination__jump"
-      )[0].childNodes[0].nodeValue = "跳转";
-    }, 500);
   },
   methods: {
     beforeClose() {
@@ -496,15 +493,17 @@ export default {
 
     //打开视频
     openVideos(videos, index) {
-      const video = this.$refs.myVideo;
       this.dialogVisible = true;
       this.videoslistindex = index;
       videos.forEach((item) => (item.videoslistcss = false));
       this.videoslist = videos;
       this.videoslist[index].videoslistcss = true;
-      video.pause();
-      video.load();
-      video.play();
+      this.$nextTick(() => {
+        const video = this.$refs.myVideo;
+        video.pause();
+        video.load();
+        video.play();
+      });
     },
 
     //切换视频
@@ -521,12 +520,31 @@ export default {
 
     //添加需求
     async addlist(item, index, id) {
+      if (this.influencersList.length == 5) {
+        const h = this.$createElement;
+        this.$message({
+          message: h("p", null, [
+            h(
+              "span",
+              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
+              "该需求最多可添加5个意向红人"
+            ),
+          ]),
+          iconClass: "el-icon-warning",
+          offset: 140,
+          customClass: "customClasssuccess",
+        });
+        return;
+      }
+
       this.$refs.addbtndom[index].classList.add("addlistbj");
       this.$refs.addbtndom[index].classList.remove("product_btn");
       this.$refs.addbtndom[index].querySelector(".test1").textContent =
         "已选择";
-      if (item.istrue != false) {
+      if (item.istrue != false && this.influencersList.length < 5) {
         this.influencersList.push(item);
+        store.commit("Index/setinfluencersList", this.influencersList);
+        store.commit("Index/setinfluencersListid", this.influencersListid);
         let result = this.influencersList
           .flat()
           .map((item) => item.user_id)
@@ -558,6 +576,8 @@ export default {
     //反选列表
     InvertList() {
       let _this = this;
+      store.commit("Index/setinfluencersList", this.influencersList);
+      store.commit("Index/setinfluencersListid", this.influencersListid);
       _this.influencersList.flat().forEach((items) => {
         let index = _this.datalist.findIndex(
           (item) => item.id == items.user_id
@@ -574,10 +594,12 @@ export default {
     },
 
     handleSizeChange(val) {
+      this.isloading = true;
       this.pageSize = val;
       this.RenderingData();
     },
     handleCurrentChange(val) {
+      this.isloading = true;
       this.currentPage = val;
       this.RenderingData();
     },
@@ -601,6 +623,11 @@ export default {
     datalistdialogVisible(newval) {
       if (newval == true) {
         this.isloading = true;
+        this.$nextTick(() => {
+          document.getElementsByClassName(
+            "el-pagination__jump"
+          )[0].childNodes[0].nodeValue = "跳转";
+        });
         this.RenderingData();
       }
     },
@@ -1003,7 +1030,11 @@ export default {
       }
     }
   }
+}
+</style>
 
+<style lang="less" scoped>
+.my-dialog {
   .eldialogVisble {
     display: flex;
 
@@ -1091,9 +1122,7 @@ export default {
     }
   }
 }
-</style>
 
-<style lang="less" scoped>
 .searchfor {
   .inp {
     ::v-deep(.el-input__inner) {
@@ -1208,9 +1237,8 @@ export default {
 .customClasssuccess {
   min-width: 100px;
   height: 40px;
-  background: #000000;
+  background-color: rgba(0, 0, 0, 0.47);
   border-radius: 6px;
-  opacity: 0.47;
 }
 
 .el-select-dropdown__item.selected {

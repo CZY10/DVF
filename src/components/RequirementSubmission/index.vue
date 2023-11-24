@@ -60,7 +60,7 @@
                   <draggable
                     v-model="scope.row.influencer_info"
                     animation="100"
-                    @end="influencer_infoOnEnd(tableData)"
+                    @end="influencer_infoOnEnd(tableData, scope.$index)"
                     ghostClass="ghost"
                     chosenClass="chosen"
                     :forceFallback="true"
@@ -335,7 +335,7 @@
           <div class="triangle"></div>
         </div>
       </div>
-      <div class="RequirementBtn">
+      <div :class="{ ifsubmitTo: ifsubmitTo, RequirementBtn: true }">
         <button @click="submitTo">提交</button>
       </div>
       <div class="elIcon">
@@ -565,17 +565,18 @@ import {
   create,
   needsDelete,
   needsRemoveInfluencer,
-  needsInfluencerList,
   needsSubmit,
   checkPayment,
   needsTemplate,
   needsVideoNumin,
   needsBudget,
+  carOperate,
 } from "@/api";
 import draggable from "vuedraggable";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
 import Tipsdialog from "./dialog/Tipsdialog.vue";
 import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
+import store from "@/store";
 export default {
   data() {
     return {
@@ -602,7 +603,6 @@ export default {
       handleSelectionChangeList: [],
       fileDiz: "",
       iscg: false,
-      getneedsInfluencerList: [],
       FillingRequirementsdialogVisible: false,
       determine: 1,
       RequirementsList: {},
@@ -622,6 +622,8 @@ export default {
       timer: null,
       influencersList: [],
       influencersListid: 0,
+      tableDataTitle: true,
+      ifsubmitTo: false,
     };
   },
   components: {
@@ -692,60 +694,98 @@ export default {
               this.tableData[index].budget = "";
             }
           });
+
+          this.tableDataTitle = this.tableData.every((item) => {
+            return item.title == "";
+          });
         }
       });
     },
     //提交
     submitTo() {
-      // const loading = this.$loading({
-      //   lock: true,
-      //   text: "提交中...",
-      //   spinner: "el-icon-loading",
-      //   background: "#fff",
-      //   target: document.querySelector(".loading-area"), //设置加载动画区域
-      // });
-      // const arr = [];
-      // this.tableData.forEach((item) => {
-      //   if (item.id && item.title != "") {
-      //     arr.push(item.id);
-      //   }
-      // });
-      // const id = arr.join(",");
-      // console.log(id);
-      // needsSubmit({
-      //   id: id,
-      // })
-      //   .then((res) => {
-      //     loading.close();
-      //     this.payDepositDialogVisible = true;
-      //     console.log(res.data.order[1].order.qrcode);
-      //     setTimeout(() => {
-      //       console.log(this.$refs.alipayQrCodeUrl);
-      //       new QRCode(this.$refs.alipayQrCodeUrl, {
-      //         text: res.data.order[1].order.qrcode,
-      //         width: 130,
-      //         height: 130,
-      //         colorDark: "#000000",
-      //         colorLight: "#ffffff",
-      //         correctLevel: QRCode.CorrectLevel.H,
-      //       });
-      //       new QRCode(this.$refs.wechatQrCodeUrl, {
-      //         text: res.data.order[0].order.qrcode,
-      //         width: 130,
-      //         height: 130,
-      //         colorDark: "#000000",
-      //         colorLight: "#ffffff",
-      //         correctLevel: QRCode.CorrectLevel.H,
-      //       });
-      //     });
-      //     this.orderData = res.data.order;
-      //     this.handlerCheckWechatPayment(res.data.order[0].order.out_trade_no);
-      //     this.handlerCheckAlipayPayment(res.data.order[1].order.out_trade_no);
-      //   })
-      //   .catch((res) => {
-      //     loading.close();
-      //     this.$message.error(res);
-      //   });
+      if (this.ifsubmitTo) {
+        const loading = this.$loading({
+          lock: true,
+          text: "提交中...",
+          spinner: "el-icon-loading",
+          background: "#fff",
+          target: document.querySelector(".loading-area"), //设置加载动画区域
+        });
+        const arr = [];
+        this.tableData.forEach((item) => {
+          if (item.id && item.title != "") {
+            arr.push(item.id);
+          }
+        });
+        const id = arr.join(",");
+        console.log(id);
+        needsSubmit({
+          id: id,
+        })
+          .then((res) => {
+            loading.close();
+            this.payDepositDialogVisible = true;
+            console.log(res.data.order[1].order.qrcode);
+            setTimeout(() => {
+              console.log(this.$refs.alipayQrCodeUrl);
+              new QRCode(this.$refs.alipayQrCodeUrl, {
+                text: res.data.order[1].order.qrcode,
+                width: 130,
+                height: 130,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H,
+              });
+              new QRCode(this.$refs.wechatQrCodeUrl, {
+                text: res.data.order[0].order.qrcode,
+                width: 130,
+                height: 130,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H,
+              });
+            });
+            this.orderData = res.data.order;
+            this.handlerCheckWechatPayment(
+              res.data.order[0].order.out_trade_no
+            );
+            this.handlerCheckAlipayPayment(
+              res.data.order[1].order.out_trade_no
+            );
+          })
+          .catch((res) => {
+            loading.close();
+            this.$message.error(res);
+          });
+      } else if (this.tableData.length == 1 || this.tableDataTitle == true) {
+        const h = this.$createElement;
+        this.$message({
+          message: h("p", null, [
+            h(
+              "span",
+              { style: "font-size: 12px;color: #FFFFFF;margin:0 0px 0 6px" },
+              "您还没有添加任何需求，请添加需求再提交"
+            ),
+          ]),
+          iconClass: "el-icon-warning",
+          offset: 140,
+          customClass: "customClasssuccess",
+        });
+      } else if (this.checked == false) {
+        const h = this.$createElement;
+        this.$message({
+          message: h("p", null, [
+            h(
+              "span",
+              { style: "font-size: 12px;color: #FFFFFF;margin:0 0px 0 6px" },
+              "请先阅读并同意《视频拍摄服务及售后说明》"
+            ),
+          ]),
+          iconClass: "el-icon-warning",
+          offset: 140,
+          customClass: "customClasssuccess",
+        });
+      }
     },
     //跳转商品详情
     gocommodity(url) {
@@ -854,8 +894,20 @@ export default {
     },
 
     //列表达人拖拽结束
-    influencer_infoOnEnd(list) {
-      console.log(list);
+    async influencer_infoOnEnd(list, index) {
+      // let influencerIds1 = list[index].influencer_info
+      //   .map((item) => item.user_id.toString())
+      //   .join(",");
+      // const res = await carOperate({
+      //   type: 2,
+      //   list: [
+      //     {
+      //       video: index,
+      //       influencer_id: influencerIds1,
+      //     },
+      //   ],
+      // });
+
       list.forEach((item, index) => {
         if (item.influencer_info.length > 5) {
           // this.RequirementLists.splice(index + 1, 0, [item[item.length - 1]]);
@@ -929,15 +981,14 @@ export default {
     },
   },
   mounted() {
+    if (store.state.Index.ExitFullScreen) {
+      this.Addinfluencers(
+        store.state.Index.influencersList,
+        store.state.Index.influencersListid
+      );
+      store.commit("Index/setExitFullScreen", false);
+    }
     this.reqsearch();
-    //搜索列表请求
-    needsInfluencerList()
-      .then((res) => {
-        this.getneedsInfluencerList = res.data.data;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   },
   watch: {
     tableData(newVal) {
@@ -972,6 +1023,17 @@ export default {
     paymentCompletedDialogVisible(newVal) {
       if (newVal == false) {
         this.$router.push("/manage/order");
+      }
+    },
+    checked(newval) {
+      if (
+        newval == true &&
+        this.tableDataTitle == false &&
+        this.tableData.length != 1
+      ) {
+        this.ifsubmitTo = true;
+      } else {
+        this.ifsubmitTo = false;
       }
     },
   },
@@ -1087,6 +1149,9 @@ export default {
         font-size: 14px;
         display: flex;
         color: #a06cf3;
+        span {
+          cursor: pointer;
+        }
         div {
           width: 2px;
           height: 13px;
@@ -1188,12 +1253,12 @@ export default {
       margin-top: 20px;
       display: flex;
       justify-content: center;
-
       button {
+        transition: all 0.3s;
         width: 160px;
         height: 42px;
-        background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-        border-radius: 21px;
+        background: #edc0fb;
+        border-radius: 5px;
         cursor: pointer;
         margin: 0 10px;
         border: none;
@@ -1201,6 +1266,11 @@ export default {
       }
     }
 
+    .ifsubmitTo {
+      button {
+        background: #d161f6;
+      }
+    }
     .elIcon {
       text-align: center;
       margin-top: 10px;
@@ -1615,9 +1685,8 @@ export default {
 .customClasswarning {
   width: 373px;
   height: 40px;
-  background: #000000;
+  background-color: rgba(0, 0, 0, 0.47);
   border-radius: 6px;
-  opacity: 0.47;
 }
 
 .el-message-btn {

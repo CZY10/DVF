@@ -831,11 +831,7 @@ export default {
 
     //提交需求
     SubmitRequirements() {
-      // let result = this.RequirementLists.flat()
-      //   .map((item) => item.user_id)
-      //   .join(",");
       let data = {
-        // influencer_ids: result,
         source: 1,
       };
       if (this.RequirementLists.length !== 0) {

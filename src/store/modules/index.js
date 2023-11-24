@@ -4,7 +4,10 @@ export default {
         isFalg: true,
         RequirementList: [],
         Requiremenitem: {},
-        RequirementFirst: 1
+        RequirementFirst: 1,
+        ExitFullScreen: false,
+        influencersList: [],
+        influencersListid: 0
     },
     mutations: {
         setIsFalg(state, payload) {
@@ -19,7 +22,16 @@ export default {
         },
         setRequirementFirst(state, payload) {
             state.RequirementFirst = payload
-        }
+        },
+        setExitFullScreen(state, payload) {
+            state.ExitFullScreen = payload
+        },
+        setinfluencersList(state, payload) {
+            state.influencersList = payload
+        },
+        setinfluencersListid(state, payload) {
+            state.influencersListid = payload
+        },
 
     },
     actions: {

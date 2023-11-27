@@ -566,9 +566,9 @@ export default {
         }
       });
 
+      // console.log(this.onEndarr, this.onStartarr);
       for (let i = 0; i < this.onEndarr.length; i++) {
         if (this.onEndarr[i] !== this.onStartarr[i]) {
-          // console.log(i);
           this.differentIndices.push(i);
         }
       }

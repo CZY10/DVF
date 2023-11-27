@@ -526,3 +526,11 @@ export function needsBudget(data) {
         data
     })
 }
+
+//拍摄需求首页
+export function needsIndex() {
+    return request({
+        url: "/api/needs/index",
+        method: "post",
+    })
+}

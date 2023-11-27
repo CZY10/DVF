@@ -4,24 +4,32 @@
       <p class="hearder">提交视频拍摄需求</p>
       <div class="RequirementWenben">
         <div class="RequirementWenben-div1">
-          <span>注意事项</span>
+          <span @click="NotedialogdialogVisible = true">注意事项</span>
           <div></div>
           <span>新手引导</span>
         </div>
         <div class="RequirementWenben-div2">
-          <div class="elIcon2">
+          <!-- <div class="elIcon2">
             <i class="iconfont icon-fx1"></i>
             <span>邀请填写</span>
-          </div>
+          </div> -->
           <div class="elIcon2">
-            <i class="iconfont icon-yq"></i>
-            <span>批量导入</span>
+            <el-upload
+              action=""
+              accept=".xls, .xlsx"
+              :show-file-list="false"
+              :multiple="false"
+              :http-request="httpRequest"
+            >
+              <i class="iconfont icon-yq"></i>
+              <span>批量导入</span>
+            </el-upload>
           </div>
           <div class="elIcon2">
             <i class="iconfont icon-mb"></i>
             <a :href="fileDiz" style="cursor: pointer">下载模板</a>
           </div>
-          <div class="elIcon2">
+          <div class="elIcon2" @click="reloadPage">
             <i class="iconfont icon-sx"></i>
             <span>刷新</span>
           </div>
@@ -60,7 +68,14 @@
                   <draggable
                     v-model="scope.row.influencer_info"
                     animation="100"
-                    @end="influencer_infoOnEnd(tableData, scope.$index)"
+                    @end="
+                      influencer_infoOnEnd(
+                        tableData,
+                        scope.$index,
+                        scope.row.id
+                      )
+                    "
+                    @start="influencer_infoOnStart"
                     ghostClass="ghost"
                     chosenClass="chosen"
                     :forceFallback="true"
@@ -341,8 +356,8 @@
       <div class="elIcon">
         <el-checkbox v-model="checked" style="margin-right: 10px"></el-checkbox>
         <span>我已阅读并同意</span
-        ><span style="cursor: pointer; color: #796cf3" @click="goNote"
-          >《视频拍摄服务及售后说明》</span
+        ><span style="cursor: pointer; color: #a06cf3" @click="goNote"
+          >《平台售后及免责声明》</span
         >
       </div>
     </div>
@@ -555,6 +570,12 @@
         </div>
       </div>
     </el-dialog>
+
+    <!-- 温馨提示弹窗 -->
+    <Notedialog
+      @getNotedialogMsg="getNotedialogMsg"
+      :NotedialogdialogVisible="NotedialogdialogVisible"
+    ></Notedialog>
   </div>
 </template>
 
@@ -570,13 +591,17 @@ import {
   needsTemplate,
   needsVideoNumin,
   needsBudget,
+  needsIndex,
   carOperate,
+  needsSelectInfluencer,
 } from "@/api";
 import draggable from "vuedraggable";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
 import Tipsdialog from "./dialog/Tipsdialog.vue";
 import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
+import Notedialog from "./dialog/notedialog.vue";
 import store from "@/store";
+import QRCode from "qrcodejs2";
 export default {
   data() {
     return {
@@ -624,6 +649,10 @@ export default {
       influencersListid: 0,
       tableDataTitle: true,
       ifsubmitTo: false,
+      NotedialogdialogVisible: false,
+      influencerids1: [],
+      influencerids2: [],
+      differentIndices: [],
     };
   },
   components: {
@@ -631,6 +660,7 @@ export default {
     FillingRequirementsdialog,
     Tipsdialog,
     ListOfInfluencersdialog,
+    Notedialog,
   },
   methods: {
     goOrder() {},
@@ -681,10 +711,13 @@ export default {
             title: "",
           });
           this.tableData = res.data.data;
-          this.fileDiz = res.data.file;
           this.tableData.forEach((item, index) => {
             if (item.title != "" && item.budget * 1 <= item.video_num * 300) {
               this.tableData[index].budget = item.video_num * 300;
+              this.budgetBlur(
+                this.tableData[index].budget,
+                this.tableData[index].id
+              );
             } else if (
               item.title != "" &&
               item.budget * 1 > item.video_num * 300
@@ -726,7 +759,7 @@ export default {
             loading.close();
             this.payDepositDialogVisible = true;
             console.log(res.data.order[1].order.qrcode);
-            setTimeout(() => {
+            this.$nextTick(() => {
               console.log(this.$refs.alipayQrCodeUrl);
               new QRCode(this.$refs.alipayQrCodeUrl, {
                 text: res.data.order[1].order.qrcode,
@@ -893,27 +926,68 @@ export default {
       this.timer = setTimeout(func, delay);
     },
 
+    //开始拖拽
+    influencer_infoOnStart() {
+      this.tableData.forEach((item) => {
+        this.influencerids1.push(item.influencer_info.length);
+      });
+    },
     //列表达人拖拽结束
-    async influencer_infoOnEnd(list, index) {
-      // let influencerIds1 = list[index].influencer_info
-      //   .map((item) => item.user_id.toString())
-      //   .join(",");
-      // const res = await carOperate({
-      //   type: 2,
-      //   list: [
-      //     {
-      //       video: index,
-      //       influencer_id: influencerIds1,
-      //     },
-      //   ],
-      // });
-
-      list.forEach((item, index) => {
-        if (item.influencer_info.length > 5) {
-          // this.RequirementLists.splice(index + 1, 0, [item[item.length - 1]]);
-          const itempop = item.influencer_info.pop();
-          console.log(itempop);
+    async influencer_infoOnEnd(list, index, id) {
+      this.tableData.forEach((item) => {
+        this.influencerids2.push(item.influencer_info.length);
+      });
+      for (let i = 0; i < this.influencerids1.length; i++) {
+        if (this.influencerids1[i] !== this.influencerids2[i]) {
+          this.differentIndices.push(i);
         }
+      }
+
+      list.forEach((item) => {
+        if (item.influencer_info.length > 5) {
+          const itempop = item.influencer_info.pop();
+          this.tableData[index].influencer_info.unshift(itempop);
+        }
+      });
+
+      let influencerIds1 = this.tableData[index].influencer_info
+        .map((item) => item.user_id.toString())
+        .join(",");
+
+      if (this.differentIndices.length == 0) {
+        this.getneedsSelectInfluencer(id, influencerIds1);
+      } else {
+        let influencerIds1 = this.tableData[
+          this.differentIndices[0]
+        ].influencer_info
+          .map((item) => item.user_id.toString())
+          .join(",");
+        let influencerIds2 = this.tableData[
+          this.differentIndices[1]
+        ].influencer_info
+          .map((item) => item.user_id.toString())
+          .join(",");
+        this.getneedsSelectInfluencer(
+          this.tableData[this.differentIndices[0]].id,
+          influencerIds1
+        );
+        this.getneedsSelectInfluencer(
+          this.tableData[this.differentIndices[1]].id,
+          influencerIds2
+        );
+      }
+
+      this.influencerids1 = [];
+      this.influencerids2 = [];
+      this.differentIndices = [];
+    },
+
+    //请求拖拽排序接口
+    async getneedsSelectInfluencer(id, influencerIds1) {
+      await needsSelectInfluencer({
+        source: 0,
+        id: id,
+        influencer_ids: influencerIds1,
       });
     },
 
@@ -949,6 +1023,9 @@ export default {
         this.reqsearch();
       }
     },
+    getNotedialogMsg(msg) {
+      this.NotedialogdialogVisible = msg;
+    },
 
     //拍摄预算修改
     budgetChange(val, index, num) {
@@ -966,18 +1043,55 @@ export default {
       }
     },
     async budgetBlur(val, id) {
-      if (this.iffuleform) {
-        const res = await needsBudget({
-          id: id,
-          budget: val,
-        });
-        console.log(res);
-      }
+      await needsBudget({
+        id: id,
+        budget: val,
+      });
     },
     Addinfluencers(list, id) {
       this.influencersList = list;
       this.influencersListid = id;
       this.datalistdialogVisible = true;
+    },
+
+    // 导入
+    httpRequest(fileLit) {
+      const formData = new FormData();
+      formData.append("file", fileLit.file);
+      needsTemplate({
+        file: fileLit.file,
+        id: this.daorid,
+      })
+        .then((res) => {
+          this.reqsearch();
+          if (res.code == 1) {
+            this.$message({
+              message: "导入成功",
+              type: "success",
+              offset: 400,
+              center: true,
+            });
+          }
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+
+    //刷新
+    reloadPage() {
+      window.location.reload();
+    },
+
+    //请求拍摄需求首页接口
+    async getneedsIndex() {
+      let res = await needsIndex();
+      if (res.code == 1) {
+        this.fileDiz = res.data.file;
+        if (res.data.if_guide == 1) {
+          this.NotedialogdialogVisible = true;
+        }
+      }
     },
   },
   mounted() {
@@ -989,6 +1103,7 @@ export default {
       store.commit("Index/setExitFullScreen", false);
     }
     this.reqsearch();
+    this.getneedsIndex();
   },
   watch: {
     tableData(newVal) {
@@ -1113,6 +1228,19 @@ export default {
   width: 100%;
   color: #f56c6c !important;
 }
+
+::v-deep(.el-upload) {
+  color: #a06cf3 !important;
+}
+
+::v-deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: #a06cf3 !important;
+  border-color: #a06cf3 !important;
+}
+
+::v-deep(.el-checkbox__inner:hover) {
+  border-color: #a06cf3;
+}
 </style>
 
 <style lang="less" scoped>
@@ -1151,12 +1279,16 @@ export default {
         color: #a06cf3;
         span {
           cursor: pointer;
+          transition: all 0.3s;
         }
         div {
           width: 2px;
           height: 13px;
           background: #ba91fc;
           margin: 3px 7px 0;
+        }
+        span:hover {
+          color: #853ff7;
         }
       }
 
@@ -1168,13 +1300,22 @@ export default {
           color: #a06cf3;
           font-size: 14px;
           margin-left: 20px;
+          transition: all 0.3s;
+          cursor: pointer;
           .iconfont {
             margin-right: 5px;
           }
           a {
             text-decoration: none;
             color: #a06cf3;
+            transition: all 0.3s;
           }
+        }
+        .elIcon2:hover {
+          color: rgb(127, 52, 248) !important;
+        }
+        .elIcon2:hover a {
+          color: rgb(127, 52, 248) !important;
         }
       }
     }
@@ -1649,12 +1790,11 @@ export default {
     border-radius: 10px;
   }
 
-  .el-tabs__nav {
+  ::v-deep(.el-tabs__nav) {
     width: 100%;
-    //padding-bottom: 1px;
   }
 
-  .el-tabs__item {
+  ::v-deep(.el-tabs__item) {
     width: 50%;
     text-align: center;
   }
@@ -1677,6 +1817,57 @@ export default {
   .el-alert--info.is-light {
     background: #f4f2ff;
     color: #666666;
+  }
+}
+
+::v-deep(.el-alert__content) {
+  padding: 0 0 0 35px;
+}
+
+.button_box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+
+  button {
+    padding: 8px 45px;
+    border-radius: 16px;
+    font-size: 14px;
+  }
+
+  .cancel_style {
+    border: 1px solid #eeeeee;
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #999999;
+  }
+
+  .cancel_style:hover {
+    background: none;
+  }
+
+  .confirm_style {
+    border: none;
+    background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #ffffff;
+  }
+}
+
+.know_btn {
+  padding-top: 20px;
+
+  button {
+    display: block;
+    margin: auto;
+    background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+    border-radius: 16px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 20px;
+    padding: 5px 41px;
   }
 }
 </style>

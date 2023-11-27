@@ -59,17 +59,16 @@
         <!-- 订单多选 -->
         <el-table-column type="selection" :selectable="selectable">
         </el-table-column>
-        <el-table-column
-          prop="createtime"
-          label="创建时间"
-          sortable="custom"
-          min-width="100"
-        ></el-table-column>
-        <el-table-column
-          prop="id"
-          label="订单号"
-          min-width="110"
-        ></el-table-column>
+        <el-table-column label="订单号" min-width="110">
+          <template slot-scope="scope">
+            <div>
+              <p>{{ scope.row.deposit_order_id }}</p>
+              <p style="font-size: 12px; color: #999">
+                {{ scope.row.createtime }}
+              </p>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="意向达人" min-width="40">
           <template slot-scope="scope">
             <div v-if="scope.row.influencer_info.length == 0">平台推荐</div>
@@ -475,23 +474,6 @@
       center
       width="500px"
     >
-      <!-- <el-alert
-        title="支付完尾款，代表服务正式生效。在订单完成之前，平台不会将你的款项支付给达人。"
-        center
-        style="position: relative; background: #f4f2ff"
-        :closable="false"
-      >
-        <i
-          class="iconfont icon-tips"
-          style="
-            position: absolute;
-            top: 9px;
-            left: 14px;
-            font-size: 18px;
-            color: #776cf3;
-          "
-        ></i>
-      </el-alert> -->
       <div class="payment_content">
         <h4>¥{{ orderData.price }}</h4>
         <p v-if="orderIdFlex">合并订单金额</p>
@@ -573,16 +555,6 @@
             </div>
           </div>
         </div>
-        <!--                <ul>-->
-        <!--                    <li>-->
-        <!--                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>-->
-        <!--                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>-->
-        <!--                    </li>-->
-        <!--                    <li>-->
-        <!--                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>-->
-        <!--                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>-->
-        <!--                    </li>-->
-        <!--                </ul>-->
       </div>
     </el-dialog>
     <!--申请退还定金-->
@@ -1332,18 +1304,6 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-        <!--                <ul>-->
-        <!--                    <li>-->
-        <!--                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>-->
-        <!--                        &lt;!&ndash;                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>&ndash;&gt;-->
-        <!--                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>-->
-        <!--                    </li>-->
-        <!--                    <li>-->
-        <!--                        &lt;!&ndash;                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>&ndash;&gt;-->
-        <!--                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>-->
-        <!--                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>-->
-        <!--                    </li>-->
-        <!--                </ul>-->
       </div>
     </el-dialog>
     <!--支付完成-->
@@ -3213,7 +3173,7 @@ export default {
   }
 }
 </style>
-<style scoped lang="less">
+<style lang="less" scoped>
 .form_button {
   button {
     margin: auto;
@@ -3967,5 +3927,9 @@ export default {
 
 ::v-deep(.el-table__header-wrapper table) {
   padding: 0 20px;
+}
+
+::v-deep(.el-textarea__inner) {
+  min-height: 120px !important;
 }
 </style>

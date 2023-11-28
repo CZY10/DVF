@@ -56,14 +56,16 @@
           height="640"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column
-            type="index"
-            label="序号"
-            width="50"
-          ></el-table-column>
+          <el-table-column label="序号" width="50">
+            <template slot-scope="scope">
+              <div v-if="scope.row.flag != 2">
+                {{ scope.$index + 1 }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="意向达人" width="400">
             <template slot-scope="scope">
-              <div v-if="scope.row.influencer_info.length != 0">
+              <div v-if="scope.row.flag != 2">
                 <ul class="influencerInfoUl">
                   <draggable
                     v-model="scope.row.influencer_info"
@@ -75,93 +77,100 @@
                         scope.row.id
                       )
                     "
-                    @start="influencer_infoOnStart"
+                    @start="influencer_infoOnStart(scope.row.influencer_info)"
                     ghostClass="ghost"
                     chosenClass="chosen"
                     :forceFallback="true"
                     group="people"
+                    handle=".mover"
                   >
                     <transition-group>
                       <li
                         class="influencerInfoLi isinfluencerInfoLi"
                         v-for="(item, index) in scope.row.influencer_info"
                         :key="index"
+                        @mousedown="influencerinfomousedown(item, index)"
                       >
-                        <div style="position: relative">
-                          <img
-                            :src="item.image"
-                            style="
-                              display: block;
-                              width: 32px;
-                              height: 32px;
-                              border-radius: 50%;
-                            "
-                            @click="gohomepage(item.user_id)"
-                          />
-                          <i
-                            class="el-icon-error delDiv"
-                            @click="delDr(item.user_id, scope.row.id)"
-                          ></i>
+                        <div
+                          v-if="item.ifinfluencerInfo"
+                          class="influencerInfoLi_div"
+                        >
+                          <div class="influencerInfo">
+                            <i class="el-icon-user-solid"></i>
+                          </div>
+                          <div class="influencerInfo2">平台推荐</div>
                         </div>
-                        <p
-                          style="
-                            font-size: 12px;
-                            font-family: PingFangSC-Regular, PingFang SC;
-                            font-weight: 400;
-                            color: #999999;
-                            max-width: 50px;
-                            white-space: nowrap;
-                          "
-                        >
-                          <span>NO.{{ item.user_id }}</span>
-                        </p>
-                        <p
-                          style="
-                            font-size: 12px;
-                            font-weight: 400;
-                            color: #796cf3;
-                            text-align: center;
-                          "
-                        >
-                          {{ item.price }}
-                        </p>
+                        <div v-else class="influencerInfoLi_div mover">
+                          <div style="position: relative">
+                            <img
+                              :src="item.image"
+                              style="
+                                display: block;
+                                width: 32px;
+                                height: 32px;
+                                border-radius: 50%;
+                              "
+                              @click="gohomepage(item.user_id)"
+                            />
+                            <i
+                              class="el-icon-error delDiv"
+                              @click="delDr(item.user_id, scope.row.id)"
+                            ></i>
+                          </div>
+                          <p
+                            style="
+                              font-size: 12px;
+                              font-family: PingFangSC-Regular, PingFang SC;
+                              font-weight: 400;
+                              color: #999999;
+                              max-width: 50px;
+                              white-space: nowrap;
+                            "
+                          >
+                            <span>NO.{{ item.user_id }}</span>
+                          </p>
+                          <p
+                            style="
+                              font-size: 12px;
+                              font-weight: 400;
+                              color: #796cf3;
+                              text-align: center;
+                            "
+                          >
+                            {{ item.price }}
+                          </p>
+                        </div>
                       </li>
                     </transition-group>
                   </draggable>
                   <li
-                    class="influencerInfoLi"
+                    class="influencerInfoLiclass"
                     v-if="scope.row.influencer_info.length != 5"
                   >
                     <div
-                      class="influencerInfo3"
-                      @click="
-                        Addinfluencers(scope.row.influencer_info, scope.row.id)
-                      "
+                      class="influencerInfoLi_div"
+                      v-if="scope.row.influencerInfo"
                     >
-                      +
+                      <div class="influencerInfo">
+                        <i class="el-icon-user-solid"></i>
+                      </div>
+                      <div class="influencerInfo2">平台推荐</div>
                     </div>
-                    <div class="influencerInfo2">添加</div>
-                  </li>
-                </ul>
-              </div>
-              <div v-else>
-                <ul class="influencerInfoUl">
-                  <li class="influencerInfoLi">
-                    <div class="influencerInfo">
-                      <i class="el-icon-user-solid"></i>
+                    <div class="influencerInfoLi_div2">
+                      <div
+                        class="influencerInfo3"
+                        @click="
+                          Addinfluencers(
+                            scope.row.influencer_info,
+                            scope.row.id,
+                            scope.$index
+                          )
+                        "
+                      >
+                        +
+                      </div>
+                      <div class="influencerInfo2">添加</div>
                     </div>
-                    <div class="influencerInfo2">平台推荐</div>
-                  </li>
-                  <li class="influencerInfoLi">
-                    <div
-                      class="influencerInfo3"
-                      @click="
-                        Addinfluencers(scope.row.influencer_info, scope.row.id)
-                      "
-                    >
-                      +
-                    </div>
-                    <div class="influencerInfo2">添加</div>
                   </li>
                 </ul>
               </div>
@@ -169,100 +178,102 @@
           </el-table-column>
           <el-table-column label="拍摄要求" width="340">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag || scope.row.title == ''">
-                <div
-                  style="
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                  "
-                >
-                  <div class="addbtn" @click="Fillintherequirements">
-                    <i class="iconfont icon-tx"></i>
-                    填写
+              <div v-if="scope.row.flag != 2">
+                <div v-if="scope.row.flag || scope.row.title == ''">
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                  >
+                    <div class="addbtn" @click="Fillintherequirements">
+                      <i class="iconfont icon-tx"></i>
+                      填写
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                v-else
-                style="
-                  display: flex;
-                  align-items: center;
-                  cursor: pointer;
-                  justify-content: center;
-                "
-              >
                 <div
-                  style="
-                    height: 60px;
-                    width: 60px;
-                    border: 1px solid #f0f0f0;
-                    padding: 1px;
-                  "
-                >
-                  <img
-                    :src="scope.row.image"
-                    style="width: 100%; height: 100%; object-fit: cover"
-                    v-if="scope.row.image"
-                    @click="gocommodity(scope.row.url)"
-                  />
-                  <img
-                    src="@/assets/images/tp.png"
-                    v-else
-                    style="width: 20px; height: 20px; margin-top: 20px"
-                  />
-                </div>
-                <div>
-                  <p
-                    style="
-                      width: 100px;
-                      max-height: 3em;
-                      overflow: hidden;
-                      display: -webkit-box;
-                      -webkit-box-orient: vertical;
-                      -webkit-line-clamp: 2;
-                      text-overflow: ellipsis;
-                    "
-                  >
-                    {{ scope.row.title }}
-                  </p>
-                  <p
-                    style="
-                      font-size: 12px;
-                      font-family: PingFangSC-Regular, PingFang SC;
-                      font-weight: 400;
-                      color: #999999;
-                    "
-                    v-if="scope.row.url"
-                    @click="gocommodity(scope.row.url)"
-                  >
-                    {{ scope.row.asin }}
-                    <img
-                      src="@/assets/images/fenx.png"
-                      style="width: 10px; height: 10px"
-                    />
-                  </p>
-                  <p v-else>--</p>
-                </div>
-
-                <div
+                  v-else
                   style="
                     display: flex;
                     align-items: center;
-                    color: #a06cf3;
-                    margin-left: 15px;
+                    cursor: pointer;
+                    justify-content: center;
                   "
-                  @click="openFillingRequirementsdialog(scope.$index)"
                 >
-                  <p style="white-space: nowrap">详情</p>
-                  <i class="iconfont icon-tx" style="margin-left: 5px"></i>
+                  <div
+                    style="
+                      height: 60px;
+                      width: 60px;
+                      border: 1px solid #f0f0f0;
+                      padding: 1px;
+                    "
+                  >
+                    <img
+                      :src="scope.row.image"
+                      style="width: 100%; height: 100%; object-fit: cover"
+                      v-if="scope.row.image"
+                      @click="gocommodity(scope.row.url)"
+                    />
+                    <img
+                      src="@/assets/images/tp.png"
+                      v-else
+                      style="width: 20px; height: 20px; margin-top: 20px"
+                    />
+                  </div>
+                  <div>
+                    <p
+                      style="
+                        width: 100px;
+                        max-height: 3em;
+                        overflow: hidden;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                        text-overflow: ellipsis;
+                      "
+                    >
+                      {{ scope.row.title }}
+                    </p>
+                    <p
+                      style="
+                        font-size: 12px;
+                        font-family: PingFangSC-Regular, PingFang SC;
+                        font-weight: 400;
+                        color: #999999;
+                      "
+                      v-if="scope.row.url"
+                      @click="gocommodity(scope.row.url)"
+                    >
+                      {{ scope.row.asin }}
+                      <img
+                        src="@/assets/images/fenx.png"
+                        style="width: 10px; height: 10px"
+                      />
+                    </p>
+                    <p v-else>--</p>
+                  </div>
+
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      color: #a06cf3;
+                      margin-left: 15px;
+                    "
+                    @click="openFillingRequirementsdialog(scope.$index)"
+                  >
+                    <p style="white-space: nowrap">详情</p>
+                    <i class="iconfont icon-tx" style="margin-left: 5px"></i>
+                  </div>
                 </div>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="视频数量">
             <template slot-scope="scope">
-              <div>
+              <div v-if="scope.row.flag != 2">
                 <el-input-number
                   v-model="scope.row.video_num"
                   @change="
@@ -275,13 +286,14 @@
                   :min="1"
                   :max="10"
                   size="mini"
+                  :disabled="scope.row.title == ''"
                 ></el-input-number>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="拍摄预算/¥" width="140">
             <template slot-scope="scope">
-              <div>
+              <div v-if="scope.row.flag != 2">
                 <el-form
                   :model="scope.row"
                   :ref="'ruleForm' + scope.$index"
@@ -309,34 +321,43 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <ul
-                style="display: flex; justify-content: center"
-                v-if="scope.row.flag == 1 || scope.row.title == ''"
-              >
-                --
-              </ul>
-              <ul
-                v-else
-                style="
-                  display: flex;
-                  justify-content: center;
-                  flex-direction: column;
-                "
-              >
-                <li class="operate">
-                  <span class="operate1" @click="operatedialog(scope.$index)">
-                    <i class="iconfont icon-fz"></i> 复制</span
+              <div v-if="scope.row.flag != 2">
+                <ul
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column;
+                  "
+                >
+                  <li class="operate" v-if="scope.row.title != ''">
+                    <span class="operate1" @click="operatedialog(scope.$index)">
+                      <i class="iconfont icon-fz"></i> 复制</span
+                    >
+                  </li>
+                  <li class="operate" v-else>--</li>
+                  <li class="operate">
+                    <span
+                      class="operate2"
+                      @click="deletesubmitForm(scope.row.id)"
+                    >
+                      <i class="iconfont icon-sc"></i> 删除</span
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <div v-else>
+                <div class="adddemand">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="新增一行"
+                    placement="top"
                   >
-                </li>
-                <li class="operate">
-                  <span
-                    class="operate2"
-                    @click="deletesubmitForm(scope.row.id)"
-                  >
-                    <i class="iconfont icon-sc"></i> 删除</span
-                  >
-                </li>
-              </ul>
+                    <i class="el-icon-circle-plus" @click="adddemand"></i>
+                  </el-tooltip>
+                </div>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -653,6 +674,8 @@ export default {
       influencerids1: [],
       influencerids2: [],
       differentIndices: [],
+      user_id: "",
+      influencersListindex: undefined,
     };
   },
   components: {
@@ -666,8 +689,16 @@ export default {
     goOrder() {},
     //删除拍摄需求
     deletesubmitForm(id) {
-      this.centerDialogVisibles = true;
-      this.formId = id;
+      if (id != undefined) {
+        this.centerDialogVisibles = true;
+        this.formId = id;
+      } else {
+        // 计算删除位置
+        var deletePosition = this.tableData.length - 2;
+
+        // 使用splice方法删除元素
+        this.tableData.splice(deletePosition, 1);
+      }
     },
     deletecenterDialogVisibles() {
       needsDelete({
@@ -710,8 +741,17 @@ export default {
             influencer_info: [],
             title: "",
           });
+          res.data.data.push({
+            flag: 2,
+            influencer_info: [],
+            title: "",
+          });
           this.tableData = res.data.data;
           this.tableData.forEach((item, index) => {
+            if (item.influencer_info.length == 0) {
+              item.influencer_info.push({ ifinfluencerInfo: true });
+            }
+
             if (item.title != "" && item.budget * 1 <= item.video_num * 300) {
               this.tableData[index].budget = item.video_num * 300;
               this.budgetBlur(
@@ -728,12 +768,32 @@ export default {
             }
           });
 
+          if (this.influencersListindex != undefined) {
+            console.log(this.tableData, this.influencersListindex);
+            this.influencersListid =
+              this.tableData[this.influencersListindex].id;
+          }
+
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
           });
         }
       });
     },
+    //增加需求
+    adddemand() {
+      // 计算插入位置
+      var insertPosition = this.tableData.length - 1;
+      // 使用splice方法插入元素
+      this.tableData.splice(insertPosition, 0, {
+        flag: 1,
+        influencer_info: [],
+        title: "",
+        influencerInfo: true,
+      });
+      console.log(this.tableData);
+    },
+
     //提交
     submitTo() {
       if (this.ifsubmitTo) {
@@ -927,13 +987,13 @@ export default {
     },
 
     //开始拖拽
-    influencer_infoOnStart() {
+    influencer_infoOnStart(influencerInfo) {
       this.tableData.forEach((item) => {
         this.influencerids1.push(item.influencer_info.length);
       });
     },
     //列表达人拖拽结束
-    async influencer_infoOnEnd(list, index, id) {
+    influencer_infoOnEnd(list, index, id) {
       this.tableData.forEach((item) => {
         this.influencerids2.push(item.influencer_info.length);
       });
@@ -943,43 +1003,91 @@ export default {
         }
       }
 
-      list.forEach((item) => {
-        if (item.influencer_info.length > 5) {
-          const itempop = item.influencer_info.pop();
-          this.tableData[index].influencer_info.unshift(itempop);
+      let falg = true;
+      let _this = this;
+      if (_this.differentIndices != 0) {
+        var count1 = list[_this.differentIndices[0]].influencer_info.filter(
+          function (value) {
+            return value.user_id == _this.user_id;
+          }
+        ).length;
+        var count2 = list[_this.differentIndices[1]].influencer_info.filter(
+          function (value) {
+            return value.user_id == _this.user_id;
+          }
+        ).length;
+        if (count1 == 2 || count2 == 2) {
+          falg = false;
+        } else {
+          falg = true;
         }
-      });
-
-      let influencerIds1 = this.tableData[index].influencer_info
-        .map((item) => item.user_id.toString())
-        .join(",");
-
-      if (this.differentIndices.length == 0) {
-        this.getneedsSelectInfluencer(id, influencerIds1);
-      } else {
-        let influencerIds1 = this.tableData[
-          this.differentIndices[0]
-        ].influencer_info
-          .map((item) => item.user_id.toString())
-          .join(",");
-        let influencerIds2 = this.tableData[
-          this.differentIndices[1]
-        ].influencer_info
-          .map((item) => item.user_id.toString())
-          .join(",");
-        this.getneedsSelectInfluencer(
-          this.tableData[this.differentIndices[0]].id,
-          influencerIds1
-        );
-        this.getneedsSelectInfluencer(
-          this.tableData[this.differentIndices[1]].id,
-          influencerIds2
-        );
       }
+      if (falg) {
+        list.forEach((item) => {
+          if (item.influencer_info.length > 5) {
+            const itempop = item.influencer_info.pop();
+            needsSelectInfluencer({
+              influencer_ids: itempop.user_id,
+            }).then((res) => {
+              if (res.code == 1) {
+                this.reqsearch();
+              }
+            });
+          }
+        });
 
+        if (this.differentIndices.length == 0) {
+          let influencerIds1 = this.tableData[index].influencer_info
+            .map((item) => item.user_id.toString())
+            .join(",");
+          this.getneedsSelectInfluencer(id, influencerIds1);
+        } else {
+          let influencerIds1 = this.tableData[
+            this.differentIndices[0]
+          ].influencer_info
+            .map((item) => item.user_id?.toString())
+            .join(",");
+          let influencerIds2 = this.tableData[
+            this.differentIndices[1]
+          ].influencer_info
+            .map((item) => item.user_id?.toString())
+            .join(",");
+          if (
+            this.tableData[this.differentIndices[1]].influencer_info[0]
+              ?.ifinfluencerInfo ||
+            this.tableData[this.differentIndices[1]].influencer_info[1]
+              ?.ifinfluencerInfo
+          ) {
+            influencerIds2 = parseInt(influencerIds2.replace(",", "")) + "";
+          }
+          if (
+            this.tableData[this.differentIndices[0]].influencer_info[0]
+              ?.ifinfluencerInfo ||
+            this.tableData[this.differentIndices[0]].influencer_info[1]
+              ?.ifinfluencerInfo
+          ) {
+            influencerIds1 = parseInt(influencerIds1.replace(",", "")) + "";
+          }
+          console.log(influencerIds1, influencerIds2);
+          this.getneedsSelectInfluencer(
+            this.tableData[this.differentIndices[0]].id,
+            influencerIds1
+          );
+          this.getneedsSelectInfluencer(
+            this.tableData[this.differentIndices[1]].id,
+            influencerIds2
+          );
+        }
+      } else {
+        this.reqsearch();
+      }
       this.influencerids1 = [];
       this.influencerids2 = [];
       this.differentIndices = [];
+    },
+
+    influencerinfomousedown(item) {
+      this.user_id = item.user_id;
     },
 
     //请求拖拽排序接口
@@ -988,6 +1096,10 @@ export default {
         source: 0,
         id: id,
         influencer_ids: influencerIds1,
+      }).then((res) => {
+        if (res.code == 1) {
+          this.reqsearch();
+        }
       });
     },
 
@@ -1048,10 +1160,31 @@ export default {
         budget: val,
       });
     },
-    Addinfluencers(list, id) {
-      this.influencersList = list;
-      this.influencersListid = id;
-      this.datalistdialogVisible = true;
+    Addinfluencers(list, id, index) {
+      let length = [];
+      this.tableData.map((item) => {
+        if (item.id) {
+          length.push(item);
+        }
+      });
+
+      if (length.length == index) {
+        if (list[0]?.ifinfluencerInfo || list.length == 0) {
+          this.influencersList = [];
+          this.datalistdialogVisible = true;
+          this.influencersListindex = index;
+          console.log(this.influencersListindex);
+        } else {
+          this.influencersList = list;
+          this.influencersListid = id;
+          this.datalistdialogVisible = true;
+        }
+      } else {
+        let isindex = index - length.length;
+        this.influencersList = [];
+        this.datalistdialogVisible = true;
+        this.influencersListindex = index - isindex;
+      }
     },
 
     // 导入
@@ -1108,7 +1241,10 @@ export default {
   watch: {
     tableData(newVal) {
       newVal.forEach((item) => {
-        if (item.title == "" && item.influencer_info.length == 0) {
+        if (
+          item.title == "" &&
+          item.influencer_info[0]?.ifinfluencerInfo == true
+        ) {
           if (item.id) {
             needsDelete({
               id: item.id,
@@ -1149,6 +1285,13 @@ export default {
         this.ifsubmitTo = true;
       } else {
         this.ifsubmitTo = false;
+      }
+    },
+    datalistdialogVisible(newval) {
+      if (newval == false) {
+        this.influencersListindex = undefined;
+        this.influencersListid = 0;
+        console.log(this.influencersListindex);
       }
     },
   },
@@ -1446,26 +1589,51 @@ export default {
   position: relative;
   cursor: pointer;
   float: left;
+
+  .influencerInfoLi_div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .influencerInfo2 {
+    font-size: 12px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #999999 !important;
+  }
+}
+.influencerInfoLiclass {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.influencerInfo3 {
-  width: 32px;
-  height: 32px;
-  background: #eeeeee;
-  border-radius: 50%;
-  line-height: 32px;
-  cursor: pointer;
-  color: #cccccc !important;
-}
-
-.influencerInfo2 {
-  font-size: 12px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-  color: #999999 !important;
+  justify-content: center;
+  .influencerInfoLi_div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 62px;
+    .influencerInfo2 {
+      font-size: 12px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #999999 !important;
+    }
+  }
+  .influencerInfoLi_div2 {
+    .influencerInfo3 {
+      width: 32px;
+      height: 32px;
+      background: #eeeeee;
+      border-radius: 50%;
+      line-height: 32px;
+      cursor: pointer;
+      color: #cccccc !important;
+    }
+    .influencerInfo2 {
+      font-size: 12px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #999999 !important;
+    }
+  }
 }
 
 .influencerInfo {
@@ -1527,6 +1695,10 @@ export default {
   text-align: center;
 }
 
+::v-deep(.el-table__row:last-child > .el-table__cell) {
+  border-bottom: none;
+}
+
 ::v-deep(.el-table th.el-table__cell > .cell) {
   text-align: center;
 }
@@ -1544,6 +1716,18 @@ export default {
 
 .chosen {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.adddemand {
+  i {
+    font-size: 24px;
+    color: #a06cf3;
+    cursor: pointer;
+    transition: all, 0.3s;
+  }
+  i:hover {
+    color: rgb(98, 18, 226);
+  }
 }
 </style>
 
@@ -1872,7 +2056,7 @@ export default {
 }
 </style>
 
-<style>
+<style lang="less">
 .customClasswarning {
   width: 373px;
   height: 40px;
@@ -1889,5 +2073,15 @@ export default {
   font-size: 12px;
   color: #ffffff;
   cursor: pointer;
+}
+
+.el-table {
+  // 每行鼠标经过得样式
+  .el-table__body tr:hover > td {
+    background-color: #ffffff !important;
+  }
+  .el-table__body tr.current-row > td {
+    background-color: #fff !important;
+  }
 }
 </style>

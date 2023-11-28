@@ -549,6 +549,7 @@ export default {
           .flat()
           .map((item) => item.user_id)
           .join(",");
+        console.log(this.influencersListid);
         const res = await needsSelectInfluencer({
           id: this.influencersListid,
           influencer_ids: result,

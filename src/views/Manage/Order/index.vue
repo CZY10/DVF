@@ -3981,7 +3981,7 @@ export default {
   padding-left: 0px;
 }
 .el-table .warning-row {
-  border-color: red !important;
+  background: red !important;
 }
 </style>
 <style lang="less" scoped>

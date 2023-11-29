@@ -62,7 +62,7 @@
         <el-table-column label="订单号" min-width="110">
           <template slot-scope="scope">
             <div>
-              <p>{{ scope.row.deposit_order_id }}</p>
+              <p>{{ scope.row.id }}</p>
               <p style="font-size: 12px; color: #999">
                 {{ scope.row.createtime }}
               </p>
@@ -83,20 +83,24 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
+        <el-table-column prop="asin" label="需求内容" min-width="200">
           <template slot-scope="scope">
-            <p>
-              {{ scope.row.asin }}
-              <a :href="scope.row.url" target="_blank" v-if="scope.row.url"
-                ><i class="iconfont icon-fx"></i
-              ></a>
-            </p>
-            <el-button
-              class="deatail_btn"
-              type="text"
-              @click="handleCheckOrderDetail(scope.row)"
-              >查看详情</el-button
-            >
+            <div class="asin">
+              <div class="asin-img">
+                <img :src="scope.row.image" alt="" />
+              </div>
+              <div class="asin-p">
+                <p class="p1">{{ scope.row.title }}</p>
+                <p class="p2">
+                  <span v-if="scope.row.asin">{{ scope.row.asin }}</span>
+                  <span v-else>-----</span>
+                  <a :href="scope.row.url" target="_blank" v-if="scope.row.url"
+                    ><i class="iconfont icon-fx"></i
+                  ></a>
+                </p>
+              </div>
+              <div class="asin-div"> <span @click="handleCheckOrderDetail(scope.row)">详情</span> <i class="iconfont icon-tx" v-if="scope.row.balance_pay_status == '0'"  @click="handleCheckOrderDetail(scope.row)"></i> </div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="nickName" label="接单达人">
@@ -1594,6 +1598,7 @@ export default {
       backDeposit: 0,
       strArray: [],
       darList: [],
+      balance_pay_status:'1'
     };
   },
   created() {
@@ -1749,6 +1754,7 @@ export default {
         });
     },
     handleCheckOrderDetail(column) {
+      this.balance_pay_status = column.balance_pay_status
       orderDetail({
         order_id: column.id,
       })
@@ -3252,11 +3258,57 @@ export default {
         color: #796cf3;
         font-size: 10px;
       }
-
-      .deatail_btn {
-        color: #796cf3;
-        font-size: 12px;
-        padding: 3px 5px;
+      .asin {
+        display: flex;
+        .asin-img {
+          height: 60px;
+          width: 60px;
+          border-radius: 2px;
+          border: 1px solid #eeeeee;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+        .asin-p {
+          text-align: left;
+          padding-left: 12px;
+          padding-top: 10px;
+          width: 150px;
+          .p1 {
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .p2 {
+            font-size: 12px;
+            color: #999999;
+            display: flex;
+            span {
+              min-width: 82px;
+              display: block;
+              margin-right: 5px;
+            }
+            i {
+              cursor: pointer;
+            }
+          }
+        }
+        .asin-div {
+          line-height: 60px;
+          font-weight: 400;
+          color: #a06cf3;
+          font-size: 12px;
+          span{
+            cursor: pointer;
+            margin-right:3px;
+          }
+          i{
+            cursor: pointer;
+          }
+        }
       }
 
       .avatar_box {

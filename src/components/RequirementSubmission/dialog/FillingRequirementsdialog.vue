@@ -237,6 +237,7 @@ export default {
     "reqsearch",
     "determine",
     "RequirementsList",
+    "FillingRequirementid",
   ], //通过props接收父组件传递的值
   data() {
     return {
@@ -345,8 +346,9 @@ export default {
           if_product_link: this.formradioLink,
           photograph_demand: formName.ShootingRequirements,
           image: str,
+          id: this.FillingRequirementid,
         };
-        const res = await createOrder(data);
+        const res = await needsEdit(data);
         console.log(res);
         if (res.code == 1) {
           this.beforeClose();
@@ -383,15 +385,6 @@ export default {
           this.$message.error(res.msg);
         }
       } else if (this.ifsubmitbtn && this.determine == 3) {
-        // console.log(this.objold.description, formName.notes);
-        // console.log(this.objold.url, formName.link);
-        // console.log(this.objold.title, formName.name);
-        // console.log(this.objold.photograph_guide, this.formradioRequirements);
-        // console.log(this.objold.if_product_link, this.formradioLink);
-        // console.log(
-        //   this.objold.photograph_demand,
-        //   formName.ShootingRequirements
-        // );
         if (
           this.objold.description == formName.notes &&
           this.objold.url == formName.link &&

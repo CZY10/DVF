@@ -117,7 +117,7 @@
                   :to="{ path: '/homepage:' + scope.row.influencer_id }"
                   ><el-avatar
                     v-if="scope.row.influencer"
-                    :src="localhost + scope.row.influencer.image"
+                    :src="scope.row.influencer.image"
                   ></el-avatar
                 ></router-link>
               </p>
@@ -872,9 +872,13 @@
                   ></el-checkbox>
                 </el-checkbox-group>
                 <el-radio-group v-else v-model="item.checkList">
-                  <el-radio v-for="(i, j) in item.list" :label="i" disabled>{{
-                    i
-                  }}</el-radio>
+                  <el-radio
+                    v-for="(i, j) in item.list"
+                    :key="j"
+                    :label="i"
+                    disabled
+                    >{{ i }}</el-radio
+                  >
                 </el-radio-group>
               </div>
             </div>
@@ -1132,7 +1136,11 @@
                     v-show="item.images.length > 0"
                   >
                     <div>
-                      <div class="item_img" v-for="item in item.images">
+                      <div
+                        class="item_img"
+                        v-for="(item, index) in item.images"
+                        :key="index"
+                      >
                         <template>
                           <img
                             :src="item"

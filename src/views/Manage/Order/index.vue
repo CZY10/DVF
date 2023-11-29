@@ -20,6 +20,7 @@
               @click="
                 currentPage = 1;
                 isMessage = 0;
+                tableData = [];
                 getOrderList();
               "
             ></el-button>
@@ -33,6 +34,7 @@
             @change="
               currentPage = 1;
               isMessage = 0;
+              tableData = [];
               getOrderList();
             "
             start-placeholder="开始日期"
@@ -55,6 +57,7 @@
         @selection-change="handleSelectionChange"
         style="width: 100%"
         @select-all="selectAll"
+        :row-class-name="tableRowClassName"
       >
         <!-- 订单多选 -->
         <el-table-column type="selection" :selectable="selectable">
@@ -83,7 +86,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="asin" label="需求内容" min-width="200">
+        <el-table-column prop="asin" label="需求内容" min-width="160">
           <template slot-scope="scope">
             <div class="asin">
               <div class="asin-img">
@@ -99,7 +102,14 @@
                   ></a>
                 </p>
               </div>
-              <div class="asin-div"> <span @click="handleCheckOrderDetail(scope.row)">详情</span> <i class="iconfont icon-tx" v-if="scope.row.balance_pay_status == '0'"  @click="handleCheckOrderDetail(scope.row)"></i> </div>
+              <div class="asin-div">
+                <span @click="handleCheckOrderDetail(scope.row)">详情</span>
+                <i
+                  class="iconfont icon-tx"
+                  v-if="scope.row.balance_pay_status == '0'"
+                  @click="handleCheckOrderDetail(scope.row)"
+                ></i>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -264,7 +274,7 @@
                   >付定金</el-button
                 >
                 <el-button
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   size="small"
                   @click="
                     deleteOrderDialog = true;
@@ -306,7 +316,7 @@
                   已申请退定
                 </div>
                 <el-button
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   v-else
                   size="small"
                   @click="
@@ -358,7 +368,7 @@
                   v-if="scope.row.site_read == 1"
                 ></div>
                 <el-button
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   size="small"
                   style="margin-left: 10px"
                   @click="getsiteRead(scope.row.id)"
@@ -374,21 +384,18 @@
                 <a
                   :href="scope.row.attachfile"
                   target="_blank"
-                  style="
-                    text-decoration: none;
-                    color: #776cf3;
-                    border: 1px solid #776cf3;
-                    font-size: 12px;
-                    font-size: 12px;
-                    padding: 3px 16px;
-                    border-radius: 16px;
-                    margin-right: 10px;
-                  "
-                  >查看视频</a
+                  style="text-decoration: none"
+                >
+                  <el-button
+                    class="operation_btn payment_btn_style"
+                    size="small"
+                    round
+                    >查看视频
+                  </el-button></a
                 >
                 <el-button
                   v-if="scope.row.comment === 1"
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   size="small"
                   round
                   @click="handleComments(scope)"
@@ -396,7 +403,8 @@
                 >
                 <el-button
                   v-else
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
+                  style="margin-left: 10px"
                   size="small"
                   round
                   @click="
@@ -409,7 +417,7 @@
               <div v-else-if="scope.row.status == 5" class="flex_center">
                 <div class="normal_style">/</div>
                 <el-button
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   size="small"
                   @click="
                     deleteOrderDialog = true;
@@ -432,26 +440,18 @@
           align-items: center;
         "
       >
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[20, 50, 100, 500]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-        >
-        </el-pagination>
+        <div style="color: #999; margin-left: 30px">已选 -- 项</div>
 
         <div style="display: flex; align-items: center">
           <span class="pagination-span" v-if="priceNum != 0"
-            >合计：<span style="color: #ff000c; font-weight: 900"
+            >合计金额：<span style="color: #ff000c; font-weight: 900"
               >￥{{ priceNum }}</span
             ></span
           >
           <span class="pagination-span" v-if="priceNum == 0"
-            >合计：<span style="color: #999; font-weight: 900">--</span></span
+            >合计金额：<span style="color: #999; font-weight: 900"
+              >--</span
+            ></span
           >
           <el-button
             class="pagination-btn"
@@ -893,7 +893,7 @@
             style="
               background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
             "
-            v-if="!videoForm.url"
+            v-if="!videoForm.url && balance_pay_status == '0'"
             @click="modifyUrl(videoForm.id)"
           >
             保存
@@ -1315,7 +1315,10 @@
       :title="paymentType == 0 ? '定金支付成功' : '订单支付成功'"
       :visible.sync="paymentCompletedDialogVisible"
       width="360px"
-      @close="getOrderList"
+      @close="
+        tableData = [];
+        getOrderList();
+      "
       :close-on-click-modal="false"
       class="payment_completed_dialog"
       center
@@ -1341,6 +1344,7 @@
           <el-button
             @click="
               paymentCompletedDialogVisible = false;
+              tableData = [];
               getOrderList();
             "
             >我知道了</el-button
@@ -1449,7 +1453,6 @@ export default {
       centerDialogVisible: false,
       multipleSelection: [],
       listArray: [],
-      checkArray: {},
       categoryList: [],
       isHide: false,
       form: {
@@ -1469,7 +1472,6 @@ export default {
       imgDialog: false,
       feedbackDialog: false,
       payDepositDialogVisible: false,
-      messageData: [],
       uploadFile: [],
       stepsList: {},
       videoForm: {},
@@ -1553,19 +1555,7 @@ export default {
       isDisabled: true,
       feedbackVal: "",
       uploadList: [],
-      //聊天
-      chatVisible: this.value,
-      loading: false,
-      defualtAvatar: require("../../../assets/images/people_header.png"), // 后端没有返回头像默认头像，注意：需要用require请求方式才能动态访问本地文件
       chatData: [],
-      distincData: [], // 消息去重数组
-      offsetMax: 0, // 最大偏移位，记录当前获取的最大id，往后的定时轮询数据时每次只获取比这个id大的数据
-      offsetMin: 0, //  // 最小偏移位，记录当前获取的最小id，往上滑动时每次只获取比这小id大的数据
-      searchForm: {
-        // 每次定时获取数据或首次加载数据提交的form表单数据
-        pageNumber: 1,
-        pageSize: 20,
-      },
       chatForm: {
         // 发送数据提交数据表单
         feedback: "",
@@ -1573,7 +1563,6 @@ export default {
       },
       timerSwitch: 0, // 定时器开关，默认关闭
       localhost: process.env.VUE_APP_BASE_URL,
-      total: 0,
       pageSize: 20,
       pageNumber: 1,
       pageState: true,
@@ -1598,7 +1587,8 @@ export default {
       backDeposit: 0,
       strArray: [],
       darList: [],
-      balance_pay_status:'1'
+      balance_pay_status: "1",
+      totalPage: 0,
     };
   },
   created() {
@@ -1609,14 +1599,13 @@ export default {
     }
   },
   mounted() {
+    this.tableData = [];
+    this.tableListener();
     this.getOrderList();
     this.token = localStorage.getItem("token");
     this.avatar = localStorage.getItem("avatar");
     this.handlerGetCategory();
     this.getShootRequireList();
-    setTimeout(() => {
-      console.log(this.tableData);
-    }, 1000);
   },
   computed: {
     query() {
@@ -1640,6 +1629,7 @@ export default {
     isMessageFn(newVal) {
       if (newVal == 1) {
         this.isMessage = newVal;
+        this.tableData = [];
         this.getOrderList();
       }
     },
@@ -1663,6 +1653,12 @@ export default {
   },
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
+    tableRowClassName({ row, rowIndex }) {
+      if (row.need_id !== 0) {
+        return "warning-row";
+      }
+      return "";
+    },
     handleSelectable(row) {
       return row.category_id == 18 ? false : true;
     },
@@ -1754,7 +1750,7 @@ export default {
         });
     },
     handleCheckOrderDetail(column) {
-      this.balance_pay_status = column.balance_pay_status
+      this.balance_pay_status = column.balance_pay_status;
       orderDetail({
         order_id: column.id,
       })
@@ -1783,6 +1779,7 @@ export default {
         ? (this.orderType = "asc")
         : (this.orderType = "desc");
       this.order = column.prop;
+      this.tableData = [];
       this.getOrderList();
     },
     //获取订单列表
@@ -1799,10 +1796,14 @@ export default {
         .then((res) => {
           if (res.code == 1) {
             this.pageState = true;
-            this.tableData = res.data.data;
-            this.total = res.data.total;
+            res.data.data.forEach((item) => {
+              this.tableData.push(item);
+            });
+
+            this.totalPage = res.data.last_page;
             this.setIsMessage(0);
             window.localStorage.setItem("ismessage", 0);
+
             this.handleSelectable();
           }
         })
@@ -1814,20 +1815,10 @@ export default {
       this.form.dateValue = [];
       this.currentPage = 1;
       this.isMessage = 0;
+      this.tableData = [];
       this.getOrderList();
     },
-    //分页
-    handleSizeChange(val) {
-      this.pageState = false;
-      this.pageSize = val;
-      this.currentPage = 1;
-      this.isMessage = 0;
-      if (this.pageState === false) this.getOrderList();
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      if (this.pageState === true) this.getOrderList();
-    },
+
     //删除订单
     handleRemoveOrder() {
       orderDelete({ order_id: this.orderId })
@@ -1835,6 +1826,7 @@ export default {
           if (res.code === 1) {
             this.$message.success("删除成功！");
             this.deleteOrderDialog = false;
+            this.tableData = [];
             this.getOrderList();
           }
         })
@@ -1962,6 +1954,7 @@ export default {
           if (res.code === 1) {
             this.returnDepositDialog = false;
             this.$message.success("申请成功！");
+            this.tableData = [];
             this.getOrderList();
           }
         })
@@ -1999,6 +1992,7 @@ export default {
               this.ruleCommentForm.complete = 0;
               this.ruleCommentForm.quality = 0;
               this.ruleCommentForm.cycle = 0;
+              this.tableData = [];
               this.getOrderList();
             }
           })
@@ -2097,6 +2091,7 @@ export default {
               if (res.code === 1) {
                 this.submitDialog = false;
                 this.$message.success("样品寄送信息提交成功!");
+                this.tableData = [];
                 this.getOrderList();
               }
             })
@@ -2152,24 +2147,6 @@ export default {
           this.$message.error(err.message);
         });
     },
-    // show(){ // 打开窗体初始化数据
-    //     // 初始化数据
-    //     this.chatData =[];
-    //     this.distincData =[];
-    //     this.offsetMax = 0;
-    //     this.offsetMin = 0;
-    //     this.searchForm.pageNumber = 1;
-    //     this.searchForm.pageSize = 20;
-    //     this.chatForm ={
-    //         content:"",
-    //         msg:""
-    //     };
-    //     // this.loadMsg();
-    //     this.chatVisible = true;
-    //     // 开启定时器
-    //     this.timerSwitch = 1;
-    //     // this.reloadData();
-    // },
     // 发送消息
     handlerSedMeg() {
       this.chatForm.feedback_images = [];
@@ -2238,6 +2215,7 @@ export default {
       }).then((res) => {
         if (res.code == 1) {
           this.centerDialogVisible = true;
+          this.tableData = [];
           this.getOrderList();
           let req = this.tableData.filter((item) => {
             return item.id == id;
@@ -2268,7 +2246,27 @@ export default {
       }).then((res) => {
         if (res.code == 1) {
           this.checkVideoDialog = false;
+          this.tableData = [];
           this.getOrderList();
+        }
+      });
+    },
+    tableListener() {
+      console.log("监听表格dom对象的滚动事件");
+      let that = this;
+      let dom = that.$refs.multipleTable.bodyWrapper;
+      dom.addEventListener("scroll", function () {
+        const scrollDistance =
+          dom.scrollHeight - dom.scrollTop - dom.clientHeight;
+        console.log("scroll", scrollDistance);
+        if (scrollDistance <= 0) {
+          //等于0证明已经到底，可以请求接口
+          if (that.currentPage < that.totalPage) {
+            //当前页数小于总页数就请求
+            that.currentPage++; //当前页数自增
+            //请求接口的代码
+            that.getOrderList();
+          }
         }
       });
     },
@@ -3260,6 +3258,7 @@ export default {
       }
       .asin {
         display: flex;
+        justify-content: center;
         .asin-img {
           height: 60px;
           width: 60px;
@@ -3286,6 +3285,9 @@ export default {
             font-size: 12px;
             color: #999999;
             display: flex;
+            a {
+              text-decoration: none;
+            }
             span {
               min-width: 82px;
               display: block;
@@ -3301,11 +3303,11 @@ export default {
           font-weight: 400;
           color: #a06cf3;
           font-size: 12px;
-          span{
+          span {
             cursor: pointer;
-            margin-right:3px;
+            margin-right: 3px;
           }
-          i{
+          i {
             cursor: pointer;
           }
         }
@@ -3347,16 +3349,25 @@ export default {
 
       .operation_btn {
         width: 82px;
-        border-radius: 16px !important;
+        height: 32px;
+        border-radius: 4px !important;
       }
 
       .payment_btn_style {
-        color: #796cf3;
-        border: 1px solid #796cf3;
+        color: #a06cf3;
+      }
+      .payment_btn_style:hover {
+        color: #fff;
+        background: #a06cf3;
+      }
 
-        &:hover {
-          background: none;
-        }
+      .payment_btn_style2 {
+        background: #fff;
+        color: #999;
+        border: 1px solid #eeeeee;
+      }
+      .payment_btn_style2:hover {
+        background: #eee;
       }
 
       .normal_style {
@@ -3882,8 +3893,8 @@ export default {
 .pagination-btn {
   width: 140px;
   height: 32px;
-  background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-  border-radius: 16px;
+  background: #d161f6;
+  border-radius: 4px;
   position: relative;
 
   .pagination-btn-span {
@@ -3906,11 +3917,9 @@ export default {
 .paginationBtn {
   width: 140px;
   height: 32px;
-  background: linear-gradient(233deg, #eaadf0 0%, #ada9e4 100%);
-  border-radius: 16px;
+  background: rgba(209, 97, 246, 0.4);
+  border-radius: 4px;
   color: #ffffff;
-  font-weight: 400;
-  font-size: 14px;
   line-height: 8px;
   pointer-events: none;
 }
@@ -3957,7 +3966,7 @@ export default {
   color: #796cf3;
   text-align: center;
   position: absolute;
-  top: 30px;
+  top: 18px;
   right: 70px;
 }
 </style>
@@ -3970,6 +3979,9 @@ export default {
 .el-table__row > td > .cell {
   padding-right: 0px;
   padding-left: 0px;
+}
+.el-table .warning-row {
+  border-color: red !important;
 }
 </style>
 <style lang="less" scoped>

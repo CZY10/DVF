@@ -77,7 +77,7 @@
           <el-badge
             :value="messageCount"
             :hidden="messageCount == 0"
-            class="item"
+            style="height: 64px; margin-bottom: 4px"
           >
             <i
               class="el-icon-chat-dot-round"

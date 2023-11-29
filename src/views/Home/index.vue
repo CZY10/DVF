@@ -97,6 +97,7 @@
             target="_blank"
             :href="token ? '/homepage:' + item.id : '/login'"
             v-for="(item, ind) in i.influencerList"
+            :key="ind"
             class="buyshowItem"
           >
             <div class="item_img"><img :src="item.image" alt="" /></div>
@@ -140,7 +141,7 @@
         </div>
         <div class="vipon_content flex_style">
           <div class="vipon_img">
-            <img src="../../assets/images/home/vipon.png" alt="" />
+            <img src="../../assets/images/home/viponwebp.webp" alt="" />
           </div>
           <div class="vipon_text">
             <h5>清库存，推新品，就用VIPON</h5>
@@ -195,6 +196,7 @@
             <ul class="flex_style buyshow_type">
               <li
                 v-for="(item, index) in fbList"
+                :key="index"
                 @click="fbActiveIndex = index"
                 :class="fbActiveIndex == index ? 'activeStyle' : ''"
               >
@@ -218,6 +220,7 @@
           <a
             target="_blank"
             v-for="(item, ind) in i.productList"
+            :key="ind"
             class="fbItem"
             @click="godetailsFb(item)"
           >

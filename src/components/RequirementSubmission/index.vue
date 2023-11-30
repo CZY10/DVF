@@ -277,22 +277,54 @@
           </el-table-column>
           <el-table-column label="视频数量">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag != 2">
-                <el-input-number
-                  class="tips4"
-                  v-model="scope.row.video_num"
-                  @change="
-                    handleChange(
-                      scope.row.budget_tip,
-                      scope.row.video_num,
-                      scope.row.id
-                    )
-                  "
-                  :min="1"
-                  :max="10"
-                  size="mini"
-                  :disabled="scope.row.title == ''"
-                ></el-input-number>
+              <div v-if="scope.row.flag != 2" class="inputnumber">
+                <div class="tips4">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="减少当前变体/型号的拍摄数量"
+                    placement="top"
+                  >
+                    <button
+                      @click="scope.row.video_num--"
+                      @mouseup="
+                        handleChange(
+                          scope.row.budget_tip,
+                          scope.row.video_num - 1,
+                          scope.row.id
+                        )
+                      "
+                      :disabled="
+                        scope.row.video_num == 1 || scope.row.title == ''
+                      "
+                    >
+                      -
+                    </button>
+                  </el-tooltip>
+                  <input type="text" v-model="scope.row.video_num" readonly />
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="增加当前变体/型号的拍摄数量"
+                    placement="top"
+                  >
+                    <button
+                      @click="scope.row.video_num++"
+                      @mouseup="
+                        handleChange(
+                          scope.row.budget_tip,
+                          scope.row.video_num + 1,
+                          scope.row.id
+                        )
+                      "
+                      :disabled="
+                        scope.row.video_num == 10 || scope.row.title == ''
+                      "
+                    >
+                      +
+                    </button>
+                  </el-tooltip>
+                </div>
               </div>
             </template>
           </el-table-column>
@@ -335,18 +367,36 @@
                   "
                 >
                   <li class="operate" v-if="scope.row.title != ''">
-                    <span class="operate1" @click="operatedialog(scope.$index)">
-                      <i class="iconfont icon-fz"></i> 复制</span
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="复制后可编辑创建其他变体/型号需求"
+                      placement="top"
                     >
+                      <span
+                        class="operate1"
+                        @click="operatedialog(scope.$index)"
+                      >
+                        <i class="iconfont icon-fz"></i> 复制</span
+                      >
+                    </el-tooltip>
                   </li>
                   <li class="operate" v-else>--</li>
                   <li class="operate">
-                    <span
-                      class="operate2"
-                      @click="deletesubmitForm(scope.row.id)"
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="删除该行内容"
+                      placement="top"
+                      :enterable="false"
                     >
-                      <i class="iconfont icon-sc"></i> 删除</span
-                    >
+                      <span
+                        class="operate2"
+                        @click="deletesubmitForm(scope.row.id)"
+                      >
+                        <i class="iconfont icon-sc"></i> 删除</span
+                      >
+                    </el-tooltip>
                   </li>
                 </ul>
               </div>
@@ -974,23 +1024,7 @@ export default {
       console.log(val);
     },
     handleChange(value, num, id) {
-      if (value == 1) {
-        this.TipsdialogdialogVisible = true;
-        this.video_id = id;
-        this.reqsearch();
-      } else {
-        this.debounce(async () => {
-          const res = await needsVideoNumin({
-            id: id + "",
-            video_num: num + "",
-          });
-          console.log(res);
-          if (res.code == 1) {
-            this.reqsearch();
-          }
-        }, 500);
-      }
-
+      console.log(num);
       if (num == 10) {
         const h = this.$createElement;
         let msg = this.$message({
@@ -1017,6 +1051,23 @@ export default {
           .addEventListener("click", function () {
             msg.close();
           });
+      }
+
+      if (value == 1) {
+        this.TipsdialogdialogVisible = true;
+        this.video_id = id;
+        this.reqsearch();
+      } else {
+        this.debounce(async () => {
+          const res = await needsVideoNumin({
+            id: id + "",
+            video_num: num + "",
+          });
+          console.log(res);
+          if (res.code == 1) {
+            this.reqsearch();
+          }
+        }, 500);
       }
     },
     debounce(func, delay) {
@@ -1408,38 +1459,6 @@ export default {
   line-height: 37px;
 }
 
-::v-deep(.el-input-number--mini) {
-  width: 65px;
-  line-height: 20px;
-}
-
-::v-deep(.el-input-number--mini .el-input-number__increase) {
-  width: 18px;
-  height: 20px;
-  line-height: 20px;
-  background: #f6f6f6 !important;
-  border-left: none;
-}
-
-::v-deep(.el-input-number--mini .el-input-number__decrease) {
-  width: 18px;
-  height: 20px;
-  line-height: 20px;
-  background: #f6f6f6 !important;
-  border-right: none;
-}
-
-::v-deep(.el-input-number--mini .el-input__inner) {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-::v-deep(.el-input--mini .el-input__inner) {
-  height: 22px;
-  line-height: 22px;
-  border: none;
-}
-
 ::v-deep(.elinput > .el-input__inner) {
   height: 100%;
   text-align: center;
@@ -1589,7 +1608,7 @@ export default {
           transition: all 0.3s;
           .iconfont {
             font-size: 12px;
-            margin-right: 7px;
+            margin-right: 3px;
           }
         }
         .operate2:hover {
@@ -1597,6 +1616,27 @@ export default {
         }
         .operate1:hover {
           color: #a06cf3;
+        }
+      }
+      .inputnumber {
+        display: flex;
+        justify-content: center;
+        button {
+          width: 18px;
+          height: 18px;
+          background: #f6f6f6;
+          border-radius: 4px;
+          border: none;
+          cursor: pointer;
+        }
+        input {
+          border: none;
+          width: 40px;
+          text-align: center;
+          color: #333333;
+        }
+        input:focus {
+          outline: none;
         }
       }
     }
@@ -1658,9 +1698,17 @@ export default {
 
 <!-- 达人列表 -->
 <style lang="less" scoped>
+::v-deep(.el-icon-plus) {
+  pointer-events: none;
+}
+
 ::v-deep(.el-table__header-wrapper) {
   margin: 14px 14px 0 14px;
   width: 1170px !important;
+}
+
+::v-deep(.el-table__header) {
+  width: auto !important;
 }
 
 ::v-deep(.dialog-footer) {
@@ -1674,7 +1722,6 @@ export default {
 
 .influencerInfoUl {
   display: flex;
-  justify-content: center;
 }
 
 .influencerInfoLi {
@@ -1682,7 +1729,7 @@ export default {
   position: relative;
   cursor: pointer;
   float: left;
-
+  width: 60px;
   .influencerInfoLi_div {
     display: flex;
     flex-direction: column;
@@ -1702,7 +1749,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 62px;
+    width: 60px;
     .influencerInfo2 {
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -1711,6 +1758,7 @@ export default {
     }
   }
   .influencerInfoLi_div2 {
+    width: 60px;
     .influencerInfo3 {
       width: 32px;
       height: 32px;
@@ -1719,6 +1767,7 @@ export default {
       line-height: 32px;
       cursor: pointer;
       color: #cccccc !important;
+      margin: 0 auto;
     }
     .influencerInfo2 {
       font-size: 12px;

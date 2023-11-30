@@ -8,12 +8,8 @@
         :model="form"
         label-width="80px"
       >
-        <el-form-item label="订单记录" class="title">
-          <el-input
-            placeholder="输入ASIN/订单号"
-            v-model="form.keywords"
-            class="input-with-select"
-          >
+        <el-form-item label="订单记录" class="title" style="font-weight: 600">
+          <el-input placeholder="输入ASIN/订单号" v-model="form.keywords">
             <el-button
               slot="append"
               icon="el-icon-search"
@@ -26,7 +22,7 @@
             ></el-button>
           </el-input>
         </el-form-item>
-        <el-form-item label="日期">
+        <el-form-item label="日期" class="title">
           <el-date-picker
             v-model="form.dateValue"
             type="daterange"
@@ -344,7 +340,7 @@
                     若未收到样品寄送地址，请检查消息反馈或联系工作人员！
                   </div>
                   <el-button
-                    class="payment_btn_style"
+                    class="operation_btn payment_btn_style"
                     size="small"
                     @click="
                       submitDialog = true;
@@ -352,8 +348,9 @@
                       handlerClearSubmit();
                     "
                     round
-                    >提交寄送信息</el-button
                   >
+                    提交寄送信息
+                  </el-button>
                 </el-tooltip>
                 <div
                   style="
@@ -440,7 +437,13 @@
           align-items: center;
         "
       >
-        <div style="color: #999; margin-left: 30px">已选 -- 项</div>
+        <div style="color: #999; margin-left: 30px">
+          已选
+          {{
+            multipleSelection.length == 0 ? "--" : multipleSelection.length
+          }}
+          项
+        </div>
 
         <div style="display: flex; align-items: center">
           <span class="pagination-span" v-if="priceNum != 0"
@@ -1654,7 +1657,8 @@ export default {
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
     tableRowClassName({ row, rowIndex }) {
-      if (row.need_id !== 0) {
+      console.log(row.need_id);
+      if (row.merge !== 0) {
         return "warning-row";
       }
       return "";
@@ -2252,7 +2256,7 @@ export default {
       });
     },
     tableListener() {
-      console.log("监听表格dom对象的滚动事件");
+      // console.log("监听表格dom对象的滚动事件");
       let that = this;
       let dom = that.$refs.multipleTable.bodyWrapper;
       dom.addEventListener("scroll", function () {
@@ -3126,11 +3130,6 @@ export default {
   font-weight: normal;
   color: #999999 !important;
 }
-
-.el-table .el-table__cell.gutter {
-  background: #f6f6f6;
-}
-
 .el-badge__content.is-dot {
   width: 6px !important;
   height: 6px !important;
@@ -3138,28 +3137,16 @@ export default {
   right: 2px !important;
 }
 
-.el-table__header-wrapper {
-  border-radius: 4px;
-  background: #f6f6f6;
-
-  table {
-    padding: 0 30px;
-    width: auto !important;
-  }
-}
-
 .el-table th.el-table__cell.is-leaf {
   border-bottom: none !important;
   padding: 6px 0;
+  background: #fdfdfd !important;
 }
 
 .el-table__body-wrapper {
-  border: 1px solid #eeeeee;
-  padding: 0 20px;
   width: auto !important;
   border-radius: 4px !important;
   margin-top: 10px;
-
   .el-table__body {
     width: auto !important;
   }
@@ -3235,19 +3222,23 @@ export default {
   .content {
     background: #ffffff;
     border-radius: 0px 4px 4px 0px;
-    border: 1px solid #eeeeee;
-    padding: 20px 30px;
+    padding: 20px 0px;
 
     .form_search {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0 20px;
 
       .title {
         font-size: 14px;
         font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
         color: #333333;
+        display: flex;
+        align-items: center;
+        ::v-deep(.el-form-item__content) {
+          margin-left: 0px !important;
+        }
       }
     }
 
@@ -3355,6 +3346,8 @@ export default {
 
       .payment_btn_style {
         color: #a06cf3;
+        display: flex;
+        justify-content: center;
       }
       .payment_btn_style:hover {
         color: #fff;
@@ -3914,6 +3907,10 @@ export default {
   }
 }
 
+.pagination-btn:hover{
+background: #d161f6;
+}
+
 .paginationBtn {
   width: 140px;
   height: 32px;
@@ -3981,7 +3978,8 @@ export default {
   padding-left: 0px;
 }
 .el-table .warning-row {
-  background: red !important;
+  border-bottom: 1px dashed #d1d1d3 !important;
+  border-top: 1px dashed #d1d1d3 !important;
 }
 </style>
 <style lang="less" scoped>
@@ -3990,10 +3988,29 @@ export default {
 }
 
 ::v-deep(.el-table__header-wrapper table) {
-  padding: 0 20px;
+  padding: 0;
 }
 
 ::v-deep(.el-textarea__inner) {
   min-height: 120px !important;
+}
+
+::v-deep(.el-table td.el-table__cell) {
+  border-bottom: none;
+}
+
+::v-deep(.el-table__body) {
+  border-collapse: collapse !important;
+}
+::v-deep(.el-table) {
+  background: #f5f7f9;
+}
+
+::v-deep(.el-table tr) {
+  border-top: 6px solid #f5f7f9;
+}
+
+::v-deep(.el-table .el-table__cell.gutter) {
+  background: #fff;
 }
 </style>

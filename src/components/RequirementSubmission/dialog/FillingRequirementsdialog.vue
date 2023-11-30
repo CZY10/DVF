@@ -12,9 +12,8 @@
           <h1>{{ dialogTitle }}</h1>
           <p class="tiele">
             <span style="color: #ed4014">注</span
-            >：请勿遗漏或填错，平台不接受事后补充/变更需求，亦不接受重拍/退款
+            >：请勿遗漏或填错，提交后不可再修改，平台不接受事后补充/变更需求
           </p>
-
           <div class="formitem">
             <el-form :model="ruleForm" ref="ruleForm">
               <div class="formitem_div">
@@ -148,7 +147,7 @@
                       <br />
                     </li>
                     <div style="font-size: 12px; margin: 0 0 0 11px">
-                      +效果展示等内容，交付周期相对较短。
+                      +效果展示等内容，交付周期相对较短
                     </div>
                     <li>
                       <div></div>

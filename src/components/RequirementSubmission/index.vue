@@ -775,7 +775,7 @@ export default {
           "right",
           "left",
         ] /* 当位置选择自动的时候，位置排列的优先级 */,
-        disableInteraction: false /* 是否禁止与元素的相互关联 */,
+        disableInteraction: true /* 是否禁止与元素的相互关联 */,
         hidePrev: true /* 是否在第一步隐藏上一步 */,
         // hideNext: true, /* 是否在最后一步隐藏下一步 */
         steps: [] /* steps步骤，可以写个工具类保存起来 */,
@@ -861,24 +861,17 @@ export default {
               item.influencer_info.push({ ifinfluencerInfo: true });
             }
 
-            if (item.title != "" && item.budget * 1 <= item.video_num * 300) {
-              this.tableData[index].budget = item.video_num * 300;
-              this.budgetBlur(
-                this.tableData[index].budget,
-                this.tableData[index].id
-              );
-            } else if (
-              item.title != "" &&
-              item.budget * 1 > item.video_num * 300
-            ) {
-              this.tableData[index].budget = item.budget * 1;
+            if (item.title != "") {
+              this.tableData[index].budget = this.tableData[index].budget * 1;
+              if (item.budget * 1 <= item.video_num * 300) {
+                this.budgetChange(item.budget, index, item.video_num);
+              }
             } else {
               this.tableData[index].budget = "";
             }
           });
 
           if (this.influencersListindex != undefined) {
-            // console.log(this.tableData, this.influencersListindex);
             this.influencersListid =
               this.tableData[this.influencersListindex].id;
           }
@@ -991,8 +984,9 @@ export default {
     },
     //跳转商品详情
     gocommodity(url) {
-      console.log(url);
-      window.open(url, "_blank");
+      if (url) {
+        window.open(url, "_blank");
+      }
     },
     //微信检测是否支付成功
     handlerCheckWechatPayment(order) {
@@ -1044,6 +1038,8 @@ export default {
       this.handleSelectionChangeList = val;
       console.log(val);
     },
+
+    //修改视频数量
     handleChange(value, num, id) {
       console.log(num);
       if (num == 10) {
@@ -1254,17 +1250,20 @@ export default {
 
     //拍摄预算修改
     budgetChange(val, index, num) {
-      console.log(val);
       if (val * 1 < 300 * num) {
-        this.$refs[
-          "ruleForm" + index
-        ].fields[0].validateMessage = `请填写预算，不低于${300 * num}`;
-        this.$refs["ruleForm" + index].fields[0].validateState = "error";
-        this.iffuleform = false;
+        this.$nextTick(() => {
+          this.$refs[
+            "ruleForm" + index
+          ].fields[0].validateMessage = `不能低于300元/个`;
+          this.$refs["ruleForm" + index].fields[0].validateState = "error";
+          this.iffuleform = false;
+        });
       } else {
-        this.iffuleform = true;
-        this.$refs["ruleForm" + index].fields[0].validateMessage = "";
-        this.$refs["ruleForm" + index].fields[0].validateState = "";
+        this.$nextTick(() => {
+          this.iffuleform = true;
+          this.$refs["ruleForm" + index].fields[0].validateMessage = "";
+          this.$refs["ruleForm" + index].fields[0].validateState = "";
+        });
       }
     },
     async budgetBlur(val, id) {

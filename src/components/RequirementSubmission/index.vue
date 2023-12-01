@@ -63,7 +63,15 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="意向达人" width="400">
+          <el-table-column width="400">
+            <template slot="header">
+              <p>
+                意向达人
+                <span style="color: #999999; font-size: 12px; margin-left: 10px"
+                  >(可上下左右拖动排序)</span
+                >
+              </p>
+            </template>
             <template slot-scope="scope">
               <div v-if="scope.row.flag != 2">
                 <ul class="influencerInfoUl">
@@ -89,7 +97,7 @@
                         class="influencerInfoLi isinfluencerInfoLi"
                         v-for="(item, index) in scope.row.influencer_info"
                         :key="index"
-                        @mousedown="influencerinfomousedown(item, index)"
+                        @mousedown="influencerinfomousedown(item)"
                       >
                         <div
                           v-if="item.ifinfluencerInfo"
@@ -140,6 +148,19 @@
                           >
                             {{ item.price }}
                           </p>
+
+                          <div
+                            :class="{
+                              indextop: true,
+                              indextop1: index == 0,
+                              indextop2: index == 1,
+                              indextop3: index == 2,
+                              indextop4: index == 3,
+                              indextop5: index == 4,
+                            }"
+                          >
+                            {{ index + 1 }}
+                          </div>
                         </div>
                       </li>
                     </transition-group>
@@ -857,7 +878,7 @@ export default {
           });
 
           if (this.influencersListindex != undefined) {
-            console.log(this.tableData, this.influencersListindex);
+            // console.log(this.tableData, this.influencersListindex);
             this.influencersListid =
               this.tableData[this.influencersListindex].id;
           }
@@ -1253,30 +1274,15 @@ export default {
       });
     },
     Addinfluencers(list, id, index) {
-      let length = [];
-      this.tableData.map((item) => {
-        if (item.id) {
-          length.push(item);
-        }
-      });
-
-      console.log(length.length, index);
-      if (length.length >= index) {
-        if (list[0]?.ifinfluencerInfo || list.length == 0) {
-          this.influencersList = [];
-          this.datalistdialogVisible = true;
-          this.influencersListindex = index;
-          console.log(this.influencersListindex);
-        } else {
-          this.influencersList = list;
-          this.influencersListid = id;
-          this.datalistdialogVisible = true;
-        }
-      } else {
-        let isindex = index - length.length;
+      if (list[0]?.ifinfluencerInfo || list.length == 0) {
         this.influencersList = [];
         this.datalistdialogVisible = true;
-        this.influencersListindex = index - isindex;
+        this.influencersListindex = index;
+        console.log(this.influencersListindex);
+      } else {
+        this.influencersList = list;
+        this.influencersListid = id;
+        this.datalistdialogVisible = true;
       }
     },
 
@@ -1648,7 +1654,7 @@ export default {
       border-radius: 5px;
       position: absolute;
       top: -50px;
-      left: 202px;
+      left: 137px;
       font-size: 12px;
       color: #e4e4e4;
       padding: 9px 12px;
@@ -1734,7 +1740,40 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    .indextop {
+      width: 16px;
+      height: 14px;
+      background: #ff9c17;
+      border-radius: 0 7px 7px 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 12px;
+      color: #ffffff;
+      line-height: 14px;
+      text-align: left;
+      padding-left: 4px;
+      box-sizing: border-box;
+    }
+
+    .indextop1 {
+      opacity: 1;
+    }
+    .indextop2 {
+      opacity: 0.8;
+    }
+    .indextop3 {
+      opacity: 0.6;
+    }
+    .indextop4 {
+      opacity: 0.4;
+    }
+    .indextop5 {
+      opacity: 0.2;
+    }
   }
+
   .influencerInfo2 {
     font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -1848,7 +1887,7 @@ export default {
 .el-icon-question {
   position: absolute;
   top: 24px;
-  left: 285px;
+  left: 220px;
   cursor: pointer;
 }
 

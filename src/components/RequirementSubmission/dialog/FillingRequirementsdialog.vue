@@ -216,9 +216,7 @@
               >
                 清空
               </button>
-              <button class="btn2" @click="handleCopy(Fillinthetemplateval)">
-                复制模板
-              </button>
+              <button class="btn2" @click="handleCopy">复制模板</button>
             </div>
           </div>
         </div>
@@ -442,11 +440,33 @@ export default {
     },
 
     // 一键复制
-    handleCopy(row) {
-      if (row == "") return;
-
+    handleCopy() {
       // 假设你要复制的内容在一个名为content的变量中
-      let content = row;
+      let content = `【产品名称】
+ 儿童滑轮鞋（带夜光）
+//产品中文名+（变体/型号）//
+
+
+【产品链接】
+https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
+//没有链接则不填//
+
+
+【拍摄要求】
+视频要点1：展示儿童鞋子的包装、款式...
+视频要点2：重点讲解材质和做工，体现健康、环保、透气、舒适...
+视频要点3：需要展示鞋子的试穿效果，体现夜光效果...
+
+特殊说明1：需要2-12岁小孩试穿并出镜...
+特殊说明2：需要提前吸光，才能体现夜光...
+特殊说明3：需要提供版权...
+
+//视频要点+特殊说明//
+
+【敏感信息备注】
+ 不要肥胖及银色头发的...
+
+//不便直接传达给红人的敏感信息//`;
 
       // 创建一个textarea元素
       let textarea = document.createElement("textarea");

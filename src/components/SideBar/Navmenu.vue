@@ -1465,11 +1465,6 @@ export default {
   background: none !important;
 }
 
-.el-menu--horizontal > .el-menu-item.is-active,
-.el-menu.el-menu--horizontal {
-  border-bottom: 2px solid #eeeeee;
-}
-
 .el-menu--horizontal > .el-menu-item.is-active {
   border-bottom-color: #d161f6 !important;
 }
@@ -1615,10 +1610,6 @@ export default {
   .el-menu--horizontal > .el-menu-item {
     height: 40px !important;
     line-height: 40px !important;
-  }
-
-  .el-menu.el-menu--horizontal {
-    border-bottom: none;
   }
 }
 </style>

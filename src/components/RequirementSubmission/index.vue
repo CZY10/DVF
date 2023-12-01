@@ -756,7 +756,6 @@ export default {
       influencerids2: [],
       differentIndices: [],
       user_id: "",
-      influencersListindex: undefined,
       FillingRequirementid: 0,
       introOption: {
         // 参数对象
@@ -880,11 +879,6 @@ export default {
             }
           });
 
-          if (this.influencersListindex != undefined) {
-            this.influencersListid =
-              this.tableData[this.influencersListindex].id;
-          }
-
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
           });
@@ -913,7 +907,6 @@ export default {
         title: "",
         influencerInfo: true,
       });
-      console.log(this.tableData);
     },
 
     //提交
@@ -1310,8 +1303,6 @@ export default {
       if (list[0]?.ifinfluencerInfo || list.length == 0) {
         this.influencersList = [];
         this.datalistdialogVisible = true;
-        this.influencersListindex = index;
-        console.log(this.influencersListindex);
       } else {
         this.influencersList = list;
         this.influencersListid = id;
@@ -1466,13 +1457,6 @@ export default {
         this.ifsubmitTo = true;
       } else {
         this.ifsubmitTo = false;
-      }
-    },
-    datalistdialogVisible(newval) {
-      if (newval == false) {
-        this.influencersListindex = undefined;
-        this.influencersListid = 0;
-        console.log(this.influencersListindex);
       }
     },
     NotedialogdialogVisible(newval) {

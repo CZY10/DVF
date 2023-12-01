@@ -557,12 +557,21 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       deep: true, // 可以深度检测到 obj 对象的属性值的变化
     },
     upload_List(newval) {
-      // console.log(newval);
+      console.log(
+        this.formradioLink,
+        newval,
+        this.ruleForm.name,
+        this.ruleForm.ShootingRequirements
+      );
       if (
-        this.formradioLink == "2" &&
-        newval.length != 0 &&
-        this.ruleForm.name != "" &&
-        this.ruleForm.ShootingRequirements != ""
+        (this.formradioLink == "2" &&
+          newval.length != 0 &&
+          this.ruleForm.name != "" &&
+          this.formradioRequirements == "2") ||
+        (this.formradioLink == "2" &&
+          newval.length != 0 &&
+          this.ruleForm.name != "" &&
+          this.ruleForm.ShootingRequirements != "")
       ) {
         this.ifsubmitbtn = true;
       } else {

@@ -545,33 +545,22 @@ export default {
         this.influencersList.push(item);
         store.commit("Index/setinfluencersList", this.influencersList);
         store.commit("Index/setinfluencersListid", this.influencersListid);
-        let result = this.influencersList
-          .flat()
-          .map((item) => item.user_id)
-          .join(",");
-        console.log(this.influencersListid);
-        const res = await needsSelectInfluencer({
-          id: this.influencersListid,
-          influencer_ids: result,
-        });
-        if (res.code == 1) {
-          this.$emit("getlist", true);
-          const h = this.$createElement;
-          this.$message({
-            message: h("p", null, [
-              h(
-                "span",
-                { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
-                "添加成功"
-              ),
-            ]),
-            iconClass: "el-icon-success",
-            offset: 140,
-            customClass: "customClasssuccess",
-          });
-        }
       }
       this.datalist[index].istrue = false;
+
+      const h = this.$createElement;
+      this.$message({
+        message: h("p", null, [
+          h(
+            "span",
+            { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
+            "添加成功"
+          ),
+        ]),
+        iconClass: "el-icon-success",
+        offset: 140,
+        customClass: "customClasssuccess",
+      });
     },
 
     //反选列表
@@ -621,7 +610,7 @@ export default {
         this.videoslistindex = -1;
       }
     },
-    datalistdialogVisible(newval) {
+    async datalistdialogVisible(newval) {
       if (newval == true) {
         this.isloading = true;
         this.$nextTick(() => {
@@ -630,6 +619,19 @@ export default {
           )[0].childNodes[0].nodeValue = "跳转";
         });
         this.RenderingData();
+      } else {
+        let result = this.influencersList
+          .flat()
+          .map((item) => item.user_id)
+          .join(",");
+        await needsSelectInfluencer({
+          id: this.influencersListid,
+          influencer_ids: result,
+        }).then((res) => {
+          if (res.code == 1) {
+            this.$emit("getlist", true);
+          }
+        });
       }
     },
   },

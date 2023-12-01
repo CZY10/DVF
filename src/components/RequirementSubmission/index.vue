@@ -1305,9 +1305,7 @@ export default {
             });
           }
         })
-        .catch((res) => {
-          console.log(res);
-        });
+        .catch((res) => {});
     },
 
     //刷新

@@ -15,9 +15,8 @@
             >：请勿遗漏或填错，提交后不可再修改，平台不接受事后补充/变更需求
           </p>
           <div class="formitem">
-            <el-form :model="ruleForm" ref="ruleForm">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
               <div class="formitem_div">
-                <span class="formitem_span">*</span>
                 <el-form-item label="产品名称" prop="name">
                   <el-input
                     v-model="ruleForm.name"
@@ -77,9 +76,6 @@
                         </span>
                       </div>
                     </el-upload>
-                    <el-dialog :visible.sync="dialogVisible">
-                      <img width="100%" :src="dialogImageUrl" alt="" />
-                    </el-dialog>
                     <p style="font-size: 12px; margin-top: 10px; color: #999">
                       请上传图片，不超过5M，支持jpg/png
                     </p>
@@ -246,6 +242,16 @@ export default {
         link: "",
         notes: "",
         ShootingRequirements: "",
+      },
+      rules: {
+        name: [
+          {
+            required: true,
+            max: 25,
+            message: "长度在25个字符以内",
+            trigger: "change",
+          },
+        ],
       },
       formradioLink: "1",
       formradioRequirements: "1",
@@ -493,20 +499,22 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
 
     //一键填写
     async OneClickFilling(text) {
-      if (text != "") {
+      if (text.length > 50) {
         const res = await needsPaste({ str: text });
         if (res.code == 1) {
           this.ruleForm.name = res.data.name;
           this.ruleForm.link = res.data.link;
-          this.ruleForm.ShootingRequirements = res.data.request.replace(
+          this.ruleForm.ShootingRequirements = res.data.request?.replace(
             /\\n/g,
             "\n"
           );
-          this.ruleForm.notes = res.data.desc.replace(/\\n/g, "\n");
+          this.ruleForm.notes = res.data.desc?.replace(/\\n/g, "\n");
           console.log(this.ruleForm.ShootingRequirements);
         } else {
           this.$message.error(res.msg);
         }
+      } else {
+        this.$message.error("解析失败");
       }
     },
   },
@@ -628,6 +636,12 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.ruleForm.link = "";
         this.ruleForm.notes = "";
         this.ruleForm.ShootingRequirements = "";
+        this.widthVisble = "500px";
+        this.ifwidthVisble = false;
+        this.Fillinthetemplateval = "";
+        this.rules.name[0].required = false;
+      } else {
+        this.rules.name[0].required = true;
       }
     },
   },

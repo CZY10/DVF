@@ -312,7 +312,9 @@
                         handleChange(
                           scope.row.budget_tip,
                           scope.row.video_num - 1,
-                          scope.row.id
+                          scope.row.id,
+                          scope.row.budget,
+                          scope.$index
                         )
                       "
                       :disabled="
@@ -335,7 +337,9 @@
                         handleChange(
                           scope.row.budget_tip,
                           scope.row.video_num + 1,
-                          scope.row.id
+                          scope.row.id,
+                          scope.row.budget,
+                          scope.$index
                         )
                       "
                       :disabled="
@@ -785,6 +789,7 @@ export default {
       tipsImg3: require("../../assets/images/tipsImg/tips3.webp"),
       tipsImg4: require("../../assets/images/tipsImg/tips4.webp"),
       ifGuide: 0,
+      budgetChangeif: true,
     };
   },
   components: {
@@ -845,11 +850,14 @@ export default {
     reqsearch() {
       search().then((res) => {
         if (res.code == 1) {
-          res.data.data.push({
-            flag: 1,
-            influencer_info: [],
-            title: "",
-          });
+          if (res.data.data.length == 0) {
+            res.data.data.push({
+              flag: 1,
+              influencer_info: [],
+              title: "",
+            });
+          }
+
           res.data.data.push({
             flag: 2,
             influencer_info: [],
@@ -863,7 +871,8 @@ export default {
 
             if (item.title != "") {
               this.tableData[index].budget = this.tableData[index].budget * 1;
-              if (item.budget * 1 <= item.video_num * 300) {
+              if (item.budget * 1 < item.video_num * 300) {
+                this.tableData[index].budget = "";
                 this.budgetChange(item.budget, index, item.video_num);
               }
             } else {
@@ -879,6 +888,17 @@ export default {
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
           });
+
+          if (
+            this.checked == true &&
+            this.tableDataTitle == false &&
+            this.tableData.length != 1 &&
+            this.budgetChangeif == true
+          ) {
+            this.ifsubmitTo = true;
+          } else {
+            this.ifsubmitTo = false;
+          }
         }
       });
     },
@@ -1040,8 +1060,7 @@ export default {
     },
 
     //修改视频数量
-    handleChange(value, num, id) {
-      console.log(num);
+    handleChange(value, num, id, budget, index) {
       if (num == 10) {
         const h = this.$createElement;
         let msg = this.$message({
@@ -1080,9 +1099,9 @@ export default {
             id: id + "",
             video_num: num + "",
           });
-          console.log(res);
           if (res.code == 1) {
-            this.reqsearch();
+            console.log(value, 0, num);
+            this.budgetChange(budget, index, num);
           }
         }, 500);
       }
@@ -1215,7 +1234,7 @@ export default {
     Fillintherequirements(id) {
       this.FillingRequirementsdialogVisible = true;
       this.FillingRequirementid = id;
-      this.determine = 1;
+      id ? (this.determine = 1) : (this.determine = 3);
     },
     //修改需求
     openFillingRequirementsdialog(index) {
@@ -1251,6 +1270,7 @@ export default {
     //拍摄预算修改
     budgetChange(val, index, num) {
       if (val * 1 < 300 * num) {
+        this.budgetChangeif = false;
         this.$nextTick(() => {
           this.$refs[
             "ruleForm" + index
@@ -1259,6 +1279,7 @@ export default {
           this.iffuleform = false;
         });
       } else {
+        this.budgetChangeif = true;
         this.$nextTick(() => {
           this.iffuleform = true;
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
@@ -1270,6 +1291,19 @@ export default {
       await needsBudget({
         id: id,
         budget: val,
+      }).then((res) => {
+        if (res.code == 1) {
+          if (
+            this.checked == true &&
+            this.tableDataTitle == false &&
+            this.tableData.length != 1 &&
+            this.budgetChangeif == true
+          ) {
+            this.ifsubmitTo = true;
+          } else {
+            this.ifsubmitTo = false;
+          }
+        }
       });
     },
     Addinfluencers(list, id, index) {
@@ -1426,7 +1460,8 @@ export default {
       if (
         newval == true &&
         this.tableDataTitle == false &&
-        this.tableData.length != 1
+        this.tableData.length != 1 &&
+        this.budgetChangeif == true
       ) {
         this.ifsubmitTo = true;
       } else {

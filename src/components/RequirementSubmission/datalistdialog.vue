@@ -5,9 +5,12 @@
         <i class="iconfont icon-fhdb1" style="color: #999"></i
       ></el-backtop>
 
+      <div class="topclon">
+        <i class="iconfont icon-icfullscreenexit" @click="outcheckFull"></i>
+        <i class="el-icon-close" @click="closeCheckFull"></i>
+      </div>
       <div class="banxin">
         <div class="loading" v-if="isloading"></div>
-
         <!-- 搜索 -->
         <div class="searchfor">
           <el-input
@@ -352,6 +355,24 @@ export default {
     },
   },
   methods: {
+    //关闭全屏
+    closeCheckFull() {
+      this.outcheckFull();
+      store.commit("Index/setExitFullScreen", false);
+      router.push("/Requirement");
+    },
+    //退出全屏
+    outcheckFull() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        /* IE11 */
+        document.msExitFullscreen();
+      }
+    },
     checkFull() {
       // 判断浏览器是否处于全屏状态 （需要考虑兼容问题）
       var isFull =
@@ -636,6 +657,14 @@ export default {
   overflow-x: hidden;
   position: relative;
   height: 100vh;
+  .topclon {
+    text-align: right;
+    padding: 20px;
+    i {
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
   .banxin {
     width: 1200px;
     margin: 0 auto;

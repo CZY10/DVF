@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "659133",
+      "name": "ic_fullscreen_exit",
+      "font_class": "icfullscreenexit",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
       "icon_id": "38103493",
       "name": "fz",
       "font_class": "fz",

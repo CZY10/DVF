@@ -4,7 +4,7 @@
       <p class="hearder">提交视频拍摄需求</p>
       <div class="RequirementWenben">
         <div class="RequirementWenben-div1">
-          <span @click="NotedialogdialogVisible = true">注意事项</span>
+          <span @click="NotedialogdialogVisible = true">拍摄须知</span>
           <div></div>
           <span @click="initGuide">新手引导</span>
         </div>
@@ -184,8 +184,7 @@
                         @click="
                           Addinfluencers(
                             scope.row.influencer_info,
-                            scope.row.id,
-                            scope.$index
+                            scope.row.id
                           )
                         "
                       >
@@ -406,8 +405,10 @@
                       >
                     </el-tooltip>
                   </li>
-                  <li class="operate" v-else>--</li>
-                  <li class="operate">
+                  <li class="operate" v-else>
+                    <span class="operate1">--</span>
+                  </li>
+                  <li class="operate" v-if="scope.row.title != ''">
                     <el-tooltip
                       class="item"
                       effect="dark"
@@ -475,7 +476,7 @@
           style="
             width: 120px;
             height: 32px;
-            border-radius: 16px;
+            border-radius: 5px;
             border: 1px solid #eeeeee;
             cursor: pointer;
             margin: 0 5px;
@@ -490,7 +491,7 @@
             width: 120px;
             height: 32px;
             background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-            border-radius: 16px;
+            border-radius: 5px;
             cursor: pointer;
             border: none;
             margin: 0 5px;
@@ -807,10 +808,9 @@ export default {
         this.formId = id;
       } else {
         // 计算删除位置
-        var deletePosition = this.tableData.length - 2;
-
+        // var deletePosition = this.tableData.length - 2;
         // 使用splice方法删除元素
-        this.tableData.splice(deletePosition, 1);
+        // this.tableData.splice(deletePosition, 1);
       }
     },
     deletecenterDialogVisibles() {
@@ -854,6 +854,7 @@ export default {
               flag: 1,
               influencer_info: [],
               title: "",
+              video_num: "1",
             });
           }
 
@@ -863,6 +864,7 @@ export default {
             title: "",
           });
           this.tableData = res.data.data;
+          console.log(this.tableData);
           this.tableData.forEach((item, index) => {
             if (item.influencer_info.length == 0) {
               item.influencer_info.push({ ifinfluencerInfo: true });
@@ -906,6 +908,7 @@ export default {
         influencer_info: [],
         title: "",
         influencerInfo: true,
+        video_num: "1",
       });
     },
 
@@ -1227,7 +1230,7 @@ export default {
     Fillintherequirements(id) {
       this.FillingRequirementsdialogVisible = true;
       this.FillingRequirementid = id;
-      id ? (this.determine = 1) : (this.determine = 3);
+      id ? (this.determine = 1) : (this.determine = "3");
     },
     //修改需求
     openFillingRequirementsdialog(index) {
@@ -1263,7 +1266,7 @@ export default {
     //拍摄预算修改
     budgetChange(val, index, num) {
       if (val * 1 < 300 * num) {
-        this.budgetChangeif = false;
+        this.ifsubmitTo = false;
         this.$nextTick(() => {
           this.$refs[
             "ruleForm" + index
@@ -1272,7 +1275,7 @@ export default {
           this.iffuleform = false;
         });
       } else {
-        this.budgetChangeif = true;
+        this.ifsubmitTo = true;
         this.$nextTick(() => {
           this.iffuleform = true;
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
@@ -1299,7 +1302,7 @@ export default {
         }
       });
     },
-    Addinfluencers(list, id, index) {
+    Addinfluencers(list, id) {
       if (
         (list[0]?.ifinfluencerInfo && id == undefined) ||
         (list.length == 0 && id == undefined)
@@ -1308,6 +1311,7 @@ export default {
         this.influencersList = [];
         this.datalistdialogVisible = true;
       } else {
+        if (list[0]?.ifinfluencerInfo) list = [];
         this.influencersList = list;
         this.influencersListid = id;
         this.datalistdialogVisible = true;
@@ -1360,6 +1364,7 @@ export default {
           title: "点击这里，添加意向红人",
           element: ".influencerInfo3",
           intro: `<img src="${this.tipsImg1}" style="width: 540px;height: 304px"/>`,
+          position: "right",
         },
         {
           title: "鼠标上下左右拖动，调整红人匹配顺序",
@@ -1374,15 +1379,18 @@ export default {
           title: "点击这里，为同一变体或型号添加拍摄数量",
           element: ".tips4",
           intro: `<img src="${this.tipsImg3}" style="width: 540px;height: 180px"/>`,
+          position: "left",
         },
         {
           title: `点击 “<i class="iconfont icon-fz" style="font-size: 14px;color: #796cf3"></i> 复制”按钮，为对应变体，快速创建需求`,
           element: ".operate1",
           intro: `<img src="${this.tipsImg4}" style="width: 540px;height: 180px"/>`,
+          position: "left",
         },
         {
           title: "点击这里，使用表格批量导入需求",
           element: ".tips6",
+          position: "left",
         },
       ];
       this.$intro()
@@ -1563,7 +1571,7 @@ export default {
           transition: all 0.3s;
         }
         div {
-          width: 2px;
+          width: 1px;
           height: 13px;
           background: #333333;
           margin: 3px 7px 0;
@@ -1724,6 +1732,10 @@ export default {
 
 <!-- 达人列表 -->
 <style lang="less" scoped>
+::v-deep(.el-table th.el-table__cell.is-leaf) {
+  background: #f6f6f6 !important;
+}
+
 ::v-deep(.el-icon-plus) {
   pointer-events: none;
 }
@@ -1809,6 +1821,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 60px;
+    margin: 0 7px;
     .influencerInfo2 {
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -1925,9 +1938,10 @@ export default {
     color: #a06cf3;
     cursor: pointer;
     transition: all, 0.3s;
+    opacity: 0.4;
   }
   i:hover {
-    color: rgb(98, 18, 226);
+    opacity: 1;
   }
 }
 </style>
@@ -2302,7 +2316,6 @@ export default {
 .introjs-tooltip-title {
   font-size: 16px !important;
   width: 80%;
-  padding-top: 10px;
   color: #000;
   white-space: nowrap;
 }
@@ -2324,19 +2337,22 @@ export default {
 }
 .introjs-right,
 .introjs-left {
-  top: 30%;
+  top: -30%;
 }
 .intro-highlight {
   background: rgba(255, 255, 255, 0.5);
 }
+.introjs-arrow {
+  // display: none !important;
+}
 .introjs-arrow.left {
-  border-right-color: #2c3e50;
+  border-right-color: #fff !important;
 }
 .introjs-arrow.top {
-  border-bottom-color: #2c3e50;
+  border-bottom-color: #fff !important;
 }
 .introjs-arrow.right {
-  border-left-color: #2c3e50;
+  border-color: transparent transparent transparent #fff !important;
 }
 .introjs-arrow.bottom {
   border-top-color: #2c3e50;
@@ -2348,6 +2364,7 @@ export default {
 }
 /* 提示框头部区域 */
 .introjs-tooltip-header {
+  padding-top: 24px !important;
 }
 .introjs-skipbutton {
   color: #999 !important;
@@ -2367,6 +2384,7 @@ export default {
   align-items: center;
   justify-content: center;
   border: none !important;
+  padding-bottom: 16px !important;
 }
 .introjs-button {
   text-align: center;

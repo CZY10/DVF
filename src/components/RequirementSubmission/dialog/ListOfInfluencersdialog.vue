@@ -557,7 +557,7 @@ export default {
             "添加成功"
           ),
         ]),
-        iconClass: "el-icon-success",
+        iconClass: "iconfont icon-zhengque1",
         offset: 140,
         customClass: "customClasssuccess",
       });
@@ -632,6 +632,7 @@ export default {
             this.$emit("getlist", true);
           }
         });
+        this.searchforval = "";
       }
     },
   },
@@ -1234,14 +1235,27 @@ export default {
 ::v-deep(.el-dialog) {
   overflow: hidden;
 }
+
+::v-deep(.el-dialog__body) {
+  padding: 0 0px 30px 20px !important;
+}
 </style>
 
 <style>
+.icon-zhengque1 {
+  color: #02b578;
+  margin-top: 2px;
+}
+
+.el-icon-warning {
+  margin-top: 3px;
+}
 .customClasssuccess {
   min-width: 100px;
   height: 40px;
   background-color: rgba(0, 0, 0, 0.47);
   border-radius: 6px;
+  border: none;
 }
 
 .el-select-dropdown__item.selected {

@@ -3,7 +3,7 @@
     <el-dialog
       :visible.sync="NotedialogdialogVisible"
       width="880px"
-      :show-close="false"
+      :show-close="true"
       center
     >
       <div class="notedialog">
@@ -40,19 +40,19 @@
               • 视频交付
             </li>
             <li
-              @click="getscrollTop(650)"
+              @click="getscrollTop(627)"
               :class="{ notedialogLi: notedialogLi[5] }"
             >
               • 交付周期
             </li>
             <li
-              @click="getscrollTop(627)"
+              @click="getscrollTop(747)"
               :class="{ notedialogLi: notedialogLi[6] }"
             >
               • 视频版权
             </li>
             <li
-              @click="getscrollTop(627)"
+              @click="getscrollTop(867)"
               :class="{ notedialogLi: notedialogLi[7] }"
             >
               • 免责声明
@@ -200,6 +200,7 @@
                 <span class="spanbj">不接受以此为由申请补拍、重拍或退款</span>
               </p>
             </li>
+            <li style="height: 220px"></li>
           </ul>
 
           <div style="display: flex; justify-content: center; margin-top: 28px">
@@ -249,9 +250,20 @@ export default {
       newval >= 400 && newval < 627
         ? (this.notedialogLi[4] = true)
         : (this.notedialogLi[4] = false);
-      newval >= 627
+      newval >= 627 && newval < 747
         ? (this.notedialogLi[5] = true)
         : (this.notedialogLi[5] = false);
+      newval >= 747 && newval < 867
+        ? (this.notedialogLi[6] = true)
+        : (this.notedialogLi[6] = false);
+      newval >= 867
+        ? (this.notedialogLi[7] = true)
+        : (this.notedialogLi[7] = false);
+    },
+    NotedialogdialogVisible(newval) {
+      if (newval == false) {
+        this.$emit("getNotedialogMsg", false);
+      }
     },
   },
 };
@@ -333,5 +345,9 @@ export default {
 
 ::v-deep(.el-dialog) {
   overflow: hidden;
+}
+
+::v-deep(.el-dialog__headerbtn) {
+  z-index: 1000;
 }
 </style>

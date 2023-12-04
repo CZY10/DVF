@@ -594,7 +594,7 @@ export default {
                 "添加成功"
               ),
             ]),
-            iconClass: "el-icon-success",
+            iconClass: "iconfont icon-zhengque1",
             offset: 140,
             customClass: "customClasssuccess",
           });
@@ -663,6 +663,9 @@ export default {
     i {
       font-size: 20px;
       cursor: pointer;
+    }
+    i:nth-child(1) {
+      margin-right: 10px;
     }
   }
   .banxin {
@@ -1023,9 +1026,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky;
-    bottom: 0;
-    left: 0;
     height: 69px;
     background: #ffffff;
     box-shadow: 0px -4px 8px 0px rgba(194, 194, 194, 0.25);
@@ -1218,7 +1218,7 @@ export default {
 }
 
 ::v-deep(.el-dialog__body) {
-  padding: 0 0px 0px 0px !important;
+  padding: 0 0px 30px 20px !important;
 }
 
 ::v-deep(.el-pagination__sizes .el-input .el-input__inner:hover) {
@@ -1252,11 +1252,21 @@ export default {
 </style>
 
 <style>
+.icon-zhengque1 {
+  color: #02b578;
+  margin-top: 2px;
+}
+
+.el-icon-warning {
+  margin-top: 3px;
+}
+
 .customClasssuccess {
   min-width: 100px;
   height: 40px;
   background-color: rgba(0, 0, 0, 0.47);
   border-radius: 6px;
+  border: none;
 }
 
 .el-select-dropdown__item.selected {

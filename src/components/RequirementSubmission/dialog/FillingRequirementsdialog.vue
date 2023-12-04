@@ -177,11 +177,19 @@
           </div>
         </div>
         <div class="Boundary">
+          <div class="xian">&ensp;</div>
           <span @click="addwidthVisble">模板填写</span>
-          <div class="elicon" @click="addwidthVisble">
-            <i class="el-icon-arrow-right" v-if="widthVisble == '500px'"></i>
-            <i class="el-icon-arrow-left" v-else></i>
-          </div>
+          <i
+            class="iconfont icon-anniu-jiantouxiangyou"
+            @click="addwidthVisble"
+            v-if="widthVisble == '500px'"
+          ></i>
+          <i
+            class="iconfont icon-anniu_jiantouxiangzuo"
+            @click="addwidthVisble"
+            v-else
+          ></i>
+          <div class="xian">&ensp;</div>
         </div>
         <div class="box2" v-if="widthVisble == '900px'">
           <div v-show="ifwidthVisble">
@@ -245,8 +253,8 @@ export default {
       },
       rules: {
         name: [
+          { required: true, message: "请填写产品名称", trigger: "blur" },
           {
-            required: true,
             max: 25,
             message: "长度在25个字符以内",
             trigger: "change",
@@ -277,7 +285,7 @@ export default {
         // 判断 > 5M
         if (file.size > 5242880) {
           fileList.pop();
-          let msg_size = `您上传的${file.name}，该文件大于5M，请您重新上传。`;
+          let msg_size = `图片过大，请重新上传`;
           this.$message.error(msg_size);
           return false;
         }
@@ -300,7 +308,7 @@ export default {
           return false;
         }
       } else {
-        this.$message.error("上传头像图片只能是 JPG,PNG 格式!");
+        this.$message.error("图片格式错误，请重新上传");
         fileList.pop();
       }
     },
@@ -387,7 +395,7 @@ export default {
         } else {
           this.$message.error(res.msg);
         }
-      } else if (this.ifsubmitbtn && this.determine == 3) {
+      } else if (this.ifsubmitbtn && this.determine * 1 == 3) {
         if (
           this.objold.description == formName.notes &&
           this.objold.url == formName.link &&
@@ -607,7 +615,8 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       newval != "" ? (this.ifbtn1 = false) : (this.ifbtn1 = true);
     },
     determine(newval) {
-      if (newval == 3) {
+      console.log(newval, "determine");
+      if (newval === 3) {
         setTimeout(() => {
           this.ifsubmitbtn = false;
           this.dialogTitle = "复制成功，请修改后保存";
@@ -692,20 +701,22 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   font-size: 12px;
   padding: 0 12px;
   &::placeholder {
-    color: #999999;
+    color: rgb(194, 194, 194); /* 谷歌 */
   }
 }
+
 ::v-deep(.el-input__inner:focus) {
   border-color: #d161f6;
 }
 
-::v-deep(.el-textarea__inner.el-textarea__inner) {
+::v-deep(.el-textarea__inner) {
   background: #f8f8f8;
   border: 1px solid #eeeeee;
   font-size: 12px;
   padding: 12px;
+  overflow: hidden;
   &::placeholder {
-    color: #999999;
+    color: rgb(194, 194, 194); /* 谷歌 */
   }
 }
 ::v-deep(.el-textarea__inner:focus) {
@@ -771,7 +782,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
     padding-left: 22px;
     h1 {
       text-align: center;
-      margin-top: 30px;
+      margin-top: 28px;
       font-size: 16px;
       font-weight: 600;
       color: #333333;
@@ -846,23 +857,22 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     width: 12px;
     margin-right: 10px;
+    color: #b6b6b6;
+    .xian {
+      flex: 1;
+      border-right: 1px solid #333333;
+    }
     span {
       cursor: pointer;
     }
-    .elicon {
-      cursor: pointer;
+    i {
       margin-top: 6px;
-      width: 12px;
-      height: 12px;
-      border: 1px solid #999999;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 12px;
-      i {
-        font-size: 12px;
-      }
+      cursor: pointer;
+      font-size: 20px;
+      color: #b6b6b6;
     }
   }
   .box2 {
@@ -892,7 +902,8 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         background: #f8f8f8;
       }
       textarea::-webkit-input-placeholder {
-        color: #999999;
+        color: rgb(194, 194, 194); /* 谷歌 */
+        font-size: 12px;
       }
     }
     .box2btns {

@@ -36,6 +36,7 @@ service.interceptors.response.use(
             //     offset: 100,
             //     duration: 5 * 1000
             // })
+            console.log(res.msg)
             if (res.code == 300 && reg.test(res.errorCode)) {
                 Message({
                     message: '未知错误,请稍后再试或联系管理员!',

@@ -1300,7 +1300,11 @@ export default {
       });
     },
     Addinfluencers(list, id, index) {
-      if (list[0]?.ifinfluencerInfo || list.length == 0) {
+      if (
+        (list[0]?.ifinfluencerInfo && id == undefined) ||
+        (list.length == 0 && id == undefined)
+      ) {
+        this.influencersListid = 0;
         this.influencersList = [];
         this.datalistdialogVisible = true;
       } else {

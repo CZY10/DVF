@@ -1527,6 +1527,7 @@ export default {
   top: 0;
   z-index: 999;
   min-width: 1050px !important;
+  border-bottom: solid 1px #e6e6e6;
 
   .user_info_box {
     display: inline-flex;
@@ -1621,5 +1622,9 @@ export default {
 
 ::v-deep(.el-badge) {
   background: white;
+}
+
+::v-deep(.el-menu.el-menu--horizontal) {
+  border-bottom: none;
 }
 </style>

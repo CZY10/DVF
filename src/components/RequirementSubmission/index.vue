@@ -29,10 +29,10 @@
             <i class="iconfont icon-mb"></i>
             <a :href="fileDiz" style="cursor: pointer">下载模板</a>
           </div>
-          <div class="elIcon2" @click="reloadPage">
+          <!-- <div class="elIcon2" @click="reloadPage">
             <i class="iconfont icon-sx"></i>
             <span>刷新</span>
-          </div>
+          </div> -->
         </div>
       </div>
       <div
@@ -1467,6 +1467,11 @@ export default {
         this.budgetChangeif == true
       ) {
         this.ifsubmitTo = true;
+        this.tableData.forEach((item) => {
+          if (item.budget == "") {
+            this.ifsubmitTo = false;
+          }
+        });
       } else {
         this.ifsubmitTo = false;
       }
@@ -1678,13 +1683,13 @@ export default {
     .RequirementBox-xinx {
       width: 180px;
       height: 60px;
-      background: #000000;
+      background: rgb(37, 37, 37);
       border-radius: 5px;
       position: absolute;
       top: -50px;
       left: 137px;
       font-size: 12px;
-      color: #e4e4e4;
+      color: #fff;
       padding: 9px 12px;
       box-sizing: border-box;
       transition: all 0.3s;
@@ -1693,7 +1698,7 @@ export default {
         height: 0;
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
-        border-top: 10px solid #000;
+        border-top: 10px solid rgb(37, 37, 37);
         position: absolute;
         bottom: -10px;
         left: 80px;

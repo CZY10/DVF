@@ -57,6 +57,7 @@
                       :file-list="fileList"
                       :on-change="upload_change"
                       :on-exceed="upload_exceed"
+                      :class="{ 'hide-upload-btn': hideUploadBtn }"
                     >
                       <i slot="default" class="el-icon-plus"></i>
                       <div slot="file" slot-scope="{ file }">
@@ -177,7 +178,9 @@
           </div>
         </div>
         <div class="Boundary">
-          <div class="xian">&ensp;</div>
+          <div class="xian" style="margin-bottom: 15px" v-show="ifxian">
+            &ensp;
+          </div>
           <span @click="addwidthVisble">模板填写</span>
           <i
             class="iconfont icon-anniu-jiantouxiangyou"
@@ -189,7 +192,9 @@
             @click="addwidthVisble"
             v-else
           ></i>
-          <div class="xian">&ensp;</div>
+          <div class="xian" style="margin-top: 15px" v-show="ifxian">
+            &ensp;
+          </div>
         </div>
         <div class="box2" v-if="widthVisble == '900px'">
           <div v-show="ifwidthVisble">
@@ -230,7 +235,7 @@
 </template>
 
 <script>
-import { createOrder, needsPaste, needsEdit } from "@/api";
+import { createOrder, needsPaste, needsEdit, orderEdit } from "@/api";
 export default {
   name: "FillingRequirementsdialog",
   props: [
@@ -276,11 +281,19 @@ export default {
       ifwidthVisble: false,
       RequirementID: 0,
       objold: {},
+      ifxian: false,
+      hideUploadBtn: false,
     };
   },
   methods: {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     upload_change: function (file, fileList) {
+      if (fileList.length >= 5) {
+        this.hideUploadBtn = true;
+      } else {
+        this.hideUploadBtn = false;
+      }
+
       if (file.raw.type == "image/jpeg" || file.raw.type == "image/png") {
         // 判断 > 5M
         if (file.size > 5242880) {
@@ -312,6 +325,7 @@ export default {
         fileList.pop();
       }
     },
+
     //删除文件
     upload_remove(file) {
       this.upload_List.forEach((item, index) => {
@@ -320,6 +334,10 @@ export default {
           this.fileList.splice(index, 1);
         }
       });
+
+      setTimeout(() => {
+        this.hideUploadBtn = false;
+      }, 1000);
     },
     //超出上传的文件
     upload_exceed(files, fileList) {
@@ -334,10 +352,12 @@ export default {
         this.widthVisble = "900px";
         setTimeout(() => {
           this.ifwidthVisble = true;
+          this.ifxian = true;
         }, 1000);
       } else {
         this.widthVisble = "500px";
         this.ifwidthVisble = false;
+        this.ifxian = false;
       }
     },
 
@@ -450,6 +470,29 @@ export default {
             this.$message.error(res.msg);
           }
         }
+      } else if (this.ifsubmitbtn && this.determine == 4) {
+        let image = [];
+        this.upload_List.forEach((item) =>
+          image.push(item.response.data.fullurl)
+        );
+        let str = image.join(",");
+        let data = {
+          url: formName.link,
+          description: formName.notes,
+          title: formName.name,
+          photograph_guide: this.formradioRequirements,
+          if_product_link: this.formradioLink,
+          photograph_demand: formName.ShootingRequirements,
+          image: str,
+          id: this.FillingRequirementid,
+        };
+        const res = await orderEdit(data);
+        if (res.code == 1) {
+          this.reqsearch();
+          this.beforeClose();
+        } else {
+          this.$message.error(res.msg);
+        }
       }
     },
 
@@ -517,7 +560,6 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
             "\n"
           );
           this.ruleForm.notes = res.data.desc?.replace(/\\n/g, "\n");
-          console.log(this.ruleForm.ShootingRequirements);
         } else {
           this.$message.error(res.msg);
         }
@@ -528,6 +570,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   },
   mounted() {
     this.token = localStorage.getItem("token");
+    console.log(this.determine, "determine");
   },
   watch: {
     ruleForm: {
@@ -558,6 +601,17 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
           this.ifsubmitbtn = true;
         } else {
           this.ifsubmitbtn = false;
+        }
+
+        if (this.determine == 3) {
+          if (
+            newVal.name == this.RequirementsList.title &&
+            newVal.link == this.RequirementsList.url &&
+            newVal.ShootingRequirements ==
+              this.RequirementsList.photograph_demand &&
+            newVal.notes == this.RequirementsList.description
+          )
+            this.ifsubmitbtn = false;
         }
         // 当obj发生变化时，这里的代码会被执行
       },
@@ -602,13 +656,15 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       } else if (this.ruleForm.ShootingRequirements == "") {
         this.ifsubmitbtn = false;
       }
-    },
-    formradioLink(newVal) {
-      if (newVal == "1") {
-        this.upload_List = [];
-        this.fileList = [];
-      } else {
-        this.ruleForm.link = "";
+
+      if (this.determine == 3) {
+        if (
+          this.ruleForm.name == this.RequirementsList.title &&
+          this.ruleForm.link == this.RequirementsList.url &&
+          this.ruleForm.notes == this.RequirementsList.description &&
+          this.RequirementsList.photograph_guide == newval
+        )
+          this.ifsubmitbtn = false;
       }
     },
     Fillinthetemplateval(newval) {
@@ -621,7 +677,6 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
           this.ifsubmitbtn = false;
           this.dialogTitle = "复制成功，请修改后保存";
           this.submitFormText = "保存";
-          console.log(this.ifsubmitbtn);
         }, 100);
       } else {
         this.submitFormText = "确认";
@@ -638,7 +693,10 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.ruleForm.ShootingRequirements = newval.photograph_demand;
         this.formradioLink = newval.if_product_link + "";
         this.formradioRequirements = newval.photograph_guide + "";
-        if (newval.image != "") {
+        if (newval.image.length != 0 && Array.isArray(newval.image)) {
+          this.fileList = newval.image.map((item) => ({ ["url"]: item }));
+          this.upload_List = newval.image.map((item) => ({ ["url"]: item }));
+        } else {
           let arr = newval.image.split(",");
           this.fileList = arr.map((item) => ({ ["url"]: item }));
           this.upload_List = arr.map((item) => ({ ["url"]: item }));
@@ -660,6 +718,21 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.rules.name[0].required = false;
       } else {
         this.rules.name[0].required = true;
+      }
+    },
+    formradioLink(newval) {
+      if (this.determine == 3) {
+        if (
+          this.ruleForm.name == this.RequirementsList.title &&
+          this.ruleForm.ShootingRequirements ==
+            this.RequirementsList.photograph_demand &&
+          this.ruleForm.notes == this.RequirementsList.description &&
+          this.RequirementsList.if_product_link == newval
+        ) {
+          this.ifsubmitbtn = false;
+        } else {
+          this.ifsubmitbtn = true;
+        }
       }
     },
   },
@@ -770,6 +843,12 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   width: 62px;
   height: 60px;
 }
+
+.hide-upload-btn {
+  ::v-deep(.el-upload--picture-card) {
+    display: none;
+  }
+}
 </style>
 
 <style lang="less" scoped>
@@ -859,11 +938,11 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
     justify-content: center;
     align-items: center;
     width: 12px;
-    margin-right: 10px;
+    margin-right: 5px;
     color: #b6b6b6;
     .xian {
       flex: 1;
-      border-right: 1px solid #333333;
+      border-right: 1px dashed #ccc;
     }
     span {
       cursor: pointer;

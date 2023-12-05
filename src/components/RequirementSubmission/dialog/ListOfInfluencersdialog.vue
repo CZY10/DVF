@@ -258,6 +258,7 @@
               :page-size="per_page"
               layout="total, prev, pager, next, sizes, jumper"
               :total="total"
+              v-if="total != 0"
             >
             </el-pagination>
           </div>
@@ -345,6 +346,9 @@ export default {
       isvideoslist: [],
       isloading: false,
     };
+  },
+  created() {
+    this.currentPage = store.state.Index.currentPage;
   },
   mounted() {
     this.isloading = true;
@@ -591,6 +595,7 @@ export default {
     handleCurrentChange(val) {
       this.isloading = true;
       this.currentPage = val;
+      store.commit("Index/setcurrentPage", val);
       this.RenderingData();
     },
 
@@ -633,6 +638,8 @@ export default {
           }
         });
         this.searchforval = "";
+        store.commit("Index/setcurrentPage", 1);
+        this.currentPage = 1;
       }
     },
   },

@@ -240,6 +240,7 @@
             :page-size="per_page"
             layout="total, prev, pager, next, sizes, jumper"
             :total="total"
+            v-if="total != 0"
           >
           </el-pagination>
         </div>
@@ -328,6 +329,7 @@ export default {
     };
   },
   mounted() {
+    this.currentPage = store.state.Index.currentPage;
     this.isloading = true;
     this.handlerGetCategory("influencer");
     this.handlerGetCategory("theme_area");
@@ -359,6 +361,8 @@ export default {
     closeCheckFull() {
       this.outcheckFull();
       store.commit("Index/setExitFullScreen", false);
+      store.commit("Index/setcurrentPage", 1);
+      this.currentPage = 1;
       router.push("/Requirement");
     },
     //退出全屏
@@ -629,6 +633,7 @@ export default {
     handleCurrentChange(val) {
       this.isloading = true;
       this.currentPage = val;
+      store.commit("Index/setcurrentPage", val);
       this.RenderingData();
     },
 

@@ -102,7 +102,7 @@
                 <span @click="handleCheckOrderDetail(scope.row)">详情</span>
                 <i
                   class="iconfont icon-tx"
-                  v-if="scope.row.balance_pay_status == '0'"
+                  v-if="scope.row.status == '0'"
                   @click="handleCheckOrderDetail(scope.row)"
                 ></i>
               </div>
@@ -439,9 +439,7 @@
       >
         <div style="color: #999; margin-left: 30px">
           已选
-          {{
-            multipleSelection.length == 0 ? "--" : multipleSelection.length
-          }}
+          {{ multipleSelection.length == 0 ? "--" : multipleSelection.length }}
           项
         </div>
 
@@ -896,7 +894,7 @@
             style="
               background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
             "
-            v-if="!videoForm.url && balance_pay_status == '0'"
+            v-if="!videoForm.url && balance_pay_status == 0"
             @click="modifyUrl(videoForm.id)"
           >
             保存
@@ -1403,6 +1401,16 @@
         </li>
       </ul>
     </el-dialog>
+
+    <!-- 填写要求弹窗 -->
+    <FillingRequirementsdialog
+      :isFillingRequirementsdialogVisible="FillingRequirementsdialogVisible"
+      @isFillingRequirementsdialogVisible="getChildMsg"
+      :determine="determine"
+      :RequirementsList="RequirementsList"
+      :FillingRequirementid="FillingRequirementid"
+      :reqsearch="clearOrderList"
+    ></FillingRequirementsdialog>
   </div>
 </template>
 
@@ -1426,6 +1434,7 @@ import {
 } from "@/api";
 import QRCode from "qrcodejs2";
 import { mapMutations } from "vuex";
+import FillingRequirementsdialog from "@/components/RequirementSubmission/dialog/FillingRequirementsdialog.vue";
 export default {
   name: "order",
   data() {
@@ -1592,6 +1601,10 @@ export default {
       darList: [],
       balance_pay_status: "1",
       totalPage: 0,
+      FillingRequirementsdialogVisible: false,
+      determine: 1,
+      RequirementsList: {},
+      FillingRequirementid: 0,
     };
   },
   created() {
@@ -1656,6 +1669,11 @@ export default {
   },
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
+
+    //在父组件中声明这个函数，用于接收子组件传回的值
+    getChildMsg(msg) {
+      this.FillingRequirementsdialogVisible = msg;
+    },
     tableRowClassName({ row, rowIndex }) {
       console.log(row.need_id);
       if (row.merge !== 0) {
@@ -1754,13 +1772,13 @@ export default {
         });
     },
     handleCheckOrderDetail(column) {
-      this.balance_pay_status = column.balance_pay_status;
+      this.balance_pay_status = column.status;
       orderDetail({
         order_id: column.id,
       })
         .then((res) => {
           if (res.code == 1) {
-            console.log(res);
+            this.RequirementsList = res.data;
             this.videoRuleForm.category = res.data.title;
             this.videoRuleForm.copper = res.data.budget;
             this.videoRuleForm.radio = res.data.method + "";
@@ -1770,7 +1788,13 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-      this.checkVideoDialog = true;
+      if (column.brand == 0) {
+        this.checkVideoDialog = true;
+      } else {
+        this.determine = 4;
+        this.FillingRequirementid = column.id;
+        this.FillingRequirementsdialogVisible = true;
+      }
     },
     handleComments(content) {
       this.completeCommentDialog = true;
@@ -2275,6 +2299,7 @@ export default {
       });
     },
   },
+  components: { FillingRequirementsdialog },
 };
 </script>
 <style lang="less">
@@ -3140,7 +3165,7 @@ export default {
 .el-table th.el-table__cell.is-leaf {
   border-bottom: none !important;
   padding: 6px 0;
-  background: #fdfdfd !important;
+  background: #f8f8f8 !important;
 }
 
 .el-table__body-wrapper {
@@ -3294,6 +3319,8 @@ export default {
           font-weight: 400;
           color: #a06cf3;
           font-size: 12px;
+          text-align: left;
+          width: 40px;
           span {
             cursor: pointer;
             margin-right: 3px;
@@ -3348,6 +3375,7 @@ export default {
         color: #a06cf3;
         display: flex;
         justify-content: center;
+        border: 1px solid #a06cf3;
       }
       .payment_btn_style:hover {
         color: #fff;
@@ -3907,8 +3935,8 @@ export default {
   }
 }
 
-.pagination-btn:hover{
-background: #d161f6;
+.pagination-btn:hover {
+  background: #d161f6;
 }
 
 .paginationBtn {

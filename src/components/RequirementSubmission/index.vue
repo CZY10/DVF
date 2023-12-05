@@ -6,7 +6,7 @@
         <div class="RequirementWenben-div1">
           <span @click="NotedialogdialogVisible = true">拍摄须知</span>
           <div></div>
-          <span @click="initGuide">新手引导</span>
+          <span @click="TipsdialogVisible1 = true">新手引导</span>
         </div>
         <div class="RequirementWenben-div2">
           <!-- <div class="elIcon2">
@@ -92,7 +92,7 @@
                     group="people"
                     handle=".mover"
                   >
-                    <transition-group>
+                    <transition-group :style="style">
                       <li
                         class="influencerInfoLi isinfluencerInfoLi"
                         v-for="(item, index) in scope.row.influencer_info"
@@ -148,7 +148,6 @@
                           >
                             {{ item.price }}
                           </p>
-
                           <div
                             :class="{
                               indextop: true,
@@ -165,6 +164,7 @@
                       </li>
                     </transition-group>
                   </draggable>
+
                   <li
                     class="influencerInfoLiclass"
                     v-if="scope.row.influencer_info.length != 5"
@@ -235,7 +235,7 @@
                     "
                   >
                     <img
-                      :src="scope.row.image"
+                      :src="scope.row.image[0]"
                       style="width: 100%; height: 100%; object-fit: cover"
                       v-if="scope.row.image"
                       @click="gocommodity(scope.row.url)"
@@ -276,7 +276,7 @@
                         style="width: 10px; height: 10px"
                       />
                     </p>
-                    <p v-else>--</p>
+                    <p v-else style="color: #999999">--</p>
                   </div>
 
                   <div
@@ -285,6 +285,7 @@
                       align-items: center;
                       color: #a06cf3;
                       margin-left: 15px;
+                      font-size: 12px;
                     "
                     @click="openFillingRequirementsdialog(scope.$index)"
                   >
@@ -679,6 +680,11 @@
       @getNotedialogMsg="getNotedialogMsg"
       :NotedialogdialogVisible="NotedialogdialogVisible"
     ></Notedialog>
+
+    <dialogVisibleTips1
+      :TipsdialogVisible1="TipsdialogVisible1"
+      @getTipsdialogVisible1="getTipsdialogVisible1"
+    ></dialogVisibleTips1>
   </div>
 </template>
 
@@ -703,6 +709,7 @@ import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
 import Tipsdialog from "./dialog/Tipsdialog.vue";
 import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 import Notedialog from "./dialog/notedialog.vue";
+import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
 import store from "@/store";
 import QRCode from "qrcodejs2";
 export default {
@@ -790,6 +797,8 @@ export default {
       tipsImg4: require("../../assets/images/tipsImg/tips4.webp"),
       ifGuide: 0,
       budgetChangeif: true,
+      style: "min-height:78px;display: block;",
+      TipsdialogVisible1: false,
     };
   },
   components: {
@@ -798,6 +807,7 @@ export default {
     Tipsdialog,
     ListOfInfluencersdialog,
     Notedialog,
+    dialogVisibleTips1,
   },
   methods: {
     goOrder() {},
@@ -864,8 +874,11 @@ export default {
             title: "",
           });
           this.tableData = res.data.data;
-          console.log(this.tableData);
+
           this.tableData.forEach((item, index) => {
+            item.image = item.image?.split(",");
+            // console.log(item.image);
+
             if (item.influencer_info.length == 0) {
               item.influencer_info.push({ ifinfluencerInfo: true });
             }
@@ -880,6 +893,7 @@ export default {
               this.tableData[index].budget = "";
             }
           });
+          // console.log(this.tableData);
 
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
@@ -934,35 +948,40 @@ export default {
           id: id,
         })
           .then((res) => {
-            loading.close();
-            this.payDepositDialogVisible = true;
-            console.log(res.data.order[1].order.qrcode);
-            this.$nextTick(() => {
-              console.log(this.$refs.alipayQrCodeUrl);
-              new QRCode(this.$refs.alipayQrCodeUrl, {
-                text: res.data.order[1].order.qrcode,
-                width: 130,
-                height: 130,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H,
+            if (res.code == 1) {
+              this.reqsearch();
+              loading.close();
+              this.payDepositDialogVisible = true;
+              console.log(res.data.order[1].order.qrcode);
+              this.$nextTick(() => {
+                console.log(this.$refs.alipayQrCodeUrl);
+                new QRCode(this.$refs.alipayQrCodeUrl, {
+                  text: res.data.order[1].order.qrcode,
+                  width: 130,
+                  height: 130,
+                  colorDark: "#000000",
+                  colorLight: "#ffffff",
+                  correctLevel: QRCode.CorrectLevel.H,
+                });
+                new QRCode(this.$refs.wechatQrCodeUrl, {
+                  text: res.data.order[0].order.qrcode,
+                  width: 130,
+                  height: 130,
+                  colorDark: "#000000",
+                  colorLight: "#ffffff",
+                  correctLevel: QRCode.CorrectLevel.H,
+                });
               });
-              new QRCode(this.$refs.wechatQrCodeUrl, {
-                text: res.data.order[0].order.qrcode,
-                width: 130,
-                height: 130,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H,
-              });
-            });
-            this.orderData = res.data.order;
-            this.handlerCheckWechatPayment(
-              res.data.order[0].order.out_trade_no
-            );
-            this.handlerCheckAlipayPayment(
-              res.data.order[1].order.out_trade_no
-            );
+              this.orderData = res.data.order;
+              this.handlerCheckWechatPayment(
+                res.data.order[0].order.out_trade_no
+              );
+              this.handlerCheckAlipayPayment(
+                res.data.order[1].order.out_trade_no
+              );
+            } else {
+              this.$message.error(res.msg);
+            }
           })
           .catch((res) => {
             loading.close();
@@ -1262,6 +1281,10 @@ export default {
     getNotedialogMsg(msg) {
       this.NotedialogdialogVisible = msg;
     },
+    getTipsdialogVisible1(msg) {
+      console.log(msg);
+      this.TipsdialogVisible1 = msg;
+    },
 
     //拍摄预算修改
     budgetChange(val, index, num) {
@@ -1275,7 +1298,7 @@ export default {
           this.iffuleform = false;
         });
       } else {
-        this.ifsubmitTo = true;
+        if (this.checked) this.ifsubmitTo = true;
         this.$nextTick(() => {
           this.iffuleform = true;
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
@@ -1334,6 +1357,22 @@ export default {
               type: "success",
               offset: 400,
               center: true,
+            });
+          } else {
+            const h = this.$createElement;
+            this.$message({
+              message: h("p", null, [
+                h(
+                  "span",
+                  {
+                    style: "font-size: 12px;color: #FFFFFF;margin:0 0px 0 6px",
+                  },
+                  "导入失败，请检查Excel表格是否按模板格式填写"
+                ),
+              ]),
+              iconClass: "el-icon-warning",
+              offset: 140,
+              customClass: "customClasssuccess",
             });
           }
         })
@@ -1460,6 +1499,12 @@ export default {
       }
     },
     checked(newval) {
+      console.log(
+        newval,
+        this.tableDataTitle,
+        this.tableData,
+        this.budgetChangeif
+      );
       if (
         newval == true &&
         this.tableDataTitle == false &&
@@ -1468,8 +1513,8 @@ export default {
       ) {
         this.ifsubmitTo = true;
         this.tableData.forEach((item) => {
-          if (item.budget == "") {
-            this.ifsubmitTo = false;
+          if (item.title != "") {
+            if (item.budget == "") this.ifsubmitTo = false;
           }
         });
       } else {
@@ -1706,7 +1751,7 @@ export default {
     }
 
     .RequirementBtn {
-      margin-top: 20px;
+      margin-top: 30px;
       display: flex;
       justify-content: center;
       button {
@@ -1752,6 +1797,8 @@ export default {
 
 ::v-deep(.el-table__header) {
   width: auto !important;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 ::v-deep(.dialog-footer) {

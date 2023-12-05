@@ -7,7 +7,8 @@ export default {
         RequirementFirst: 1,
         ExitFullScreen: false,
         influencersList: [],
-        influencersListid: 0
+        influencersListid: 0,
+        currentPage: 1
     },
     mutations: {
         setIsFalg(state, payload) {
@@ -32,7 +33,9 @@ export default {
         setinfluencersListid(state, payload) {
             state.influencersListid = payload
         },
-
+        setcurrentPage(state, payload) {
+            state.currentPage = payload
+        },
     },
     actions: {
 

@@ -483,8 +483,9 @@ export default {
             if (res.data.jump) {
               await new Promise((resolve) => {
                 window.open(res.data.jump, "_blank");
-                router.push("/");
                 setTimeout(() => {
+                  router.push("/");
+                  console.log("gohome");
                   resolve();
                 }, 1000);
               });
@@ -561,8 +562,8 @@ export default {
             if (res.data.jump) {
               await new Promise((resolve) => {
                 window.open(res.data.jump, "_blank");
-                router.push("/");
                 setTimeout(() => {
+                  router.push("/");
                   resolve();
                 }, 1000);
               });

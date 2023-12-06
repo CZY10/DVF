@@ -753,7 +753,6 @@ export default {
           },
         },
       ],
-      iffuleform: false,
       timer: null,
       influencersList: [],
       influencersListid: 0,
@@ -876,9 +875,6 @@ export default {
           this.tableData = res.data.data;
 
           this.tableData.forEach((item, index) => {
-            item.image = item.image?.split(",");
-            // console.log(item.image);
-
             if (item.influencer_info.length == 0) {
               item.influencer_info.push({ ifinfluencerInfo: true });
             }
@@ -993,28 +989,44 @@ export default {
       } else if (this.tableData.length == 1 || this.tableDataTitle == true) {
         const h = this.$createElement;
         this.$message({
-          message: h("p", null, [
+          message: h("p", { style: "display: flex" }, [
+            h(
+              "div",
+              {
+                style:
+                  "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+              },
+              "¡"
+            ),
             h(
               "span",
-              { style: "font-size: 12px;color: #FFFFFF;margin:0 0px 0 6px" },
+              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
               "您还没有添加任何需求，请添加需求再提交"
             ),
           ]),
-          iconClass: "el-icon-warning",
+          iconClass: "iconfont",
           offset: 140,
           customClass: "customClasssuccess",
         });
       } else if (this.checked == false) {
         const h = this.$createElement;
         this.$message({
-          message: h("p", null, [
+          message: h("p", { style: "display: flex" }, [
+            h(
+              "div",
+              {
+                style:
+                  "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+              },
+              "¡"
+            ),
             h(
               "span",
-              { style: "font-size: 12px;color: #FFFFFF;margin:0 0px 0 6px" },
+              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
               "请先阅读并同意《视频拍摄服务及售后说明》"
             ),
           ]),
-          iconClass: "el-icon-warning",
+          iconClass: "iconfont",
           offset: 140,
           customClass: "customClasssuccess",
         });
@@ -1082,7 +1094,15 @@ export default {
       if (num == 10) {
         const h = this.$createElement;
         let msg = this.$message({
-          message: h("p", null, [
+          message: h("p", { style: "display: flex;align-items: center;" }, [
+            h(
+              "div",
+              {
+                style:
+                  "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+              },
+              "¡"
+            ),
             h(
               "span",
               { style: "font-size: 12px;color: #FFFFFF;margin:0 10px 0 6px" },
@@ -1096,9 +1116,9 @@ export default {
               "知道了"
             ),
           ]),
-          iconClass: "el-icon-warning",
+          iconClass: "iconfont",
           offset: 140,
-          customClass: "customClasswarning",
+          customClass: "customClasssuccess",
         });
         document
           .querySelector(".el-message-btn")
@@ -1303,14 +1323,14 @@ export default {
               "ruleForm" + index
             ].fields[0].validateMessage = `请填写预算`;
           }
-
           this.$refs["ruleForm" + index].fields[0].validateState = "error";
-          this.iffuleform = false;
         });
       } else {
-        if (this.checked) this.ifsubmitTo = true;
+        let flag = !this.tableData.some(
+          (item) => item.budget < item.video_num * 300
+        );
+        if (this.checked && flag) this.ifsubmitTo = true;
         this.$nextTick(() => {
-          this.iffuleform = true;
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
           this.$refs["ruleForm" + index].fields[0].validateState = "";
         });
@@ -1371,16 +1391,22 @@ export default {
           } else {
             const h = this.$createElement;
             this.$message({
-              message: h("p", null, [
+              message: h("p", { style: "display: flex" }, [
+                h(
+                  "div",
+                  {
+                    style:
+                      "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+                  },
+                  "¡"
+                ),
                 h(
                   "span",
-                  {
-                    style: "font-size: 12px;color: #FFFFFF;margin:0 0px 0 6px",
-                  },
+                  { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
                   "导入失败，请检查Excel表格是否按模板格式填写"
                 ),
               ]),
-              iconClass: "el-icon-warning",
+              iconClass: "iconfont",
               offset: 140,
               customClass: "customClasssuccess",
             });

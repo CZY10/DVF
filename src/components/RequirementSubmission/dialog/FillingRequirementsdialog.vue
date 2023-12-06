@@ -430,21 +430,27 @@ export default {
           this.objold.photograph_demand == formName.ShootingRequirements
         ) {
           this.ifsubmitbtn = false;
+
           const h = this.$createElement;
           this.$message({
-            message: h("p", null, [
+            message: h("p", { style: "display: flex" }, [
               h(
-                "span",
+                "div",
                 {
                   style:
-                    "font-size: 12px;color: #FFFFFF;margin:0 10px 0px 6px;display: block;padding-bottom: 3px;",
+                    "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
                 },
+                "¡"
+              ),
+              h(
+                "span",
+                { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
                 "请修改后保存"
               ),
             ]),
-            iconClass: "el-icon-warning",
+            iconClass: "iconfont",
             offset: 140,
-            customClass: "customClasswarning",
+            customClass: "customClasssuccess",
           });
           return;
         } else {
@@ -575,7 +581,6 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   },
   mounted() {
     this.token = localStorage.getItem("token");
-    console.log(this.determine, "determine");
   },
   watch: {
     ruleForm: {
@@ -676,7 +681,6 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       newval != "" ? (this.ifbtn1 = false) : (this.ifbtn1 = true);
     },
     determine(newval) {
-      console.log(newval, "determine");
       if (newval === 3) {
         setTimeout(() => {
           this.ifsubmitbtn = false;
@@ -793,7 +797,6 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   border: 1px solid #eeeeee;
   font-size: 12px;
   padding: 12px;
-  overflow: hidden;
   &::placeholder {
     color: rgb(194, 194, 194); /* 谷歌 */
   }
@@ -978,7 +981,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       border-radius: 4px;
       border: 1px solid #eeeeee;
       margin: 10px auto;
-      overflow: hidden;
+      overflow: auto;
       #textarea {
         padding: 13px;
         height: 92%;

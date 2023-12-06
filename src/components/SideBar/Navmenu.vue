@@ -1528,6 +1528,7 @@ export default {
   z-index: 999;
   min-width: 1050px !important;
   border-bottom: solid 1px #e6e6e6;
+  min-height: 66px;
 
   .user_info_box {
     display: inline-flex;

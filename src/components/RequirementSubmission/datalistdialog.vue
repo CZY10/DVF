@@ -559,14 +559,22 @@ export default {
       if (this.influencersList.length == 5) {
         const h = this.$createElement;
         this.$message({
-          message: h("p", null, [
+          message: h("p", { style: "display: flex" }, [
+            h(
+              "div",
+              {
+                style:
+                  "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+              },
+              "¡"
+            ),
             h(
               "span",
               { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
               "该需求最多可添加5个意向红人"
             ),
           ]),
-          iconClass: "el-icon-warning",
+          iconClass: "iconfont",
           offset: 140,
           customClass: "customClasssuccess",
         });
@@ -598,7 +606,7 @@ export default {
                 "添加成功"
               ),
             ]),
-            iconClass: "iconfont icon-zhengque1",
+            iconClass: "iconfont icon-cg",
             offset: 140,
             customClass: "customClasssuccess",
           });
@@ -1257,13 +1265,9 @@ export default {
 </style>
 
 <style>
-.icon-zhengque1 {
+.icon-cg {
   color: #02b578;
   margin-top: 2px;
-}
-
-.el-icon-warning {
-  margin-top: 3px;
 }
 
 .customClasssuccess {

@@ -1410,6 +1410,7 @@
       :RequirementsList="RequirementsList"
       :FillingRequirementid="FillingRequirementid"
       :reqsearch="clearOrderList"
+      :getstate="getstate"
     ></FillingRequirementsdialog>
   </div>
 </template>
@@ -1605,6 +1606,7 @@ export default {
       determine: 1,
       RequirementsList: {},
       FillingRequirementid: 0,
+      getstate: 0,
     };
   },
   created() {
@@ -1672,10 +1674,11 @@ export default {
 
     //在父组件中声明这个函数，用于接收子组件传回的值
     getChildMsg(msg) {
+      this.getstate = 0;
+      console.log(this.getstate);
       this.FillingRequirementsdialogVisible = msg;
     },
     tableRowClassName({ row, rowIndex }) {
-      console.log(row.need_id);
       if (row.merge !== 0) {
         return "warning-row";
       }
@@ -1792,6 +1795,7 @@ export default {
         this.checkVideoDialog = true;
       } else {
         this.determine = 4;
+        this.getstate = column.status;
         this.FillingRequirementid = column.id;
         this.FillingRequirementsdialogVisible = true;
       }
@@ -2286,7 +2290,6 @@ export default {
       dom.addEventListener("scroll", function () {
         const scrollDistance =
           dom.scrollHeight - dom.scrollTop - dom.clientHeight;
-        console.log("scroll", scrollDistance);
         if (scrollDistance <= 0) {
           //等于0证明已经到底，可以请求接口
           if (that.currentPage < that.totalPage) {

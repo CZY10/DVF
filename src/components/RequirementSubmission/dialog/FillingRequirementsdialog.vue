@@ -171,7 +171,11 @@
               <button
                 @click="submitForm(ruleForm)"
                 :class="{ ifsubmitbtn: ifsubmitbtn, submitbtn: true }"
+                v-if="getstate == 0 || determine != 4"
               >
+                {{ submitFormText }}
+              </button>
+              <button class="submitbtn" v-else>
                 {{ submitFormText }}
               </button>
             </div>
@@ -244,6 +248,7 @@ export default {
     "determine",
     "RequirementsList",
     "FillingRequirementid",
+    "getstate",
   ], //通过props接收父组件传递的值
   data() {
     return {
@@ -716,6 +721,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.ifwidthVisble = false;
         this.Fillinthetemplateval = "";
         this.rules.name[0].required = false;
+        this.ifxian = false;
       } else {
         this.rules.name[0].required = true;
       }

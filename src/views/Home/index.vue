@@ -510,7 +510,7 @@ export default {
         loginHref = `http://localhost:8088`;
       }
 
-      if (this.token) {
+      if (localStorage.getItem("token")) {
         window.open(this.fbbaseURLC + `/hot/fb-detail?id=${item.id}`, "_black");
         this.fbbaseURLC = `${this.fbbaseURLC} + /hot/fb-detail?id=`;
       } else {
@@ -533,7 +533,7 @@ export default {
         loginHref = `http://localhost:8088`;
       }
 
-      if (this.token) {
+      if (localStorage.getItem("token")) {
         window.open(
           this.fbbaseURLC + `/hot/deal-detail?id=${item.id}`,
           "_black"

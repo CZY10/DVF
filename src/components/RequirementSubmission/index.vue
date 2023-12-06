@@ -886,7 +886,10 @@ export default {
             if (item.title != "") {
               this.tableData[index].budget = this.tableData[index].budget * 1;
               if (item.budget * 1 < item.video_num * 300) {
-                this.tableData[index].budget = "";
+                item.budget != 0
+                  ? (this.tableData[index].budget = item.budget * 1)
+                  : (this.tableData[index].budget = "");
+
                 this.budgetChange(item.budget, index, item.video_num);
               }
             } else {
@@ -1291,9 +1294,16 @@ export default {
       if (val * 1 < 300 * num) {
         this.ifsubmitTo = false;
         this.$nextTick(() => {
-          this.$refs[
-            "ruleForm" + index
-          ].fields[0].validateMessage = `不能低于300元/个`;
+          if (val != "") {
+            this.$refs[
+              "ruleForm" + index
+            ].fields[0].validateMessage = `不能低于300元/个`;
+          } else {
+            this.$refs[
+              "ruleForm" + index
+            ].fields[0].validateMessage = `请填写预算`;
+          }
+
           this.$refs["ruleForm" + index].fields[0].validateState = "error";
           this.iffuleform = false;
         });

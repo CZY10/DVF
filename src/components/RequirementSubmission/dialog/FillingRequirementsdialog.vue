@@ -478,7 +478,7 @@ export default {
       } else if (this.ifsubmitbtn && this.determine == 4) {
         let image = [];
         this.upload_List.forEach((item) =>
-          image.push(item.response.data.fullurl)
+          image.push(item.response?.data.fullurl || item.url)
         );
         let str = image.join(",");
         let data = {
@@ -948,16 +948,18 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
     color: #b6b6b6;
     .xian {
       flex: 1;
-      border-right: 1px dashed #ccc;
+      border-left: 1px dashed #ccc;
     }
     span {
       cursor: pointer;
+      margin-right: 8px;
     }
     i {
       margin-top: 6px;
       cursor: pointer;
       font-size: 20px;
       color: #b6b6b6;
+      margin-right: 8px;
     }
   }
   .box2 {
@@ -970,7 +972,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       font-size: 14px;
     }
     .Fillinthetemplate {
-      width: 334px;
+      width: 350px;
       height: 400px;
       background: #f8f8f8;
       border-radius: 4px;

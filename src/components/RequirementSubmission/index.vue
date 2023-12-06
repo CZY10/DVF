@@ -1835,6 +1835,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
+    margin-top: 10px;
     .indextop {
       width: 16px;
       height: 14px;
@@ -1883,7 +1884,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 60px;
-    margin: 0 7px;
+    margin: 10px 7px 0;
     .influencerInfo2 {
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -1893,6 +1894,7 @@ export default {
   }
   .influencerInfoLi_div2 {
     width: 60px;
+    margin-top: 10px;
     .influencerInfo3 {
       width: 32px;
       height: 32px;

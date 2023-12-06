@@ -1607,6 +1607,7 @@ export default {
       RequirementsList: {},
       FillingRequirementid: 0,
       getstate: 0,
+      iftableListener: true,
     };
   },
   created() {
@@ -1828,6 +1829,7 @@ export default {
         .then((res) => {
           if (res.code == 1) {
             this.pageState = true;
+            this.iftableListener = true;
             res.data.data.forEach((item) => {
               this.tableData.push(item);
             });
@@ -1848,6 +1850,7 @@ export default {
       this.currentPage = 1;
       this.isMessage = 0;
       this.tableData = [];
+      this.iftableListener = false;
       this.getOrderList();
     },
 
@@ -2290,9 +2293,10 @@ export default {
       dom.addEventListener("scroll", function () {
         const scrollDistance =
           dom.scrollHeight - dom.scrollTop - dom.clientHeight;
+        console.log(scrollDistance, "scrollDistance");
         if (scrollDistance <= 0) {
           //等于0证明已经到底，可以请求接口
-          if (that.currentPage < that.totalPage) {
+          if (that.currentPage < that.totalPage && that.iftableListener) {
             //当前页数小于总页数就请求
             that.currentPage++; //当前页数自增
             //请求接口的代码
@@ -3295,7 +3299,7 @@ export default {
           padding-top: 10px;
           width: 150px;
           .p1 {
-            max-width: 140px;
+            max-width: 120px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;

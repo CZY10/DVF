@@ -46,7 +46,7 @@ export default {
   data() {
     return {
       imgurl: [
-        require("@/assets/images/tipsImg/tips1.webp"),
+        require("@/assets/images/tipsImg/step1.webp"),
         require("@/assets/images/tipsImg/step2.webp"),
         require("@/assets/images/tipsImg/tips3.webp"),
         require("@/assets/images/tipsImg/tips4.webp"),
@@ -74,10 +74,15 @@ export default {
 <style lang="less" scoped>
 ::v-deep(.el-dialog) {
   border-radius: 8px;
+  background: #ffffff !important;
 }
 
 ::v-deep(.el-dialog__body) {
   padding: 0 !important;
+}
+
+::v-deep(.el-dialog__header) {
+  padding-top: 20px !important;
 }
 </style>
 

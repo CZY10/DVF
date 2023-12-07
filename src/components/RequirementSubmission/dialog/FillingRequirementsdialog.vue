@@ -75,7 +75,7 @@
                         />
                         <span
                           class="el-upload-list__item-actions"
-                          v-if="getstate == 0"
+                          v-if="getstate == 0 || determine != 4"
                         >
                           <span
                             v-if="!disabled"
@@ -118,7 +118,12 @@
                         <p>2、需要提前吸光，才能体现夜光</p>
                         <p>3、需要提供版权</p>
                       </div>
-                      <span style="margin-right: 20px; color: #a06cf3;font-size: 12px;"
+                      <span
+                        style="
+                          margin-right: 20px;
+                          color: #a06cf3;
+                          font-size: 12px;
+                        "
                         >示例</span
                       >
                     </el-tooltip>
@@ -266,7 +271,7 @@ export default {
   ], //通过props接收父组件传递的值
   data() {
     return {
-      dialogTitle: "填写产品及拍摄要求",
+      dialogTitle: "产品及拍摄要求",
       submitFormText: "确认",
       widthVisble: "500px",
       ruleForm: {
@@ -702,7 +707,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         }, 100);
       } else {
         this.submitFormText = "确认";
-        this.dialogTitle = "填写产品及拍摄要求";
+        this.dialogTitle = "产品及拍摄要求";
       }
     },
     RequirementsList(newval) {
@@ -846,6 +851,11 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   padding-left: 5px;
 }
 
+::v-deep(.el-radio) {
+  color: #333333;
+  font-weight: 400;
+}
+
 ::v-deep(.el-textarea .el-input__count) {
   bottom: 15px;
 }
@@ -979,13 +989,19 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
     span {
       cursor: pointer;
       margin-right: 8px;
+      font-size: 12px;
+      transition: all 0.3s;
+    }
+
+    span:hover {
+      color: #333;
     }
     i {
-      margin-top: 6px;
       cursor: pointer;
       font-size: 20px;
       color: #b6b6b6;
       margin-right: 8px;
+      transition: all 0.3s;
     }
   }
   .box2 {

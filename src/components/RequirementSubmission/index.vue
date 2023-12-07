@@ -65,12 +65,20 @@
           </el-table-column>
           <el-table-column width="400">
             <template slot="header">
-              <p>
-                意向达人
-                <span style="color: #999999; font-size: 12px; margin-left: 10px"
+              <div style="display: flex; justify-content: center">
+                <el-tooltip class="item" effect="dark" placement="top">
+                  <div slot="content">
+                    <p style="line-height: 20px">
+                      默认按排序先后匹配红人，未选 <br />
+                      意向红人时，默认为平台推荐
+                    </p>
+                  </div>
+                  <p>意向达人</p>
+                </el-tooltip>
+                <span style="color: #999999; font-size: 12px; margin-left: 4px"
                   >(可上下左右拖动排序)</span
                 >
-              </p>
+              </div>
             </template>
             <template slot-scope="scope">
               <div v-if="scope.row.flag != 2">
@@ -225,6 +233,7 @@
                     cursor: pointer;
                     justify-content: center;
                   "
+                  class="table-yaoq"
                 >
                   <div
                     style="
@@ -285,20 +294,11 @@
                   </div>
 
                   <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      color: #a06cf3;
-                      margin-left: 15px;
-                      font-size: 12px;
-                    "
                     @click="openFillingRequirementsdialog(scope.$index)"
+                    class="tableyaoq-div"
                   >
-                    <p style="white-space: nowrap">详情</p>
-                    <i
-                      class="iconfont icon-tx"
-                      style="margin-left: 5px; font-size: 13px"
-                    ></i>
+                    <p>详情</p>
+                    <i class="iconfont icon-tx"></i>
                   </div>
                 </div>
               </div>
@@ -328,6 +328,10 @@
                       :disabled="
                         scope.row.video_num == 1 || scope.row.title == ''
                       "
+                      :class="{
+                        disabled:
+                          scope.row.video_num == 1 || scope.row.title == '',
+                      }"
                     >
                       -
                     </button>
@@ -349,9 +353,6 @@
                           scope.row.budget,
                           scope.$index
                         )
-                      "
-                      :disabled="
-                        scope.row.video_num == 10 || scope.row.title == ''
                       "
                     >
                       +
@@ -414,10 +415,7 @@
                       >
                     </el-tooltip>
                   </li>
-                  <li class="operate" v-else>
-                    <span class="operate1">--</span>
-                  </li>
-                  <li class="operate" v-if="scope.row.title != ''">
+                  <li class="operate">
                     <el-tooltip
                       class="item"
                       effect="dark"
@@ -451,15 +449,6 @@
             </template>
           </el-table-column>
         </el-table>
-        <i
-          class="el-icon-question"
-          @mouseover="flag = true"
-          @mouseout="flag = false"
-        ></i>
-        <div class="RequirementBox-xinx" v-show="flag">
-          未选意向达人情况下，默认为 平台推荐达人
-          <div class="triangle"></div>
-        </div>
       </div>
       <div :class="{ ifsubmitTo: ifsubmitTo, RequirementBtn: true }">
         <button @click="submitTo">提交</button>
@@ -499,7 +488,7 @@
           style="
             width: 120px;
             height: 32px;
-            background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+            background: #d161f6;
             border-radius: 5px;
             cursor: pointer;
             border: none;
@@ -737,7 +726,6 @@ export default {
           influencer_info: [],
         },
       ],
-      flag: false,
       errorShow: false,
       isvideoSubmitDialogVisible: 0,
       checkWechatPaymentVal: "",
@@ -825,9 +813,13 @@ export default {
         this.formId = id;
       } else {
         // 计算删除位置
-        // var deletePosition = this.tableData.length - 2;
+        var deletePosition = this.tableData.length - 2;
         // 使用splice方法删除元素
-        // this.tableData.splice(deletePosition, 1);
+        this.tableData.splice(deletePosition, 1);
+
+        let num = localStorage.getItem("addnum");
+        num--;
+        localStorage.setItem("addnum", num);
       }
     },
     deletecenterDialogVisibles() {
@@ -871,6 +863,18 @@ export default {
               title: "",
               video_num: "1",
             });
+          } else if (localStorage.getItem("addnum") != 0) {
+            let num = localStorage.getItem("addnum") * 1;
+            if (num > 0) {
+              for (let i = 1; i <= num; i++) {
+                res.data.data.push({
+                  flag: 1,
+                  influencer_info: [],
+                  title: "",
+                  video_num: "1",
+                });
+              }
+            }
           }
 
           res.data.data.push({
@@ -897,7 +901,7 @@ export default {
               this.tableData[index].budget = "";
             }
           });
-          // console.log(this.tableData);
+          console.log(this.tableData);
 
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
@@ -928,6 +932,13 @@ export default {
         influencerInfo: true,
         video_num: "1",
       });
+      let num = 0;
+      if (localStorage.getItem("addnum")) {
+        num = localStorage.getItem("addnum") * 1 + 1;
+      } else {
+        num++;
+      }
+      localStorage.setItem("addnum", num);
     },
 
     //提交
@@ -1092,7 +1103,7 @@ export default {
 
     //修改视频数量
     handleChange(value, num, id, budget, index) {
-      if (num == 10) {
+      if (num == 5) {
         const h = this.$createElement;
         let msg = this.$message({
           message: h("p", { style: "display: flex;align-items: center;" }, [
@@ -1107,7 +1118,7 @@ export default {
             h(
               "span",
               { style: "font-size: 12px;color: #FFFFFF;margin:0 10px 0 6px" },
-              "目前一个亚马逊Listing只能上传10个关联视频哦~"
+              "目前一个亚马逊Listing只能上传5个关联视频，多余的视频仅在商品下方展示"
             ),
             h(
               "button",
@@ -1371,6 +1382,13 @@ export default {
 
     // 导入
     httpRequest(fileLit) {
+      const loading = this.$loading({
+        lock: true,
+        text: "需求导入中...",
+        spinner: "el-icon-loading",
+        background: "#fff",
+        target: document.querySelector(".loading-area"), //设置加载动画区域
+      });
       const formData = new FormData();
       formData.append("file", fileLit.file);
       needsTemplate({
@@ -1380,6 +1398,8 @@ export default {
         .then((res) => {
           this.reqsearch();
           if (res.code == 1) {
+            loading.close();
+
             this.$message({
               message: "导入成功",
               type: "success",
@@ -1387,6 +1407,7 @@ export default {
               center: true,
             });
           } else {
+            loading.close();
             const h = this.$createElement;
             this.$message({
               message: h("p", { style: "display: flex" }, [
@@ -1410,7 +1431,9 @@ export default {
             });
           }
         })
-        .catch((res) => {});
+        .catch((res) => {
+          loading.close();
+        });
     },
 
     //刷新
@@ -1566,6 +1589,7 @@ export default {
   padding: 0 30px 25px 30px;
   border: none;
   box-sizing: border-box;
+  margin-top: 0px;
 }
 
 ::v-deep .el-table .cell::before {
@@ -1577,6 +1601,7 @@ export default {
 ::v-deep(.elinput > .el-input__inner) {
   height: 100%;
   text-align: center;
+  padding: 0 10px;
 }
 ::v-deep(.el-input__inner:focus) {
   border-color: #a06cf3;
@@ -1746,6 +1771,16 @@ export default {
           border-radius: 4px;
           border: none;
           cursor: pointer;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          background-color: rgba(199, 179, 230, 0.2);
+          color: #a06cf3;
+        }
+        .disabled:hover {
+          background: #f6f6f6 !important;
+          color: #b3b3b3 !important;
         }
         input {
           border: none;
@@ -1757,33 +1792,29 @@ export default {
           outline: none;
         }
       }
-    }
 
-    .RequirementBox-xinx {
-      width: 180px;
-      height: 60px;
-      background: rgb(37, 37, 37);
-      border-radius: 5px;
-      position: absolute;
-      top: -50px;
-      left: 157px;
-      font-size: 12px;
-      color: #fff;
-      padding: 9px 12px;
-      box-sizing: border-box;
-      transition: all 0.3s;
-      .triangle {
-        width: 0;
-        height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-top: 10px solid rgb(37, 37, 37);
-        position: absolute;
-        bottom: -10px;
-        left: 80px;
+      .table-yaoq {
+        .tableyaoq-div {
+          display: flex;
+          align-items: center;
+          color: #a06cf3;
+          margin-left: 15px;
+          font-size: 12px;
+          p {
+            white-space: nowrap;
+          }
+          .icon-tx {
+            transition: all 0.3s;
+            margin-left: 5px;
+            font-size: 13px;
+            opacity: 0;
+          }
+        }
+        .tableyaoq-div:hover .icon-tx {
+          opacity: 1;
+        }
       }
     }
-
     .RequirementBtn {
       margin-top: 30px;
       display: flex;
@@ -1919,6 +1950,7 @@ export default {
   .influencerInfoLi_div2 {
     width: 60px;
     margin-top: 10px;
+    height: 55px;
     .influencerInfo3 {
       width: 32px;
       height: 32px;
@@ -1928,13 +1960,22 @@ export default {
       cursor: pointer;
       color: #cccccc !important;
       margin: 0 auto;
+      transition: all 0.3s;
     }
     .influencerInfo2 {
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999 !important;
+      cursor: pointer;
     }
+  }
+
+  .influencerInfoLi_div2:hover .influencerInfo3 {
+    color: #a06cf3 !important;
+  }
+  .influencerInfoLi_div2:hover .influencerInfo2 {
+    color: #a06cf3 !important;
   }
 }
 
@@ -2003,13 +2044,6 @@ export default {
 
 ::v-deep(.el-table th.el-table__cell > .cell) {
   text-align: center;
-}
-
-.el-icon-question {
-  position: absolute;
-  top: 24px;
-  left: 240px;
-  cursor: pointer;
 }
 
 .ghost {
@@ -2404,7 +2438,7 @@ export default {
 .introjs-tooltip-title {
   font-size: 16px !important;
   width: 80%;
-  color: #000;
+  color: #333;
   white-space: nowrap;
 }
 .warper {
@@ -2459,6 +2493,7 @@ export default {
   font-size: 14px !important;
   font-weight: normal !important;
   //   padding: 8px 10px !important ;
+  margin-top: 12px;
 }
 
 .introjs-tooltiptext {

@@ -68,7 +68,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="意向达人" min-width="40">
+        <el-table-column label="意向红人" min-width="40">
           <template slot-scope="scope">
             <div v-if="scope.row.influencer_info.length == 0">平台推荐</div>
             <div v-else>
@@ -114,7 +114,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="nickName" label="接单达人">
+        <el-table-column prop="nickName" label="接单红人">
           <template slot-scope="scope">
             <div class="avatar_box">
               <p>
@@ -156,7 +156,7 @@
         <el-table-column prop="price" label="订单金额">
           <template slot-scope="scope">
             <span v-if="scope.row.influencer_id == null">待反馈</span>
-            <span v-else>{{ scope.row.price }}</span>
+            <span v-else>{{ scope.row.price }}￥</span>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="订单状态" width="100">
@@ -240,7 +240,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="hasMessage" label="达人沟通" width="150">
+        <el-table-column prop="hasMessage" label="红人沟通" width="150">
           <template slot-scope="scope">
             <el-badge
               is-dot
@@ -438,7 +438,7 @@
     </div>
 
     <div class="order-bottom">
-      <div style="color: #999;">
+      <div style="color: #999">
         已选
         {{ multipleSelection.length == 0 ? "--" : multipleSelection.length }}
         项
@@ -1373,9 +1373,9 @@
     </el-dialog>
 
     <el-dialog
-      title="已选达人"
+      title="已选红人"
       :visible.sync="centerDialogVisibleXinz"
-      width="28%"
+      width="530px"
       center
     >
       <ul style="display: flex; justify-content: center">
@@ -1396,7 +1396,9 @@
             style="width: 40px; height: 40px; border-radius: 50%"
           />
           <p>NO.{{ item.user_id }}</p>
-          <p style="color: #796cf3; margin-top: 4px">{{ item.price }}</p>
+          <p style="color: #796cf3; margin-top: 4px; white-space: nowrap">
+            {{ item.price }}
+          </p>
         </li>
       </ul>
     </el-dialog>

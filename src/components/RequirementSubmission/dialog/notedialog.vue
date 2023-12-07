@@ -294,6 +294,7 @@ export default {
   .notedialog-rigth {
     flex: 1;
     height: 590px;
+    background: #fff;
     h1 {
       margin-top: 30px;
       text-align: center;

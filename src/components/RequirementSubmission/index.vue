@@ -276,7 +276,6 @@
                         style="
                           color: #a06cf3;
                           font-size: 12px;
-                          font-weight: 600;
                           margin-left: 3px;
                         "
                       ></i>

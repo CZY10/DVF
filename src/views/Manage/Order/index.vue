@@ -60,7 +60,7 @@
         </el-table-column>
         <el-table-column label="订单号" min-width="110">
           <template slot-scope="scope">
-            <div>
+            <div style="padding-left: 12px">
               <p>{{ scope.row.id }}</p>
               <p style="font-size: 12px; color: #999">
                 {{ scope.row.createtime }}
@@ -86,7 +86,12 @@
           <template slot-scope="scope">
             <div class="asin">
               <div class="asin-img">
-                <img :src="scope.row.image" alt="" />
+                <img :src="scope.row.image" v-if="scope.row.image != ''" />
+                <img
+                  src="@/assets/images/tp.png"
+                  v-else
+                  style="width: 20px; height: 20px; margin-top: 20px"
+                />
               </div>
               <div class="asin-p">
                 <p class="p1">{{ scope.row.title }}</p>
@@ -248,10 +253,12 @@
               "
               class="badge_style"
             >
-              <i
-                class="el-icon-chat-dot-round"
-                style="font-size: 20px; cursor: pointer"
-              ></i>
+              <p style="padding-right: 8px">
+                <i
+                  class="el-icon-chat-dot-round"
+                  style="font-size: 20px; cursor: pointer"
+                ></i>
+              </p>
             </el-badge>
           </template>
         </el-table-column>
@@ -2397,10 +2404,6 @@ export default {
     color: #f56c6c;
   }
 
-  .el-table__body-wrapper .el-table__body {
-    margin-bottom: 30px;
-  }
-
   .el-upload-list--picture-card .el-upload-list__item .el-icon-close {
     display: block;
     width: 20px;
@@ -3264,7 +3267,6 @@ export default {
 
       .title {
         font-size: 14px;
-        font-family: PingFangSC-Semibold, PingFang SC;
         color: #333333;
         display: flex;
         align-items: center;
@@ -4023,7 +4025,9 @@ export default {
 }
 
 ::v-deep(.el-table__header-wrapper table) {
-  padding: 0;
+  padding: 0 10px 12px;
+  background: #fff;
+  width: auto !important;
 }
 
 ::v-deep(.el-textarea__inner) {

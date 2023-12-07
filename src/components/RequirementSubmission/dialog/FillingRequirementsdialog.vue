@@ -21,6 +21,7 @@
                   <el-input
                     v-model="ruleForm.name"
                     placeholder="中文填写，注明变体或型号，例：女性连衣裙（红色）"
+                    :disabled="getstate != 0 && determine == 4"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -33,9 +34,13 @@
                       v-model="formradioLink"
                       label="1"
                       style="margin-right: 20px"
+                      :disabled="getstate != 0 && determine == 4"
                       >有链接</el-radio
                     >
-                    <el-radio v-model="formradioLink" label="2"
+                    <el-radio
+                      v-model="formradioLink"
+                      label="2"
+                      :disabled="getstate != 0 && determine == 4"
                       >无链接</el-radio
                     >
                   </div>
@@ -43,6 +48,7 @@
                     v-model="ruleForm.link"
                     placeholder="请输入产品链接"
                     v-if="formradioLink == '1'"
+                    :disabled="getstate != 0 && determine == 4"
                   ></el-input>
 
                   <div
@@ -58,6 +64,7 @@
                       :on-change="upload_change"
                       :on-exceed="upload_exceed"
                       :class="{ 'hide-upload-btn': hideUploadBtn }"
+                      :disabled="getstate != 0 && determine == 4"
                     >
                       <i slot="default" class="el-icon-plus"></i>
                       <div slot="file" slot-scope="{ file }">
@@ -66,7 +73,10 @@
                           :src="file.url"
                           alt=""
                         />
-                        <span class="el-upload-list__item-actions">
+                        <span
+                          class="el-upload-list__item-actions"
+                          v-if="getstate == 0"
+                        >
                           <span
                             v-if="!disabled"
                             class="el-upload-list__item-delete"
@@ -92,6 +102,7 @@
                       v-model="formradioRequirements"
                       label="1"
                       style="margin-right: 10px"
+                      :disabled="getstate != 0 && determine == 4"
                       >按要求拍摄</el-radio
                     >
                     <el-tooltip effect="dark" placement="right-start">
@@ -116,6 +127,7 @@
                       v-model="formradioRequirements"
                       label="2"
                       style="margin-right: 7px"
+                      :disabled="getstate != 0 && determine == 4"
                       >红人自由发挥</el-radio
                     >
                     <span class="formitem_span1">交付较快</span>
@@ -135,6 +147,7 @@
      ⑤. 要求提供版权"
                     show-word-limit
                     v-if="formradioRequirements == 1"
+                    :disabled="getstate != 0 && determine == 4"
                   ></el-input>
 
                   <div class="formitem_text" v-else>
@@ -162,6 +175,7 @@
                   <el-input
                     v-model="ruleForm.notes"
                     placeholder="如涉及红人敏感信息请备注，如：要年轻漂亮的，不要胖子/瘦子/黑人"
+                    :disabled="getstate != 0 && determine == 4"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -627,6 +641,13 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       deep: true, // 可以深度检测到 obj 对象的属性值的变化
     },
     upload_List(newval) {
+      if (newval.length >= 5) {
+        this.hideUploadBtn = true;
+        console.log(newval, this.hideUploadBtn);
+      } else {
+        this.hideUploadBtn = false;
+      }
+
       if (
         (this.formradioLink == "2" &&
           newval.length != 0 &&
@@ -1026,5 +1047,12 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
 .content > p {
   margin-bottom: 7px;
   color: #e4e4e4 !important;
+}
+.el-upload-list__item-delete {
+  width: 100%;
+  height: 100%;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
 }
 </style>

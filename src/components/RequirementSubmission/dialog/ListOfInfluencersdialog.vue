@@ -349,6 +349,11 @@ export default {
   },
   created() {
     this.currentPage = store.state.Index.currentPage;
+    this.genderValue = store.state.Index.dataobj.genderValue;
+    this.categoryValue = store.state.Index.dataobj.categoryValue;
+    this.themeValue = store.state.Index.dataobj.themeValue;
+    this.searchforval = store.state.Index.dataobj.searchforval;
+    this.priceval = store.state.Index.dataobj.priceval;
   },
   mounted() {
     this.isloading = true;
@@ -400,12 +405,32 @@ export default {
         default:
           break;
       }
+
+      let obj = {
+        genderValue: this.genderValue,
+        categoryValue: this.categoryValue,
+        themeValue: this.themeValue,
+        searchforval: this.searchforval,
+        priceval: this.priceval,
+      };
+
+      store.commit("Index/setdataobj", obj);
       this.RenderingData();
     },
 
     //搜索
     getRenderingData() {
       this.isloading = true;
+      let obj = {
+        genderValue: this.genderValue,
+        categoryValue: this.categoryValue,
+        themeValue: this.themeValue,
+        searchforval: this.searchforval,
+        priceval: this.priceval,
+      };
+
+      store.commit("Index/setdataobj", obj);
+
       this.RenderingData();
     },
 

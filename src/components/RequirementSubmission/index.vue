@@ -237,7 +237,7 @@
                     <img
                       :src="scope.row.image[0]"
                       style="width: 100%; height: 100%; object-fit: cover"
-                      v-if="scope.row.image"
+                      v-if="scope.row.image.length != 0"
                       @click="gocommodity(scope.row.url)"
                     />
                     <img
@@ -271,10 +271,15 @@
                       @click="gocommodity(scope.row.url)"
                     >
                       {{ scope.row.asin }}
-                      <img
-                        src="@/assets/images/fenx.png"
-                        style="width: 10px; height: 10px"
-                      />
+                      <i
+                        class="iconfont icon-share"
+                        style="
+                          color: #a06cf3;
+                          font-size: 12px;
+                          font-weight: 600;
+                          margin-left: 3px;
+                        "
+                      ></i>
                     </p>
                     <p v-else style="color: #999999">--</p>
                   </div>
@@ -871,7 +876,6 @@ export default {
             title: "",
           });
           this.tableData = res.data.data;
-
           this.tableData.forEach((item, index) => {
             if (item.influencer_info.length == 0) {
               item.influencer_info.push({ ifinfluencerInfo: true });
@@ -1477,6 +1481,9 @@ export default {
     },
   },
   mounted() {
+    // setTimeout(() => {
+    //   this.initGuide(); // 调用新手引导的方法
+    // }, 3000);
     if (store.state.Index.ExitFullScreen) {
       this.Addinfluencers(
         store.state.Index.influencersList,
@@ -2450,7 +2457,7 @@ export default {
 
 .introjs-tooltiptext {
   font-size: 14px !important;
-  padding: 15px !important;
+  padding: 15px 15px 12px !important;
   color: #000;
 }
 /* 提示框按钮 */
@@ -2459,7 +2466,7 @@ export default {
   align-items: center;
   justify-content: center;
   border: none !important;
-  padding-bottom: 16px !important;
+  padding-bottom: 22px !important;
 }
 .introjs-button {
   text-align: center;

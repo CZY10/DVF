@@ -6,11 +6,11 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "38453514",
-      "name": "tss",
-      "font_class": "tss",
-      "unicode": "e681",
-      "unicode_decimal": 59009
+      "icon_id": "10635077",
+      "name": "分享",
+      "font_class": "share",
+      "unicode": "e606",
+      "unicode_decimal": 58886
     },
     {
       "icon_id": "33463571",

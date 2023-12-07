@@ -330,6 +330,12 @@ export default {
   },
   mounted() {
     this.currentPage = store.state.Index.currentPage;
+    this.genderValue = store.state.Index.dataobj.genderValue;
+    this.categoryValue = store.state.Index.dataobj.categoryValue;
+    this.themeValue = store.state.Index.dataobj.themeValue;
+    this.searchforval = store.state.Index.dataobj.searchforval;
+    this.priceval = store.state.Index.dataobj.priceval;
+
     this.isloading = true;
     this.handlerGetCategory("influencer");
     this.handlerGetCategory("theme_area");
@@ -362,6 +368,13 @@ export default {
       this.outcheckFull();
       store.commit("Index/setExitFullScreen", false);
       store.commit("Index/setcurrentPage", 1);
+      store.commit("Index/setdataobj", {
+        genderValue: "",
+        categoryValue: "",
+        themeValue: "",
+        searchforval: "",
+        priceval: "",
+      });
       this.currentPage = 1;
       router.push("/Requirement");
     },
@@ -416,6 +429,8 @@ export default {
 
     //搜索列表
     handlerSearchList(type, value) {
+      this.currentPage = 1;
+
       if (localStorage.getItem("token")) {
         this.isloading = true;
       }
@@ -432,12 +447,21 @@ export default {
         default:
           break;
       }
+      let obj = {
+        genderValue: this.genderValue,
+        categoryValue: this.categoryValue,
+        themeValue: this.themeValue,
+      };
+
+      store.commit("Index/setdataobj", obj);
+
       this.RenderingData();
     },
 
     //搜索
     getRenderingData() {
       this.isloading = true;
+      this.currentPage = 1;
       this.RenderingData();
     },
 

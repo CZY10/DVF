@@ -418,6 +418,7 @@ export default {
 
     //搜索列表
     handlerSearchList(type, value) {
+      this.currentPage = 1;
       if (localStorage.getItem("token")) {
         this.isloading = true;
       }
@@ -441,6 +442,7 @@ export default {
     getRenderingData() {
       if (localStorage.getItem("token")) {
         this.isloading = true;
+        this.currentPage = 1;
         this.RenderingData();
       }
     },

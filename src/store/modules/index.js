@@ -8,7 +8,14 @@ export default {
         ExitFullScreen: false,
         influencersList: [],
         influencersListid: 0,
-        currentPage: 1
+        currentPage: 1,
+        dataobj: {
+            genderValue: "",
+            categoryValue: "",
+            themeValue: "",
+            searchforval: "",
+            priceval: ""
+        }
     },
     mutations: {
         setIsFalg(state, payload) {
@@ -36,6 +43,9 @@ export default {
         setcurrentPage(state, payload) {
             state.currentPage = payload
         },
+        setdataobj(state, payload) {
+            state.dataobj = payload
+        }
     },
     actions: {
 

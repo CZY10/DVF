@@ -827,7 +827,6 @@ export default {
         id: this.formId,
       }).then((res) => {
         if (res.code == 1) {
-          console.log(res);
           this.reqsearch();
           this.centerDialogVisibles = false;
         }
@@ -835,7 +834,6 @@ export default {
     },
     //删除达人
     delDr(user_id, id) {
-      console.log(user_id, id);
       needsRemoveInfluencer({
         id: id,
         user_id: user_id,
@@ -942,7 +940,6 @@ export default {
           }
         });
         const id = arr.join(",");
-        console.log(id);
         needsSubmit({
           id: id,
         })
@@ -951,9 +948,7 @@ export default {
               this.reqsearch();
               loading.close();
               this.payDepositDialogVisible = true;
-              console.log(res.data.order[1].order.qrcode);
               this.$nextTick(() => {
-                console.log(this.$refs.alipayQrCodeUrl);
                 new QRCode(this.$refs.alipayQrCodeUrl, {
                   text: res.data.order[1].order.qrcode,
                   width: 130,
@@ -1086,7 +1081,6 @@ export default {
     },
     handleSelectionChange(val) {
       this.handleSelectionChangeList = val;
-      console.log(val);
     },
 
     //修改视频数量
@@ -1138,7 +1132,6 @@ export default {
             video_num: num + "",
           });
           if (res.code == 1) {
-            console.log(value, 0, num);
             this.budgetChange(budget, index, num);
           }
         }, 500);
@@ -1234,7 +1227,6 @@ export default {
           ) {
             influencerIds1 = parseInt(influencerIds1.replace(",", "")) + "";
           }
-          console.log(influencerIds1, influencerIds2);
           this.getneedsSelectInfluencer(
             this.tableData[this.differentIndices[0]].id,
             influencerIds1
@@ -1305,7 +1297,6 @@ export default {
       this.NotedialogdialogVisible = msg;
     },
     getTipsdialogVisible1(msg) {
-      console.log(msg);
       this.TipsdialogVisible1 = msg;
     },
 
@@ -1535,12 +1526,6 @@ export default {
       }
     },
     checked(newval) {
-      console.log(
-        newval,
-        this.tableDataTitle,
-        this.tableData,
-        this.budgetChangeif
-      );
       if (
         newval == true &&
         this.tableDataTitle == false &&

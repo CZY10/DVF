@@ -334,7 +334,7 @@ export default {
     //删除文件
     upload_remove(file) {
       this.upload_List.forEach((item, index) => {
-        if (item.name == file.name) {
+        if (item.url == file.url) {
           this.upload_List.splice(index, 1);
           this.fileList.splice(index, 1);
         }
@@ -385,7 +385,6 @@ export default {
           id: this.FillingRequirementid,
         };
         const res = await needsEdit(data);
-        console.log(res);
         if (res.code == 1) {
           this.beforeClose();
           this.reqsearch();
@@ -473,7 +472,6 @@ export default {
             image: str,
           };
           const res = await createOrder(data);
-          console.log(res);
           if (res.code == 1) {
             this.beforeClose();
             this.reqsearch();
@@ -629,12 +627,6 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       deep: true, // 可以深度检测到 obj 对象的属性值的变化
     },
     upload_List(newval) {
-      console.log(
-        this.formradioLink,
-        newval,
-        this.ruleForm.name,
-        this.ruleForm.ShootingRequirements
-      );
       if (
         (this.formradioLink == "2" &&
           newval.length != 0 &&

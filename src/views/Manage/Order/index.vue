@@ -4048,6 +4048,9 @@ export default {
 ::v-deep(.el-table tr) {
   border-top: 6px solid #f5f7f9;
 }
+::v-deep(.el-table tr td .cell .el-checkbox) {
+  padding-left: 17px;
+}
 
 ::v-deep(.el-table .el-table__cell.gutter) {
   background: #fff;

@@ -1627,7 +1627,7 @@ export default {
     #ecf2ff 60%,
     #eee5fc 100%
   );
-  height: calc(100vh - 67px);
+  min-height: calc(100vh - 67px);
   .RequirementBoxBanxin {
     width: 1200px;
     margin: 0 auto;

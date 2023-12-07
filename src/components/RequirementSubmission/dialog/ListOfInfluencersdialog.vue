@@ -668,7 +668,7 @@ export default {
 #buyershow {
   overflow-x: hidden;
   position: relative;
-  height: 830px;
+  max-height: 830px;
   margin-top: 10px;
   .banxin {
     width: 891px;
@@ -1253,6 +1253,7 @@ export default {
 
 ::v-deep(.el-dialog) {
   overflow: hidden;
+  max-height: 95%;
 }
 
 ::v-deep(.el-dialog__body) {

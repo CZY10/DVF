@@ -17,7 +17,7 @@
           <div class="formitem">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
               <div class="formitem_div">
-                <el-form-item label="产品名称" prop="name">
+                <el-form-item label="产品名称" prop="name" class="name">
                   <el-input
                     v-model="ruleForm.name"
                     placeholder="中文填写，注明变体或型号，例：女性连衣裙（红色）"
@@ -118,7 +118,7 @@
                         <p>2、需要提前吸光，才能体现夜光</p>
                         <p>3、需要提供版权</p>
                       </div>
-                      <span style="margin-right: 20px; color: #a06cf3"
+                      <span style="margin-right: 20px; color: #a06cf3;font-size: 12px;"
                         >示例</span
                       >
                     </el-tooltip>
@@ -719,9 +719,11 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
           this.fileList = newval.image.map((item) => ({ ["url"]: item }));
           this.upload_List = newval.image.map((item) => ({ ["url"]: item }));
         } else {
-          let arr = newval.image.split(",");
-          this.fileList = arr.map((item) => ({ ["url"]: item }));
-          this.upload_List = arr.map((item) => ({ ["url"]: item }));
+          if (newval.image != "") {
+            let arr = newval.image.split(",");
+            this.fileList = arr.map((item) => ({ ["url"]: item }));
+            this.upload_List = arr.map((item) => ({ ["url"]: item }));
+          }
         }
       }
     },
@@ -823,6 +825,12 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
 ::v-deep(.el-form-item__content) {
   line-height: 0;
   width: 397px;
+}
+
+::v-deep(.name) {
+  .el-input {
+    padding-left: 9px;
+  }
 }
 
 ::v-deep(.el-radio__input.is-checked .el-radio__inner) {

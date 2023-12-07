@@ -435,46 +435,38 @@
           </template>
         </el-table-column>
       </el-table>
-      <div
-        style="
-          text-align: center;
-          margin-top: 20px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <div style="color: #999; margin-left: 30px">
-          已选
-          {{ multipleSelection.length == 0 ? "--" : multipleSelection.length }}
-          项
-        </div>
+    </div>
 
-        <div style="display: flex; align-items: center">
-          <span class="pagination-span" v-if="priceNum != 0"
-            >合计金额：<span style="color: #ff000c; font-weight: 900"
-              >￥{{ priceNum }}</span
-            ></span
-          >
-          <span class="pagination-span" v-if="priceNum == 0"
-            >合计金额：<span style="color: #999; font-weight: 900"
-              >--</span
-            ></span
-          >
-          <el-button
-            class="pagination-btn"
-            @click="ConsolidatedPayment"
-            v-if="multipleSelection.length != 0"
-            ><span class="pagination-btn-span" ref="btnDom"
-              >合并支付({{ multipleSelection.length }})</span
-            ></el-button
-          >
-          <el-button class="paginationBtn" v-if="multipleSelection.length == 0"
-            >合并支付</el-button
-          >
-        </div>
+    <div class="order-bottom">
+      <div style="color: #999;">
+        已选
+        {{ multipleSelection.length == 0 ? "--" : multipleSelection.length }}
+        项
+      </div>
+
+      <div style="display: flex; align-items: center">
+        <span class="pagination-span" v-if="priceNum != 0"
+          >合计金额：<span style="color: #ff000c; font-weight: 900"
+            >￥{{ priceNum }}</span
+          ></span
+        >
+        <span class="pagination-span" v-if="priceNum == 0"
+          >合计金额：<span style="color: #999; font-weight: 900">--</span></span
+        >
+        <el-button
+          class="pagination-btn"
+          @click="ConsolidatedPayment"
+          v-if="multipleSelection.length != 0"
+          ><span class="pagination-btn-span" ref="btnDom"
+            >合并支付({{ multipleSelection.length }})</span
+          ></el-button
+        >
+        <el-button class="paginationBtn" v-if="multipleSelection.length == 0"
+          >合并支付</el-button
+        >
       </div>
     </div>
+
     <!--支付尾款-->
     <el-dialog
       title="请尽快支付订单"
@@ -3242,6 +3234,7 @@ export default {
 
   background: #f5f7f9;
   padding: 20px 30px 0 30px;
+  min-height: calc(100vh - 86px);
 
   .reset_btn {
     margin-left: 30px;
@@ -3257,7 +3250,7 @@ export default {
   .content {
     background: #ffffff;
     border-radius: 0px 4px 4px 0px;
-    padding: 20px 0px;
+    padding-top: 20px;
 
     .form_search {
       display: flex;
@@ -3406,6 +3399,21 @@ export default {
         margin: 0 5px;
       }
     }
+  }
+
+  .order-bottom {
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 100vw;
+    background: #fff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 69px;
+    padding: 0 60px;
+    box-sizing: border-box;
   }
 
   .payment_content {

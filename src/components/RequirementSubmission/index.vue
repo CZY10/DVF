@@ -56,9 +56,9 @@
           height="640"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column label="序号" width="50">
+          <el-table-column label="序号" width="70">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag != 2">
+              <div v-if="scope.row.flag != 2" style="padding-right: 30px">
                 {{ scope.$index + 1 }}
               </div>
             </template>
@@ -246,7 +246,7 @@
                       style="width: 20px; height: 20px; margin-top: 20px"
                     />
                   </div>
-                  <div>
+                  <div style="margin-left: 5px">
                     <p
                       style="
                         width: 100px;
@@ -256,6 +256,7 @@
                         -webkit-box-orient: vertical;
                         -webkit-line-clamp: 2;
                         text-overflow: ellipsis;
+                        text-align: left;
                       "
                     >
                       {{ scope.row.title }}
@@ -294,7 +295,10 @@
                     @click="openFillingRequirementsdialog(scope.$index)"
                   >
                     <p style="white-space: nowrap">详情</p>
-                    <i class="iconfont icon-tx" style="margin-left: 5px"></i>
+                    <i
+                      class="iconfont icon-tx"
+                      style="margin-left: 5px; font-size: 13px"
+                    ></i>
                   </div>
                 </div>
               </div>
@@ -359,7 +363,7 @@
           </el-table-column>
           <el-table-column label="拍摄预算/¥" width="140">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag != 2">
+              <div v-if="scope.row.flag != 2" style="padding-left: 25px">
                 <el-form
                   :model="scope.row"
                   :ref="'ruleForm' + scope.$index"
@@ -387,7 +391,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <div v-if="scope.row.flag != 2">
+              <div v-if="scope.row.flag != 2" style="padding-left: 20px">
                 <ul
                   style="
                     display: flex;
@@ -432,7 +436,7 @@
                 </ul>
               </div>
 
-              <div v-else>
+              <div v-else style="padding-left: 25px">
                 <div class="adddemand">
                   <el-tooltip
                     class="item"
@@ -1559,7 +1563,7 @@ export default {
 
 <style lang="less" scoped>
 ::v-deep .el-table__body-wrapper {
-  padding: 0 15px 25px 15px;
+  padding: 0 30px 25px 30px;
   border: none;
   box-sizing: border-box;
 }
@@ -1714,6 +1718,8 @@ export default {
       .operate {
         color: #999999;
         font-size: 12px;
+        height: 30px;
+        line-height: 30px;
         span {
           cursor: pointer;
           transition: all 0.3s;
@@ -1732,6 +1738,7 @@ export default {
       .inputnumber {
         display: flex;
         justify-content: center;
+        padding-left: 15px;
         button {
           width: 18px;
           height: 18px;
@@ -1759,7 +1766,7 @@ export default {
       border-radius: 5px;
       position: absolute;
       top: -50px;
-      left: 137px;
+      left: 157px;
       font-size: 12px;
       color: #fff;
       padding: 9px 12px;
@@ -2001,7 +2008,7 @@ export default {
 .el-icon-question {
   position: absolute;
   top: 24px;
-  left: 220px;
+  left: 240px;
   cursor: pointer;
 }
 

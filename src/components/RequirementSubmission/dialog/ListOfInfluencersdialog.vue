@@ -389,6 +389,7 @@ export default {
 
     //搜索列表
     handlerSearchList(type, value) {
+      this.currentPage = 1;
       if (localStorage.getItem("token")) {
         this.isloading = true;
       }
@@ -430,7 +431,7 @@ export default {
       };
 
       store.commit("Index/setdataobj", obj);
-
+      this.currentPage = 1;
       this.RenderingData();
     },
 
@@ -1059,8 +1060,8 @@ export default {
     height: 69px;
     background: #ffffff;
     box-shadow: 0px -4px 8px 0px rgba(194, 194, 194, 0.25);
-    width: 983px;
     border-radius: 0 0 20px 20px;
+    padding-right: 20px;
   }
   @media screen and (max-width: 1280px) {
     .banxin {

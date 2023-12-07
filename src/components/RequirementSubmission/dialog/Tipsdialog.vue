@@ -106,4 +106,8 @@ export default {
 ::v-deep(.el-dialog--center .el-dialog__body) {
   padding: 22px 41px 24px;
 }
+
+::v-deep(.el-dialog){
+  background: #fff !important;
+}
 </style>

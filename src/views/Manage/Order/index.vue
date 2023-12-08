@@ -1395,7 +1395,7 @@
             :src="item.image"
             style="width: 40px; height: 40px; border-radius: 50%"
           />
-          <p>NO.{{ item.user_id }}</p>
+          <p>No.{{ item.user_id }}</p>
           <p style="color: #796cf3; margin-top: 4px; white-space: nowrap">
             {{ item.price }}
           </p>
@@ -2294,7 +2294,6 @@ export default {
       dom.addEventListener("scroll", function () {
         const scrollDistance =
           dom.scrollHeight - dom.scrollTop - dom.clientHeight;
-        console.log(scrollDistance, "scrollDistance");
         if (scrollDistance <= 0) {
           //等于0证明已经到底，可以请求接口
           if (that.currentPage < that.totalPage && that.iftableListener) {
@@ -4015,7 +4014,7 @@ export default {
 }
 </style>
 <style lang="less" scoped>
-#order .video_dialog .video_ruleForm[data-v-0d0e0941] {
+#order .video_dialog .video_ruleForm {
   height: auto;
 }
 </style>
@@ -4058,11 +4057,16 @@ export default {
 ::v-deep(.el-table tr) {
   border-top: 6px solid #f5f7f9;
 }
+
 ::v-deep(.el-table tr td .cell .el-checkbox) {
   padding-left: 17px;
 }
 
 ::v-deep(.el-table .el-table__cell.gutter) {
   background: #fff;
+}
+
+.order_table ::v-deep .el-table__body tr:hover > td {
+  background-color: rgb(243, 243, 243) !important;
 }
 </style>

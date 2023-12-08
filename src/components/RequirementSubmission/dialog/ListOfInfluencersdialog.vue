@@ -683,6 +683,10 @@ export default {
           .map((item) => item.user_id)
           .join(",");
         if (result != "") {
+          if (this.influencersListid == 0) {
+            let num = localStorage.getItem("addnum") - 1;
+            localStorage.setItem("addnum", num);
+          }
           await needsSelectInfluencer({
             id: this.influencersListid,
             influencer_ids: result,

@@ -73,7 +73,7 @@
                       意向红人时，默认为平台推荐
                     </p>
                   </div>
-                  <p>意向达人</p>
+                  <p>意向红人</p>
                 </el-tooltip>
                 <span style="color: #999999; font-size: 12px; margin-left: 4px"
                   >(可上下左右拖动排序)</span
@@ -144,7 +144,7 @@
                               white-space: nowrap;
                             "
                           >
-                            <span>NO.{{ item.user_id }}</span>
+                            <span>No.{{ item.user_id }}</span>
                           </p>
                           <p
                             style="
@@ -875,7 +875,6 @@ export default {
     },
     reqsearch() {
       search().then((res) => {
-        console.log(res.data.data);
         if (res.code == 1) {
           if (res.data.data.length == 0) {
             res.data.data.push({
@@ -911,7 +910,7 @@ export default {
 
             if (item.title != "") {
               this.tableData[index].budget = this.tableData[index].budget * 1;
-              if (item.budget * 1 < item.video_num * 300) {
+              if (item.budget * 1 <= item.video_num * 300) {
                 item.budget != 0
                   ? (this.tableData[index].budget = item.budget * 1)
                   : (this.tableData[index].budget = "");
@@ -1116,7 +1115,11 @@ export default {
 
     //修改视频数量
     handleChange(value, num, id, budget, index) {
-      if (num == 5) {
+      if (localStorage.getItem("handleChange") != "false") {
+        localStorage.setItem("handleChange", true);
+      }
+
+      if (num >= 5 && localStorage.getItem("handleChange") == "true") {
         const h = this.$createElement;
         let msg = this.$message({
           message: h("p", { style: "display: flex;align-items: center;" }, [
@@ -1149,6 +1152,7 @@ export default {
           .querySelector(".el-message-btn")
           .addEventListener("click", function () {
             msg.close();
+            localStorage.setItem("handleChange", false);
           });
       }
 
@@ -1354,6 +1358,7 @@ export default {
             flag = false;
           }
         });
+        console.log(flag);
         if (this.checked && flag) this.ifsubmitTo = true;
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";

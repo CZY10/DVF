@@ -611,30 +611,38 @@ export default {
         "已选择";
       if (item.istrue != false && this.influencersList.length < 5) {
         this.influencersList.push(item);
-        let result = this.influencersList
-          .flat()
-          .map((item) => item.user_id)
-          .join(",");
-        const res = await needsSelectInfluencer({
-          id: this.influencersListid,
-          influencer_ids: result,
+        this.$emit("getlist", true);
+        const h = this.$createElement;
+        this.$message({
+          message: h("p", { style: "display: flex" }, [
+            h(
+              "div",
+              {
+                style:
+                  "width: 13px;height: 13px;background: #fff;border-radius: 50%;margin-top: 1px;position: relative;",
+              },
+              [
+                h(
+                  "i",
+                  {
+                    class: "iconfont icon-cg",
+                    style: "",
+                  },
+                  ""
+                ),
+              ]
+            ),
+
+            h(
+              "span",
+              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 8px" },
+              "添加成功"
+            ),
+          ]),
+          iconClass: "iconfont",
+          offset: 140,
+          customClass: "customClasssuccess",
         });
-        if (res.code == 1) {
-          this.$emit("getlist", true);
-          const h = this.$createElement;
-          this.$message({
-            message: h("p", null, [
-              h(
-                "span",
-                { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
-                "添加成功"
-              ),
-            ]),
-            iconClass: "iconfont icon-cg",
-            offset: 140,
-            customClass: "customClasssuccess",
-          });
-        }
       }
       this.datalist[index].istrue = false;
     },
@@ -685,6 +693,20 @@ export default {
         this.videoslistindex = -1;
       }
     },
+  },
+  async beforeDestroy() {
+    let result = this.influencersList
+      .flat()
+      .map((item) => item.user_id)
+      .join(",");
+    await needsSelectInfluencer({
+      id: this.influencersListid,
+      influencer_ids: result,
+    }).then((res) => {
+      if (res.code == 1) {
+        this.$emit("getlist", true);
+      }
+    });
   },
 };
 </script>
@@ -1291,7 +1313,8 @@ export default {
 <style>
 .icon-cg {
   color: #02b578;
-  margin-top: 2px;
+  position: absolute;
+  top: -1px;
 }
 
 .customClasssuccess {

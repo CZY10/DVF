@@ -1574,7 +1574,9 @@ export default {
         this.ifsubmitTo = true;
         this.tableData.forEach((item) => {
           if (item.title != "") {
-            if (item.budget == "") this.ifsubmitTo = false;
+            console.log(item);
+            if (item.budget == "" || item.budget * 1 < item.video_num * 300)
+              this.ifsubmitTo = false;
           }
         });
       } else {
@@ -2509,6 +2511,7 @@ export default {
   font-weight: normal !important;
   //   padding: 8px 10px !important ;
   margin-top: 12px;
+  margin-right: 8px;
 }
 
 .introjs-tooltiptext {

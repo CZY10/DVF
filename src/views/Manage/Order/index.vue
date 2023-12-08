@@ -94,7 +94,7 @@
                 />
               </div>
               <div class="asin-p">
-                <p class="p1">{{ scope.row.title }}</p>
+                <p class="p1" :title="scope.row.title">{{ scope.row.title }}</p>
                 <p class="p2">
                   <span v-if="scope.row.asin">{{ scope.row.asin }}</span>
                   <span v-else>-----</span>

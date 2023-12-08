@@ -267,6 +267,7 @@
                         text-overflow: ellipsis;
                         text-align: left;
                       "
+                      :title="scope.row.title"
                     >
                       {{ scope.row.title }}
                     </p>

@@ -405,7 +405,7 @@ export default {
     //获取公共配置信息
     getContent() {
       getConfig()
-        .then((res) => {  
+        .then((res) => {
           if (res.code === 1) {
             this.logoImg = res.data.logo;
             localStorage.setItem("logo", res.data.logo);
@@ -484,6 +484,8 @@ export default {
               await new Promise((resolve) => {
                 window.open(res.data.jump, "_blank");
                 setTimeout(() => {
+                  router.push("/");
+                  console.log("gohome");
                   resolve();
                 }, 1000);
               });
@@ -561,6 +563,7 @@ export default {
               await new Promise((resolve) => {
                 window.open(res.data.jump, "_blank");
                 setTimeout(() => {
+                  router.push("/");
                   resolve();
                 }, 1000);
               });

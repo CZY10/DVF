@@ -70,6 +70,12 @@ const routes = [
                         component: Requirement,
                     },
                     {
+                        path: '/datalistdialog',
+                        name: 'datalistdialog',
+                        meta: { requiresAuth: true },
+                        component: () => import('@/components/RequirementSubmission/datalistdialog.vue')
+                    },
+                    {
                         path: '/Note',
                         name: 'Note',
                         meta: { requiresAuth: false },
@@ -139,7 +145,7 @@ VueRouter.prototype.push = function push(location) {
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-    if (to.fullPath == "/Note") {
+    if (to.fullPath == "/Note" || to.fullPath == "/datalistdialog") {
         store.commit('Index/setIsFalg', false)
     } else {
         store.commit('Index/setIsFalg', true)

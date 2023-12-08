@@ -82,7 +82,7 @@ export default {
       box-sizing: border-box;
       border-radius: 20px;
       margin: 0 auto !important;
-      background: url("../../assets/images/home/dialog_bg.png");
+      background: url("../../assets/images/home/dialog_bg.webp");
       background-size: 100% 100%;
       .dialog_close {
         position: absolute;

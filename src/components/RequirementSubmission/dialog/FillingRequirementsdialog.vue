@@ -372,7 +372,10 @@ export default {
       this.$emit("isFillingRequirementsdialogVisible", false);
     },
     addwidthVisble() {
-      if (this.widthVisble == "500px") {
+      if (
+        (this.widthVisble == "500px" && this.getstate == 0) ||
+        this.determine != 4
+      ) {
         this.widthVisble = "900px";
         setTimeout(() => {
           this.ifwidthVisble = true;

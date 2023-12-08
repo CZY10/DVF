@@ -875,6 +875,7 @@ export default {
     },
     reqsearch() {
       search().then((res) => {
+        console.log(res.data.data);
         if (res.code == 1) {
           if (res.data.data.length == 0) {
             res.data.data.push({
@@ -908,7 +909,6 @@ export default {
               item.influencer_info.push({ ifinfluencerInfo: true });
             }
 
-            console.log(item);
             if (item.title != "") {
               this.tableData[index].budget = this.tableData[index].budget * 1;
               if (item.budget * 1 < item.video_num * 300) {
@@ -1131,7 +1131,7 @@ export default {
             h(
               "span",
               { style: "font-size: 12px;color: #FFFFFF;margin:0 10px 0 6px" },
-              "目前一个亚马逊Listing只能上传5个关联视频，多余的视频仅在商品下方展示"
+              "目前一个亚马逊Listing只能上传5个关联视频，多余的视频仅在竞品下方展示"
             ),
             h(
               "button",

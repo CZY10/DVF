@@ -247,22 +247,6 @@
             </div>
           </div>
         </div>
-        <template>
-          <div class="paging" v-show="datalist.length != 0">
-            <el-pagination
-              background
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-sizes="[12, 24, 48, 96]"
-              :page-size="per_page"
-              layout="total, prev, pager, next, sizes, jumper"
-              :total="total"
-              v-if="total != 0"
-            >
-            </el-pagination>
-          </div>
-        </template>
 
         <el-dialog
           :visible.sync="dialogVisible"
@@ -313,6 +297,23 @@
           </div>
         </el-dialog>
       </div>
+
+      <template>
+        <div class="paging" v-show="datalist.length != 0">
+          <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[12, 24, 48, 96]"
+            :page-size="per_page"
+            layout="total, prev, pager, next, sizes, jumper"
+            :total="total"
+            v-if="total != 0"
+          >
+          </el-pagination>
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -681,14 +682,16 @@ export default {
           .flat()
           .map((item) => item.user_id)
           .join(",");
-        await needsSelectInfluencer({
-          id: this.influencersListid,
-          influencer_ids: result,
-        }).then((res) => {
-          if (res.code == 1) {
-            this.$emit("getlist", true);
-          }
-        });
+        if (result != "") {
+          await needsSelectInfluencer({
+            id: this.influencersListid,
+            influencer_ids: result,
+          }).then((res) => {
+            if (res.code == 1) {
+              this.$emit("getlist", true);
+            }
+          });
+        }
         this.searchforval = "";
         store.commit("Index/setcurrentPage", 1);
         this.currentPage = 1;
@@ -719,6 +722,7 @@ export default {
     margin: 0 auto;
     min-height: 100%;
     overflow: hidden;
+    padding-bottom: 70px;
 
     .searchfor {
       height: 46px;
@@ -1068,18 +1072,6 @@ export default {
     }
   }
 
-  .paging {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: sticky;
-    bottom: 0;
-    left: 0;
-    height: 69px;
-    background: #ffffff;
-    box-shadow: 0px -4px 8px 0px rgba(194, 194, 194, 0.25);
-    border-radius: 0 0 20px 20px;
-  }
   @media screen and (max-width: 1280px) {
     .banxin {
       width: 900px;
@@ -1097,13 +1089,26 @@ export default {
     }
   }
 }
+
+.paging {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  height: 69px;
+  background: #ffffff;
+  box-shadow: 0px -4px 8px 0px rgba(194, 194, 194, 0.25);
+  border-radius: 0 0 20px 20px;
+}
 </style>
 
 <style lang="less" scoped>
 .my-dialog {
   .eldialogVisble {
     display: flex;
-
+    padding: 0 0 30px 20px;
     .leftVis {
       width: 650px;
       height: 366px;

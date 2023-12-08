@@ -1079,7 +1079,6 @@ export default {
     background: #ffffff;
     box-shadow: 0px -4px 8px 0px rgba(194, 194, 194, 0.25);
     border-radius: 0 0 20px 20px;
-    padding-right: 20px;
   }
   @media screen and (max-width: 1280px) {
     .banxin {
@@ -1298,10 +1297,6 @@ export default {
 ::v-deep(.el-dialog) {
   overflow: hidden;
   max-height: 95%;
-}
-
-::v-deep(.el-dialog__body) {
-  padding: 0 0px 30px 20px !important;
 }
 </style>
 

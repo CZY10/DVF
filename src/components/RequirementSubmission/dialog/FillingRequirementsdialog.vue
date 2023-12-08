@@ -648,7 +648,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
     upload_List(newval) {
       if (newval.length >= 5) {
         this.hideUploadBtn = true;
-        console.log(newval, this.hideUploadBtn);
+        // console.log(newval, this.hideUploadBtn);
       } else {
         this.hideUploadBtn = false;
       }

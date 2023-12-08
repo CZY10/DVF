@@ -422,15 +422,6 @@ export function needsRemoveInfluencer(data) {
     })
 }
 
-//网站所有达人列表
-export function needsInfluencerList(data) {
-    return request({
-        url: "/api/needs/influencerList",
-        method: "post",
-        data
-    })
-}
-
 //需求提交
 export function needsSubmit(data) {
     return request({
@@ -451,18 +442,6 @@ export function needsTemplate(data) {
         data
     })
 }
-
-
-// export function needsTemplate(data) {
-//     return request({
-//         url: "/api/needs/template",
-//         method: "post",
-//         headers: {
-//             'Content-Type': 'multipart/form-data'
-//         },
-//         data
-//     })
-// }
 
 //修改产品信息url
 export function orderEdit(data) {

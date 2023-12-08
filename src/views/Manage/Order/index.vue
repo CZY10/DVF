@@ -156,7 +156,7 @@
         <el-table-column prop="price" label="订单金额">
           <template slot-scope="scope">
             <span v-if="scope.row.influencer_id == null">待反馈</span>
-            <span v-else>{{ scope.row.price }}￥</span>
+            <span v-else>￥{{ scope.row.price }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="订单状态" width="100">

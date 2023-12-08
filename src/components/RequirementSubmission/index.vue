@@ -354,6 +354,10 @@
                           scope.$index
                         )
                       "
+                      :disabled="scope.row.title == ''"
+                      :class="{
+                        disabled: scope.row.title == '',
+                      }"
                     >
                       +
                     </button>
@@ -382,7 +386,14 @@
                           scope.row.video_num
                         )
                       "
-                      @blur="budgetBlur(scope.row.budget, scope.row.id)"
+                      @blur="
+                        budgetBlur(
+                          scope.row.budget,
+                          scope.row.id,
+                          scope.$index,
+                          scope.row.video_num
+                        )
+                      "
                       :disabled="scope.row.title == ''"
                     ></el-input>
                   </el-form-item>
@@ -425,7 +436,7 @@
                     >
                       <span
                         class="operate2"
-                        @click="deletesubmitForm(scope.row.id)"
+                        @click="deletesubmitForm(scope.row.id, scope.$index)"
                       >
                         <i class="iconfont icon-sc"></i> 删除</span
                       >
@@ -791,9 +802,9 @@ export default {
       tipsImg3: require("../../assets/images/tipsImg/tips3.webp"),
       tipsImg4: require("../../assets/images/tipsImg/tips4.webp"),
       ifGuide: 0,
-      budgetChangeif: true,
       style: "min-height:78px;display: block;",
       TipsdialogVisible1: false,
+      deletecenterDialogVisiblesindex: 0,
     };
   },
   components: {
@@ -807,10 +818,11 @@ export default {
   methods: {
     goOrder() {},
     //删除拍摄需求
-    deletesubmitForm(id) {
+    deletesubmitForm(id, index) {
       if (id != undefined) {
         this.centerDialogVisibles = true;
         this.formId = id;
+        this.deletecenterDialogVisiblesindex = index;
       } else {
         // 计算删除位置
         var deletePosition = this.tableData.length - 2;
@@ -823,6 +835,14 @@ export default {
       }
     },
     deletecenterDialogVisibles() {
+      this.$nextTick(() => {
+        this.$refs[
+          "ruleForm" + this.deletecenterDialogVisiblesindex
+        ].fields[0].validateMessage = "";
+        this.$refs[
+          "ruleForm" + this.deletecenterDialogVisiblesindex
+        ].fields[0].validateState = "";
+      });
       needsDelete({
         id: this.formId,
       }).then((res) => {
@@ -888,6 +908,7 @@ export default {
               item.influencer_info.push({ ifinfluencerInfo: true });
             }
 
+            console.log(item);
             if (item.title != "") {
               this.tableData[index].budget = this.tableData[index].budget * 1;
               if (item.budget * 1 < item.video_num * 300) {
@@ -897,26 +918,18 @@ export default {
 
                 this.budgetChange(item.budget, index, item.video_num);
               }
+            } else if (!item.flag && item.flag != undefined) {
+              this.tableData[index].budget = "";
+              this.budgetChange(item.budget, index, item.video_num);
             } else {
               this.tableData[index].budget = "";
             }
           });
-          console.log(this.tableData);
+          // console.log(this.tableData);
 
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
           });
-
-          if (
-            this.checked == true &&
-            this.tableDataTitle == false &&
-            this.tableData.length != 1 &&
-            this.budgetChangeif == true
-          ) {
-            this.ifsubmitTo = true;
-          } else {
-            this.ifsubmitTo = false;
-          }
         }
       });
     },
@@ -1335,9 +1348,12 @@ export default {
           this.$refs["ruleForm" + index].fields[0].validateState = "error";
         });
       } else {
-        let flag = !this.tableData.some(
-          (item) => item.budget < item.video_num * 300
-        );
+        let flag = true;
+        this.tableData.map((item) => {
+          if (item.budget < item.video_num * 300 && item.title != "") {
+            flag = false;
+          }
+        });
         if (this.checked && flag) this.ifsubmitTo = true;
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
@@ -1345,22 +1361,13 @@ export default {
         });
       }
     },
-    async budgetBlur(val, id) {
+    async budgetBlur(val, id, index, num) {
       await needsBudget({
         id: id,
         budget: val,
       }).then((res) => {
         if (res.code == 1) {
-          if (
-            this.checked == true &&
-            this.tableDataTitle == false &&
-            this.tableData.length != 1 &&
-            this.budgetChangeif == true
-          ) {
-            this.ifsubmitTo = true;
-          } else {
-            this.ifsubmitTo = false;
-          }
+          this.budgetChange(val, index, num);
         }
       });
     },
@@ -1562,8 +1569,7 @@ export default {
       if (
         newval == true &&
         this.tableDataTitle == false &&
-        this.tableData.length != 1 &&
-        this.budgetChangeif == true
+        this.tableData.length != 1
       ) {
         this.ifsubmitTo = true;
         this.tableData.forEach((item) => {
@@ -1635,6 +1641,14 @@ export default {
 
 ::v-deep(.el-checkbox__inner:hover) {
   border-color: #a06cf3;
+}
+
+::v-deep(.el-upload) {
+  color: #333 !important;
+  transition: all 0.3s;
+}
+::v-deep(.el-upload:hover) {
+  color: #a06cf3 !important;
 }
 </style>
 
@@ -1973,6 +1987,7 @@ export default {
 
   .influencerInfoLi_div2:hover .influencerInfo3 {
     color: #a06cf3 !important;
+    background-color: rgba(199, 179, 230, 0.2);
   }
   .influencerInfoLi_div2:hover .influencerInfo2 {
     color: #a06cf3 !important;

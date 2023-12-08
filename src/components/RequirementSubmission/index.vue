@@ -9,10 +9,10 @@
           <span @click="TipsdialogVisible1 = true">新手引导</span>
         </div>
         <div class="RequirementWenben-div2">
-          <!-- <div class="elIcon2">
+          <div class="elIcon2" @click="InvitationFillingdialogVisble = true">
             <i class="iconfont icon-fx1"></i>
             <span>邀请填写</span>
-          </div> -->
+          </div>
           <div class="elIcon2 tips6">
             <el-upload
               action=""
@@ -29,10 +29,10 @@
             <i class="iconfont icon-mb"></i>
             <a :href="fileDiz" style="cursor: pointer">下载模板</a>
           </div>
-          <!-- <div class="elIcon2" @click="reloadPage">
+          <div class="elIcon2" @click="reloadPage">
             <i class="iconfont icon-sx"></i>
             <span>刷新</span>
-          </div> -->
+          </div>
         </div>
       </div>
       <div
@@ -694,6 +694,12 @@
       :TipsdialogVisible1="TipsdialogVisible1"
       @getTipsdialogVisible1="getTipsdialogVisible1"
     ></dialogVisibleTips1>
+
+    <!-- 邀请填写弹窗 -->
+    <InvitationFillingdialog
+      :InvitationFillingdialogVisble="InvitationFillingdialogVisble"
+      @InvitationFillingdialogMsg="InvitationFillingdialogMsg"
+    ></InvitationFillingdialog>
   </div>
 </template>
 
@@ -719,6 +725,7 @@ import Tipsdialog from "./dialog/Tipsdialog.vue";
 import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 import Notedialog from "./dialog/notedialog.vue";
 import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
+import InvitationFillingdialog from "./dialog/InvitationFillingdialog.vue";
 import store from "@/store";
 import QRCode from "qrcodejs2";
 export default {
@@ -806,6 +813,7 @@ export default {
       style: "min-height:78px;display: block;",
       TipsdialogVisible1: false,
       deletecenterDialogVisiblesindex: 0,
+      InvitationFillingdialogVisble: false,
     };
   },
   components: {
@@ -815,6 +823,7 @@ export default {
     ListOfInfluencersdialog,
     Notedialog,
     dialogVisibleTips1,
+    InvitationFillingdialog,
   },
   methods: {
     goOrder() {},
@@ -1122,6 +1131,7 @@ export default {
 
       if (num >= 5 && localStorage.getItem("handleChange") == "true") {
         const h = this.$createElement;
+
         let msg = this.$message({
           message: h("p", { style: "display: flex;align-items: center;" }, [
             h(
@@ -1149,12 +1159,13 @@ export default {
           offset: 140,
           customClass: "customClasssuccess",
         });
-        document
-          .querySelector(".el-message-btn")
-          .addEventListener("click", function () {
+
+        document.querySelectorAll(".el-message-btn").forEach((item) => {
+          item.addEventListener("click", function () {
             msg.close();
             localStorage.setItem("handleChange", false);
           });
+        });
       }
 
       if (value == 1) {
@@ -1334,6 +1345,9 @@ export default {
     },
     getTipsdialogVisible1(msg) {
       this.TipsdialogVisible1 = msg;
+    },
+    InvitationFillingdialogMsg(msg) {
+      this.InvitationFillingdialogVisble = msg;
     },
 
     //拍摄预算修改

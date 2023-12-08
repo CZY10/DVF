@@ -77,7 +77,7 @@ export function getSearchList(data) {
         data
     })
 }
-//提交订单
+//提交订单 改为 填写拍摄需求
 export function createOrder(data) {
     return request({
         url: '/api/order/create',
@@ -387,13 +387,13 @@ export function needsEdit(data) {
 }
 
 //需求克隆
-export function needsCopy(data) {
-    return request({
-        url: "/api/needs/copy",
-        method: "post",
-        data
-    })
-}
+// export function needsCopy(data) {
+//     return request({
+//         url: "/api/needs/copy",
+//         method: "post",
+//         data
+//     })
+// }
 
 //需求删除
 export function needsDelete(data) {
@@ -422,15 +422,6 @@ export function needsRemoveInfluencer(data) {
     })
 }
 
-//网站所有达人列表
-export function needsInfluencerList(data) {
-    return request({
-        url: "/api/needs/influencerList",
-        method: "post",
-        data
-    })
-}
-
 //需求提交
 export function needsSubmit(data) {
     return request({
@@ -451,18 +442,6 @@ export function needsTemplate(data) {
         data
     })
 }
-
-
-// export function needsTemplate(data) {
-//     return request({
-//         url: "/api/needs/template",
-//         method: "post",
-//         headers: {
-//             'Content-Type': 'multipart/form-data'
-//         },
-//         data
-//     })
-// }
 
 //修改产品信息url
 export function orderEdit(data) {
@@ -487,5 +466,50 @@ export function carList() {
     return request({
         url: "/api/influencer/carList",
         method: "post"
+    })
+}
+
+//拍摄需求填写模板粘贴一键识别
+export function needsPaste(data) {
+    return request({
+        url: "/api/needs/paste",
+        method: "post",
+        data
+    })
+}
+
+
+//修改视频数量
+export function needsVideoNumin(data) {
+    return request({
+        url: "/api/needs/videoNum",
+        method: "post",
+        data
+    })
+}
+
+//记录'修改预算'的弹窗状态
+export function needsBudgetTip(data) {
+    return request({
+        url: "/api/needs/budgetTip",
+        method: "post",
+        data
+    })
+}
+
+//修改拍摄预算
+export function needsBudget(data) {
+    return request({
+        url: "/api/needs/budget",
+        method: "post",
+        data
+    })
+}
+
+//拍摄需求首页
+export function needsIndex() {
+    return request({
+        url: "/api/needs/index",
+        method: "post",
     })
 }

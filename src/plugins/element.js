@@ -43,9 +43,12 @@ import {
     MessageBox,
     Message,
     Avatar,
-    Notification
+    Notification,
+    InputNumber,
+    Progress
 } from 'element-ui';
 
+Vue.use(InputNumber);
 Vue.use(Pagination);
 Vue.use(Dialog);
 Vue.use(Menu);
@@ -87,6 +90,7 @@ Vue.use(Drawer);
 Vue.use(Empty);
 Vue.use(Avatar);
 Vue.use(Loading.directive);
+Vue.use(Progress);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;

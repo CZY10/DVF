@@ -7,40 +7,41 @@ import router from '@/router'
 
 const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_URL,   // api的base_url  自动加在url前面
-    timeout:5000*60, //请求超时时间
+    timeout: 5000 * 60, //请求超时时间
 })
 
 // request拦截器
 service.interceptors.request.use(config => {
     if (config.url == "/api/needs/template") {
-         config.headers['Content-Type'] = 'multipart/form-data'
+        config.headers['Content-Type'] = 'multipart/form-data'
     } else {
-         config.headers['Content-Type'] = 'application/json'
+        config.headers['Content-Type'] = 'application/json'
     }
-        config.headers['token'] = localStorage.getItem('token')
+    config.headers['token'] = localStorage.getItem('token')
     return config
 },
-error => {
-    console.log(error)
-    return Promise.reject(error)
-})
+    error => {
+        console.log(error)
+        return Promise.reject(error)
+    })
 // respone拦截器
 service.interceptors.response.use(
     response => {
         const res = response.data;
         const reg = /^0.*0$|^0$/;
-        if(res.code !== 1) {
-                Message({
-                    message: res.msg,
-                    type: 'error',
-                    offset:100,
-                    duration: 5 * 1000
-                })
-            if(res.code == 300 && reg.test(res.errorCode)){
+        if (res.code !== 1) {
+            // Message({
+            //     message: res.msg,
+            //     type: 'error',
+            //     offset: 100,
+            //     duration: 5 * 1000
+            // })
+            console.log(res.msg)
+            if (res.code == 300 && reg.test(res.errorCode)) {
                 Message({
                     message: '未知错误,请稍后再试或联系管理员!',
                     type: 'error',
-                    offset:100,
+                    offset: 100,
                     duration: 5 * 1000
                 })
             }
@@ -61,9 +62,9 @@ service.interceptors.response.use(
 export const createAPI = (url, method, data) => {
 
     const config = {}
-    if(method === 'get'){
+    if (method === 'get') {
         config.params = data
-    }else {
+    } else {
         config.data = data
     }
     return service({

@@ -8,24 +8,21 @@
         :model="form"
         label-width="80px"
       >
-        <el-form-item label="订单记录" class="title">
-          <el-input
-            placeholder="输入ASIN/订单号"
-            v-model="form.keywords"
-            class="input-with-select"
-          >
+        <el-form-item label="订单记录" class="title" style="font-weight: 600">
+          <el-input placeholder="输入ASIN/订单号" v-model="form.keywords">
             <el-button
               slot="append"
               icon="el-icon-search"
               @click="
                 currentPage = 1;
                 isMessage = 0;
+                tableData = [];
                 getOrderList();
               "
             ></el-button>
           </el-input>
         </el-form-item>
-        <el-form-item label="日期">
+        <el-form-item label="日期" class="title">
           <el-date-picker
             v-model="form.dateValue"
             type="daterange"
@@ -33,6 +30,7 @@
             @change="
               currentPage = 1;
               isMessage = 0;
+              tableData = [];
               getOrderList();
             "
             start-placeholder="开始日期"
@@ -55,22 +53,22 @@
         @selection-change="handleSelectionChange"
         style="width: 100%"
         @select-all="selectAll"
+        :row-class-name="tableRowClassName"
       >
         <!-- 订单多选 -->
         <el-table-column type="selection" :selectable="selectable">
         </el-table-column>
-        <el-table-column
-          prop="createtime"
-          label="创建时间"
-          sortable="custom"
-          min-width="100"
-        ></el-table-column>
-        <el-table-column
-          prop="id"
-          label="订单号"
-          min-width="110"
-        ></el-table-column>
-        <el-table-column label="意向达人" min-width="40">
+        <el-table-column label="订单号" min-width="110">
+          <template slot-scope="scope">
+            <div style="padding-left: 12px">
+              <p>{{ scope.row.id }}</p>
+              <p style="font-size: 12px; color: #999">
+                {{ scope.row.createtime }}
+              </p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="意向红人" min-width="40">
           <template slot-scope="scope">
             <div v-if="scope.row.influencer_info.length == 0">平台推荐</div>
             <div v-else>
@@ -84,23 +82,39 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="asin" label="Asin及需求详情" min-width="110">
+        <el-table-column prop="asin" label="需求内容" min-width="160">
           <template slot-scope="scope">
-            <p>
-              {{ scope.row.asin }}
-              <a :href="scope.row.url" target="_blank" v-if="scope.row.url"
-                ><i class="iconfont icon-fx"></i
-              ></a>
-            </p>
-            <el-button
-              class="deatail_btn"
-              type="text"
-              @click="handleCheckOrderDetail(scope.row)"
-              >查看详情</el-button
-            >
+            <div class="asin">
+              <div class="asin-img">
+                <img :src="scope.row.image" v-if="scope.row.image != ''" />
+                <img
+                  src="@/assets/images/tp.png"
+                  v-else
+                  style="width: 20px; height: 20px; margin-top: 20px"
+                />
+              </div>
+              <div class="asin-p">
+                <p class="p1" :title="scope.row.title">{{ scope.row.title }}</p>
+                <p class="p2">
+                  <span v-if="scope.row.asin">{{ scope.row.asin }}</span>
+                  <span v-else>-----</span>
+                  <a :href="scope.row.url" target="_blank" v-if="scope.row.url"
+                    ><i class="iconfont icon-fx"></i
+                  ></a>
+                </p>
+              </div>
+              <div class="asin-div">
+                <span @click="handleCheckOrderDetail(scope.row)">详情</span>
+                <i
+                  class="iconfont icon-tx"
+                  v-if="scope.row.status == '0'"
+                  @click="handleCheckOrderDetail(scope.row)"
+                ></i>
+              </div>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="nickName" label="接单达人">
+        <el-table-column prop="nickName" label="接单红人">
           <template slot-scope="scope">
             <div class="avatar_box">
               <p>
@@ -142,7 +156,7 @@
         <el-table-column prop="price" label="订单金额">
           <template slot-scope="scope">
             <span v-if="scope.row.influencer_id == null">待反馈</span>
-            <span v-else>{{ scope.row.price }}</span>
+            <span v-else>￥{{ scope.row.price }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="订单状态" width="100">
@@ -226,7 +240,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="hasMessage" label="达人沟通" width="150">
+        <el-table-column prop="hasMessage" label="红人沟通" width="150">
           <template slot-scope="scope">
             <el-badge
               is-dot
@@ -239,10 +253,12 @@
               "
               class="badge_style"
             >
-              <i
-                class="el-icon-chat-dot-round"
-                style="font-size: 20px; cursor: pointer"
-              ></i>
+              <p style="padding-right: 8px">
+                <i
+                  class="el-icon-chat-dot-round"
+                  style="font-size: 20px; cursor: pointer"
+                ></i>
+              </p>
             </el-badge>
           </template>
         </el-table-column>
@@ -261,7 +277,7 @@
                   >付定金</el-button
                 >
                 <el-button
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   size="small"
                   @click="
                     deleteOrderDialog = true;
@@ -303,7 +319,7 @@
                   已申请退定
                 </div>
                 <el-button
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   v-else
                   size="small"
                   @click="
@@ -331,7 +347,7 @@
                     若未收到样品寄送地址，请检查消息反馈或联系工作人员！
                   </div>
                   <el-button
-                    class="payment_btn_style"
+                    class="operation_btn payment_btn_style"
                     size="small"
                     @click="
                       submitDialog = true;
@@ -339,8 +355,9 @@
                       handlerClearSubmit();
                     "
                     round
-                    >提交寄送信息</el-button
                   >
+                    提交寄送信息
+                  </el-button>
                 </el-tooltip>
                 <div
                   style="
@@ -355,7 +372,7 @@
                   v-if="scope.row.site_read == 1"
                 ></div>
                 <el-button
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   size="small"
                   style="margin-left: 10px"
                   @click="getsiteRead(scope.row.id)"
@@ -371,21 +388,18 @@
                 <a
                   :href="scope.row.attachfile"
                   target="_blank"
-                  style="
-                    text-decoration: none;
-                    color: #776cf3;
-                    border: 1px solid #776cf3;
-                    font-size: 12px;
-                    font-size: 12px;
-                    padding: 3px 16px;
-                    border-radius: 16px;
-                    margin-right: 10px;
-                  "
-                  >查看视频</a
+                  style="text-decoration: none"
+                >
+                  <el-button
+                    class="operation_btn payment_btn_style"
+                    size="small"
+                    round
+                    >查看视频
+                  </el-button></a
                 >
                 <el-button
                   v-if="scope.row.comment === 1"
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   size="small"
                   round
                   @click="handleComments(scope)"
@@ -393,7 +407,8 @@
                 >
                 <el-button
                   v-else
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
+                  style="margin-left: 10px"
                   size="small"
                   round
                   @click="
@@ -406,7 +421,7 @@
               <div v-else-if="scope.row.status == 5" class="flex_center">
                 <div class="normal_style">/</div>
                 <el-button
-                  class="operation_btn"
+                  class="operation_btn payment_btn_style2"
                   size="small"
                   @click="
                     deleteOrderDialog = true;
@@ -420,50 +435,38 @@
           </template>
         </el-table-column>
       </el-table>
-      <div
-        style="
-          text-align: center;
-          margin-top: 20px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[20, 50, 100, 500]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-        >
-        </el-pagination>
+    </div>
 
-        <div style="display: flex; align-items: center">
-          <span class="pagination-span" v-if="priceNum != 0"
-            >合计：<span style="color: #ff000c; font-weight: 900"
-              >￥{{ priceNum }}</span
-            ></span
-          >
-          <span class="pagination-span" v-if="priceNum == 0"
-            >合计：<span style="color: #999; font-weight: 900">--</span></span
-          >
-          <el-button
-            class="pagination-btn"
-            @click="ConsolidatedPayment"
-            v-if="multipleSelection.length != 0"
-            ><span class="pagination-btn-span" ref="btnDom"
-              >合并支付({{ multipleSelection.length }})</span
-            ></el-button
-          >
-          <el-button class="paginationBtn" v-if="multipleSelection.length == 0"
-            >合并支付</el-button
-          >
-        </div>
+    <div class="order-bottom">
+      <div style="color: #999">
+        已选
+        {{ multipleSelection.length == 0 ? "--" : multipleSelection.length }}
+        项
+      </div>
+
+      <div style="display: flex; align-items: center">
+        <span class="pagination-span" v-if="priceNum != 0"
+          >合计金额：<span style="color: #ff000c; font-weight: 900"
+            >￥{{ priceNum }}</span
+          ></span
+        >
+        <span class="pagination-span" v-if="priceNum == 0"
+          >合计金额：<span style="color: #999; font-weight: 900">--</span></span
+        >
+        <el-button
+          class="pagination-btn"
+          @click="ConsolidatedPayment"
+          v-if="multipleSelection.length != 0"
+          ><span class="pagination-btn-span" ref="btnDom"
+            >合并支付({{ multipleSelection.length }})</span
+          ></el-button
+        >
+        <el-button class="paginationBtn" v-if="multipleSelection.length == 0"
+          >合并支付</el-button
+        >
       </div>
     </div>
+
     <!--支付尾款-->
     <el-dialog
       title="请尽快支付订单"
@@ -475,23 +478,6 @@
       center
       width="500px"
     >
-      <!-- <el-alert
-        title="支付完尾款，代表服务正式生效。在订单完成之前，平台不会将你的款项支付给达人。"
-        center
-        style="position: relative; background: #f4f2ff"
-        :closable="false"
-      >
-        <i
-          class="iconfont icon-tips"
-          style="
-            position: absolute;
-            top: 9px;
-            left: 14px;
-            font-size: 18px;
-            color: #776cf3;
-          "
-        ></i>
-      </el-alert> -->
       <div class="payment_content">
         <h4>¥{{ orderData.price }}</h4>
         <p v-if="orderIdFlex">合并订单金额</p>
@@ -573,16 +559,6 @@
             </div>
           </div>
         </div>
-        <!--                <ul>-->
-        <!--                    <li>-->
-        <!--                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>-->
-        <!--                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>-->
-        <!--                    </li>-->
-        <!--                    <li>-->
-        <!--                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>-->
-        <!--                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>-->
-        <!--                    </li>-->
-        <!--                </ul>-->
       </div>
     </el-dialog>
     <!--申请退还定金-->
@@ -917,7 +893,7 @@
             style="
               background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
             "
-            v-if="!videoForm.url"
+            v-if="!videoForm.url && balance_pay_status == 0"
             @click="modifyUrl(videoForm.id)"
           >
             保存
@@ -1332,18 +1308,6 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-        <!--                <ul>-->
-        <!--                    <li>-->
-        <!--                        <div class="qrcode" ref="alipayQrCodeUrl" style="padding: 5px"></div>-->
-        <!--                        &lt;!&ndash;                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>&ndash;&gt;-->
-        <!--                        <p><i class="iconfont icon-zhifu-zhifubao" style="color: rgba(2, 169, 241, 1)"></i>支付宝支付</p>-->
-        <!--                    </li>-->
-        <!--                    <li>-->
-        <!--                        &lt;!&ndash;                        <div><img src="../../../assets/images/contact_us.png" alt=""></div>&ndash;&gt;-->
-        <!--                        <div class="qrcode" ref="wechatQrCodeUrl" style="padding: 5px"></div>-->
-        <!--                        <p><i class="iconfont icon-zhifupingtai-weixin" style="color: rgba(59, 202, 114, 1)"></i>微信支付</p>-->
-        <!--                    </li>-->
-        <!--                </ul>-->
       </div>
     </el-dialog>
     <!--支付完成-->
@@ -1351,7 +1315,10 @@
       :title="paymentType == 0 ? '定金支付成功' : '订单支付成功'"
       :visible.sync="paymentCompletedDialogVisible"
       width="360px"
-      @close="getOrderList"
+      @close="
+        tableData = [];
+        getOrderList();
+      "
       :close-on-click-modal="false"
       class="payment_completed_dialog"
       center
@@ -1377,6 +1344,7 @@
           <el-button
             @click="
               paymentCompletedDialogVisible = false;
+              tableData = [];
               getOrderList();
             "
             >我知道了</el-button
@@ -1405,9 +1373,9 @@
     </el-dialog>
 
     <el-dialog
-      title="已选达人"
+      title="已选红人"
       :visible.sync="centerDialogVisibleXinz"
-      width="28%"
+      width="530px"
       center
     >
       <ul style="display: flex; justify-content: center">
@@ -1427,11 +1395,24 @@
             :src="item.image"
             style="width: 40px; height: 40px; border-radius: 50%"
           />
-          <p>NO.{{ item.user_id }}</p>
-          <p style="color: #796cf3; margin-top: 4px">{{ item.price }}</p>
+          <p>No.{{ item.user_id }}</p>
+          <p style="color: #796cf3; margin-top: 4px; white-space: nowrap">
+            {{ item.price }}
+          </p>
         </li>
       </ul>
     </el-dialog>
+
+    <!-- 填写要求弹窗 -->
+    <FillingRequirementsdialog
+      :isFillingRequirementsdialogVisible="FillingRequirementsdialogVisible"
+      @isFillingRequirementsdialogVisible="getChildMsg"
+      :determine="determine"
+      :RequirementsList="RequirementsList"
+      :FillingRequirementid="FillingRequirementid"
+      :reqsearch="clearOrderList"
+      :getstate="getstate"
+    ></FillingRequirementsdialog>
   </div>
 </template>
 
@@ -1455,6 +1436,7 @@ import {
 } from "@/api";
 import QRCode from "qrcodejs2";
 import { mapMutations } from "vuex";
+import FillingRequirementsdialog from "@/components/RequirementSubmission/dialog/FillingRequirementsdialog.vue";
 export default {
   name: "order",
   data() {
@@ -1485,7 +1467,6 @@ export default {
       centerDialogVisible: false,
       multipleSelection: [],
       listArray: [],
-      checkArray: {},
       categoryList: [],
       isHide: false,
       form: {
@@ -1505,7 +1486,6 @@ export default {
       imgDialog: false,
       feedbackDialog: false,
       payDepositDialogVisible: false,
-      messageData: [],
       uploadFile: [],
       stepsList: {},
       videoForm: {},
@@ -1589,19 +1569,7 @@ export default {
       isDisabled: true,
       feedbackVal: "",
       uploadList: [],
-      //聊天
-      chatVisible: this.value,
-      loading: false,
-      defualtAvatar: require("../../../assets/images/people_header.png"), // 后端没有返回头像默认头像，注意：需要用require请求方式才能动态访问本地文件
       chatData: [],
-      distincData: [], // 消息去重数组
-      offsetMax: 0, // 最大偏移位，记录当前获取的最大id，往后的定时轮询数据时每次只获取比这个id大的数据
-      offsetMin: 0, //  // 最小偏移位，记录当前获取的最小id，往上滑动时每次只获取比这小id大的数据
-      searchForm: {
-        // 每次定时获取数据或首次加载数据提交的form表单数据
-        pageNumber: 1,
-        pageSize: 20,
-      },
       chatForm: {
         // 发送数据提交数据表单
         feedback: "",
@@ -1609,7 +1577,6 @@ export default {
       },
       timerSwitch: 0, // 定时器开关，默认关闭
       localhost: process.env.VUE_APP_BASE_URL,
-      total: 0,
       pageSize: 20,
       pageNumber: 1,
       pageState: true,
@@ -1634,6 +1601,14 @@ export default {
       backDeposit: 0,
       strArray: [],
       darList: [],
+      balance_pay_status: "1",
+      totalPage: 0,
+      FillingRequirementsdialogVisible: false,
+      determine: 1,
+      RequirementsList: {},
+      FillingRequirementid: 0,
+      getstate: 0,
+      iftableListener: true,
     };
   },
   created() {
@@ -1644,14 +1619,13 @@ export default {
     }
   },
   mounted() {
+    this.tableData = [];
+    this.tableListener();
     this.getOrderList();
     this.token = localStorage.getItem("token");
     this.avatar = localStorage.getItem("avatar");
     this.handlerGetCategory();
     this.getShootRequireList();
-    setTimeout(() => {
-      console.log(this.tableData);
-    }, 1000);
   },
   computed: {
     query() {
@@ -1675,6 +1649,7 @@ export default {
     isMessageFn(newVal) {
       if (newVal == 1) {
         this.isMessage = newVal;
+        this.tableData = [];
         this.getOrderList();
       }
     },
@@ -1698,6 +1673,19 @@ export default {
   },
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
+
+    //在父组件中声明这个函数，用于接收子组件传回的值
+    getChildMsg(msg) {
+      this.getstate = 0;
+      console.log(this.getstate);
+      this.FillingRequirementsdialogVisible = msg;
+    },
+    tableRowClassName({ row, rowIndex }) {
+      if (row.merge !== 0) {
+        return "warning-row";
+      }
+      return "";
+    },
     handleSelectable(row) {
       return row.category_id == 18 ? false : true;
     },
@@ -1789,12 +1777,13 @@ export default {
         });
     },
     handleCheckOrderDetail(column) {
+      this.balance_pay_status = column.status;
       orderDetail({
         order_id: column.id,
       })
         .then((res) => {
           if (res.code == 1) {
-            console.log(res);
+            this.RequirementsList = res.data;
             this.videoRuleForm.category = res.data.title;
             this.videoRuleForm.copper = res.data.budget;
             this.videoRuleForm.radio = res.data.method + "";
@@ -1804,7 +1793,14 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-      this.checkVideoDialog = true;
+      if (column.brand == 0) {
+        this.checkVideoDialog = true;
+      } else {
+        this.determine = 4;
+        this.getstate = column.status;
+        this.FillingRequirementid = column.id;
+        this.FillingRequirementsdialogVisible = true;
+      }
     },
     handleComments(content) {
       this.completeCommentDialog = true;
@@ -1817,6 +1813,7 @@ export default {
         ? (this.orderType = "asc")
         : (this.orderType = "desc");
       this.order = column.prop;
+      this.tableData = [];
       this.getOrderList();
     },
     //获取订单列表
@@ -1833,10 +1830,15 @@ export default {
         .then((res) => {
           if (res.code == 1) {
             this.pageState = true;
-            this.tableData = res.data.data;
-            this.total = res.data.total;
+            this.iftableListener = true;
+            res.data.data.forEach((item) => {
+              this.tableData.push(item);
+            });
+
+            this.totalPage = res.data.last_page;
             this.setIsMessage(0);
             window.localStorage.setItem("ismessage", 0);
+
             this.handleSelectable();
           }
         })
@@ -1848,20 +1850,11 @@ export default {
       this.form.dateValue = [];
       this.currentPage = 1;
       this.isMessage = 0;
+      this.tableData = [];
+      this.iftableListener = false;
       this.getOrderList();
     },
-    //分页
-    handleSizeChange(val) {
-      this.pageState = false;
-      this.pageSize = val;
-      this.currentPage = 1;
-      this.isMessage = 0;
-      if (this.pageState === false) this.getOrderList();
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      if (this.pageState === true) this.getOrderList();
-    },
+
     //删除订单
     handleRemoveOrder() {
       orderDelete({ order_id: this.orderId })
@@ -1869,6 +1862,7 @@ export default {
           if (res.code === 1) {
             this.$message.success("删除成功！");
             this.deleteOrderDialog = false;
+            this.tableData = [];
             this.getOrderList();
           }
         })
@@ -1996,6 +1990,7 @@ export default {
           if (res.code === 1) {
             this.returnDepositDialog = false;
             this.$message.success("申请成功！");
+            this.tableData = [];
             this.getOrderList();
           }
         })
@@ -2033,6 +2028,7 @@ export default {
               this.ruleCommentForm.complete = 0;
               this.ruleCommentForm.quality = 0;
               this.ruleCommentForm.cycle = 0;
+              this.tableData = [];
               this.getOrderList();
             }
           })
@@ -2131,6 +2127,7 @@ export default {
               if (res.code === 1) {
                 this.submitDialog = false;
                 this.$message.success("样品寄送信息提交成功!");
+                this.tableData = [];
                 this.getOrderList();
               }
             })
@@ -2186,24 +2183,6 @@ export default {
           this.$message.error(err.message);
         });
     },
-    // show(){ // 打开窗体初始化数据
-    //     // 初始化数据
-    //     this.chatData =[];
-    //     this.distincData =[];
-    //     this.offsetMax = 0;
-    //     this.offsetMin = 0;
-    //     this.searchForm.pageNumber = 1;
-    //     this.searchForm.pageSize = 20;
-    //     this.chatForm ={
-    //         content:"",
-    //         msg:""
-    //     };
-    //     // this.loadMsg();
-    //     this.chatVisible = true;
-    //     // 开启定时器
-    //     this.timerSwitch = 1;
-    //     // this.reloadData();
-    // },
     // 发送消息
     handlerSedMeg() {
       this.chatForm.feedback_images = [];
@@ -2272,6 +2251,7 @@ export default {
       }).then((res) => {
         if (res.code == 1) {
           this.centerDialogVisible = true;
+          this.tableData = [];
           this.getOrderList();
           let req = this.tableData.filter((item) => {
             return item.id == id;
@@ -2302,11 +2282,31 @@ export default {
       }).then((res) => {
         if (res.code == 1) {
           this.checkVideoDialog = false;
+          this.tableData = [];
           this.getOrderList();
         }
       });
     },
+    tableListener() {
+      // console.log("监听表格dom对象的滚动事件");
+      let that = this;
+      let dom = that.$refs.multipleTable.bodyWrapper;
+      dom.addEventListener("scroll", function () {
+        const scrollDistance =
+          dom.scrollHeight - dom.scrollTop - dom.clientHeight;
+        if (scrollDistance <= 0) {
+          //等于0证明已经到底，可以请求接口
+          if (that.currentPage < that.totalPage && that.iftableListener) {
+            //当前页数小于总页数就请求
+            that.currentPage++; //当前页数自增
+            //请求接口的代码
+            that.getOrderList();
+          }
+        }
+      });
+    },
   },
+  components: { FillingRequirementsdialog },
 };
 </script>
 <style lang="less">
@@ -2395,10 +2395,6 @@ export default {
     font-size: 12px;
     left: -5px;
     color: #f56c6c;
-  }
-
-  .el-table__body-wrapper .el-table__body {
-    margin-bottom: 30px;
   }
 
   .el-upload-list--picture-card .el-upload-list__item .el-icon-close {
@@ -3162,11 +3158,6 @@ export default {
   font-weight: normal;
   color: #999999 !important;
 }
-
-.el-table .el-table__cell.gutter {
-  background: #f6f6f6;
-}
-
 .el-badge__content.is-dot {
   width: 6px !important;
   height: 6px !important;
@@ -3174,28 +3165,16 @@ export default {
   right: 2px !important;
 }
 
-.el-table__header-wrapper {
-  border-radius: 4px;
-  background: #f6f6f6;
-
-  table {
-    padding: 0 30px;
-    width: auto !important;
-  }
-}
-
 .el-table th.el-table__cell.is-leaf {
   border-bottom: none !important;
   padding: 6px 0;
+  background: #f8f8f8 !important;
 }
 
 .el-table__body-wrapper {
-  border: 1px solid #eeeeee;
-  padding: 0 20px;
   width: auto !important;
   border-radius: 4px !important;
   margin-top: 10px;
-
   .el-table__body {
     width: auto !important;
   }
@@ -3213,7 +3192,7 @@ export default {
   }
 }
 </style>
-<style scoped lang="less">
+<style lang="less" scoped>
 .form_button {
   button {
     margin: auto;
@@ -3256,6 +3235,7 @@ export default {
 
   background: #f5f7f9;
   padding: 20px 30px 0 30px;
+  min-height: calc(100vh - 86px);
 
   .reset_btn {
     margin-left: 30px;
@@ -3271,19 +3251,22 @@ export default {
   .content {
     background: #ffffff;
     border-radius: 0px 4px 4px 0px;
-    border: 1px solid #eeeeee;
-    padding: 20px 30px;
+    padding-top: 20px;
 
     .form_search {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0 20px;
 
       .title {
         font-size: 14px;
-        font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
         color: #333333;
+        display: flex;
+        align-items: center;
+        ::v-deep(.el-form-item__content) {
+          margin-left: 0px !important;
+        }
       }
     }
 
@@ -3292,11 +3275,63 @@ export default {
         color: #796cf3;
         font-size: 10px;
       }
-
-      .deatail_btn {
-        color: #796cf3;
-        font-size: 12px;
-        padding: 3px 5px;
+      .asin {
+        display: flex;
+        justify-content: center;
+        .asin-img {
+          height: 60px;
+          width: 60px;
+          border-radius: 2px;
+          border: 1px solid #eeeeee;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+        .asin-p {
+          text-align: left;
+          padding-left: 12px;
+          padding-top: 10px;
+          width: 150px;
+          .p1 {
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .p2 {
+            font-size: 12px;
+            color: #999999;
+            display: flex;
+            a {
+              text-decoration: none;
+            }
+            span {
+              min-width: 82px;
+              display: block;
+              margin-right: 5px;
+            }
+            i {
+              cursor: pointer;
+            }
+          }
+        }
+        .asin-div {
+          line-height: 60px;
+          font-weight: 400;
+          color: #a06cf3;
+          font-size: 12px;
+          text-align: left;
+          width: 40px;
+          span {
+            cursor: pointer;
+            margin-right: 3px;
+          }
+          i {
+            cursor: pointer;
+          }
+        }
       }
 
       .avatar_box {
@@ -3335,16 +3370,28 @@ export default {
 
       .operation_btn {
         width: 82px;
-        border-radius: 16px !important;
+        height: 32px;
+        border-radius: 4px !important;
       }
 
       .payment_btn_style {
-        color: #796cf3;
-        border: 1px solid #796cf3;
+        color: #a06cf3;
+        display: flex;
+        justify-content: center;
+        border: 1px solid #a06cf3;
+      }
+      .payment_btn_style:hover {
+        color: #fff;
+        background: #a06cf3;
+      }
 
-        &:hover {
-          background: none;
-        }
+      .payment_btn_style2 {
+        background: #fff;
+        color: #999;
+        border: 1px solid #eeeeee;
+      }
+      .payment_btn_style2:hover {
+        background: #eee;
       }
 
       .normal_style {
@@ -3353,6 +3400,21 @@ export default {
         margin: 0 5px;
       }
     }
+  }
+
+  .order-bottom {
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 100vw;
+    background: #fff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 69px;
+    padding: 0 60px;
+    box-sizing: border-box;
   }
 
   .payment_content {
@@ -3870,8 +3932,8 @@ export default {
 .pagination-btn {
   width: 140px;
   height: 32px;
-  background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-  border-radius: 16px;
+  background: #d161f6;
+  border-radius: 4px;
   position: relative;
 
   .pagination-btn-span {
@@ -3891,14 +3953,16 @@ export default {
   }
 }
 
+.pagination-btn:hover {
+  background: #d161f6;
+}
+
 .paginationBtn {
   width: 140px;
   height: 32px;
-  background: linear-gradient(233deg, #eaadf0 0%, #ada9e4 100%);
-  border-radius: 16px;
+  background: rgba(209, 97, 246, 0.4);
+  border-radius: 4px;
   color: #ffffff;
-  font-weight: 400;
-  font-size: 14px;
   line-height: 8px;
   pointer-events: none;
 }
@@ -3945,12 +4009,12 @@ export default {
   color: #796cf3;
   text-align: center;
   position: absolute;
-  top: 30px;
+  top: 18px;
   right: 70px;
 }
 </style>
 <style lang="less" scoped>
-#order .video_dialog .video_ruleForm[data-v-0d0e0941] {
+#order .video_dialog .video_ruleForm {
   height: auto;
 }
 </style>
@@ -3959,9 +4023,50 @@ export default {
   padding-right: 0px;
   padding-left: 0px;
 }
+.el-table .warning-row {
+  border-bottom: 0px dashed #fff !important;
+  border-top: 0px dashed #fff !important;
+}
 </style>
 <style lang="less" scoped>
 ::v-deep .el-form-item--small .el-form-item__label {
   line-height: 22px;
+}
+
+::v-deep(.el-table__header-wrapper table) {
+  padding: 0 10px 12px;
+  background: #fff;
+  width: auto !important;
+}
+
+::v-deep(.el-textarea__inner) {
+  min-height: 120px !important;
+}
+
+::v-deep(.el-table td.el-table__cell) {
+  border-bottom: none;
+}
+
+::v-deep(.el-table__body) {
+  border-collapse: collapse !important;
+}
+::v-deep(.el-table) {
+  background: #f5f7f9;
+}
+
+::v-deep(.el-table tr) {
+  border-top: 6px solid #f5f7f9;
+}
+
+::v-deep(.el-table tr td .cell .el-checkbox) {
+  padding-left: 17px;
+}
+
+::v-deep(.el-table .el-table__cell.gutter) {
+  background: #fff;
+}
+
+.order_table ::v-deep .el-table__body tr:hover > td {
+  background-color: rgb(243, 243, 243) !important;
 }
 </style>

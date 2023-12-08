@@ -566,9 +566,9 @@ export default {
         }
       });
 
+      // console.log(this.onEndarr, this.onStartarr);
       for (let i = 0; i < this.onEndarr.length; i++) {
         if (this.onEndarr[i] !== this.onStartarr[i]) {
-          // console.log(i);
           this.differentIndices.push(i);
         }
       }
@@ -831,11 +831,7 @@ export default {
 
     //提交需求
     SubmitRequirements() {
-      // let result = this.RequirementLists.flat()
-      //   .map((item) => item.user_id)
-      //   .join(",");
       let data = {
-        // influencer_ids: result,
         source: 1,
       };
       if (this.RequirementLists.length !== 0) {
@@ -1469,11 +1465,6 @@ export default {
   background: none !important;
 }
 
-.el-menu--horizontal > .el-menu-item.is-active,
-.el-menu.el-menu--horizontal {
-  border-bottom: 2px solid #eeeeee;
-}
-
 .el-menu--horizontal > .el-menu-item.is-active {
   border-bottom-color: #d161f6 !important;
 }
@@ -1509,7 +1500,7 @@ export default {
 .el-submenu.is-active .el-submenu__title,
 .el-menu--horizontal > .el-menu-item {
   height: 55px !important;
-  line-height: 66px !important;
+  line-height: 64px !important;
 }
 
 .el-submenu__title i {
@@ -1536,6 +1527,8 @@ export default {
   top: 0;
   z-index: 999;
   min-width: 1050px !important;
+  border-bottom: solid 1px #e6e6e6;
+  min-height: 66px;
 
   .user_info_box {
     display: inline-flex;
@@ -1620,10 +1613,6 @@ export default {
     height: 40px !important;
     line-height: 40px !important;
   }
-
-  .el-menu.el-menu--horizontal {
-    border-bottom: none;
-  }
 }
 </style>
 
@@ -1634,5 +1623,9 @@ export default {
 
 ::v-deep(.el-badge) {
   background: white;
+}
+
+::v-deep(.el-menu.el-menu--horizontal) {
+  border-bottom: none;
 }
 </style>

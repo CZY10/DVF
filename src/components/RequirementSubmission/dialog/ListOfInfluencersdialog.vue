@@ -588,14 +588,32 @@ export default {
 
       const h = this.$createElement;
       this.$message({
-        message: h("p", null, [
+        message: h("p", { style: "display: flex" }, [
+          h(
+            "div",
+            {
+              style:
+                "width: 13px;height: 13px;background: #fff;border-radius: 50%;margin-top: 1px;position: relative;",
+            },
+            [
+              h(
+                "i",
+                {
+                  class: "iconfont icon-cg",
+                  style: "",
+                },
+                ""
+              ),
+            ]
+          ),
+
           h(
             "span",
-            { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
+            { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 8px" },
             "添加成功"
           ),
         ]),
-        iconClass: "iconfont icon-cg",
+        iconClass: "iconfont",
         offset: 140,
         customClass: "customClasssuccess",
       });
@@ -1290,7 +1308,8 @@ export default {
 <style>
 .icon-cg {
   color: #02b578;
-  margin-top: 2px;
+  position: absolute;
+  top: -1px;
 }
 .customClasssuccess {
   min-width: 100px;

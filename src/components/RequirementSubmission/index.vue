@@ -1517,6 +1517,7 @@ export default {
     // setTimeout(() => {
     //   this.initGuide(); // 调用新手引导的方法
     // }, 3000);
+
     if (store.state.Index.ExitFullScreen) {
       this.Addinfluencers(
         store.state.Index.influencersList,
@@ -1651,6 +1652,14 @@ export default {
 }
 ::v-deep(.el-upload:hover) {
   color: #a06cf3 !important;
+}
+
+::v-deep(.el-loading-spinner .el-loading-text) {
+  color: #a06cf3;
+}
+
+::v-deep(.el-loading-spinner i) {
+  color: #a06cf3;
 }
 </style>
 

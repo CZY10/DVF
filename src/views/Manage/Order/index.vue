@@ -4025,8 +4025,8 @@ export default {
   padding-left: 0px;
 }
 .el-table .warning-row {
-  border-bottom: 1px dashed #d1d1d3 !important;
-  border-top: 1px dashed #d1d1d3 !important;
+  border-bottom: 0px dashed #fff !important;
+  border-top: 0px dashed #fff !important;
 }
 </style>
 <style lang="less" scoped>

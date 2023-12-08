@@ -6,6 +6,7 @@
       width="408px"
       :before-close="beforeClose"
       :show-close="false"
+      :close-on-click-modal="false"
       center
     >
       <p class="prompt_p1">
@@ -20,8 +21,7 @@
       </p>
 
       <div class="prompt_btn">
-        <button @click="Dontpromptagain">不再提示</button>
-        <button @click="know">知道了</button>
+        <button @click="Dontpromptagain">知道了</button>
       </div>
     </el-dialog>
   </div>
@@ -53,17 +53,6 @@ export default {
         this.beforeClose();
       }
     },
-
-    async know() {
-      const res = await needsBudgetTip({
-        id: this.video_id,
-        budget_tip: "0",
-      });
-      if (res.code == 1) {
-        this.reqsearch();
-        this.beforeClose();
-      }
-    },
   },
 };
 </script>
@@ -89,17 +78,9 @@ export default {
     border: none;
     background: none;
     cursor: pointer;
-    border-radius: 5px;
-  }
-
-  button:nth-child(1) {
-    border: 1px solid #eeeeee;
-    color: #999999;
-  }
-  button:nth-child(2) {
     background: #d161f6;
     color: #fff;
-    margin-left: 10px;
+    border-radius: 5px;
   }
 }
 
@@ -107,7 +88,7 @@ export default {
   padding: 22px 41px 24px;
 }
 
-::v-deep(.el-dialog){
+::v-deep(.el-dialog) {
   background: #fff !important;
 }
 </style>

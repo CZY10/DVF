@@ -374,7 +374,7 @@ export default {
     addwidthVisble() {
       if (
         (this.widthVisble == "500px" && this.getstate == 0) ||
-        this.determine != 4
+        (this.determine != 4 && this.widthVisble == "500px")
       ) {
         this.widthVisble = "900px";
         setTimeout(() => {

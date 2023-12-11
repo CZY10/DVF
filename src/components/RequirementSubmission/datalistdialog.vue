@@ -699,7 +699,6 @@ export default {
       .flat()
       .map((item) => item.user_id)
       .join(",");
-
     if (result != "" && store.state.Index.ExitFullScreen == false) {
       await needsSelectInfluencer({
         id: this.influencersListid,

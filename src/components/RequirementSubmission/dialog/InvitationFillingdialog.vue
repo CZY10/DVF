@@ -52,12 +52,7 @@ export default {
       ifcopy: false,
     };
   },
-  mounted() {
-    this.link =
-      window.location.origin +
-      "/Invitationfilling" +
-      this.InvitationFillingdialoglink;
-  },
+  mounted() {},
   methods: {
     beforeClose() {
       this.$emit("InvitationFillingdialogMsg", false);
@@ -80,6 +75,16 @@ export default {
 
       this.btnText = "已复制，去分享吧~";
       this.ifcopy = true;
+    },
+  },
+  watch: {
+    InvitationFillingdialogVisble(newval) {
+      if (newval == true) {
+        this.link =
+          window.location.origin +
+          "/Invitationfilling" +
+          this.InvitationFillingdialoglink;
+      }
     },
   },
 };

@@ -680,34 +680,33 @@ export default {
       } else {
         let result = this.influencersList
           .flat()
-          .map((item) => item.id_unique)
+          .map((item) => item.id_unique || item.id)
           .join(",");
-        console.log(this.influencersList);
 
-        // if (result != "") {
-        //   if (this.influencersListid == 0) {
-        //     let num = localStorage.getItem("addnum") - 1;
-        //     localStorage.setItem("addnum", num);
-        //   }
-        //   let url = new URL(window.location.href);
-        //   let needs = url.searchParams.get("needs");
-        //   await inviteSelectInfluencer({
-        //     id: this.influencersListid,
-        //     influencer_ids: result,
-        //     url_mark: needs,
-        //   }).then((res) => {
-        //     if (res.code == 1) {
-        //       this.$emit("getlist", true);
-        //     }
-        //   });
-        // }
-        // this.searchforval = "";
-        // store.commit("Index/setcurrentPage", 1);
-        // this.currentPage = 1;
-        // this.genderValue = "";
-        // this.themeValue = "";
-        // this.categoryValue = "";
-        // this.priceval = "";
+        if (result != "") {
+          if (this.influencersListid == 0) {
+            let num = localStorage.getItem("addnum") - 1;
+            localStorage.setItem("addnum", num);
+          }
+          let url = new URL(window.location.href);
+          let needs = url.searchParams.get("needs");
+          await inviteSelectInfluencer({
+            id: this.influencersListid,
+            influencer_ids: result,
+            url_mark: needs,
+          }).then((res) => {
+            if (res.code == 1) {
+              this.$emit("getlist", true);
+            }
+          });
+        }
+        this.searchforval = "";
+        store.commit("Index/setcurrentPage", 1);
+        this.currentPage = 1;
+        this.genderValue = "";
+        this.themeValue = "";
+        this.categoryValue = "";
+        this.priceval = "";
       }
     },
   },

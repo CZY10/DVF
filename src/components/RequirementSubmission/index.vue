@@ -1161,7 +1161,6 @@ export default {
           offset: 140,
           customClass: "customClasssuccess",
         });
-
         document.querySelectorAll(".el-message-btn").forEach((item) => {
           item.addEventListener("click", function () {
             msg.close();

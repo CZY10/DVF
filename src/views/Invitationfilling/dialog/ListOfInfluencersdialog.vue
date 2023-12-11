@@ -1,234 +1,303 @@
 <template>
-  <div style="background: #f5f7f9; margin-top: -67px">
-    <div id="buyershow">
-      <el-backtop target="#buyershow">
-        <i class="iconfont icon-fhdb1" style="color: #999"></i
-      ></el-backtop>
+  <div>
+    <el-dialog
+      :visible.sync="datalistdialogVisible"
+      width="983px"
+      :before-close="beforeClose"
+    >
+      <i class="el-icon-full-screen" v-screenfull></i>
 
-      <div class="topclon">
-        <i class="iconfont icon-icfullscreenexit" @click="outcheckFull"></i>
-        <i class="el-icon-close" @click="closeCheckFull"></i>
-      </div>
-      <div class="banxin">
-        <div class="loading" v-if="isloading"></div>
-        <!-- 搜索 -->
-        <div class="searchfor">
-          <el-input
-            v-model="searchforval"
-            placeholder="输入产品名称/品类/红人编号"
-            class="inp"
-            @keyup.enter.native="getRenderingData"
-          ></el-input>
-          <el-button class="searchforbtn" @click="getRenderingData"
-            >搜索</el-button
-          >
-        </div>
+      <div id="buyershow">
+        <el-backtop target="#buyershow">
+          <i class="iconfont icon-fhdb1" style="color: #999"></i
+        ></el-backtop>
 
-        <!-- 筛选 -->
-        <div class="screen">
-          <div class="filter_header">
-            <div class="filter_item">
-              <span>达人性别</span>
-              <el-radio-group
-                v-model="genderValue"
-                @change="handlerSearchList('genderdata', genderValue)"
-              >
-                <el-radio-button label="">全部</el-radio-button>
-                <el-radio-button label="male">男性</el-radio-button>
-                <el-radio-button label="female">女性</el-radio-button>
-              </el-radio-group>
-            </div>
-            <div class="filter_item">
-              <span>产品品类</span>
-              <el-radio-group
-                v-model="categoryValue"
-                @change="handlerSearchList('category_id', categoryValue)"
-              >
-                <el-radio-button label="">全部</el-radio-button>
-                <el-radio-button
-                  v-for="(item, index) in categoryList"
-                  :key="index"
-                  :label="item.id"
-                  >{{ item.name }}</el-radio-button
-                >
-              </el-radio-group>
-            </div>
-            <div style="height: 1px; background-color: #eee"></div>
+        <div class="banxin">
+          <div class="loading" v-if="isloading"></div>
 
-            <div class="filter_item" style="margin-top: 10px">
-              <span>主题专区</span>
-              <el-radio-group
-                v-model="themeValue"
-                @change="handlerSearchList('theme_id', themeValue)"
-              >
-                <el-radio-button label=""> 全部 </el-radio-button>
-                <el-radio-button
-                  v-for="(item, index) in themeList"
-                  :key="index"
-                  :label="item.id"
-                >
-                  <div>
-                    {{ item.name }}
-                  </div>
-                </el-radio-button>
-              </el-radio-group>
-            </div>
-          </div>
-        </div>
-
-        <!-- 查找 -->
-        <div class="seek">
-          <div class="seek_div">
-            <div class="seek_div_span">找到 {{ total }} 个</div>
-            <div class="seek_divd">
-              <span>价格 ≤</span>
-              <el-input
-                v-model="priceval"
-                class="priceinp"
-                @change="getRenderingData"
-              ></el-input>
-              <span>元</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 分类产品 -->
-        <div class="product">
-          <ul class="product_ul" v-if="datalist.length != 0">
-            <li
-              class="product_li"
-              v-for="(item, index) in datalist"
-              :key="item.user_id"
+          <!-- 搜索 -->
+          <div class="searchfor">
+            <el-input
+              v-model="searchforval"
+              placeholder="输入产品名称/品类/红人编号"
+              class="inp"
+              @keyup.enter.native="getRenderingData"
+            ></el-input>
+            <el-button class="searchforbtn" @click="getRenderingData"
+              >搜索</el-button
             >
-              <div class="product_li_img" @click="gohomepage(item.user_id)">
-                <img :src="item.image" />
-              </div>
-              <div class="product_list">
-                <div class="product_list_div1">
-                  <div class="product_list_left">
-                    <div class="product_list_no">No.{{ item.user_id }}</div>
-                    <div
-                      v-if="item.type == '影响力者'"
-                      class="product_list_typelv"
-                    >
-                      {{ item.type }}
-                    </div>
-                    <div
-                      v-if="item.type == '社媒红人'"
-                      class="product_list_typeho"
-                    >
-                      {{ item.type }}
-                    </div>
-                    <div
-                      v-if="item.type == '数字人'"
-                      class="product_list_typelan"
-                    >
-                      {{ item.type }}
-                    </div>
-                    <div
-                      v-if="item.type == '素人'"
-                      class="product_list_typechen"
-                    >
-                      {{ item.type }}
-                    </div>
-                  </div>
+          </div>
 
-                  <div class="product_list_rigth" v-if="item.price_type == 0">
-                    ￥{{ item.price }}
-                  </div>
-
-                  <div
-                    class="product_list_rigth"
-                    v-else-if="item.price_type == 1"
-                  >
-                    ￥<span
-                      >{{ item.lower_price }}-{{ item.highest_price }}</span
-                    >
-                  </div>
-
-                  <div
-                    class="product_list_rigth"
-                    v-else
-                    style="font-size: 11px"
-                  >
-                    视产品而定
-                  </div>
-                </div>
-
-                <div
-                  class="product_list_div2"
-                  v-if="item.category_ids.length <= 5"
-                  :title="categoryidarr[index]"
+          <!-- 筛选 -->
+          <div class="screen">
+            <div class="filter_header">
+              <div class="filter_item">
+                <span>达人性别</span>
+                <el-radio-group
+                  v-model="genderValue"
+                  @change="handlerSearchList('genderdata', genderValue)"
                 >
-                  <li v-for="(item, index) in item.category_ids" :key="index">
-                    {{ item.name }}
-                  </li>
+                  <el-radio-button label="">全部</el-radio-button>
+                  <el-radio-button label="male">男性</el-radio-button>
+                  <el-radio-button label="female">女性</el-radio-button>
+                </el-radio-group>
+              </div>
+              <div class="filter_item">
+                <span>产品品类</span>
+                <el-radio-group
+                  v-model="categoryValue"
+                  @change="handlerSearchList('category_id', categoryValue)"
+                >
+                  <el-radio-button label="">全部</el-radio-button>
+                  <el-radio-button
+                    v-for="(item, index) in categoryList"
+                    :key="index"
+                    :label="item.id"
+                    >{{ item.name }}</el-radio-button
+                  >
+                </el-radio-group>
+              </div>
+              <div style="height: 1px; background-color: #eee"></div>
+
+              <div class="filter_item" style="margin-top: 10px">
+                <span>主题专区</span>
+                <el-radio-group
+                  v-model="themeValue"
+                  @change="handlerSearchList('theme_id', themeValue)"
+                >
+                  <el-radio-button label=""> 全部 </el-radio-button>
+                  <el-radio-button
+                    v-for="(item, index) in themeList"
+                    :key="index"
+                    :label="item.id"
+                  >
+                    <div>
+                      {{ item.name }}
+                    </div>
+                  </el-radio-button>
+                </el-radio-group>
+              </div>
+            </div>
+          </div>
+
+          <!-- 查找 -->
+          <div class="seek">
+            <div class="seek_div">
+              <div class="seek_div_span">找到 {{ total }} 个</div>
+              <div class="seek_divd">
+                <span>价格 ≤</span>
+                <el-input
+                  v-model="priceval"
+                  class="priceinp"
+                  @change="getRenderingData"
+                ></el-input>
+                <span>元</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 分类产品 -->
+          <div class="product">
+            <ul class="product_ul" v-if="datalist.length != 0">
+              <li
+                class="product_li"
+                v-for="(item, index) in datalist"
+                :key="item.user_id"
+              >
+                <div class="product_li_img" @click="gohomepage(item.user_id)">
+                  <img :src="item.image" />
                 </div>
-                <div v-else style="display: flex" :title="categoryidarr[index]">
-                  <div class="product_list_div2">
+                <div class="product_list">
+                  <div class="product_list_div1">
+                    <div class="product_list_left">
+                      <div class="product_list_no">No.{{ item.user_id }}</div>
+                      <div
+                        v-if="item.type == '影响力者'"
+                        class="product_list_typelv"
+                      >
+                        {{ item.type }}
+                      </div>
+                      <div
+                        v-if="item.type == '社媒红人'"
+                        class="product_list_typeho"
+                      >
+                        {{ item.type }}
+                      </div>
+                      <div
+                        v-if="item.type == '数字人'"
+                        class="product_list_typelan"
+                      >
+                        {{ item.type }}
+                      </div>
+                      <div
+                        v-if="item.type == '素人'"
+                        class="product_list_typechen"
+                      >
+                        {{ item.type }}
+                      </div>
+                    </div>
+
+                    <div class="product_list_rigth" v-if="item.price_type == 0">
+                      ￥{{ item.price }}
+                    </div>
+
+                    <div
+                      class="product_list_rigth"
+                      v-else-if="item.price_type == 1"
+                    >
+                      ￥<span
+                        >{{ item.lower_price }}-{{ item.highest_price }}</span
+                      >
+                    </div>
+
+                    <div
+                      class="product_list_rigth"
+                      v-else
+                      style="font-size: 11px"
+                    >
+                      视产品而定
+                    </div>
+                  </div>
+
+                  <div
+                    class="product_list_div2"
+                    v-if="item.category_ids.length <= 5"
+                    :title="categoryidarr[index]"
+                  >
                     <li v-for="(item, index) in item.category_ids" :key="index">
                       {{ item.name }}
                     </li>
                   </div>
-                  <span>...</span>
-                </div>
-
-                <div
-                  style="height: 1px; background-color: #eee; margin-top: 15px"
-                ></div>
-
-                <ul class="product_list_videos">
-                  <li
-                    v-for="(items, indexviedeos) in isvideoslist[index]"
-                    :key="items.user_id"
-                    @click="openVideos(item.videos, indexviedeos)"
-                    :title="items.desc"
+                  <div
+                    v-else
+                    style="display: flex"
+                    :title="categoryidarr[index]"
                   >
-                    <i class="iconfont icon-video" style="font-size: 14px"></i>
-                    <span> {{ items.desc }}</span>
-                  </li>
+                    <div class="product_list_div2">
+                      <li
+                        v-for="(item, index) in item.category_ids"
+                        :key="index"
+                      >
+                        {{ item.name }}
+                      </li>
+                    </div>
+                    <span>...</span>
+                  </div>
 
-                  <li
+                  <div
                     style="
-                      width: 22px;
-                      text-align: center;
-                      display: block;
-                      background: linear-gradient(
-                          270deg,
-                          #ffffff 0%,
-                          #f1f0fd 100%
-                        ),
-                        linear-gradient(270deg, #ffffff 0%, #fcf3ff 100%);
-                      border-radius: 4px;
+                      height: 1px;
+                      background-color: #eee;
+                      margin-top: 15px;
                     "
-                    v-if="item.videos.length >= 12"
-                    @click="gohomepage(item.user_id)"
-                  >
-                    . . .
-                  </li>
-                </ul>
-              </div>
-              <div
-                @click="addlist(item, index, item.user_id)"
-                :class="{
-                  product_btn: item.istrue != false,
-                  addlistbj: item.istrue == false,
-                }"
-                ref="addbtndom"
-              >
-                <span class="icon">+</span>
-                <i class="iconfont icon-gwc" style="font-size: 14px"></i>
-                <span class="test1" v-if="item.istrue == false">已选择</span>
-                <span class="test1" v-else>选择</span>
-              </div>
-            </li>
-          </ul>
-          <div v-else class="product_div">
-            <img src="@/assets/images/empty_img.png" alt="" />
-            <p>暂无搜索结果</p>
+                  ></div>
+
+                  <ul class="product_list_videos">
+                    <li
+                      v-for="(items, indexviedeos) in isvideoslist[index]"
+                      :key="items.user_id"
+                      @click="openVideos(item.videos, indexviedeos)"
+                      :title="items.desc"
+                    >
+                      <i
+                        class="iconfont icon-video"
+                        style="font-size: 14px"
+                      ></i>
+                      <span> {{ items.desc }}</span>
+                    </li>
+
+                    <li
+                      style="
+                        width: 22px;
+                        text-align: center;
+                        display: block;
+                        background: linear-gradient(
+                            270deg,
+                            #ffffff 0%,
+                            #f1f0fd 100%
+                          ),
+                          linear-gradient(270deg, #ffffff 0%, #fcf3ff 100%);
+                        border-radius: 4px;
+                      "
+                      v-if="item.videos.length >= 12"
+                      @click="gohomepage(item.user_id)"
+                    >
+                      . . .
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  @click="addlist(item, index, item.user_id)"
+                  :class="{
+                    product_btn: item.istrue != false,
+                    addlistbj: item.istrue == false,
+                  }"
+                  ref="addbtndom"
+                >
+                  <span class="icon">+</span>
+                  <i class="iconfont icon-gwc" style="font-size: 14px"></i>
+                  <span class="test1" v-if="item.istrue == false">已选择</span>
+                  <span class="test1" v-else>选择</span>
+                </div>
+              </li>
+            </ul>
+            <div v-else class="product_div">
+              <img src="@/assets/images/empty_img.png" alt="" />
+              <p>暂无搜索结果</p>
+            </div>
           </div>
         </div>
+
+        <el-dialog
+          :visible.sync="dialogVisible"
+          width="880px"
+          :close-on-click-modal="false"
+          :append-to-body="true"
+          custom-class="my-dialog"
+        >
+          <div class="eldialogVisble">
+            <div style="width: 650px">
+              <div class="leftVis">
+                <video
+                  autoplay
+                  controls
+                  preload="none"
+                  ref="myVideo"
+                  @play="video_img = true"
+                  @pause="video_img = false"
+                >
+                  <source
+                    :src="videoslist[videoslistindex]?.file"
+                    type="video/mp4"
+                  />
+                </video>
+                <div
+                  class="video_img"
+                  @click="videoplay"
+                  v-show="!video_img"
+                ></div>
+              </div>
+              <div class="title" :title="videoslist[videoslistindex]?.desc">
+                {{ videoslist[videoslistindex]?.desc }}
+              </div>
+            </div>
+            <div class="rigthlist">
+              <p class="rigthlist_p">作品案例</p>
+              <p
+                v-for="(item, index) in videoslist"
+                :key="item.id"
+                :class="{ videoslistcss: item.videoslistcss, falg: true }"
+                @click="SwitchVideo(videoslist, index)"
+                :title="item.desc"
+              >
+                <i class="iconfont icon-video"></i>
+                {{ item.desc }}
+              </p>
+            </div>
+          </div>
+        </el-dialog>
       </div>
+
       <template>
         <div class="paging" v-show="datalist.length != 0">
           <el-pagination
@@ -245,64 +314,15 @@
           </el-pagination>
         </div>
       </template>
-
-      <el-dialog
-        :visible.sync="dialogVisible"
-        width="880px"
-        :close-on-click-modal="false"
-        :append-to-body="true"
-        custom-class="my-dialog"
-      >
-        <div class="eldialogVisble">
-          <div style="width: 650px">
-            <div class="leftVis">
-              <video
-                autoplay
-                controls
-                preload="none"
-                ref="myVideo"
-                @play="video_img = true"
-                @pause="video_img = false"
-              >
-                <source
-                  :src="videoslist[videoslistindex]?.file"
-                  type="video/mp4"
-                />
-              </video>
-              <div
-                class="video_img"
-                @click="videoplay"
-                v-show="!video_img"
-              ></div>
-            </div>
-            <div class="title" :title="videoslist[videoslistindex]?.desc">
-              {{ videoslist[videoslistindex]?.desc }}
-            </div>
-          </div>
-          <div class="rigthlist">
-            <p class="rigthlist_p">作品案例</p>
-            <p
-              v-for="(item, index) in videoslist"
-              :key="item.id"
-              :class="{ videoslistcss: item.videoslistcss, falg: true }"
-              @click="SwitchVideo(videoslist, index)"
-              :title="item.desc"
-            >
-              <i class="iconfont icon-video"></i>
-              {{ item.desc }}
-            </p>
-          </div>
-        </div>
-      </el-dialog>
-    </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getCategory, getSearchList, needsSelectInfluencer } from "@/api";
-import router from "@/router";
+import { getCategory, getSearchList, inviteSelectInfluencer } from "@/api";
 import store from "@/store";
 export default {
+  props: ["datalistdialogVisible", "influencersList", "influencersListid"], //通过props接收父组件传递的值
   data() {
     return {
       searchforval: "",
@@ -328,83 +348,24 @@ export default {
       isloading: false,
     };
   },
-  mounted() {
+  created() {
     this.currentPage = store.state.Index.currentPage;
     this.genderValue = store.state.Index.dataobj.genderValue;
     this.categoryValue = store.state.Index.dataobj.categoryValue;
     this.themeValue = store.state.Index.dataobj.themeValue;
     this.searchforval = store.state.Index.dataobj.searchforval;
     this.priceval = store.state.Index.dataobj.priceval;
-
+  },
+  mounted() {
     this.isloading = true;
     this.handlerGetCategory("influencer");
     this.handlerGetCategory("theme_area");
     this.RenderingData();
   },
-  created() {
-    const that = this;
-    window.onresize = function () {
-      if (!that.checkFull()) {
-        // 退出全屏后要执行的动作
-        store.commit("Index/setExitFullScreen", true);
-        router.push("/Requirement");
-        console.log("退出全屏");
-      } else {
-        console.log("全屏");
-      }
-    };
-  },
-  computed: {
-    influencersList() {
-      return store.state.Index.influencersList;
-    },
-    influencersListid() {
-      return store.state.Index.influencersListid;
-    },
-  },
   methods: {
-    //关闭全屏
-    closeCheckFull() {
-      this.outcheckFull();
-      store.commit("Index/setExitFullScreen", false);
-      store.commit("Index/setcurrentPage", 1);
-      store.commit("Index/setdataobj", {
-        genderValue: "",
-        categoryValue: "",
-        themeValue: "",
-        searchforval: "",
-        priceval: "",
-      });
-      this.currentPage = 1;
-      router.push("/Requirement");
+    beforeClose() {
+      this.$emit("setdatalistdialogVisible", false);
     },
-    //退出全屏
-    outcheckFull() {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        /* Safari */
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        /* IE11 */
-        document.msExitFullscreen();
-      }
-    },
-    checkFull() {
-      // 判断浏览器是否处于全屏状态 （需要考虑兼容问题）
-      var isFull =
-        document.mozFullScreen ||
-        document.fullScreen ||
-        document.webkitIsFullScreen ||
-        document.webkitRequestFullScreen ||
-        document.mozRequestFullScreen ||
-        document.msFullscreenEnabled;
-      if (isFull === undefined) {
-        isFull = false;
-      }
-      return isFull;
-    },
-
     //获取搜索分类
     handlerGetCategory(type) {
       getCategory({ type: type })
@@ -430,7 +391,6 @@ export default {
     //搜索列表
     handlerSearchList(type, value) {
       this.currentPage = 1;
-
       if (localStorage.getItem("token")) {
         this.isloading = true;
       }
@@ -447,20 +407,31 @@ export default {
         default:
           break;
       }
+
       let obj = {
         genderValue: this.genderValue,
         categoryValue: this.categoryValue,
         themeValue: this.themeValue,
+        searchforval: this.searchforval,
+        priceval: this.priceval,
       };
 
       store.commit("Index/setdataobj", obj);
-
       this.RenderingData();
     },
 
     //搜索
     getRenderingData() {
       this.isloading = true;
+      let obj = {
+        genderValue: this.genderValue,
+        categoryValue: this.categoryValue,
+        themeValue: this.themeValue,
+        searchforval: this.searchforval,
+        priceval: this.priceval,
+      };
+
+      store.commit("Index/setdataobj", obj);
       this.currentPage = 1;
       this.RenderingData();
     },
@@ -611,45 +582,49 @@ export default {
         "已选择";
       if (item.istrue != false && this.influencersList.length < 5) {
         this.influencersList.push(item);
-        this.$emit("getlist", true);
-        const h = this.$createElement;
-        this.$message({
-          message: h("p", { style: "display: flex" }, [
-            h(
-              "div",
-              {
-                style:
-                  "width: 13px;height: 13px;background: #fff;border-radius: 50%;margin-top: 1px;position: relative;",
-              },
-              [
-                h(
-                  "i",
-                  {
-                    class: "iconfont icon-cg",
-                    style: "",
-                  },
-                  ""
-                ),
-              ]
-            ),
-
-            h(
-              "span",
-              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 8px" },
-              "添加成功"
-            ),
-          ]),
-          iconClass: "iconfont",
-          offset: 140,
-          customClass: "customClasssuccess",
-        });
+        store.commit("Index/setinfluencersList", this.influencersList);
+        store.commit("Index/setinfluencersListid", this.influencersListid);
       }
       this.datalist[index].istrue = false;
+
+      const h = this.$createElement;
+      this.$message({
+        message: h("p", { style: "display: flex" }, [
+          h(
+            "div",
+            {
+              style:
+                "width: 13px;height: 13px;background: #fff;border-radius: 50%;margin-top: 1px;position: relative;",
+            },
+            [
+              h(
+                "i",
+                {
+                  class: "iconfont icon-cg",
+                  style: "",
+                },
+                ""
+              ),
+            ]
+          ),
+
+          h(
+            "span",
+            { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 8px" },
+            "添加成功"
+          ),
+        ]),
+        iconClass: "iconfont",
+        offset: 140,
+        customClass: "customClasssuccess",
+      });
     },
 
     //反选列表
     InvertList() {
       let _this = this;
+      store.commit("Index/setinfluencersList", this.influencersList);
+      store.commit("Index/setinfluencersListid", this.influencersListid);
       _this.influencersList.flat().forEach((items) => {
         let index = _this.datalist.findIndex(
           (item) => item.id == items.user_id
@@ -693,48 +668,70 @@ export default {
         this.videoslistindex = -1;
       }
     },
-  },
-  async beforeDestroy() {
-    let result = this.influencersList
-      .flat()
-      .map((item) => item.user_id)
-      .join(",");
+    async datalistdialogVisible(newval) {
+      if (newval == true) {
+        this.isloading = true;
+        this.$nextTick(() => {
+          document.getElementsByClassName(
+            "el-pagination__jump"
+          )[0].childNodes[0].nodeValue = "跳转";
+        });
+        this.RenderingData();
+      } else {
+        let result = this.influencersList
+          .flat()
+          .map((item) => item.id_unique)
+          .join(",");
+        console.log(this.influencersList);
 
-    if (result != "" && store.state.Index.ExitFullScreen == false) {
-      await needsSelectInfluencer({
-        id: this.influencersListid,
-        influencer_ids: result,
-      }).then((res) => {
-        if (res.code == 1) {
-          this.$emit("getlist", true);
-        }
-      });
-    }
+        // if (result != "") {
+        //   if (this.influencersListid == 0) {
+        //     let num = localStorage.getItem("addnum") - 1;
+        //     localStorage.setItem("addnum", num);
+        //   }
+        //   let url = new URL(window.location.href);
+        //   let needs = url.searchParams.get("needs");
+        //   await inviteSelectInfluencer({
+        //     id: this.influencersListid,
+        //     influencer_ids: result,
+        //     url_mark: needs,
+        //   }).then((res) => {
+        //     if (res.code == 1) {
+        //       this.$emit("getlist", true);
+        //     }
+        //   });
+        // }
+        // this.searchforval = "";
+        // store.commit("Index/setcurrentPage", 1);
+        // this.currentPage = 1;
+        // this.genderValue = "";
+        // this.themeValue = "";
+        // this.categoryValue = "";
+        // this.priceval = "";
+      }
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
+.el-icon-full-screen {
+  position: absolute;
+  top: -17px;
+  right: 45px;
+}
+
 #buyershow {
   overflow-x: hidden;
   position: relative;
-  height: 100vh;
-  .topclon {
-    text-align: right;
-    padding: 20px;
-    i {
-      font-size: 20px;
-      cursor: pointer;
-    }
-    i:nth-child(1) {
-      margin-right: 10px;
-    }
-  }
+  max-height: 830px;
+  margin-top: 10px;
   .banxin {
-    width: 1200px;
+    width: 891px;
     margin: 0 auto;
     min-height: 100%;
     overflow: hidden;
+    padding-bottom: 70px;
 
     .searchfor {
       height: 46px;
@@ -1084,16 +1081,6 @@ export default {
     }
   }
 
-  .paging {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 69px;
-    background: #ffffff;
-    box-shadow: 0px -4px 8px 0px rgba(194, 194, 194, 0.25);
-    width: 100%;
-    border-radius: 0 0 20px 20px;
-  }
   @media screen and (max-width: 1280px) {
     .banxin {
       width: 900px;
@@ -1111,13 +1098,26 @@ export default {
     }
   }
 }
+
+.paging {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  height: 69px;
+  background: #ffffff;
+  box-shadow: 0px -4px 8px 0px rgba(194, 194, 194, 0.25);
+  border-radius: 0 0 20px 20px;
+}
 </style>
 
 <style lang="less" scoped>
 .my-dialog {
   .eldialogVisble {
     display: flex;
-
+    padding: 0 0 30px 20px;
     .leftVis {
       width: 650px;
       height: 366px;
@@ -1280,7 +1280,7 @@ export default {
 }
 
 ::v-deep(.el-dialog__body) {
-  padding: 0 0px 30px 20px !important;
+  padding: 0 0px 0px 0px !important;
 }
 
 ::v-deep(.el-pagination__sizes .el-input .el-input__inner:hover) {
@@ -1310,6 +1310,7 @@ export default {
 
 ::v-deep(.el-dialog) {
   overflow: hidden;
+  max-height: 95%;
 }
 </style>
 
@@ -1319,7 +1320,6 @@ export default {
   position: absolute;
   top: -1px;
 }
-
 .customClasssuccess {
   min-width: 100px;
   height: 40px;

@@ -81,6 +81,18 @@ const routes = [
                         meta: { requiresAuth: false },
                         component: Note,
                     },
+                    {
+                        path: '/Invitationfilling',
+                        name: 'Invitationfilling',
+                        meta: { requiresAuth: false },
+                        component: () => import('@/views/Invitationfilling/index.vue')
+                    },
+                    {
+                        path: '/datalistdialogIf',
+                        name: 'datalistdialogIf',
+                        meta: { requiresAuth: true },
+                        component: () => import('@/views/Invitationfilling/datalistdialog.vue')
+                    },
                 ]
             },
 
@@ -113,9 +125,6 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '@/views/Login')
     },
     {
@@ -145,7 +154,7 @@ VueRouter.prototype.push = function push(location) {
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-    if (to.fullPath == "/Note" || to.fullPath == "/datalistdialog") {
+    if (to.fullPath == "/Note" || to.fullPath == "/datalistdialog" || to.path == '/Invitationfilling' || to.path == '/datalistdialogIf') {
         store.commit('Index/setIsFalg', false)
     } else {
         store.commit('Index/setIsFalg', true)

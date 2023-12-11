@@ -299,7 +299,7 @@
 </template>
 
 <script>
-import { getCategory, getSearchList, needsSelectInfluencer } from "@/api";
+import { getCategory, getSearchList, inviteSelectInfluencer } from "@/api";
 import router from "@/router";
 import store from "@/store";
 export default {
@@ -347,7 +347,9 @@ export default {
       if (!that.checkFull()) {
         // 退出全屏后要执行的动作
         store.commit("Index/setExitFullScreen", true);
-        router.push("/Requirement");
+
+        let url = new URL(window.location.href).search;
+        router.push("Invitationfilling" + url);
         console.log("退出全屏");
       } else {
         console.log("全屏");
@@ -376,7 +378,8 @@ export default {
         priceval: "",
       });
       this.currentPage = 1;
-      router.push("/Requirement");
+      let url = new URL(window.location.href).search;
+      router.push("Invitationfilling" + url);
     },
     //退出全屏
     outcheckFull() {
@@ -697,13 +700,17 @@ export default {
   async beforeDestroy() {
     let result = this.influencersList
       .flat()
-      .map((item) => item.user_id)
+      .map((item) => item.id_unique)
       .join(",");
 
+    let url = new URL(window.location.href);
+    let needs = url.searchParams.get("needs");
+
     if (result != "" && store.state.Index.ExitFullScreen == false) {
-      await needsSelectInfluencer({
+      await inviteSelectInfluencer({
         id: this.influencersListid,
         influencer_ids: result,
+        url_mark: needs,
       }).then((res) => {
         if (res.code == 1) {
           this.$emit("getlist", true);

@@ -3,6 +3,10 @@ import Vue from "vue";
 // 全屏
 import screenfull from "screenfull";
 import router from "@/router";
+
+
+// console.log(window.location.pathname, 'router')
+
 Vue.directive("screenfull", {
     bind(el, binding) {
         if (binding.modifiers.icon) {
@@ -21,7 +25,14 @@ Vue.directive("screenfull", {
                 alert("浏览器不支持全屏");
                 return;
             }
-            router.push("datalistdialog")
+
+            if (window.location.pathname == '/Requirement') {
+                router.push("datalistdialog")
+            } else if (window.location.pathname == '/Invitationfilling') {
+                let url = new URL(window.location.href).search;
+                console.log(url)
+                router.push("datalistdialogIf" + url)
+            }
             screenfull.toggle();
         });
     },

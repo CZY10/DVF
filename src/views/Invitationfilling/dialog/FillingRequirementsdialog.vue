@@ -405,7 +405,7 @@ export default {
           photograph_demand: formName.ShootingRequirements,
           image: str,
           id: this.FillingRequirementid,
-          source: 0,
+          source: 1,
         };
         const res = await needsEdit(data);
         if (res.code == 1) {
@@ -434,7 +434,7 @@ export default {
           photograph_guide: this.formradioRequirements,
           photograph_demand: formName.ShootingRequirements,
           image: str,
-          source: 0,
+          source: 1,
         };
         const res = await needsEdit(data);
         if (res.code == 1) {
@@ -486,6 +486,10 @@ export default {
             }
           });
           let str = image.join(",");
+
+          let url = new URL(window.location.href);
+          let needs = url.searchParams.get("needs");
+
           let data = {
             url: formName.link,
             description: formName.notes,
@@ -494,7 +498,8 @@ export default {
             if_product_link: this.formradioLink,
             photograph_demand: formName.ShootingRequirements,
             image: str,
-            source: 0,
+            source: 1,
+            url_mark: needs,
           };
           const res = await createOrder(data);
           if (res.code == 1) {

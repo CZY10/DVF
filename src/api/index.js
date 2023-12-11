@@ -368,15 +368,6 @@ export function search(data) {
     })
 }
 
-// 提交拍摄需求
-export function create(data) {
-    return request({
-        url: "/api/order/create",
-        method: "post",
-        data
-    })
-}
-
 //编辑拍摄需求
 export function needsEdit(data) {
     return request({
@@ -507,9 +498,19 @@ export function needsBudget(data) {
 }
 
 //拍摄需求首页
-export function needsIndex() {
+export function needsIndex(data) {
     return request({
         url: "/api/needs/index",
         method: "post",
+        data
+    })
+}
+
+// 邀请填写页勾选达人提交需求
+export function inviteSelectInfluencer(data) {
+    return request({
+        url: "/api/needs/inviteSelectInfluencer",
+        method: "post",
+        data
     })
 }

@@ -1,5 +1,10 @@
 <template>
   <div class="RequirementBox">
+    <div class="headertop">
+      <a href="/" target="_blank">
+        <img src="@/assets/images/home/logo.webp" />
+      </a>
+    </div>
     <div class="RequirementBoxBanxin">
       <p class="hearder">提交视频拍摄需求</p>
       <div class="RequirementWenben">
@@ -9,10 +14,6 @@
           <span @click="TipsdialogVisible1 = true">新手引导</span>
         </div>
         <div class="RequirementWenben-div2">
-          <div class="elIcon2" @click="InvitationFillingdialogVisble = true">
-            <i class="iconfont icon-fx1"></i>
-            <span>邀请填写</span>
-          </div>
           <div class="elIcon2 tips6">
             <el-upload
               action=""
@@ -28,10 +29,6 @@
           <div class="elIcon2">
             <i class="iconfont icon-mb"></i>
             <a :href="fileDiz" style="cursor: pointer">下载模板</a>
-          </div>
-          <div class="elIcon2" @click="reloadPage">
-            <i class="iconfont icon-sx"></i>
-            <span>刷新</span>
           </div>
         </div>
       </div>
@@ -463,14 +460,7 @@
         </el-table>
       </div>
       <div :class="{ ifsubmitTo: ifsubmitTo, RequirementBtn: true }">
-        <button @click="submitTo">提交</button>
-      </div>
-      <div class="elIcon">
-        <el-checkbox v-model="checked" style="margin-right: 10px"></el-checkbox>
-        <span>我已阅读并同意</span
-        ><span style="cursor: pointer; color: #a06cf3" @click="goNote"
-          >《平台售后及免责声明》</span
-        >
+        <button @click="submitTo">上传</button>
       </div>
     </div>
 
@@ -694,13 +684,6 @@
       :TipsdialogVisible1="TipsdialogVisible1"
       @getTipsdialogVisible1="getTipsdialogVisible1"
     ></dialogVisibleTips1>
-
-    <!-- 邀请填写弹窗 -->
-    <InvitationFillingdialog
-      :InvitationFillingdialogVisble="InvitationFillingdialogVisble"
-      @InvitationFillingdialogMsg="InvitationFillingdialogMsg"
-      :InvitationFillingdialoglink="InvitationFillingdialoglink"
-    ></InvitationFillingdialog>
   </div>
 </template>
 
@@ -715,7 +698,7 @@ import {
   needsVideoNumin,
   needsBudget,
   needsIndex,
-  needsSelectInfluencer,
+  inviteSelectInfluencer,
 } from "@/api";
 import draggable from "vuedraggable";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
@@ -723,14 +706,12 @@ import Tipsdialog from "./dialog/Tipsdialog.vue";
 import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 import Notedialog from "./dialog/notedialog.vue";
 import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
-import InvitationFillingdialog from "./dialog/InvitationFillingdialog.vue";
 import store from "@/store";
 import QRCode from "qrcodejs2";
 export default {
   data() {
     return {
       datalistdialogVisible: false,
-      checked: false,
       flags: false,
       ispersonid: "",
       input: "",
@@ -777,42 +758,9 @@ export default {
       differentIndices: [],
       user_id: "",
       FillingRequirementid: 0,
-      introOption: {
-        // 参数对象
-        prevLabel: "上一步",
-        nextLabel: "下一步",
-        skipLabel: "跳过",
-        doneLabel: "完成",
-        tooltipClass: "intro-tooltip" /* 引导说明文本框的样式 */,
-        // highlightClass: 'intro-highlight', /* 说明高亮区域的样式 */
-        exitOnEsc: true /* 是否使用键盘Esc退出 */,
-        exitOnOverlayClick: false /* 是否允许点击空白处退出 */,
-        keyboardNavigation: true /* 是否允许键盘来操作 */,
-        showBullets: false /* 是否使用点显示进度 */,
-        showProgress: false /* 是否显示进度条 */,
-        scrollToElement: true /* 是否滑动到高亮的区域 */,
-        overlayOpacity: 0.5, // 遮罩层的透明度 0-1之间
-        positionPrecedence: [
-          "bottom",
-          "top",
-          "right",
-          "left",
-        ] /* 当位置选择自动的时候，位置排列的优先级 */,
-        disableInteraction: true /* 是否禁止与元素的相互关联 */,
-        hidePrev: true /* 是否在第一步隐藏上一步 */,
-        // hideNext: true, /* 是否在最后一步隐藏下一步 */
-        steps: [] /* steps步骤，可以写个工具类保存起来 */,
-      },
-      tipsImg1: require("../../assets/images/tipsImg/tips1.webp"),
-      tipsImg2: require("../../assets/images/tipsImg/tips2.webp"),
-      tipsImg3: require("../../assets/images/tipsImg/tips3.webp"),
-      tipsImg4: require("../../assets/images/tipsImg/tips4.webp"),
-      ifGuide: 0,
       style: "min-height:78px;display: block;",
       TipsdialogVisible1: false,
       deletecenterDialogVisiblesindex: 0,
-      InvitationFillingdialogVisble: false,
-      InvitationFillingdialoglink: "",
     };
   },
   components: {
@@ -822,7 +770,6 @@ export default {
     ListOfInfluencersdialog,
     Notedialog,
     dialogVisibleTips1,
-    InvitationFillingdialog,
   },
   methods: {
     goOrder() {},
@@ -854,7 +801,7 @@ export default {
       });
       needsDelete({
         id: this.formId,
-        source: 0,
+        source: 1,
       }).then((res) => {
         if (res.code == 1) {
           this.reqsearch();
@@ -880,12 +827,13 @@ export default {
         "_blank"
       );
     },
-    goNote() {
-      window.open(this.$router.resolve({ path: `/Note` }).href, "_blank");
-    },
     reqsearch() {
+      let url = new URL(window.location.href);
+      let needs = url.searchParams.get("needs");
+
       search({
-        source: 0,
+        url_mark: needs,
+        source: 1,
       }).then((res) => {
         if (res.code == 1) {
           if (res.data.data.length == 0) {
@@ -1045,28 +993,6 @@ export default {
           offset: 140,
           customClass: "customClasssuccess",
         });
-      } else if (this.checked == false) {
-        const h = this.$createElement;
-        this.$message({
-          message: h("p", { style: "display: flex" }, [
-            h(
-              "div",
-              {
-                style:
-                  "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
-              },
-              "¡"
-            ),
-            h(
-              "span",
-              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
-              "请先阅读并同意《视频拍摄服务及售后说明》"
-            ),
-          ]),
-          iconClass: "iconfont",
-          offset: 140,
-          customClass: "customClasssuccess",
-        });
       }
     },
     //跳转商品详情
@@ -1179,7 +1105,7 @@ export default {
           const res = await needsVideoNumin({
             id: id + "",
             video_num: num + "",
-            source: 0,
+            source: 1,
           });
           if (res.code == 1) {
             this.budgetChange(budget, index, num);
@@ -1231,9 +1157,12 @@ export default {
       if (falg) {
         list.forEach((item) => {
           if (item.influencer_info.length > 5) {
+            let url = new URL(window.location.href);
+            let needs = url.searchParams.get("needs");
             const itempop = item.influencer_info.pop();
-            needsSelectInfluencer({
-              influencer_ids: itempop.user_id,
+            inviteSelectInfluencer({
+              influencer_ids: itempop.id,
+              url_mark: needs,
             }).then((res) => {
               if (res.code == 1) {
                 this.reqsearch();
@@ -1244,7 +1173,7 @@ export default {
 
         if (this.differentIndices.length == 0) {
           let influencerIds1 = this.tableData[index].influencer_info
-            .map((item) => item.user_id.toString())
+            .map((item) => item.id.toString())
             .join(",");
           this.getneedsSelectInfluencer(id, influencerIds1);
           setTimeout(() => {
@@ -1254,12 +1183,12 @@ export default {
           let influencerIds1 = this.tableData[
             this.differentIndices[0]
           ].influencer_info
-            .map((item) => item.user_id?.toString())
+            .map((item) => item.id?.toString())
             .join(",");
           let influencerIds2 = this.tableData[
             this.differentIndices[1]
           ].influencer_info
-            .map((item) => item.user_id?.toString())
+            .map((item) => item.id?.toString())
             .join(",");
           if (
             this.tableData[this.differentIndices[1]].influencer_info[0]
@@ -1303,8 +1232,10 @@ export default {
 
     //请求拖拽排序接口
     async getneedsSelectInfluencer(id, influencerIds1) {
-      await needsSelectInfluencer({
-        source: 0,
+      let url = new URL(window.location.href);
+      let needs = url.searchParams.get("needs");
+      await inviteSelectInfluencer({
+        url_mark: needs,
         id: id,
         influencer_ids: influencerIds1,
       });
@@ -1349,9 +1280,6 @@ export default {
     getTipsdialogVisible1(msg) {
       this.TipsdialogVisible1 = msg;
     },
-    InvitationFillingdialogMsg(msg) {
-      this.InvitationFillingdialogVisble = msg;
-    },
 
     //拍摄预算修改
     budgetChange(val, index, num) {
@@ -1376,8 +1304,7 @@ export default {
             flag = false;
           }
         });
-        console.log(flag);
-        if (this.checked && flag) this.ifsubmitTo = true;
+        if (flag) this.ifsubmitTo = true;
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
           this.$refs["ruleForm" + index].fields[0].validateState = "";
@@ -1388,7 +1315,7 @@ export default {
       await needsBudget({
         id: id,
         budget: val,
-        source: 0,
+        source: 1,
       }).then((res) => {
         if (res.code == 1) {
           this.budgetChange(val, index, num);
@@ -1467,84 +1394,17 @@ export default {
         });
     },
 
-    //刷新
-    reloadPage() {
-      window.location.reload();
-    },
-
     //请求拍摄需求首页接口
     async getneedsIndex() {
       let res = await needsIndex({
-        source: 0,
+        source: 1,
       });
       if (res.code == 1) {
         this.fileDiz = res.data.file;
-        this.ifGuide = res.data.if_guide;
-        this.InvitationFillingdialoglink = res.data.invite_url;
-        if (res.data.if_guide == 1) {
-          this.NotedialogdialogVisible = true;
-        }
       }
-    },
-
-    initGuide() {
-      // 绑定标签元素的选择器数组
-      this.introOption.steps = [
-        {
-          title: "点击这里，添加意向红人",
-          element: ".influencerInfo3",
-          intro: `<img src="${this.tipsImg1}" style="width: 540px;height: 304px"/>`,
-          position: "right",
-        },
-        {
-          title: "鼠标上下左右拖动，调整红人匹配顺序",
-          element: ".influencerInfoUl",
-          intro: `<img src="${this.tipsImg2}" style="width: 540px;height: 180px"/>`,
-        },
-        {
-          title: "点击这里，填写产品及拍摄需求",
-          element: ".addbtn",
-        },
-        {
-          title: "点击这里，为同一变体或型号添加拍摄数量",
-          element: ".tips4",
-          intro: `<img src="${this.tipsImg3}" style="width: 540px;height: 180px"/>`,
-          position: "left",
-        },
-        {
-          title: `点击 “<i class="iconfont icon-fz" style="font-size: 14px;color: #796cf3"></i> 复制”按钮，为对应变体，快速创建需求`,
-          element: ".operate1",
-          intro: `<img src="${this.tipsImg4}" style="width: 540px;height: 180px"/>`,
-          position: "left",
-        },
-        {
-          title: "点击这里，使用表格批量导入需求",
-          element: ".tips6",
-          position: "left",
-        },
-      ];
-      this.$intro()
-        .setOptions(this.introOption)
-        // 点击结束按钮后执行的事件
-        .oncomplete(() => {
-          console.log("点击结束按钮后执行的事件");
-        })
-        // 点击跳过按钮后执行的事件
-        .onexit(() => {
-          console.log("点击跳过按钮后执行的事件");
-        })
-        // 确认完毕之后执行的事件
-        .onbeforeexit(() => {
-          console.log("确认完毕之后执行的事件");
-        })
-        .start();
     },
   },
   mounted() {
-    // setTimeout(() => {
-    //   this.initGuide(); // 调用新手引导的方法
-    // }, 3000);
-
     if (store.state.Index.ExitFullScreen) {
       this.Addinfluencers(
         store.state.Index.influencersList,
@@ -1565,7 +1425,7 @@ export default {
           if (item.id) {
             needsDelete({
               id: item.id,
-              source: 0,
+              source: 1,
             }).then((res) => {
               if (res.code == 1) {
                 this.reqsearch();
@@ -1592,29 +1452,6 @@ export default {
     paymentCompletedDialogVisible(newVal) {
       if (newVal == false) {
         this.$router.push("/manage/order");
-      }
-    },
-    checked(newval) {
-      if (
-        newval == true &&
-        this.tableDataTitle == false &&
-        this.tableData.length != 1
-      ) {
-        this.ifsubmitTo = true;
-        this.tableData.forEach((item) => {
-          if (item.title != "") {
-            console.log(item);
-            if (item.budget == "" || item.budget * 1 < item.video_num * 300)
-              this.ifsubmitTo = false;
-          }
-        });
-      } else {
-        this.ifsubmitTo = false;
-      }
-    },
-    NotedialogdialogVisible(newval) {
-      if (newval == false && this.ifGuide == 1) {
-        this.initGuide(); // 调用新手引导的方法
       }
     },
   },
@@ -1665,11 +1502,6 @@ export default {
   color: #f56c6c !important;
 }
 
-::v-deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
-  background-color: #a06cf3 !important;
-  border-color: #a06cf3 !important;
-}
-
 ::v-deep(.el-checkbox__inner:hover) {
   border-color: #a06cf3;
 }
@@ -1693,6 +1525,7 @@ export default {
 
 <style lang="less" scoped>
 .RequirementBox {
+  margin-top: -67px;
   background: linear-gradient(
     225deg,
     #e6e9fe 0%,
@@ -1700,7 +1533,22 @@ export default {
     #ecf2ff 60%,
     #eee5fc 100%
   );
-  min-height: calc(100vh - 67px);
+  min-height: 100vh;
+
+  .headertop {
+    box-sizing: border-box;
+    width: 100%;
+    height: 66px;
+    background: #ffffff;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    img {
+      cursor: pointer;
+    }
+  }
+
   .RequirementBoxBanxin {
     width: 1200px;
     margin: 0 auto;
@@ -1889,10 +1737,6 @@ export default {
       button {
         background: #d161f6;
       }
-    }
-    .elIcon {
-      text-align: center;
-      margin-top: 10px;
     }
   }
 }
@@ -2474,122 +2318,5 @@ export default {
   .el-table__body tr.current-row > td {
     background-color: #fff !important;
   }
-}
-</style>
-
-<!-- 新手引导提示样式 -->
-<style lang="less">
-.introjs-helperLayer {
-  box-shadow: rgba(33, 33, 33, 0.8) 0px 0px 1px 0px,
-    rgba(33, 33, 33, 0.5) 0px 0px 0px 5000px !important;
-  outline: 2px dashed #fff;
-}
-.new-tips {
-  color: #409eff;
-  line-height: 80px;
-  cursor: pointer;
-}
-.introjs-tooltip-title {
-  font-size: 16px !important;
-  width: 80%;
-  color: #333;
-  white-space: nowrap;
-}
-.warper {
-  width: 200px;
-  height: 100px;
-  line-height: 100px;
-  text-align: center;
-  border: 1px solid saddlebrown;
-}
-/* 重置引导组件样式(类似element-ui个人使用) */
-.intro-tooltip {
-  color: #ffff;
-  background: #2c3e50;
-}
-/* 引导提示框的位置 */
-.introjs-bottom-left-aligned {
-  left: 45% !important;
-}
-.introjs-right,
-.introjs-left {
-  top: -30%;
-}
-.intro-highlight {
-  background: rgba(255, 255, 255, 0.5);
-}
-.introjs-arrow {
-  // display: none !important;
-}
-.introjs-arrow.left {
-  border-right-color: #fff !important;
-}
-.introjs-arrow.top {
-  border-bottom-color: #fff !important;
-}
-.introjs-arrow.right {
-  border-color: transparent transparent transparent #fff !important;
-}
-.introjs-arrow.bottom {
-  border-top-color: #2c3e50;
-}
-.introjs-tooltip {
-  background: #fff !important;
-  max-width: none !important;
-  min-width: 320px !important;
-}
-/* 提示框头部区域 */
-.introjs-tooltip-header {
-  padding-top: 24px !important;
-}
-.introjs-skipbutton {
-  color: #999 !important;
-  font-size: 14px !important;
-  font-weight: normal !important;
-  //   padding: 8px 10px !important ;
-  margin-top: 12px;
-  margin-right: 8px;
-}
-
-.introjs-tooltiptext {
-  font-size: 14px !important;
-  padding: 15px 15px 12px !important;
-  color: #000;
-}
-/* 提示框按钮 */
-.introjs-tooltipbuttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none !important;
-  padding-bottom: 22px !important;
-}
-.introjs-button {
-  text-align: center;
-  padding: 4px !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  border-radius: 5px !important;
-  border: none !important;
-  width: 92px !important;
-  height: 24px !important;
-  line-height: 24px;
-}
-.introjs-button:last-child {
-  margin-left: 10px;
-  background: #d161f6 !important;
-}
-.introjs-prevbutton {
-  color: #606266 !important;
-  background: #fff !important;
-  border: 1px solid #dcdfe6 !important;
-}
-.introjs-nextbutton {
-  color: #fff !important;
-}
-.introjs-disabled {
-  color: #9e9e9e !important;
-  border-color: #bdbdbd !important;
-  background-color: #f4f4f4 !important;
 }
 </style>

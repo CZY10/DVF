@@ -541,6 +541,18 @@
       :TipsdialogVisible1="TipsdialogVisible1"
       @getTipsdialogVisible1="getTipsdialogVisible1"
     ></dialogVisibleTips1>
+
+    <!-- 上传成功弹窗 -->
+    <Successfullyejectedialog
+      :Successfullyejectedialog="Successfullyejectedialog"
+      @getSuccessfullyejectedialogMsg="getSuccessfullyejectedialogMsg"
+    ></Successfullyejectedialog>
+
+    <!-- 警告弹窗 -->
+    <Warningdialog
+      :Warningdialog="Warningdialog"
+      @getWarningdialogMsg="getWarningdialogMsg"
+    ></Warningdialog>
   </div>
 </template>
 
@@ -562,7 +574,11 @@ import Tipsdialog from "./dialog/Tipsdialog.vue";
 import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 import Notedialog from "./dialog/notedialog.vue";
 import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
+import Successfullyejectedialog from "./dialog/Successfullyejectedialog.vue";
+import Warningdialog from "./dialog/Warningdialog.vue";
 import store from "@/store";
+import { v4 as uuidv4 } from "uuid";
+import router from "@/router";
 export default {
   data() {
     return {
@@ -604,6 +620,8 @@ export default {
       style: "min-height:78px;display: block;",
       TipsdialogVisible1: false,
       deletecenterDialogVisiblesindex: 0,
+      Successfullyejectedialog: false,
+      Warningdialog: false,
     };
   },
   components: {
@@ -613,6 +631,8 @@ export default {
     ListOfInfluencersdialog,
     Notedialog,
     dialogVisibleTips1,
+    Successfullyejectedialog,
+    Warningdialog,
   },
   methods: {
     //删除拍摄需求
@@ -644,6 +664,7 @@ export default {
       needsDelete({
         id: this.formId,
         source: 1,
+        auth: localStorage.getItem("token"),
       }).then((res) => {
         if (res.code == 1) {
           this.reqsearch();
@@ -733,6 +754,9 @@ export default {
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
           });
+        } else {
+          localStorage.clear();
+          router.push("/");
         }
       });
     },
@@ -759,7 +783,6 @@ export default {
 
     //提交
     submitTo() {
-      console.log(11111);
       if (this.ifsubmitTo) {
         const loading = this.$loading({
           lock: true,
@@ -785,6 +808,8 @@ export default {
           .then((res) => {
             if (res.code == 1) {
               this.reqsearch();
+              this.Successfullyejectedialog = true;
+              this.ifsubmitTo = false;
               loading.close();
             } else {
               this.$message.error(res.msg);
@@ -1061,6 +1086,12 @@ export default {
     getTipsdialogVisible1(msg) {
       this.TipsdialogVisible1 = msg;
     },
+    getSuccessfullyejectedialogMsg(msg) {
+      this.Successfullyejectedialog = msg;
+    },
+    getWarningdialogMsg(msg) {
+      this.Warningdialog = msg;
+    },
 
     //拍摄预算修改
     budgetChange(val, index, num) {
@@ -1182,16 +1213,22 @@ export default {
 
     //请求拍摄需求首页接口
     async getneedsIndex() {
-      var date = new Date();
-      date.setMonth(date.getMonth() + 6); // 设置日期为半年后
-      document.cookie =
-        `auth=${localStorage.getItem("token")}; expires=` + date.toUTCString();
+      if (localStorage.getItem("token") == null) {
+        let said = uuidv4();
+        localStorage.setItem("token", said);
+        var date = new Date();
+        date.setMonth(date.getMonth() + 6); // 设置日期为半年后
+        document.cookie =
+          `auth=${localStorage.getItem("token")}; expires=` +
+          date.toUTCString();
+      }
       let res = await needsIndex({
         source: 1,
         auth: localStorage.getItem("token"),
       });
       if (res.code == 1) {
         this.fileDiz = res.data.file;
+        this.reqsearch();
       }
     },
   },
@@ -1203,8 +1240,13 @@ export default {
       );
       store.commit("Index/setExitFullScreen", false);
     }
-    this.reqsearch();
     this.getneedsIndex();
+
+    window.addEventListener("beforeunload", (event) => {
+      this.Warningdialog = true;
+      event.preventDefault();
+      event.returnValue = "";
+    });
   },
   watch: {
     tableData(newVal) {
@@ -1217,6 +1259,7 @@ export default {
             needsDelete({
               id: item.id,
               source: 1,
+              auth: localStorage.getItem("token"),
             }).then((res) => {
               if (res.code == 1) {
                 this.reqsearch();

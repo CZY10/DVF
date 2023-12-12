@@ -128,7 +128,7 @@
                             />
                             <i
                               class="el-icon-error delDiv"
-                              @click="delDr(item.user_id, scope.row.id)"
+                              @click="delDr(item.id, scope.row.id)"
                             ></i>
                           </div>
                           <p
@@ -531,149 +531,6 @@
       :reqsearch="reqsearch"
     ></Tipsdialog>
 
-    <!--支付定金-->
-    <el-dialog
-      title="已提交成功，请尽快支付定金"
-      :visible.sync="payDepositDialogVisible"
-      width="500px"
-      :close-on-click-modal="false"
-      class="pay_deposit_dialog"
-      center
-    >
-      <div style="position: relative">
-        <el-alert
-          title="支付定金后，平台将正式为您对接达人。不满意可随时申请退还定金。"
-          center
-          style="position: relative"
-          :closable="false"
-        >
-          <i
-            class="iconfont icon-tips"
-            style="
-              position: absolute;
-              top: 8px;
-              left: 14px;
-              font-size: 18px;
-              color: #796cf3;
-            "
-          ></i>
-        </el-alert>
-        <h5>¥{{ orderData[0].order.price }}</h5>
-        <p>定金金额</p>
-        <p>
-          订单号：
-          <span>{{ orderData[0].order.order_id }}</span>
-        </p>
-        <el-tabs type="border-card">
-          <el-tab-pane>
-            <span
-              slot="label"
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-              ><i
-                class="iconfont icon-zhifupingtai-weixin"
-                style="
-                  color: rgba(59, 202, 114, 1);
-                  font-size: 20px;
-                  margin-right: 6px;
-                "
-              ></i
-              >微信支付</span
-            >
-            <div>
-              <div class="qrcode" ref="wechatQrCodeUrl">
-                <span class="top_left"></span>
-                <span class="top_right"></span>
-                <span class="bottom_left"></span>
-                <span class="bottom_right"></span>
-              </div>
-              <p style="padding-top: 8px">可截图给财务人员付款</p>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane>
-            <span
-              slot="label"
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-              ><i
-                class="iconfont icon-zhifu-zhifubao"
-                style="
-                  color: rgba(2, 169, 241, 1);
-                  font-size: 20px;
-                  margin-right: 6px;
-                "
-              ></i
-              >支付宝支付</span
-            >
-            <div>
-              <div class="qrcode" ref="alipayQrCodeUrl">
-                <span class="top_left"></span>
-                <span class="top_right"></span>
-                <span class="bottom_left"></span>
-                <span class="bottom_right"></span>
-              </div>
-              <p style="padding-top: 8px">可截图给财务人员付款</p>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-
-        <div
-          style="
-            width: 20px;
-            height: 20px;
-            background: #02b578;
-            border-radius: 50%;
-            text-align: center;
-            color: white;
-            position: absolute;
-            top: -34px;
-            left: 88px;
-          "
-        >
-          √
-        </div>
-      </div>
-    </el-dialog>
-
-    <!--支付完成-->
-    <el-dialog
-      :title="'定金支付成功'"
-      :visible.sync="paymentCompletedDialogVisible"
-      width="360px"
-      @close="goOrder"
-      :close-on-click-modal="false"
-      class="payment_completed_dialog"
-      center
-    >
-      <div slot="title">
-        <i
-          style="color: rgba(2, 181, 120, 1); font-size: 20px"
-          class="el-icon-success"
-        ></i>
-        定金支付成功
-      </div>
-      <div>
-        <p style="line-height: 24px; text-align: center">
-          平台将开始匹配并对接达人，预计1-2个工作日会收到反馈，敬请留意
-        </p>
-        <div class="button_box know_btn">
-          <el-button
-            @click="
-              paymentCompletedDialogVisible = false;
-              goOrder();
-            "
-            >我知道了</el-button
-          >
-        </div>
-      </div>
-    </el-dialog>
-
     <!-- 温馨提示弹窗 -->
     <Notedialog
       @getNotedialogMsg="getNotedialogMsg"
@@ -691,9 +548,8 @@
 import {
   search,
   needsDelete,
-  needsRemoveInfluencer,
-  needsSubmit,
-  checkPayment,
+  inviteRemoveInfluencer,
+  inviteSubmit,
   needsVideoNumin,
   needsBudget,
   needsIndex,
@@ -707,7 +563,6 @@ import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 import Notedialog from "./dialog/notedialog.vue";
 import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
 import store from "@/store";
-import QRCode from "qrcodejs2";
 export default {
   data() {
     return {
@@ -726,8 +581,6 @@ export default {
       ],
       errorShow: false,
       isvideoSubmitDialogVisible: 0,
-      checkWechatPaymentVal: "",
-      checkAlipayPaymentVal: "",
       fileList: [],
       handleSelectionChangeList: [],
       fileDiz: "",
@@ -737,16 +590,6 @@ export default {
       RequirementsList: {},
       TipsdialogdialogVisible: false,
       video_id: "",
-      payDepositDialogVisible: false,
-      paymentCompletedDialogVisible: false,
-      orderData: [
-        {
-          order: {
-            price: "",
-            order_id: "",
-          },
-        },
-      ],
       timer: null,
       influencersList: [],
       influencersListid: 0,
@@ -772,7 +615,6 @@ export default {
     dialogVisibleTips1,
   },
   methods: {
-    goOrder() {},
     //删除拍摄需求
     deletesubmitForm(id, index) {
       if (id != undefined) {
@@ -811,9 +653,10 @@ export default {
     },
     //删除达人
     delDr(user_id, id) {
-      needsRemoveInfluencer({
+      inviteRemoveInfluencer({
         id: id,
-        user_id: user_id,
+        influencer_id: user_id,
+        auth: localStorage.getItem("token"),
       }).then((res) => {
         if (res.code == 1) {
           this.reqsearch();
@@ -834,6 +677,7 @@ export default {
       search({
         url_mark: needs,
         source: 1,
+        auth: localStorage.getItem("token"),
       }).then((res) => {
         if (res.code == 1) {
           if (res.data.data.length == 0) {
@@ -915,6 +759,7 @@ export default {
 
     //提交
     submitTo() {
+      console.log(11111);
       if (this.ifsubmitTo) {
         const loading = this.$loading({
           lock: true,
@@ -930,39 +775,17 @@ export default {
           }
         });
         const id = arr.join(",");
-        needsSubmit({
+        let url = new URL(window.location.href);
+        let needs = url.searchParams.get("needs");
+        inviteSubmit({
           id: id,
+          url_mark: needs,
+          auth: localStorage.getItem("token"),
         })
           .then((res) => {
             if (res.code == 1) {
               this.reqsearch();
               loading.close();
-              this.payDepositDialogVisible = true;
-              this.$nextTick(() => {
-                new QRCode(this.$refs.alipayQrCodeUrl, {
-                  text: res.data.order[1].order.qrcode,
-                  width: 130,
-                  height: 130,
-                  colorDark: "#000000",
-                  colorLight: "#ffffff",
-                  correctLevel: QRCode.CorrectLevel.H,
-                });
-                new QRCode(this.$refs.wechatQrCodeUrl, {
-                  text: res.data.order[0].order.qrcode,
-                  width: 130,
-                  height: 130,
-                  colorDark: "#000000",
-                  colorLight: "#ffffff",
-                  correctLevel: QRCode.CorrectLevel.H,
-                });
-              });
-              this.orderData = res.data.order;
-              this.handlerCheckWechatPayment(
-                res.data.order[0].order.out_trade_no
-              );
-              this.handlerCheckAlipayPayment(
-                res.data.order[1].order.out_trade_no
-              );
             } else {
               this.$message.error(res.msg);
             }
@@ -1001,52 +824,7 @@ export default {
         window.open(url, "_blank");
       }
     },
-    //微信检测是否支付成功
-    handlerCheckWechatPayment(order) {
-      let _this = this;
-      _this.checkWechatPaymentVal = setInterval(function () {
-        checkPayment({
-          out_trade_no: order,
-          payment: "wechat",
-        })
-          .then((res) => {
-            if (res.code === 1) {
-              if (res.data.status === "success") {
-                _this.payDepositDialogVisible = false;
-                clearInterval(_this.checkWechatPaymentVal);
-                clearInterval(_this.checkAlipayPaymentVal);
-                _this.paymentCompletedDialogVisible = true;
-              }
-            }
-          })
-          .catch((err) => {
-            this.$message.error(err.message);
-          });
-      }, 3000);
-    },
-    //支付宝检测是否支付成功
-    handlerCheckAlipayPayment(order) {
-      let _this = this;
-      _this.checkAlipayPaymentVal = setInterval(function () {
-        checkPayment({
-          out_trade_no: order,
-          payment: "alipay",
-        })
-          .then((res) => {
-            if (res.code === 1) {
-              if (res.data.status === "success") {
-                _this.payDepositDialogVisible = false;
-                clearInterval(_this.checkAlipayPaymentVal);
-                clearInterval(_this.checkWechatPaymentVal);
-                _this.paymentCompletedDialogVisible = true;
-              }
-            }
-          })
-          .catch((err) => {
-            this.$message.error(err.message);
-          });
-      }, 3000);
-    },
+
     handleSelectionChange(val) {
       this.handleSelectionChangeList = val;
     },
@@ -1106,6 +884,7 @@ export default {
             id: id + "",
             video_num: num + "",
             source: 1,
+            auth: localStorage.getItem("token"),
           });
           if (res.code == 1) {
             this.budgetChange(budget, index, num);
@@ -1163,6 +942,7 @@ export default {
             inviteSelectInfluencer({
               influencer_ids: itempop.id,
               url_mark: needs,
+              auth: localStorage.getItem("token"),
             }).then((res) => {
               if (res.code == 1) {
                 this.reqsearch();
@@ -1238,6 +1018,7 @@ export default {
         url_mark: needs,
         id: id,
         influencer_ids: influencerIds1,
+        auth: localStorage.getItem("token"),
       });
     },
 
@@ -1316,6 +1097,7 @@ export default {
         id: id,
         budget: val,
         source: 1,
+        auth: localStorage.getItem("token"),
       }).then((res) => {
         if (res.code == 1) {
           this.budgetChange(val, index, num);
@@ -1355,6 +1137,7 @@ export default {
       inviteTemplate({
         file: fileLit.file,
         url_mark: needs,
+        auth: localStorage.getItem("token"),
       })
         .then((res) => {
           this.reqsearch();
@@ -1399,8 +1182,13 @@ export default {
 
     //请求拍摄需求首页接口
     async getneedsIndex() {
+      var date = new Date();
+      date.setMonth(date.getMonth() + 6); // 设置日期为半年后
+      document.cookie =
+        `auth=${localStorage.getItem("token")}; expires=` + date.toUTCString();
       let res = await needsIndex({
         source: 1,
+        auth: localStorage.getItem("token"),
       });
       if (res.code == 1) {
         this.fileDiz = res.data.file;
@@ -1442,19 +1230,6 @@ export default {
       if (newval == false) {
         this.RequirementsList = [];
         this.determine = 0;
-      }
-    },
-    payDepositDialogVisible(newVal) {
-      let _this = this;
-      if (newVal == false && _this.paymentCompletedDialogVisible == false) {
-        clearInterval(_this.checkWechatPaymentVal);
-        clearInterval(_this.checkAlipayPaymentVal);
-        _this.$router.push("/manage/order");
-      }
-    },
-    paymentCompletedDialogVisible(newVal) {
-      if (newVal == false) {
-        this.$router.push("/manage/order");
       }
     },
   },
@@ -1965,331 +1740,6 @@ export default {
   }
   i:hover {
     opacity: 1;
-  }
-}
-</style>
-
-<style lang="less" scoped>
-.pay_deposit_dialog {
-  h5 {
-    font-size: 22px;
-    font-family: PingFangSC-Semibold, PingFang SC;
-    font-weight: 600;
-    color: #ff2c4c;
-    line-height: 30px;
-    text-align: center;
-    margin: 18px 0 1px 0;
-  }
-
-  p {
-    font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #999999;
-    line-height: 20px;
-    text-align: center;
-    padding: 5px 0;
-
-    span {
-      color: rgba(51, 51, 51, 1);
-    }
-  }
-
-  ul {
-    border-radius: 10px;
-    border: 2px solid #f4f2ff;
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 30px;
-    margin: 15px 35px 16px 35px;
-
-    li {
-      div {
-        width: 128px;
-        height: 128px;
-        background: #ffffff;
-        border: 1px solid #eeeeee;
-
-        img {
-          width: 100%;
-        }
-      }
-
-      p {
-        font-size: 14px;
-        font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
-        color: #333333;
-        line-height: 20px;
-        margin-top: 10px;
-        margin-bottom: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        i {
-          font-size: 18px;
-          margin-right: 6px;
-        }
-      }
-    }
-  }
-}
-
-.group_26 {
-  background-color: rgba(244, 242, 255, 1);
-  border-radius: 4px;
-  width: 420px;
-  height: 94px;
-}
-
-.image-text_40 {
-  width: 392px;
-  height: 66px;
-  margin: 14px 0 0 14px;
-  display: flex;
-  padding-top: 15px;
-}
-
-.thumbnail_26 {
-  width: 15px;
-  height: 18px;
-}
-
-.text-group_14 {
-  width: 369px;
-  height: 66px;
-  overflow-wrap: break-word;
-  font-size: 0;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  line-height: 20px;
-  margin-left: 9px;
-}
-
-.text_98 {
-  width: 369px;
-  height: 66px;
-  overflow-wrap: break-word;
-  color: rgba(102, 102, 102, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  line-height: 20px;
-}
-
-.text_99 {
-  width: 369px;
-  height: 66px;
-  overflow-wrap: break-word;
-  color: rgba(51, 51, 51, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Semibold;
-  font-weight: 600;
-  text-align: left;
-  line-height: 20px;
-}
-
-.paragraph_1 {
-  width: 369px;
-  height: 66px;
-  overflow-wrap: break-word;
-  color: rgba(102, 102, 102, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  line-height: 20px;
-}
-
-/*支付尾款弹窗*/
-.payment_dialog,
-.pay_deposit_dialog {
-  .el-tabs--border-card > .el-tabs__content {
-    padding: 34px 15px 21px 15px;
-  }
-
-  .qrcode {
-    position: relative;
-    padding: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 140px;
-    height: 140px;
-    margin: auto;
-    border: 1px solid #eeeeee;
-
-    .top_left,
-    .top_right,
-    .bottom_left,
-    .bottom_right {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-    }
-
-    .top_left {
-      border-top: 1px solid #333333;
-      left: -1px;
-      top: -1px;
-      border-left: 1px solid #333333;
-    }
-
-    .top_right {
-      border-top: 1px solid #333333;
-      right: -1px;
-      top: -1px;
-      border-right: 1px solid #333333;
-    }
-
-    .bottom_left {
-      border-bottom: 1px solid #333333;
-      left: -1px;
-      bottom: -1px;
-      border-left: 1px solid #333333;
-    }
-
-    .bottom_right {
-      border-bottom: 1px solid #333333;
-      right: -1px;
-      bottom: -1px;
-      border-right: 1px solid #333333;
-    }
-  }
-
-  .el-tabs--border-card {
-    border: 1px solid #eeeeee;
-    margin-top: 15px;
-  }
-
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item + .el-tabs__item {
-    margin-left: 0;
-  }
-
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item:first-child {
-    border-right: 1px solid #eeeeee !important;
-    margin-left: 0;
-  }
-
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
-    margin-left: 0;
-  }
-
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item {
-    color: #999999;
-    font-family: PingFangSC-Semibold, PingFang SC;
-    border: none;
-    margin-bottom: 1px;
-    transition: none;
-    height: 42px;
-  }
-
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
-    font-weight: 600;
-    color: #333333;
-    background: #f6f5ff;
-    border-bottom: 2px solid #796cf3;
-
-    i {
-      font-weight: normal;
-    }
-  }
-
-  .el-tabs--border-card > .el-tabs__header {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    overflow: hidden;
-    border-bottom: 1px solid #eeeeee;
-    background: #ffffff;
-  }
-
-  .el-tabs--border-card {
-    box-shadow: none;
-    border-radius: 10px;
-  }
-
-  ::v-deep(.el-tabs__nav) {
-    width: 100%;
-  }
-
-  ::v-deep(.el-tabs__item) {
-    width: 50%;
-    text-align: center;
-  }
-}
-
-/*支付定金弹窗*/
-.pay_deposit_dialog {
-  .el-alert {
-    padding: 7px 0;
-
-    .el-alert__description {
-      margin: 0;
-    }
-  }
-
-  .el-alert__icon {
-    color: #796cf3;
-  }
-
-  .el-alert--info.is-light {
-    background: #f4f2ff;
-    color: #666666;
-  }
-}
-
-::v-deep(.el-alert__content) {
-  padding: 0 0 0 35px;
-}
-
-.button_box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
-
-  button {
-    padding: 8px 45px;
-    border-radius: 16px;
-    font-size: 14px;
-  }
-
-  .cancel_style {
-    border: 1px solid #eeeeee;
-    font-family: PingFangSC-Regular, PingFang SC;
-    color: #999999;
-  }
-
-  .cancel_style:hover {
-    background: none;
-  }
-
-  .confirm_style {
-    border: none;
-    background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-    font-family: PingFangSC-Regular, PingFang SC;
-    color: #ffffff;
-  }
-}
-
-.know_btn {
-  padding-top: 20px;
-
-  button {
-    display: block;
-    margin: auto;
-    background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-    border-radius: 16px;
-    font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #ffffff;
-    line-height: 20px;
-    padding: 5px 41px;
   }
 }
 </style>

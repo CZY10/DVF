@@ -520,3 +520,21 @@ export function inviteTemplate(data) {
         data
     })
 }
+
+//邀请填写页删除需求的意向红人
+export function inviteRemoveInfluencer(data) {
+    return request({
+        url: "/api/needs/inviteRemoveInfluencer",
+        method: "post",
+        data
+    })
+}
+
+//邀请填写页需求提交
+export function inviteSubmit(data) {
+    return request({
+        url: "/api/needs/inviteSubmit",
+        method: "post",
+        data
+    })
+}

@@ -694,6 +694,7 @@ export default {
             id: this.influencersListid,
             influencer_ids: result,
             url_mark: needs,
+            auth: localStorage.getItem("token"),
           }).then((res) => {
             if (res.code == 1) {
               this.$emit("getlist", true);

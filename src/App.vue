@@ -23,18 +23,7 @@ export default {
       fullscreenLoading: false,
     };
   },
-  mounted() {},
-  created() {
-    this.source =
-      this.$route.query.source || localStorage.getItem("source") || "";
-    this.action =
-      this.$route.query.action || localStorage.getItem("action") || "";
-    if (window.localStorage.token) {
-      this.isToken = true;
-    } else {
-      this.isToken = false;
-    }
-
+  mounted() {
     if (this.isToken == true && this.source == "vipon_deal") {
       const loading = this.$loading({
         lock: true,
@@ -53,21 +42,36 @@ export default {
         this.$store.commit("resetState");
         this.$router.push("/login");
       } else {
+        let url = new URL(window.location.href);
+        let id = url.searchParams.get("id");
         determineDeal({
           is_login: true,
           action: this.action,
           source: this.source,
-          id: this.$route.query.id || "",
+          id: id,
         })
           .then((res) => {
-            window.location.href = res.data.jump;
-            localStorage.removeItem("source");
-            localStorage.removeItem("action");
+            if (res.code == 1) {
+              localStorage.removeItem("source");
+              localStorage.removeItem("action");
+              window.location.href = res.data.jump;
+            }
           })
           .catch((res) => {
             console.log(res);
           });
       }
+    }
+  },
+  created() {
+    this.source =
+      this.$route.query.source || localStorage.getItem("source") || "";
+    this.action =
+      this.$route.query.action || localStorage.getItem("action") || "";
+    if (window.localStorage.token) {
+      this.isToken = true;
+    } else {
+      this.isToken = false;
     }
   },
   methods: {

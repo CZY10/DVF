@@ -1149,12 +1149,12 @@ export default {
           offset: 140,
           customClass: "customClasssuccess",
         });
-        document
-          .querySelector(".el-message-btn")
-          .addEventListener("click", function () {
+        document.querySelectorAll(".el-message-btn").forEach((item) => {
+          item.addEventListener("click", function () {
             msg.close();
             localStorage.setItem("handleChange", false);
           });
+        });
       }
 
       if (value == 1) {

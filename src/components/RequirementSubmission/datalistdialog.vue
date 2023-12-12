@@ -699,14 +699,16 @@ export default {
       .flat()
       .map((item) => item.user_id)
       .join(",");
-    await needsSelectInfluencer({
-      id: this.influencersListid,
-      influencer_ids: result,
-    }).then((res) => {
-      if (res.code == 1) {
-        this.$emit("getlist", true);
-      }
-    });
+    if (result != "" && store.state.Index.ExitFullScreen == false) {
+      await needsSelectInfluencer({
+        id: this.influencersListid,
+        influencer_ids: result,
+      }).then((res) => {
+        if (res.code == 1) {
+          this.$emit("getlist", true);
+        }
+      });
+    }
   },
 };
 </script>

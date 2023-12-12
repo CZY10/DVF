@@ -1344,7 +1344,7 @@
           <el-button
             @click="
               paymentCompletedDialogVisible = false;
-              tableData = [];
+              this.tableData = [];
               getOrderList();
             "
             >我知道了</el-button
@@ -2251,12 +2251,9 @@ export default {
       }).then((res) => {
         if (res.code == 1) {
           this.centerDialogVisible = true;
-          this.tableData = [];
-          this.getOrderList();
           let req = this.tableData.filter((item) => {
             return item.id == id;
           });
-          // console.log(req[0].site);
           this.getsite = req[0].site;
           this.strArray = this.getsite.split("\r\n");
         }

@@ -482,7 +482,8 @@ export default {
             this.setAvatar(res.data.userinfo.avatar);
             if (res.data.jump) {
               await new Promise((resolve) => {
-                window.open(res.data.jump, "_blank");
+                this.openUrl(res.data.jump);
+
                 setTimeout(() => {
                   router.push("/");
                   console.log("gohome");
@@ -499,6 +500,16 @@ export default {
           this.$message.error(err.msg);
         }
       }, 3000);
+    },
+
+    // 跳转 不会被拦截
+    openUrl(url) {
+      var a = document.createElement("a"); //创建a对象
+      a.setAttribute("href", url);
+      a.setAttribute("target", "_blank");
+      a.setAttribute("id", "camnpr");
+      document.body.appendChild(a);
+      a.click(); //执行当前对象
     },
 
     handleClick(tab) {

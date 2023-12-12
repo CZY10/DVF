@@ -27,9 +27,11 @@
         <el-menu-item index="/buyershow" class="el-menu-itempadding"
           >红人视频</el-menu-item
         >
-        <el-menu-item class="el-menu-itempadding" @click="goVipon"
-          >站外推广</el-menu-item
-        >
+        <el-menu-item class="el-menu-itempadding">
+          <a :href="ViponSrc" target="_blank" style="line-height: 59px"
+            ><span>站外推广</span></a
+          >
+        </el-menu-item>
         <el-submenu style="float: left" index="1">
           <template slot="title"><span>联盟介绍</span></template>
           <div style="width: 100px">
@@ -518,6 +520,13 @@ export default {
       })();
     };
 
+    //   vipon自助发帖跳转
+    if (process.env.NODE_ENV == "production") {
+      this.ViponSrc = "https://seller.vipona.com/hot/fb";
+    } else if (process.env.NODE_ENV == "development") {
+      this.ViponSrc = "https://hkatest.myvipon.com/hot/fb";
+    }
+
     this.getcarList();
   },
   methods: {
@@ -772,22 +781,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    //   vipon自助发帖跳转
-    goVipon() {
-      router.go(0);
-      if (process.env.NODE_ENV == "production") {
-        this.ViponSrc = "https://seller.vipona.com/hot/fb";
-      } else if (process.env.NODE_ENV == "development") {
-        this.ViponSrc = "https://hkatest.myvipon.com/hot/fb";
-      }
-      if (window.localStorage.getItem("token")) {
-        localStorage.removeItem("source");
-        localStorage.removeItem("active");
-        window.open(this.ViponSrc, "_blank");
-      } else {
-        window.open(this.ViponSrc, "_blank");
-      }
     },
 
     //删除需求列表某一列

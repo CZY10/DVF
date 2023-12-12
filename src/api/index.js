@@ -426,9 +426,6 @@ export function needsSubmit(data) {
 export function needsTemplate(data) {
     return request({
         url: "/api/needs/template",
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        },
         method: "post",
         data
     })
@@ -510,6 +507,15 @@ export function needsIndex(data) {
 export function inviteSelectInfluencer(data) {
     return request({
         url: "/api/needs/inviteSelectInfluencer",
+        method: "post",
+        data
+    })
+}
+
+// 邀请填写页导入模板
+export function inviteTemplate(data) {
+    return request({
+        url: "/api/needs/inviteTemplate",
         method: "post",
         data
     })

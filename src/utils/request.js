@@ -1,8 +1,6 @@
 import axios from "axios";
-import { Message, MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import store from "@/store";
-import config from "../../config";
-import { refreshToken } from "@/api";
 import router from '@/router'
 
 const service = axios.create({
@@ -12,7 +10,7 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-    if (config.url == "/api/needs/template") {
+    if (config.url == "/api/needs/template" || config.url == '/api/needs/inviteTemplate') {
         config.headers['Content-Type'] = 'multipart/form-data'
     } else {
         config.headers['Content-Type'] = 'application/json'

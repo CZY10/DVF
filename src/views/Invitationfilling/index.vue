@@ -694,11 +694,11 @@ import {
   needsRemoveInfluencer,
   needsSubmit,
   checkPayment,
-  needsTemplate,
   needsVideoNumin,
   needsBudget,
   needsIndex,
   inviteSelectInfluencer,
+  inviteTemplate,
 } from "@/api";
 import draggable from "vuedraggable";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
@@ -1349,9 +1349,12 @@ export default {
       });
       const formData = new FormData();
       formData.append("file", fileLit.file);
-      needsTemplate({
+
+      let url = new URL(window.location.href);
+      let needs = url.searchParams.get("needs");
+      inviteTemplate({
         file: fileLit.file,
-        id: this.daorid,
+        url_mark: needs,
       })
         .then((res) => {
           this.reqsearch();

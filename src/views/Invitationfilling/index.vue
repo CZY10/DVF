@@ -6,12 +6,14 @@
       </a>
     </div>
 
-    <div class="headertitle">
-      <p>
-        <i class="iconfont icon-tips" style="font-size: 14px"></i>
-        温馨提示：填写完后记得及时上传，否则提报人无法接收哦～
-      </p>
-    </div>
+    <Transition enter-active-class="li2show" leave-active-class="li2hide">
+      <div class="headertitle" v-show="ifsubmitTo">
+        <p>
+          <i class="iconfont icon-tips" style="font-size: 14px"></i>
+          温馨提示：填写完后记得及时上传，否则提报人无法接收哦～
+        </p>
+      </div>
+    </Transition>
 
     <div class="RequirementBoxBanxin">
       <p class="hearder">提交视频拍摄需求</p>
@@ -1359,12 +1361,42 @@ export default {
     }
   }
 
+  .li2show {
+    animation: box-enter2 0.3s cubic-bezier(0, 0, 1, 1);
+  }
+
+  @keyframes box-enter2 {
+    0% {
+      height: 0;
+    }
+
+    100% {
+      height: 30px;
+    }
+  }
+
+  /*离开的动画*/
+  .li2hide {
+    animation: box-leave2 0.3s cubic-bezier(0, 0, 1, 1);
+  }
+
+  @keyframes box-leave2 {
+    0% {
+      height: 30px;
+    }
+
+    100% {
+      height: 0;
+    }
+  }
   .headertitle {
     width: 100%;
     height: 30px;
     background: #faebff;
     border-radius: 0px 0px 10px 10px;
     line-height: 30px;
+    overflow: hidden;
+    position: fixed;
     p {
       width: 1200px;
       margin: 0 auto;
@@ -1384,7 +1416,7 @@ export default {
       font-weight: 600;
       color: #333333;
       text-align: center;
-      margin-top: 10px;
+      margin-top: 40px;
     }
 
     .RequirementWenben {

@@ -336,9 +336,6 @@ import { mapMutations } from "vuex";
 import draggable from "vuedraggable";
 import {
   chatCount,
-  addWeCom,
-  checkQr,
-  checkEnterpriseQr,
   serviceInfo,
   getConfig,
   carList,

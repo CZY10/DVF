@@ -9,7 +9,6 @@ import Manage from "@/views/Manage";
 import Order from "@/views/Manage/Order";
 import Payment from "@/views/Manage/Payment";
 import Personal from "@/views/Manage/Personal";
-import ChatGPT from "@/views/ChatGPT";
 import webDeal from "@/views/webDeal/index.vue"
 import Requirement from "@/components/RequirementSubmission/index.vue"
 import Note from "@/components/RequirementSubmission/note.vue"
@@ -38,12 +37,6 @@ const routes = [
                 name: 'webDeal',
                 meta: { requiresAuth: false },
                 component: webDeal,
-            },
-            {
-                path: '/chatgpt',
-                name: 'chatgpt',
-                meta: { requiresAuth: true },
-                component: ChatGPT,
             },
             {
                 path: '/buyershowmanage',

@@ -1,6 +1,5 @@
 //请求方法
 import request, { createAPI } from "@/utils/request";
-import { log } from "video.js";
 
 //post请求
 // export function login(data){
@@ -275,22 +274,6 @@ export function orderStep(data) {
         data
     })
 }
-//获取chatGPT列表
-export function chatgptList(data) {
-    return request({
-        url: '/api/chatgpt/index',
-        method: 'post',
-        data
-    })
-}
-//chatGPT消息发送
-export function createChatgpt(data) {
-    return request({
-        url: '/api/chatgpt/create',
-        method: 'post',
-        data
-    })
-}
 //引导添加企业微信
 export function addWeCom(data) {
     return request({
@@ -376,15 +359,6 @@ export function needsEdit(data) {
         data
     })
 }
-
-//需求克隆
-// export function needsCopy(data) {
-//     return request({
-//         url: "/api/needs/copy",
-//         method: "post",
-//         data
-//     })
-// }
 
 //需求删除
 export function needsDelete(data) {

@@ -762,7 +762,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.upload_List == [];
         this.formradioLink = "1";
         this.formradioRequirements = "1";
-        this.ruleForm.name = " ";
+        this.ruleForm.name = "";
         this.ruleForm.link = "";
         this.ruleForm.notes = "";
         this.ruleForm.ShootingRequirements = "";
@@ -774,7 +774,6 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.fileList = [];
         this.upload_List = [];
       } else {
-        this.ruleForm.name = "";
         this.rules.name[0].required = true;
       }
     },

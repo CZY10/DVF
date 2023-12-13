@@ -5,6 +5,14 @@
         <img src="@/assets/images/home/logo.webp" />
       </a>
     </div>
+
+    <div class="headertitle">
+      <p>
+        <i class="iconfont icon-tips" style="font-size: 14px"></i>
+        温馨提示：填写完后记得及时上传，否则提报人无法接收哦～
+      </p>
+    </div>
+
     <div class="RequirementBoxBanxin">
       <p class="hearder">提交视频拍摄需求</p>
       <div class="RequirementWenben">
@@ -38,8 +46,8 @@
           position: relative;
           border-radius: 4px;
           border: 1px solid #eeeeee;
-          height: 640px;
           box-sizing: border-box;
+          height: calc(100vh - 270px);
         "
       >
         <el-table
@@ -50,7 +58,6 @@
             color: '#333333',
             position: 'relative',
           }"
-          height="640"
           @selection-change="handleSelectionChange"
         >
           <el-table-column label="序号" width="70">
@@ -547,12 +554,6 @@
       :Successfullyejectedialog="Successfullyejectedialog"
       @getSuccessfullyejectedialogMsg="getSuccessfullyejectedialogMsg"
     ></Successfullyejectedialog>
-
-    <!-- 警告弹窗 -->
-    <Warningdialog
-      :Warningdialog="Warningdialog"
-      @getWarningdialogMsg="getWarningdialogMsg"
-    ></Warningdialog>
   </div>
 </template>
 
@@ -575,7 +576,6 @@ import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 import Notedialog from "./dialog/notedialog.vue";
 import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
 import Successfullyejectedialog from "./dialog/Successfullyejectedialog.vue";
-import Warningdialog from "./dialog/Warningdialog.vue";
 import store from "@/store";
 import { v4 as uuidv4 } from "uuid";
 import router from "@/router";
@@ -621,7 +621,6 @@ export default {
       TipsdialogVisible1: false,
       deletecenterDialogVisiblesindex: 0,
       Successfullyejectedialog: false,
-      Warningdialog: false,
     };
   },
   components: {
@@ -632,7 +631,6 @@ export default {
     Notedialog,
     dialogVisibleTips1,
     Successfullyejectedialog,
-    Warningdialog,
   },
   methods: {
     //删除拍摄需求
@@ -1089,9 +1087,6 @@ export default {
     getSuccessfullyejectedialogMsg(msg) {
       this.Successfullyejectedialog = msg;
     },
-    getWarningdialogMsg(msg) {
-      this.Warningdialog = msg;
-    },
 
     //拍摄预算修改
     budgetChange(val, index, num) {
@@ -1241,12 +1236,6 @@ export default {
       store.commit("Index/setExitFullScreen", false);
     }
     this.getneedsIndex();
-
-    window.addEventListener("beforeunload", (event) => {
-      this.Warningdialog = true;
-      event.preventDefault();
-      event.returnValue = "";
-    });
   },
   watch: {
     tableData(newVal) {
@@ -1346,7 +1335,6 @@ export default {
 
 <style lang="less" scoped>
 .RequirementBox {
-  margin-top: -67px;
   background: linear-gradient(
     225deg,
     #e6e9fe 0%,
@@ -1355,6 +1343,7 @@ export default {
     #eee5fc 100%
   );
   min-height: 100vh;
+  margin-top: -67px;
 
   .headertop {
     box-sizing: border-box;
@@ -1370,17 +1359,32 @@ export default {
     }
   }
 
+  .headertitle {
+    width: 100%;
+    height: 30px;
+    background: #faebff;
+    border-radius: 0px 0px 10px 10px;
+    line-height: 30px;
+    p {
+      width: 1200px;
+      margin: 0 auto;
+      color: #d161f6;
+      font-size: 12px;
+    }
+  }
+
   .RequirementBoxBanxin {
     width: 1200px;
     margin: 0 auto;
     overflow: hidden;
+    min-height: calc(100vh - 97px);
     .hearder {
       font-size: 20px;
       font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: 600;
       color: #333333;
       text-align: center;
-      margin-top: 30px;
+      margin-top: 10px;
     }
 
     .RequirementWenben {
@@ -1784,6 +1788,10 @@ export default {
   i:hover {
     opacity: 1;
   }
+}
+
+::v-deep(.el-table) {
+  height: 100%;
 }
 </style>
 

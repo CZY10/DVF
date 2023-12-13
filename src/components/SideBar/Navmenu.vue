@@ -28,7 +28,10 @@
           >红人视频</el-menu-item
         >
         <el-menu-item class="el-menu-itempadding">
-          <a :href="ViponSrc" target="_blank" style="line-height: 59px"
+          <a
+            :href="ViponSrc"
+            target="_blank"
+            style="height: 100%; line-height: 62px"
             ><span>站外推广</span></a
           >
         </el-menu-item>
@@ -350,7 +353,6 @@ export default {
   inject: ["reload"],
   data() {
     return {
-      dialog: false,
       isLogin: true,
       avatar: localStorage.getItem("avatar") || this.$store.state.login.avatar,
       messageCount: 0,
@@ -455,7 +457,6 @@ export default {
   mounted() {
     if (localStorage.getItem("videoUrl") == "undefined") this.getContent();
     if (localStorage.getItem("videoUrl")) {
-      // console.log(1);
     } else {
       this.getContent();
     }
@@ -468,27 +469,6 @@ export default {
     if (localStorage.getItem("userInfo"))
       this.userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
 
-    if (localStorage.getItem("isBindEnterpriseQr")) {
-      this.isBindEnterpriseQr = localStorage.getItem("isBindEnterpriseQr");
-      if (this.isBindEnterpriseQr == 1) {
-        this.dialog = true;
-        this.handleCheckEnterpriseQr();
-        document
-          .querySelector("body,html")
-          .classList.add("el-popup-parent--hidden");
-      } else {
-        this.dialog = false;
-        document
-          .querySelector("body,html")
-          .classList.remove("el-popup-parent--hidden");
-        localStorage.setItem("isBindEnterpriseQr", 0);
-      }
-    } else if (this.isBindEnterpriseQr == null && this.token) {
-      this.handleAddWeCom();
-    } else if (this.isBindEnterpriseQr == null) {
-      this.dialog = false;
-    }
-
     if (JSON.parse(localStorage.getItem("configObj"))) {
       this.logoWhite = JSON.parse(localStorage.getItem("configObj")).footerlogo;
     } else {
@@ -496,8 +476,6 @@ export default {
     }
     if (localStorage.getItem("serviceInfoQrCode")) {
       this.contactMeQr = localStorage.getItem("serviceInfoQrCode");
-    } else if (this.token) {
-      this.handleAddWeCom();
     }
 
     //渲染客服信息
@@ -690,39 +668,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    //引导添加企业微信
-    handleAddWeCom() {
-      //取消推广页显示
-      localStorage.setItem("isBindEnterpriseQr", 0);
-      // if (JSON.parse(localStorage.getItem("userInfo"))) {
-      //   _this.userId = JSON.parse(localStorage.getItem("userInfo")).user_id;
-      // }
-      // addWeCom({
-      //   id: _this.userId,
-      // })
-      //   .then((res) => {
-      //     if (res.code == 1 && res.data.pop_ups == 1) {
-      //       _this.dialog = true;
-      //       _this.handleCheckEnterpriseQr();
-      //       document
-      //         .querySelector("body,html")
-      //         .classList.add("el-popup-parent--hidden");
-      //     } else {
-      //       _this.dialog = false;
-      //       document
-      //         .querySelector("body,html")
-      //         .classList.remove("el-popup-parent--hidden");
-      //     }
-      //     if (res.code == 1) {
-      //       localStorage.setItem("isBindEnterpriseQr", res.data.pop_ups);
-      //       localStorage.setItem("serviceInfoQrCode", res.data.qr_code);
-      //       this.contactMeQr = res.data.qr_code;
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
     },
     //获取消息条数
     getMessage() {
@@ -1277,10 +1222,6 @@ export default {
       }
     }
   }
-}
-
-.el-popup-parent--hidden {
-  overflow: hidden;
 }
 
 .weComDialog {

@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "32810967",
+      "name": "tips",
+      "font_class": "tips",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
       "icon_id": "38494879",
       "name": "step",
       "font_class": "step",

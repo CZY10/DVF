@@ -4,6 +4,7 @@
       :visible.sync="datalistdialogVisible"
       width="983px"
       :before-close="beforeClose"
+      :close-on-click-modal="false"
     >
       <i class="el-icon-full-screen" v-screenfull></i>
 

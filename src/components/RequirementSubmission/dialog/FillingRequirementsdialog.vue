@@ -186,7 +186,15 @@
               </div>
             </el-form>
 
-            <div style="display: flex; justify-content: center; padding: 24px">
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                padding: 24px;
+                width: 461px;
+                box-sizing: border-box;
+              "
+            >
               <button
                 @click="submitForm(ruleForm)"
                 :class="{ ifsubmitbtn: ifsubmitbtn, submitbtn: true }"
@@ -500,6 +508,9 @@ export default {
           if (res.code == 1) {
             this.beforeClose();
             this.reqsearch();
+            let num = localStorage.getItem("addnum") - 1;
+            if (num <= 0) num = 0;
+            localStorage.setItem("addnum", num);
           } else {
             this.$message.error(res.msg);
           }
@@ -743,7 +754,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.upload_List == [];
         this.formradioLink = "1";
         this.formradioRequirements = "1";
-        this.ruleForm.name = "";
+        this.ruleForm.name = " ";
         this.ruleForm.link = "";
         this.ruleForm.notes = "";
         this.ruleForm.ShootingRequirements = "";
@@ -755,6 +766,7 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.fileList = [];
         this.upload_List = [];
       } else {
+        this.ruleForm.name = "";
         this.rules.name[0].required = true;
       }
     },
@@ -898,12 +910,14 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       font-size: 16px;
       font-weight: 600;
       color: #333333;
+      width: 461px;
     }
     .tiele {
       text-align: center;
       font-size: 12px;
       color: #999999;
       margin-top: 4px;
+      width: 461px;
     }
     .formitem {
       margin-top: 10px;

@@ -9,7 +9,10 @@
           <span @click="TipsdialogVisible1 = true">新手引导</span>
         </div>
         <div class="RequirementWenben-div2">
-          <div class="elIcon2" @click="InvitationFillingdialogVisble = true">
+          <div
+            class="elIcon2 tips7"
+            @click="InvitationFillingdialogVisble = true"
+          >
             <i class="iconfont icon-fx1"></i>
             <span>邀请填写</span>
           </div>
@@ -29,7 +32,7 @@
             <i class="iconfont icon-mb"></i>
             <a :href="fileDiz" style="cursor: pointer">下载模板</a>
           </div>
-          <div class="elIcon2" @click="reloadPage">
+          <div class="elIcon2 tips8" @click="reloadPage">
             <i class="iconfont icon-sx"></i>
             <span>刷新</span>
           </div>
@@ -41,8 +44,8 @@
           position: relative;
           border-radius: 4px;
           border: 1px solid #eeeeee;
-          height: 640px;
           box-sizing: border-box;
+          height: calc(100vh - 295px);
         "
       >
         <el-table
@@ -53,7 +56,6 @@
             color: '#333333',
             position: 'relative',
           }"
-          height="640"
           @selection-change="handleSelectionChange"
         >
           <el-table-column label="序号" width="70">
@@ -986,7 +988,7 @@ export default {
           id: id,
         })
           .then((res) => {
-            if (res.code == 1) {
+            if (res.code == 1 && res.data.renew == 0) {
               this.reqsearch();
               loading.close();
               this.payDepositDialogVisible = true;
@@ -1016,7 +1018,30 @@ export default {
                 res.data.order[1].order.out_trade_no
               );
             } else {
-              this.$message.error(res.msg);
+              loading.close();
+              const h = this.$createElement;
+              this.$message({
+                message: h("p", { style: "display: flex" }, [
+                  h(
+                    "div",
+                    {
+                      style:
+                        "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+                    },
+                    "¡"
+                  ),
+                  h(
+                    "span",
+                    {
+                      style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px",
+                    },
+                    `${res.msg}`
+                  ),
+                ]),
+                iconClass: "iconfont",
+                offset: 140,
+                customClass: "customClasssuccess",
+              });
             }
           })
           .catch((res) => {
@@ -1521,6 +1546,16 @@ export default {
           element: ".tips6",
           position: "left",
         },
+        {
+          title: "点击这里，邀请同事填写需求",
+          element: ".tips7",
+          position: "left",
+        },
+        {
+          title: "点击这里刷新，同步接收同事填写的需求",
+          element: ".tips8",
+          position: "left",
+        },
       ];
       this.$intro()
         .setOptions(this.introOption)
@@ -1700,6 +1735,7 @@ export default {
     #eee5fc 100%
   );
   min-height: calc(100vh - 67px);
+
   .RequirementBoxBanxin {
     width: 1200px;
     margin: 0 auto;
@@ -2119,6 +2155,10 @@ export default {
     opacity: 1;
   }
 }
+
+::v-deep(.el-table) {
+  height: 100%;
+}
 </style>
 
 <style lang="less" scoped>
@@ -2492,7 +2532,6 @@ export default {
   font-size: 16px !important;
   width: 80%;
   color: #333;
-  white-space: nowrap;
 }
 .warper {
   width: 200px;

@@ -22,6 +22,7 @@
                     v-model="ruleForm.name"
                     placeholder="中文填写，注明变体或型号，例：女性连衣裙（红色）"
                     :disabled="getstate != 0 && determine == 4"
+                    ref="ruleForm"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -765,6 +766,10 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.ifxian = false;
         this.fileList = [];
         this.upload_List = [];
+        this.$nextTick(() => {
+          this.$refs["ruleForm"].fields[0].validateMessage = "";
+          this.$refs["ruleForm"].fields[0].validateState = "";
+        });
       } else {
         this.rules.name[0].required = true;
       }
@@ -892,6 +897,10 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   ::v-deep(.el-upload--picture-card) {
     display: none;
   }
+}
+
+::v-deep(.el-form-item__error) {
+  margin-left: 10px;
 }
 </style>
 

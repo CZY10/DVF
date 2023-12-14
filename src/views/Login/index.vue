@@ -299,7 +299,6 @@ import {
   getConfig,
 } from "@/api/index";
 import login from "@/store/modules/login";
-import { log } from "video.js";
 import router from "@/router";
 export default {
   name: "login",

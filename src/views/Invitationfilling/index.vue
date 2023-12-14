@@ -49,7 +49,6 @@
           border-radius: 4px;
           border: 1px solid #eeeeee;
           box-sizing: border-box;
-          height: calc(100vh - 270px);
         "
       >
         <el-table
@@ -575,8 +574,8 @@ import draggable from "vuedraggable";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
 import Tipsdialog from "./dialog/Tipsdialog.vue";
 import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
-import Notedialog from "./dialog/notedialog.vue";
-import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
+import Notedialog from "@/components/RequirementSubmission/dialog/notedialog.vue";
+import dialogVisibleTips1 from "@/components/RequirementSubmission/dialog/dialogVisibleTips1.vue";
 import Successfullyejectedialog from "./dialog/Successfullyejectedialog.vue";
 import store from "@/store";
 import { v4 as uuidv4 } from "uuid";
@@ -1276,6 +1275,8 @@ export default {
   border: none;
   box-sizing: border-box;
   margin-top: 0px;
+  height: calc(100vh - 365px);
+  overflow-y: auto;
 }
 
 ::v-deep .el-table .cell::before {

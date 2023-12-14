@@ -45,7 +45,6 @@
           border-radius: 4px;
           border: 1px solid #eeeeee;
           box-sizing: border-box;
-          height: calc(100vh - 295px);
         "
       >
         <el-table
@@ -1661,6 +1660,8 @@ export default {
   border: none;
   box-sizing: border-box;
   margin-top: 0px;
+  height: calc(100vh - 365px);
+  overflow-y: auto;
 }
 
 ::v-deep .el-table .cell::before {

@@ -1,5 +1,5 @@
 //请求方法
-import request, { createAPI } from "@/utils/request";
+import request from "@/utils/request";
 
 //post请求
 // export function login(data){
@@ -274,22 +274,7 @@ export function orderStep(data) {
         data
     })
 }
-//引导添加企业微信
-export function addWeCom(data) {
-    return request({
-        url: '/api/home/qrcode',
-        method: 'post',
-        data
-    })
-}
-//检测企业微信是否添加成功
-export function checkEnterpriseQr(data) {
-    return request({
-        url: '/api/enterprise_wechat/check',
-        method: 'post',
-        data
-    })
-}
+
 //获取企业客服信息
 export function serviceInfo(data) {
     return request({

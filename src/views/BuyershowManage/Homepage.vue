@@ -48,7 +48,9 @@
               国家：<span>{{ countryName }}</span>
             </div>
             <div style="display: flex; align-items: center">
-              社交平台：<i v-for="(item, index) in userInfo.platform"
+              社交平台：<i
+                v-for="(item, index) in userInfo.platform"
+                :key="index"
                 ><img :src="item.image" alt=""
               /></i>
             </div>

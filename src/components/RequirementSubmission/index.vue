@@ -882,12 +882,14 @@ export default {
       }).then((res) => {
         if (res.code == 1) {
           if (res.data.data.length == 0) {
+            this.ifsubmitTo = false;
             res.data.data.push({
               flag: 1,
               influencer_info: [],
               title: "",
               video_num: "1",
             });
+            localStorage.setItem("addnum", 0);
           } else if (localStorage.getItem("addnum") != 0) {
             let num = localStorage.getItem("addnum") * 1;
             if (num > 0) {

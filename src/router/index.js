@@ -83,7 +83,7 @@ const routes = [
                     {
                         path: '/datalistdialogIf',
                         name: 'datalistdialogIf',
-                        meta: { requiresAuth: true },
+                        meta: { requiresAuth: false },
                         component: () => import('@/views/Invitationfilling/datalistdialog.vue')
                     },
                 ]

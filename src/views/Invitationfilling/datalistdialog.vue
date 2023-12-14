@@ -434,9 +434,7 @@ export default {
     handlerSearchList(type, value) {
       this.currentPage = 1;
 
-      if (localStorage.getItem("token")) {
-        this.isloading = true;
-      }
+      this.isloading = true;
       switch (type) {
         case "genderdata":
           this.genderValue = value;
@@ -473,29 +471,15 @@ export default {
       this.datalist = [];
       this.isvideoslist = [];
       this.categoryidarr = [];
-
-      if (
-        (!localStorage.getItem("token") && this.searchforval != "") ||
-        (!localStorage.getItem("token") && this.categoryValue != "") ||
-        (!localStorage.getItem("token") && this.themeValue != "") ||
-        (!localStorage.getItem("token") && this.genderValue != "") ||
-        (!localStorage.getItem("token") && this.priceval != "")
-      ) {
-        this.genderValue = "";
-        this.themeValue = "";
-        this.categoryValue = "";
-        this.priceval = "";
-      } else {
-        this.getdata(
-          this.currentPage,
-          this.pageSize,
-          this.genderValue,
-          this.categoryValue,
-          this.themeValue,
-          this.priceval,
-          this.searchforval
-        );
-      }
+      this.getdata(
+        this.currentPage,
+        this.pageSize,
+        this.genderValue,
+        this.categoryValue,
+        this.themeValue,
+        this.priceval,
+        this.searchforval
+      );
     },
 
     //获取数据

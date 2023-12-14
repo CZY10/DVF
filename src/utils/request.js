@@ -27,7 +27,7 @@ service.interceptors.response.use(
     response => {
         const res = response.data;
         const reg = /^0.*0$|^0$/;
-        if (res.code !== 1 && res.msg != '添加失败') {
+        if (res.code !== 1 && res.msg != '添加失败' && res.msg != 'budget不能为空' && res.msg != '数据格式错误') {
             Message({
                 message: res.msg,
                 type: 'error',

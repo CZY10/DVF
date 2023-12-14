@@ -584,24 +584,16 @@ export default {
   data() {
     return {
       datalistdialogVisible: false,
-      flags: false,
-      ispersonid: "",
-      input: "",
       formId: "",
       centerDialogVisibles: false,
-      radio: "1",
       tableData: [
         {
           flag: 1,
           influencer_info: [],
         },
       ],
-      errorShow: false,
-      isvideoSubmitDialogVisible: 0,
-      fileList: [],
       handleSelectionChangeList: [],
       fileDiz: "",
-      iscg: false,
       FillingRequirementsdialogVisible: false,
       determine: 1,
       RequirementsList: {},
@@ -819,27 +811,7 @@ export default {
             this.$message.error(res);
           });
       } else if (this.tableData.length == 1 || this.tableDataTitle == true) {
-        const h = this.$createElement;
-        this.$message({
-          message: h("p", { style: "display: flex" }, [
-            h(
-              "div",
-              {
-                style:
-                  "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
-              },
-              "¡"
-            ),
-            h(
-              "span",
-              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
-              "您还没有添加任何需求，请添加需求再提交"
-            ),
-          ]),
-          iconClass: "iconfont",
-          offset: 140,
-          customClass: "customClasssuccess",
-        });
+        this.showMessage("您还没有添加任何需求，请添加需求再提交");
       }
     },
     //跳转商品详情
@@ -1179,27 +1151,7 @@ export default {
             });
           } else {
             loading.close();
-            const h = this.$createElement;
-            this.$message({
-              message: h("p", { style: "display: flex" }, [
-                h(
-                  "div",
-                  {
-                    style:
-                      "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
-                  },
-                  "¡"
-                ),
-                h(
-                  "span",
-                  { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
-                  "导入失败，请检查Excel表格是否按模板格式填写"
-                ),
-              ]),
-              iconClass: "iconfont",
-              offset: 140,
-              customClass: "customClasssuccess",
-            });
+            this.showMessage("导入失败，请检查Excel表格是否按模板格式填写");
           }
         })
         .catch((res) => {
@@ -1226,6 +1178,31 @@ export default {
         this.fileDiz = res.data.file;
         this.reqsearch();
       }
+    },
+
+    //警告提示
+    showMessage(text) {
+      const h = this.$createElement;
+      this.$message({
+        message: h("p", { style: "display: flex" }, [
+          h(
+            "div",
+            {
+              style:
+                "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+            },
+            "¡"
+          ),
+          h(
+            "span",
+            { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
+            text
+          ),
+        ]),
+        iconClass: "iconfont",
+        offset: 140,
+        customClass: "customClasssuccess",
+      });
     },
   },
   mounted() {

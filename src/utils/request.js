@@ -27,13 +27,13 @@ service.interceptors.response.use(
     response => {
         const res = response.data;
         const reg = /^0.*0$|^0$/;
-        if (res.code !== 1) {
-            // Message({
-            //     message: res.msg,
-            //     type: 'error',
-            //     offset: 100,
-            //     duration: 5 * 1000
-            // })
+        if (res.code !== 1 && res.msg != '添加失败') {
+            Message({
+                message: res.msg,
+                type: 'error',
+                offset: 100,
+                duration: 5 * 1000
+            })
             console.log(res.msg)
             if (res.code == 300 && reg.test(res.errorCode)) {
                 Message({

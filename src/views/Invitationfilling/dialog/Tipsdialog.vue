@@ -48,7 +48,7 @@ export default {
         id: this.video_id,
         budget_tip: "2",
         source: 1,
-        auth: localStorage.getItem("token"),
+        auth: localStorage.getItem("said"),
       });
       if (res.code == 1) {
         this.reqsearch();

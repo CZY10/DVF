@@ -655,7 +655,7 @@ export default {
       needsDelete({
         id: this.formId,
         source: 1,
-        auth: localStorage.getItem("token"),
+        auth: localStorage.getItem("said"),
       }).then((res) => {
         if (res.code == 1) {
           this.reqsearch();
@@ -668,7 +668,7 @@ export default {
       inviteRemoveInfluencer({
         id: id,
         influencer_id: user_id,
-        auth: localStorage.getItem("token"),
+        auth: localStorage.getItem("said"),
       }).then((res) => {
         if (res.code == 1) {
           this.reqsearch();
@@ -689,7 +689,7 @@ export default {
       search({
         url_mark: needs,
         source: 1,
-        auth: localStorage.getItem("token"),
+        auth: localStorage.getItem("said"),
       }).then((res) => {
         if (res.code == 1) {
           if (res.data.data.length == 0) {
@@ -794,7 +794,7 @@ export default {
         inviteSubmit({
           id: id,
           url_mark: needs,
-          auth: localStorage.getItem("token"),
+          auth: localStorage.getItem("said"),
         })
           .then((res) => {
             if (res.code == 1) {
@@ -880,7 +880,7 @@ export default {
             id: id + "",
             video_num: num + "",
             source: 1,
-            auth: localStorage.getItem("token"),
+            auth: localStorage.getItem("said"),
           });
           if (res.code == 1) {
             this.budgetChange(budget, index, num);
@@ -938,7 +938,7 @@ export default {
             inviteSelectInfluencer({
               influencer_ids: itempop.id,
               url_mark: needs,
-              auth: localStorage.getItem("token"),
+              auth: localStorage.getItem("said"),
             }).then((res) => {
               if (res.code == 1) {
                 this.reqsearch();
@@ -1014,7 +1014,7 @@ export default {
         url_mark: needs,
         id: id,
         influencer_ids: influencerIds1,
-        auth: localStorage.getItem("token"),
+        auth: localStorage.getItem("said"),
       });
     },
 
@@ -1096,7 +1096,7 @@ export default {
         id: id,
         budget: val,
         source: 1,
-        auth: localStorage.getItem("token"),
+        auth: localStorage.getItem("said"),
       }).then((res) => {
         if (res.code == 1) {
           this.budgetChange(val, index, num);
@@ -1136,7 +1136,7 @@ export default {
       inviteTemplate({
         file: fileLit.file,
         url_mark: needs,
-        auth: localStorage.getItem("token"),
+        auth: localStorage.getItem("said"),
       })
         .then((res) => {
           this.reqsearch();
@@ -1161,18 +1161,17 @@ export default {
 
     //请求拍摄需求首页接口
     async getneedsIndex() {
-      if (localStorage.getItem("token") == null) {
+      if (localStorage.getItem("said") == null) {
         let said = uuidv4();
-        localStorage.setItem("token", said);
+        localStorage.setItem("said", said);
         var date = new Date();
         date.setMonth(date.getMonth() + 6); // 设置日期为半年后
         document.cookie =
-          `auth=${localStorage.getItem("token")}; expires=` +
-          date.toUTCString();
+          `auth=${localStorage.getItem("said")}; expires=` + date.toUTCString();
       }
       let res = await needsIndex({
         source: 1,
-        auth: localStorage.getItem("token"),
+        auth: localStorage.getItem("said"),
       });
       if (res.code == 1) {
         this.fileDiz = res.data.file;
@@ -1226,7 +1225,7 @@ export default {
             needsDelete({
               id: item.id,
               source: 1,
-              auth: localStorage.getItem("token"),
+              auth: localStorage.getItem("said"),
             }).then((res) => {
               if (res.code == 1) {
                 this.reqsearch();

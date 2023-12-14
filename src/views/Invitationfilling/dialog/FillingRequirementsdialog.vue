@@ -415,7 +415,7 @@ export default {
           image: str,
           id: this.FillingRequirementid,
           source: 1,
-          auth: localStorage.getItem("token"),
+          auth: localStorage.getItem("said"),
         };
         const res = await needsEdit(data);
         if (res.code == 1) {
@@ -445,7 +445,7 @@ export default {
           photograph_demand: formName.ShootingRequirements,
           image: str,
           source: 1,
-          auth: localStorage.getItem("token"),
+          auth: localStorage.getItem("said"),
         };
         const res = await needsEdit(data);
         if (res.code == 1) {
@@ -511,7 +511,7 @@ export default {
             image: str,
             source: 1,
             url_mark: needs,
-            auth: localStorage.getItem("token"),
+            auth: localStorage.getItem("said"),
           };
           const res = await createOrder(data);
           if (res.code == 1) {

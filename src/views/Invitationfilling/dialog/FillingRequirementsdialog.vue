@@ -782,6 +782,19 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.rules.name[0].required = true;
       }
     },
+    formradioLink(newval) {
+      if (newval == 1) {
+        this.fileList = [];
+        this.upload_List.forEach((item) => {
+          if (item.response) {
+            this.fileList.push({ ["url"]: item.response.data.url });
+          } else {
+            this.fileList.push({ ["url"]: item.url });
+          }
+        });
+        this.upload_List = this.fileList;
+      }
+    },
   },
 };
 </script>

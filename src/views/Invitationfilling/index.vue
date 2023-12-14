@@ -1161,7 +1161,26 @@ export default {
 
     //请求拍摄需求首页接口
     async getneedsIndex() {
-      if (localStorage.getItem("said") == null) {
+      // 获取所有的 cookie
+      var allCookies = document.cookie;
+      // 将所有的 cookie 分割成一个数组
+      var cookieArray = allCookies.split("; ");
+
+      let flge = true;
+      // 遍历数组，找到您想要的 cookie
+      for (var i = 0; i < cookieArray.length; i++) {
+        var cookie = cookieArray[i];
+        var name = cookie.split("=")[0]; // cookie 的名称
+        var value = cookie.split("=")[1]; // cookie 的值
+
+        if (name === "auth") {
+          flge = false;
+          if (!localStorage.getItem("said"))
+            localStorage.setItem("said", value);
+        }
+      }
+
+      if (flge) {
         let said = uuidv4();
         localStorage.setItem("said", said);
         var date = new Date();

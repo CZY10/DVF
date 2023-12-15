@@ -569,8 +569,14 @@
             "
           ></i>
         </el-alert>
-        <h5>¥{{ orderData[0].order.price }}</h5>
-        <p>定金金额</p>
+        <h5 style="display: flex; justify-content: center">
+          <p style="margin-right: 5px">定金金额 :</p>
+          ¥<span>{{ orderData[0].order.price }}</span>
+        </h5>
+        <p>
+          共计<span style="color: #ff2c4c">{{ orderCount }}</span
+          >笔
+        </p>
         <p>
           订单号：
           <span>{{ orderData[0].order.order_id }}</span>
@@ -806,6 +812,7 @@ export default {
       deletecenterDialogVisiblesindex: 0,
       InvitationFillingdialogVisble: false,
       InvitationFillingdialoglink: "",
+      orderCount: 0,
     };
   },
   components: {
@@ -1004,6 +1011,7 @@ export default {
                 });
               });
               this.orderData = res.data.order;
+              this.orderCount = res.data.order_count;
               this.handlerCheckWechatPayment(
                 res.data.order[0].order.out_trade_no
               );
@@ -2105,7 +2113,6 @@ export default {
 .pay_deposit_dialog {
   h5 {
     font-size: 22px;
-    font-family: PingFangSC-Semibold, PingFang SC;
     font-weight: 600;
     color: #ff2c4c;
     line-height: 30px;
@@ -2115,7 +2122,6 @@ export default {
 
   p {
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #999999;
     line-height: 20px;
@@ -2319,16 +2325,11 @@ export default {
     height: 42px;
   }
 
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
-    font-weight: 600;
-    color: #333333;
+  ::v-deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active) {
     background: #f6f5ff;
     border-bottom: 2px solid #796cf3;
-
-    i {
-      font-weight: normal;
-    }
+    font-weight: 600;
+    color: #333333;
   }
 
   .el-tabs--border-card > .el-tabs__header {

@@ -2957,10 +2957,6 @@ export default {
       margin-left: 0;
     }
 
-    .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
-      margin-left: 0;
-    }
-
     .el-tabs--border-card > .el-tabs__header .el-tabs__item {
       color: #999999;
       font-family: PingFangSC-Semibold, PingFang SC;
@@ -2970,8 +2966,7 @@ export default {
       height: 42px;
     }
 
-    .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
-    .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
+    .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
       font-weight: 600;
       color: #333333;
       background: #f6f5ff;

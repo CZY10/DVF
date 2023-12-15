@@ -321,12 +321,6 @@ export default {
   methods: {
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     upload_change: function (file, fileList) {
-      if (fileList.length >= 5) {
-        this.hideUploadBtn = true;
-      } else {
-        this.hideUploadBtn = false;
-      }
-
       if (file.raw.type == "image/jpeg" || file.raw.type == "image/png") {
         // 判断 > 5M
         if (file.size > 5242880) {
@@ -356,6 +350,12 @@ export default {
       } else {
         this.$message.error("图片格式错误，请重新上传");
         fileList.pop();
+      }
+
+      if (fileList.length >= 5) {
+        this.hideUploadBtn = true;
+      } else {
+        this.hideUploadBtn = false;
       }
     },
 

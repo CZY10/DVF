@@ -577,10 +577,33 @@
           共计<span style="color: #ff2c4c">{{ orderCount }}</span
           >笔
         </p>
-        <p>
-          订单号：
-          <span>{{ orderData[0].order.order_id }}</span>
+
+        <p class="textp1" v-if="iforderid">
+          订单号：<span
+            v-for="(item, index) in orderData[0].order.order_id"
+            :key="index"
+          >
+            <span v-if="index < 5">{{ item }}</span>
+            <span v-if="index < 4">,</span>
+          </span>
+          <span style="cursor: pointer; margin-left: 5px" @click="addiforderid"
+            >全部 <i class="el-icon-arrow-down"></i
+          ></span>
         </p>
+
+        <p class="textp2" v-else>
+          订单号：<span
+            v-for="(item, index) in orderData[0].order.order_id"
+            :key="index"
+            >{{ item
+            }}<span v-if="index !== orderData[0].order.order_id.length - 1"
+              >,
+            </span> </span
+          ><span style="cursor: pointer; margin-left: 5px" @click="addiforderid"
+            >收起 <i class="el-icon-arrow-up"></i>
+          </span>
+        </p>
+
         <el-tabs type="border-card">
           <el-tab-pane>
             <span
@@ -756,13 +779,13 @@ export default {
       RequirementsList: {},
       TipsdialogdialogVisible: false,
       video_id: "",
-      payDepositDialogVisible: false,
+      payDepositDialogVisible: true,
       paymentCompletedDialogVisible: false,
       orderData: [
         {
           order: {
             price: "",
-            order_id: "",
+            order_id: [1074, 1075, 1076, 1077, 1078, 1076, 1077, 1078, 1233],
           },
         },
       ],
@@ -814,6 +837,7 @@ export default {
       InvitationFillingdialogVisble: false,
       InvitationFillingdialoglink: "",
       orderCount: 0,
+      iforderid: true,
     };
   },
   components: {
@@ -1013,6 +1037,9 @@ export default {
                 });
               });
               this.orderData = res.data.order;
+              this.orderData[0].order.order_id =
+                res.data.order[0].order.order_id.split(",");
+
               this.orderCount = res.data.order_count;
               this.handlerCheckWechatPayment(
                 res.data.order[0].order.out_trade_no
@@ -1520,6 +1547,10 @@ export default {
         offset: 140,
         customClass: "customClasssuccess",
       });
+    },
+
+    addiforderid() {
+      this.iforderid = !this.iforderid;
     },
   },
   mounted() {
@@ -2129,10 +2160,16 @@ export default {
     line-height: 20px;
     text-align: center;
     padding: 5px 0;
+  }
 
-    span {
-      color: rgba(51, 51, 51, 1);
-    }
+  .textp1 {
+    width: 370px;
+    margin: 0 auto 15px;
+  }
+  .textp2 {
+    text-align: left;
+    width: 370px;
+    margin: 0 auto 15px;
   }
 
   ul {
@@ -2303,6 +2340,8 @@ export default {
   .el-tabs--border-card {
     border: 1px solid #eeeeee;
     margin-top: 15px;
+    width: 370px;
+    margin: 0 auto;
   }
 
   .el-tabs--border-card > .el-tabs__header .el-tabs__item + .el-tabs__item {

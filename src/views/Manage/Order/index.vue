@@ -469,7 +469,7 @@
 
     <!--支付尾款-->
     <el-dialog
-      title="请尽快支付订单"
+      title="请尽快支付"
       :visible.sync="paymentDialog"
       v-if="paymentDialog"
       @close="handleClose"
@@ -482,9 +482,6 @@
         <h4>¥{{ orderData.price }}</h4>
         <p v-if="orderIdFlex">合并订单金额</p>
         <p v-if="orderIdFlex == false">订单金额</p>
-        <!-- <p>
-          订单号：<span>{{ orderData.order_id }}</span>
-        </p> -->
         <el-tabs type="border-card">
           <el-tab-pane>
             <span
@@ -1218,7 +1215,7 @@
     </el-dialog>
     <!--支付定金-->
     <el-dialog
-      title="请尽快支付定金"
+      title="请尽快支付"
       @close="handleClose"
       :visible.sync="payDepositDialogVisible"
       v-if="payDepositDialogVisible"
@@ -1308,6 +1305,22 @@
             </div>
           </el-tab-pane>
         </el-tabs>
+        <div class="group_26 flex-row">
+          <div class="image-text_40 flex-row justify-between">
+            <img
+              class="thumbnail_26"
+              referrerpolicy="no-referrer"
+              src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngadd69f7b6dbb5a1080befad2c5168f68a6705b339b5967fdd3f737c59baf4d89"
+            />
+            <div class="text-group_14">
+              <span class="text_98">1、订单支付成功后，</span>
+              <span class="text_99">定金</span>
+              <span class="paragraph_1"
+                >将原路退回至您的「支付宝/微信」账户；<br />2、完成订单支付，代表服务正式生效。在完成交付之前，平台不会将你的款项支付给达人。</span
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </el-dialog>
     <!--支付完成-->
@@ -1702,7 +1715,7 @@ export default {
       this.multipleSelection.map((item) => {
         num = num + item.price * 1;
       });
-      this.priceNum = num;
+      this.priceNum = num.toFixed(2);
 
       setTimeout(() => {
         var element = document.querySelector(".is-indeterminate");
@@ -3845,7 +3858,7 @@ export default {
 .group_26 {
   background-color: rgba(244, 242, 255, 1);
   border-radius: 4px;
-  width: 420px;
+  width: 100%;
   height: 94px;
 }
 

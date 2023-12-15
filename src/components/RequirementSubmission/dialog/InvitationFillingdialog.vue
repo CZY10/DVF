@@ -139,7 +139,6 @@ export default {
   }
 
   .link {
-    width: 372px;
     height: 80px;
     background: #f8f8f8;
     border-radius: 4px;

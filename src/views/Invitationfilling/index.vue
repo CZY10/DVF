@@ -324,7 +324,7 @@
                       @click="scope.row.video_num--"
                       @mouseup="
                         handleChange(
-                          scope.row.budget_tip,
+                          scope.row.video_tip,
                           scope.row.video_num - 1,
                           scope.row.id,
                           scope.row.budget,
@@ -580,6 +580,7 @@ import Successfullyejectedialog from "./dialog/Successfullyejectedialog.vue";
 import store from "@/store";
 import { v4 as uuidv4 } from "uuid";
 import router from "@/router";
+
 export default {
   data() {
     return {
@@ -780,6 +781,7 @@ export default {
           });
 
           if (this.ifGuide == 1) this.NotedialogdialogVisible = true;
+          this.ifGuide = 0;
         } else {
           localStorage.clear();
           router.push("/");
@@ -810,6 +812,7 @@ export default {
     //提交
     submitTo() {
       if (this.ifsubmitTo) {
+        this.ifsubmitTo = false;
         const loading = this.$loading({
           lock: true,
           text: "上传中...",
@@ -850,6 +853,7 @@ export default {
         this.showMessage("您还没有添加任何需求，请添加需求再提交");
       }
     },
+
     //跳转商品详情
     gocommodity(url) {
       if (url) {

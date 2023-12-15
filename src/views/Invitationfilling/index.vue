@@ -353,7 +353,7 @@
                       @click="scope.row.video_num++"
                       @mouseup="
                         handleChange(
-                          scope.row.budget_tip,
+                          scope.row.video_tip,
                           scope.row.video_num + 1,
                           scope.row.id,
                           scope.row.budget,
@@ -614,6 +614,37 @@ export default {
       TipsdialogVisible1: false,
       deletecenterDialogVisiblesindex: 0,
       Successfullyejectedialog: false,
+      introOption: {
+        // 参数对象
+        prevLabel: "上一步",
+        nextLabel: "下一步",
+        skipLabel: "跳过",
+        doneLabel: "完成",
+        tooltipClass: "intro-tooltip" /* 引导说明文本框的样式 */,
+        // highlightClass: 'intro-highlight', /* 说明高亮区域的样式 */
+        exitOnEsc: true /* 是否使用键盘Esc退出 */,
+        exitOnOverlayClick: false /* 是否允许点击空白处退出 */,
+        keyboardNavigation: true /* 是否允许键盘来操作 */,
+        showBullets: false /* 是否使用点显示进度 */,
+        showProgress: false /* 是否显示进度条 */,
+        scrollToElement: true /* 是否滑动到高亮的区域 */,
+        overlayOpacity: 0.5, // 遮罩层的透明度 0-1之间
+        positionPrecedence: [
+          "bottom",
+          "top",
+          "right",
+          "left",
+        ] /* 当位置选择自动的时候，位置排列的优先级 */,
+        disableInteraction: true /* 是否禁止与元素的相互关联 */,
+        hidePrev: true /* 是否在第一步隐藏上一步 */,
+        // hideNext: true, /* 是否在最后一步隐藏下一步 */
+        steps: [] /* steps步骤，可以写个工具类保存起来 */,
+      },
+      tipsImg1: require("../../assets/images/tipsImg/tips1.webp"),
+      tipsImg2: require("../../assets/images/tipsImg/tips2.webp"),
+      tipsImg3: require("../../assets/images/tipsImg/tips3.webp"),
+      tipsImg4: require("../../assets/images/tipsImg/tips4.webp"),
+      ifGuide: 0,
     };
   },
   components: {
@@ -747,6 +778,8 @@ export default {
           this.tableDataTitle = this.tableData.every((item) => {
             return item.title == "";
           });
+
+          if (this.ifGuide == 1) this.NotedialogdialogVisible = true;
         } else {
           localStorage.clear();
           router.push("/");
@@ -1197,6 +1230,7 @@ export default {
       });
       if (res.code == 1) {
         this.fileDiz = res.data.file;
+        this.ifGuide = res.data.if_guide;
         this.reqsearch();
       }
     },
@@ -1224,6 +1258,58 @@ export default {
         offset: 140,
         customClass: "customClasssuccess",
       });
+    },
+    initGuide() {
+      // 绑定标签元素的选择器数组
+      this.introOption.steps = [
+        {
+          title: "点击这里，添加意向红人",
+          element: ".influencerInfo3",
+          intro: `<img src="${this.tipsImg1}" style="width: 540px;height: 304px"/>`,
+          position: "right",
+        },
+        {
+          title: "鼠标上下左右拖动，调整红人匹配顺序",
+          element: ".influencerInfoUl",
+          intro: `<img src="${this.tipsImg2}" style="width: 540px;height: 180px"/>`,
+        },
+        {
+          title: "点击这里，填写产品及拍摄需求",
+          element: ".addbtn",
+        },
+        {
+          title: "点击这里，为同一变体或型号添加拍摄数量",
+          element: ".tips4",
+          intro: `<img src="${this.tipsImg3}" style="width: 540px;height: 180px"/>`,
+          position: "left",
+        },
+        {
+          title: `点击 “<i class="iconfont icon-fz" style="font-size: 14px;color: #796cf3"></i> 复制”按钮，为对应变体，快速创建需求`,
+          element: ".operate1",
+          intro: `<img src="${this.tipsImg4}" style="width: 540px;height: 180px"/>`,
+          position: "left",
+        },
+        {
+          title: "点击这里，使用表格批量导入需求",
+          element: ".tips6",
+          position: "left",
+        },
+      ];
+      this.$intro()
+        .setOptions(this.introOption)
+        // 点击结束按钮后执行的事件
+        .oncomplete(() => {
+          console.log("点击结束按钮后执行的事件");
+        })
+        // 点击跳过按钮后执行的事件
+        .onexit(() => {
+          console.log("点击跳过按钮后执行的事件");
+        })
+        // 确认完毕之后执行的事件
+        .onbeforeexit(() => {
+          console.log("确认完毕之后执行的事件");
+        })
+        .start();
     },
   },
   mounted() {
@@ -1261,6 +1347,11 @@ export default {
       if (newval == false) {
         this.RequirementsList = [];
         this.determine = 0;
+      }
+    },
+    NotedialogdialogVisible(newval) {
+      if (newval == false && this.ifGuide == 1) {
+        this.initGuide(); // 调用新手引导的方法
       }
     },
   },

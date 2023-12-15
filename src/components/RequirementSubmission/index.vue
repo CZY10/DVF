@@ -733,6 +733,7 @@ import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
 import InvitationFillingdialog from "./dialog/InvitationFillingdialog.vue";
 import store from "@/store";
 import QRCode from "qrcodejs2";
+
 export default {
   data() {
     return {
@@ -970,6 +971,7 @@ export default {
     //提交
     submitTo() {
       if (this.ifsubmitTo) {
+        this.ifsubmitTo = false;
         const loading = this.$loading({
           lock: true,
           text: "提交中...",

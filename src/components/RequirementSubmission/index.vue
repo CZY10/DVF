@@ -1065,6 +1065,10 @@ export default {
             } else {
               loading.close();
               this.reqsearch();
+              setTimeout(() => {
+                this.ifsubmitTo = true;
+                console.log(this.ifsubmitTo);
+              }, 1000);
               this.showMessage(res.msg);
             }
           })

@@ -66,6 +66,8 @@
                       :on-exceed="upload_exceed"
                       :class="{ 'hide-upload-btn': hideUploadBtn }"
                       :disabled="getstate != 0 && determine == 4"
+                      :on-success="handleAvatarSuccess"
+                      :on-progress="handleAvatarProgress"
                     >
                       <i slot="default" class="el-icon-plus"></i>
                       <div slot="file" slot-scope="{ file }">
@@ -89,7 +91,7 @@
                       </div>
                     </el-upload>
                     <p style="font-size: 12px; margin-top: 10px; color: #999">
-                      请上传图片，不超过5M，支持jpg/png
+                      {{ handletext }}
                     </p>
                   </div>
                 </el-form-item>
@@ -316,9 +318,18 @@ export default {
       objold: {},
       ifxian: false,
       hideUploadBtn: false,
+      handletext: "请上传图片，不超过5M，支持jpg/png",
     };
   },
   methods: {
+    handleAvatarProgress() {
+      console.log("开始");
+      this.handletext = "图片正在上传中......";
+    },
+    handleAvatarSuccess() {
+      console.log("成功");
+      this.handletext = "请上传图片，不超过5M，支持jpg/png";
+    },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     upload_change: function (file, fileList) {
       if (file.raw.type == "image/jpeg" || file.raw.type == "image/png") {
@@ -327,6 +338,9 @@ export default {
           fileList.pop();
           let msg_size = `图片过大，请重新上传`;
           this.$message.error(msg_size);
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           return false;
         }
         // 判断重名文件
@@ -337,6 +351,9 @@ export default {
           fileList.pop();
           let msg_repeat = `您上传的${file.name}，该文件有重名文件，请您重新上传。`;
           this.$message.error(msg_repeat);
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           return false;
         }
         if (file?.response?.code == 1) {
@@ -344,10 +361,16 @@ export default {
           this.fileList = JSON.parse(JSON.stringify(fileList));
         } else if (file?.response?.code == 0) {
           fileList.pop();
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           this.$message.error(file.response.msg);
           return false;
         }
       } else {
+        setTimeout(() => {
+          this.handletext = "请上传图片，不超过5M，支持jpg/png";
+        }, 1000);
         this.$message.error("图片格式错误，请重新上传");
         fileList.pop();
       }

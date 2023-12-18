@@ -589,31 +589,49 @@
           >笔
         </p>
 
-        <p class="textp1" v-if="iforderid">
-          订单号：<span
-            v-for="(item, index) in orderData[0].order.order_id"
-            :key="index"
-          >
-            <span v-if="index < 5">{{ item }}</span>
-            <span v-if="index < 4">,</span>
-          </span>
-          <span style="cursor: pointer; margin-left: 5px" @click="addiforderid"
-            >全部 <i class="el-icon-arrow-down"></i
-          ></span>
-        </p>
+        <div v-if="orderData[0].order.order_id.length >= 9">
+          <p class="textp1" v-if="iforderid">
+            订单号：<span
+              v-for="(item, index) in orderData[0].order.order_id"
+              :key="index"
+            >
+              <span v-if="index < 5">{{ item }}</span>
+              <span v-if="index < 4">,</span>
+            </span>
+            <span
+              style="cursor: pointer; margin-left: 5px"
+              @click="addiforderid"
+              >全部 <i class="el-icon-arrow-down"></i
+            ></span>
+          </p>
 
-        <p class="textp2" v-else>
-          订单号：<span
-            v-for="(item, index) in orderData[0].order.order_id"
-            :key="index"
-            >{{ item
-            }}<span v-if="index !== orderData[0].order.order_id.length - 1"
-              >,
-            </span> </span
-          ><span style="cursor: pointer; margin-left: 5px" @click="addiforderid"
-            >收起 <i class="el-icon-arrow-up"></i>
-          </span>
-        </p>
+          <p class="textp2" v-else>
+            订单号：<span
+              v-for="(item, index) in orderData[0].order.order_id"
+              :key="index"
+              >{{ item
+              }}<span v-if="index !== orderData[0].order.order_id.length - 1"
+                >,
+              </span> </span
+            ><span
+              style="cursor: pointer; margin-left: 5px"
+              @click="addiforderid"
+              >收起 <i class="el-icon-arrow-up"></i>
+            </span>
+          </p>
+        </div>
+
+        <div v-else>
+          <p class="textp1">
+            订单号：<span
+              v-for="(item, index) in orderData[0].order.order_id"
+              :key="index"
+            >
+              <span v-if="index < 8">{{ item }}</span>
+              <span v-if="index < 7">,</span>
+            </span>
+          </p>
+        </div>
 
         <el-tabs type="border-card">
           <el-tab-pane>
@@ -790,13 +808,13 @@ export default {
       RequirementsList: {},
       TipsdialogdialogVisible: false,
       video_id: "",
-      payDepositDialogVisible: true,
+      payDepositDialogVisible: false,
       paymentCompletedDialogVisible: false,
       orderData: [
         {
           order: {
             price: "",
-            order_id: [1074, 1075, 1076, 1077, 1078, 1076, 1077, 1078, 1233],
+            order_id: [],
           },
         },
       ],

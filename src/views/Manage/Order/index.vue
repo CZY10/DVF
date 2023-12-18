@@ -480,7 +480,7 @@
     >
       <div class="payment_content">
         <h4>¥{{ orderData.price }}</h4>
-        <p v-if="orderIdFlex">合并订单金额</p>
+        <p v-if="orderIdFlex">合并金额</p>
         <p v-if="orderIdFlex == false">订单金额</p>
         <el-tabs type="border-card">
           <el-tab-pane>
@@ -1244,9 +1244,6 @@
         </el-alert>
         <h5>¥{{ orderData.price }}</h5>
         <p>定金金额</p>
-        <p>
-          订单号：<span>{{ orderData.order_id }}</span>
-        </p>
         <el-tabs type="border-card">
           <el-tab-pane>
             <span

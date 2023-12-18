@@ -338,6 +338,9 @@ export default {
           fileList.pop();
           let msg_size = `图片过大，请重新上传`;
           this.$message.error(msg_size);
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           return false;
         }
         // 判断重名文件
@@ -348,6 +351,9 @@ export default {
           fileList.pop();
           let msg_repeat = `您上传的${file.name}，该文件有重名文件，请您重新上传。`;
           this.$message.error(msg_repeat);
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           return false;
         }
         if (file?.response?.code == 1) {
@@ -355,10 +361,16 @@ export default {
           this.fileList = JSON.parse(JSON.stringify(fileList));
         } else if (file?.response?.code == 0) {
           fileList.pop();
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           this.$message.error(file.response.msg);
           return false;
         }
       } else {
+        setTimeout(() => {
+          this.handletext = "请上传图片，不超过5M，支持jpg/png";
+        }, 1000);
         this.$message.error("图片格式错误，请重新上传");
         fileList.pop();
       }

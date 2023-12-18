@@ -4,6 +4,7 @@
       :visible.sync="NotedialogdialogVisible"
       width="880px"
       :show-close="true"
+      :close-on-click-modal="false"
       center
     >
       <div class="notedialog">
@@ -77,7 +78,7 @@
               </p>
               <p>
                 其中，<span class="spanbj">
-                  <span>①、②、④</span>
+                  <span>①、③、④</span>
                   需要您配合并及时完成
                 </span>
                 ，请您留意平台消息及账号经理的反馈

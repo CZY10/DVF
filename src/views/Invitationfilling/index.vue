@@ -16,7 +16,7 @@
     </Transition>
 
     <div class="RequirementBoxBanxin">
-      <p class="hearder">提交视频拍摄需求</p>
+      <p class="hearder">填写视频拍摄需求</p>
       <div class="RequirementWenben">
         <div class="RequirementWenben-div1">
           <span @click="NotedialogdialogVisible = true">拍摄须知</span>
@@ -760,13 +760,11 @@ export default {
 
             if (item.title != "") {
               this.tableData[index].budget = this.tableData[index].budget * 1;
-              if (item.budget * 1 <= item.video_num * 300) {
-                item.budget != 0
-                  ? (this.tableData[index].budget = item.budget * 1)
-                  : (this.tableData[index].budget = "");
+              item.budget != 0
+                ? (this.tableData[index].budget = item.budget * 1)
+                : (this.tableData[index].budget = "");
 
-                this.budgetChange(item.budget, index, item.video_num);
-              }
+              this.budgetChange(item.budget, index, item.video_num);
             } else if (!item.flag && item.flag != undefined) {
               this.tableData[index].budget = "";
               this.budgetChange(item.budget, index, item.video_num);
@@ -781,7 +779,6 @@ export default {
           });
 
           if (this.ifGuide == 1) this.NotedialogdialogVisible = true;
-          this.ifGuide = 0;
         } else {
           localStorage.clear();
           router.push("/");
@@ -822,7 +819,11 @@ export default {
         });
         const arr = [];
         this.tableData.forEach((item) => {
-          if (item.id && item.title != "") {
+          if (
+            item.id &&
+            item.title != "" &&
+            item.budget * 1 >= item.video_num * 300
+          ) {
             arr.push(item.id);
           }
         });
@@ -838,7 +839,6 @@ export default {
             if (res.code == 1) {
               this.reqsearch();
               this.Successfullyejectedialog = true;
-              this.ifsubmitTo = false;
               loading.close();
             } else {
               loading.close();
@@ -1105,6 +1105,12 @@ export default {
     budgetChange(val, index, num) {
       if (val * 1 < 300 * num) {
         this.ifsubmitTo = false;
+        this.tableData.map((item) => {
+          if (item.budget >= item.video_num * 300) {
+            this.ifsubmitTo = true;
+          }
+        });
+
         this.$nextTick(() => {
           if (val != "") {
             this.$refs[
@@ -1355,6 +1361,7 @@ export default {
     },
     NotedialogdialogVisible(newval) {
       if (newval == false && this.ifGuide == 1) {
+        this.ifGuide = 0;
         this.initGuide(); // 调用新手引导的方法
       }
     },
@@ -1831,7 +1838,7 @@ export default {
 .influencerInfo {
   width: 32px;
   height: 32px;
-  background: #796cf3;
+  background: #a06cf3;
   border-radius: 50%;
   display: flex;
   justify-content: center;

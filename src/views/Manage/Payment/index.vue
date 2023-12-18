@@ -279,10 +279,6 @@ export default {
     }
   }
 }
-
-::v-deep(.el-table__header-wrapper table) {
-  padding: 0 20px;
-}
 </style>
 <style lang="less">
 #payment {

@@ -11,14 +11,14 @@
         <div class="step">
           <div class="step-span"><span>① </span>分享链接</div>
           <i class="iconfont icon-step"></i>
-          <div class="step-span"><span>② </span>同事填写并保存</div>
+          <div class="step-span"><span>② </span>同事填写并上传</div>
           <i class="iconfont icon-step"></i>
           <div class="step-span"><span>③ </span>您统一提交</div>
         </div>
 
         <div class="title">
           <h1>在线填写链接</h1>
-          <span>(同事填写后，会同步到当前页面)</span>
+          <span>(同事填写并上传后，会同步到当前页面)</span>
         </div>
 
         <div class="link">

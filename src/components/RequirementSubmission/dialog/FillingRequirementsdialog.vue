@@ -66,6 +66,8 @@
                       :on-exceed="upload_exceed"
                       :class="{ 'hide-upload-btn': hideUploadBtn }"
                       :disabled="getstate != 0 && determine == 4"
+                      :on-success="handleAvatarSuccess"
+                      :on-progress="handleAvatarProgress"
                     >
                       <i slot="default" class="el-icon-plus"></i>
                       <div slot="file" slot-scope="{ file }">
@@ -89,7 +91,7 @@
                       </div>
                     </el-upload>
                     <p style="font-size: 12px; margin-top: 10px; color: #999">
-                      请上传图片，不超过5M，支持jpg/png
+                      {{ handletext }}
                     </p>
                   </div>
                 </el-form-item>
@@ -316,9 +318,18 @@ export default {
       objold: {},
       ifxian: false,
       hideUploadBtn: false,
+      handletext: "请上传图片，不超过5M，支持jpg/png",
     };
   },
   methods: {
+    handleAvatarProgress() {
+      console.log("开始");
+      this.handletext = "图片正在上传中......";
+    },
+    handleAvatarSuccess() {
+      console.log("成功");
+      this.handletext = "请上传图片，不超过5M，支持jpg/png";
+    },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     upload_change: function (file, fileList) {
       if (file.raw.type == "image/jpeg" || file.raw.type == "image/png") {

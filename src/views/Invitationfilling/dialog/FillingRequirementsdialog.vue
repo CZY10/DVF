@@ -90,7 +90,10 @@
                         </span>
                       </div>
                     </el-upload>
-                    <p style="font-size: 12px; margin-top: 10px; color: #999">
+                    <p
+                      style="font-size: 12px; margin-top: 10px; color: #999"
+                      :class="{ isred: isred }"
+                    >
                       {{ handletext }}
                     </p>
                   </div>
@@ -319,6 +322,7 @@ export default {
       ifxian: false,
       hideUploadBtn: false,
       handletext: "请上传图片，不超过5M，支持jpg/png",
+      isred: false,
     };
   },
   methods: {
@@ -818,6 +822,11 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.upload_List = this.fileList;
       }
     },
+    handletext(newval) {
+      newval == "图片正在上传中......"
+        ? (this.isred = true)
+        : (this.isred = false);
+    },
   },
 };
 </script>
@@ -1135,5 +1144,9 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   display: flex !important;
   justify-content: center;
   align-items: center;
+}
+
+.isred {
+  color: rgb(236, 53, 53) !important;
 }
 </style>

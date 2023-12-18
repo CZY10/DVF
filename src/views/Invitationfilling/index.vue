@@ -779,7 +779,6 @@ export default {
           });
 
           if (this.ifGuide == 1) this.NotedialogdialogVisible = true;
-          this.ifGuide = 0;
         } else {
           localStorage.clear();
           router.push("/");
@@ -1362,6 +1361,7 @@ export default {
     },
     NotedialogdialogVisible(newval) {
       if (newval == false && this.ifGuide == 1) {
+        this.ifGuide = 0;
         this.initGuide(); // 调用新手引导的方法
       }
     },

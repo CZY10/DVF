@@ -4,6 +4,7 @@
       :visible.sync="NotedialogdialogVisible"
       width="880px"
       :show-close="true"
+      :close-on-click-modal="false"
       center
     >
       <div class="notedialog">

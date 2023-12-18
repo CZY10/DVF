@@ -9,13 +9,20 @@
           <span @click="TipsdialogVisible1 = true">新手引导</span>
         </div>
         <div class="RequirementWenben-div2">
-          <div
-            class="elIcon2 tips7"
-            @click="InvitationFillingdialogVisble = true"
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="支持多人同时在线填写"
+            placement="top"
           >
-            <i class="iconfont icon-fx1"></i>
-            <span>邀请填写</span>
-          </div>
+            <div
+              class="elIcon2 tips7"
+              @click="InvitationFillingdialogVisble = true"
+            >
+              <i class="iconfont icon-fx1"></i>
+              <span>邀请填写</span>
+            </div>
+          </el-tooltip>
           <div class="elIcon2 tips6">
             <el-upload
               action=""
@@ -32,10 +39,17 @@
             <i class="iconfont icon-mb"></i>
             <a :href="fileDiz" style="cursor: pointer">下载模板</a>
           </div>
-          <div class="elIcon2 tips8" @click="reloadPage">
-            <i class="iconfont icon-sx"></i>
-            <span>刷新</span>
-          </div>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击后同步他人填写的需求"
+            placement="top"
+          >
+            <div class="elIcon2 tips8" @click="reloadPage">
+              <i class="iconfont icon-sx"></i>
+              <span>刷新</span>
+            </div>
+          </el-tooltip>
         </div>
       </div>
       <div
@@ -974,10 +988,15 @@ export default {
         });
         const arr = [];
         this.tableData.forEach((item) => {
-          if (item.id && item.title != "") {
+          if (
+            item.id &&
+            item.title != "" &&
+            item.budget * 1 >= item.video_num * 300
+          ) {
             arr.push(item.id);
           }
         });
+        console.log(arr);
         const id = arr.join(",");
         needsSubmit({
           id: id,
@@ -1022,10 +1041,10 @@ export default {
             loading.close();
             this.$message.error(res);
           });
-      } else if (this.tableData.length == 1 || this.tableDataTitle == true) {
-        this.showMessage("您还没有添加任何需求，请添加需求再提交");
       } else if (this.checked == false) {
         this.showMessage("请先阅读并同意《视频拍摄服务及售后说明》");
+      } else {
+        this.showMessage("您还没有添加任何需求，请添加需求再提交");
       }
     },
     //跳转商品详情
@@ -1314,7 +1333,15 @@ export default {
     //拍摄预算修改
     budgetChange(val, index, num) {
       if (val * 1 < 300 * num) {
-        this.ifsubmitTo = false;
+        if (this.checked) {
+          this.ifsubmitTo = false;
+          this.tableData.map((item) => {
+            if (item.budget >= item.video_num * 300) {
+              this.ifsubmitTo = true;
+            }
+          });
+        }
+
         this.$nextTick(() => {
           if (val != "") {
             this.$refs[
@@ -1328,14 +1355,7 @@ export default {
           this.$refs["ruleForm" + index].fields[0].validateState = "error";
         });
       } else {
-        let flag = true;
-        this.tableData.map((item) => {
-          if (item.budget < item.video_num * 300 && item.title != "") {
-            flag = false;
-          }
-        });
-        console.log(flag);
-        if (this.checked && flag) this.ifsubmitTo = true;
+        if (this.checked) this.ifsubmitTo = true;
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
           this.$refs["ruleForm" + index].fields[0].validateState = "";
@@ -1574,12 +1594,9 @@ export default {
         this.tableDataTitle == false &&
         this.tableData.length != 1
       ) {
-        this.ifsubmitTo = true;
         this.tableData.forEach((item) => {
-          if (item.title != "") {
-            console.log(item);
-            if (item.budget == "" || item.budget * 1 < item.video_num * 300)
-              this.ifsubmitTo = false;
+          if (item.budget * 1 >= item.video_num * 300) {
+            this.ifsubmitTo = true;
           }
         });
       } else {
@@ -2013,7 +2030,7 @@ export default {
 .influencerInfo {
   width: 32px;
   height: 32px;
-  background: #796cf3;
+  background: #a06cf3;
   border-radius: 50%;
   display: flex;
   justify-content: center;

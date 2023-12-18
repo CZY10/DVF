@@ -1124,11 +1124,10 @@ export default {
           this.$refs["ruleForm" + index].fields[0].validateState = "error";
         });
       } else {
-        let flag = true;
+        let flag = false;
         this.tableData.map((item) => {
-          console.log(item);
-          if (item.budget > item.video_num * 300 && item.title != "") {
-            flag = false;
+          if (item.budget >= item.video_num * 300 && item.title != "") {
+            flag = true;
           }
         });
         if (flag) this.ifsubmitTo = true;

@@ -993,7 +993,6 @@ export default {
             arr.push(item.id);
           }
         });
-        console.log(arr);
         const id = arr.join(",");
         needsSubmit({
           id: id,
@@ -1030,7 +1029,7 @@ export default {
               );
             } else {
               loading.close();
-
+              this.reqsearch();
               this.showMessage(res.msg);
             }
           })

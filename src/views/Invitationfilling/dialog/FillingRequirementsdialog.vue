@@ -91,7 +91,7 @@
                       </div>
                     </el-upload>
                     <p style="font-size: 12px; margin-top: 10px; color: #999">
-                      请上传图片，不超过5M，支持jpg/png
+                      {{ handletext }}
                     </p>
                   </div>
                 </el-form-item>

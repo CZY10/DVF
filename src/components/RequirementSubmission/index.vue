@@ -281,23 +281,20 @@
                         -webkit-line-clamp: 2;
                         text-overflow: ellipsis;
                         text-align: left;
+                        padding-left: 6px;
+                        box-sizing: border-box;
                       "
                       :title="scope.row.title"
                     >
                       {{ scope.row.title }}
                     </p>
                     <p
-                      style="
-                        font-size: 12px;
-                        font-family: PingFangSC-Regular, PingFang SC;
-                        font-weight: 400;
-                        color: #999999;
-                      "
+                      style="font-size: 12px; color: #999999"
                       v-if="scope.row.url"
                       @click="gocommodity(scope.row.url)"
                     >
-                      {{ scope.row.asin }}
-                      <i
+                      {{ scope.row.asin
+                      }}<i
                         class="iconfont icon-share"
                         style="
                           color: #a06cf3;

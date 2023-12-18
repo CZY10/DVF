@@ -604,7 +604,7 @@ export default {
       influencersList: [],
       influencersListid: 0,
       tableDataTitle: true,
-      ifsubmitTo: true,
+      ifsubmitTo: false,
       NotedialogdialogVisible: false,
       influencerids1: [],
       influencerids2: [],

@@ -1126,7 +1126,7 @@ export default {
       } else {
         let flag = false;
         this.tableData.map((item) => {
-          if (item.budget > item.video_num * 300 && item.title != "") {
+          if (item.budget >= item.video_num * 300 && item.title != "") {
             flag = true;
           }
         });

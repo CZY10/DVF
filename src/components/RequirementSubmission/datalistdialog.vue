@@ -209,7 +209,7 @@
                 </ul>
               </div>
               <div
-                @click="addlist(item, index, item.user_id)"
+                @click="addlist(item, index, item.istrue)"
                 :class="{
                   product_btn: item.istrue != false,
                   addlistbj: item.istrue == false,
@@ -579,7 +579,11 @@ export default {
     },
 
     //添加需求
-    async addlist(item, index, id) {
+    async addlist(item, index, istrue) {
+      if (istrue == false) {
+        return;
+      }
+
       if (this.influencersList.length == 5) {
         const h = this.$createElement;
         this.$message({
@@ -652,7 +656,7 @@ export default {
       let _this = this;
       _this.influencersList.flat().forEach((items) => {
         let index = _this.datalist.findIndex(
-          (item) => item.id == items.user_id
+          (item) => item.user_id == items.user_id
         );
         if (index != -1) {
           _this.datalist[index].istrue = false;

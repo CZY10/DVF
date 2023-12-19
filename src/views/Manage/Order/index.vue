@@ -1895,7 +1895,6 @@ export default {
       //微信
       payOrder({
         order_id: this.orderId,
-        type: type,
         payment: "wechat",
       })
         .then((res) => {
@@ -1920,7 +1919,6 @@ export default {
       //支付宝
       payOrder({
         order_id: this.orderId,
-        type: type,
         payment: "alipay",
       })
         .then((res) => {

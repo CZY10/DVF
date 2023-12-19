@@ -646,6 +646,7 @@ export default {
       tipsImg3: require("../../assets/images/tipsImg/tips3.webp"),
       tipsImg4: require("../../assets/images/tipsImg/tips4.webp"),
       ifGuide: 0,
+      num: 0,
     };
   },
   components: {
@@ -979,10 +980,6 @@ export default {
               influencer_ids: itempop.id,
               url_mark: needs,
               auth: localStorage.getItem("said"),
-            }).then((res) => {
-              if (res.code == 1) {
-                this.reqsearch();
-              }
             });
           }
         });
@@ -992,9 +989,6 @@ export default {
             .map((item) => item.id.toString())
             .join(",");
           this.getneedsSelectInfluencer(id, influencerIds1);
-          setTimeout(() => {
-            this.reqsearch();
-          }, 1000);
         } else {
           let influencerIds1 = this.tableData[
             this.differentIndices[0]
@@ -1030,9 +1024,6 @@ export default {
             this.tableData[this.differentIndices[1]].id,
             influencerIds2
           );
-          setTimeout(() => {
-            this.reqsearch();
-          }, 1000);
         }
       } else {
         this.reqsearch();
@@ -1056,6 +1047,17 @@ export default {
         influencer_ids: influencerIds1,
         auth: localStorage.getItem("said"),
       });
+
+      let comma = ",";
+      let flag = true;
+      if (influencerIds1.toLowerCase().includes(comma.toLowerCase())) {
+        console.log("字符串（忽略大小写）包含逗号");
+      } else {
+        this.reqsearch();
+        flag = false;
+      }
+
+      if (influencerIds1 == "" && flag) this.reqsearch();
     },
 
     //填写需求
@@ -1339,7 +1341,8 @@ export default {
           item.title == "" &&
           item.influencer_info[0]?.ifinfluencerInfo == true
         ) {
-          if (item.id) {
+          if (item.id && this.num != item.id) {
+            this.num = item.id;
             needsDelete({
               id: item.id,
               source: 1,

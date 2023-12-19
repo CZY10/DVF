@@ -303,7 +303,7 @@
                 >
                 <div class="normal_style" v-else>/</div>
                 <div
-                  class="normal_style"
+                  class="operation_btn"
                   v-if="scope.row.apply_refund_deposit == 1"
                   style="
                     font-size: 12px;
@@ -1403,7 +1403,12 @@
         >
           <img
             :src="item.image"
-            style="width: 40px; height: 40px; border-radius: 50%"
+            style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+            "
           />
           <p>No.{{ item.user_id }}</p>
           <p style="color: #796cf3; margin-top: 4px; white-space: nowrap">

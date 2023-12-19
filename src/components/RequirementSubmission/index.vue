@@ -627,8 +627,12 @@
               v-for="(item, index) in orderData[0].order.order_id"
               :key="index"
             >
-              <span v-if="index < 8">{{ item }}</span>
-              <span v-if="index < 7">,</span>
+              <span v-if="index < orderData[0].order.order_id.length">{{
+                item
+              }}</span>
+              <span v-if="index < orderData[0].order.order_id.length - 1"
+                >,</span
+              >
             </span>
           </p>
         </div>
@@ -867,6 +871,7 @@ export default {
       InvitationFillingdialoglink: "",
       orderCount: 0,
       iforderid: true,
+      num: 0,
     };
   },
   components: {
@@ -1264,10 +1269,6 @@ export default {
             const itempop = item.influencer_info.pop();
             needsSelectInfluencer({
               influencer_ids: itempop.user_id,
-            }).then((res) => {
-              if (res.code == 1) {
-                this.reqsearch();
-              }
             });
           }
         });
@@ -1277,9 +1278,6 @@ export default {
             .map((item) => item.user_id.toString())
             .join(",");
           this.getneedsSelectInfluencer(id, influencerIds1);
-          setTimeout(() => {
-            this.reqsearch();
-          }, 1000);
         } else {
           let influencerIds1 = this.tableData[
             this.differentIndices[0]
@@ -1315,9 +1313,6 @@ export default {
             this.tableData[this.differentIndices[1]].id,
             influencerIds2
           );
-          setTimeout(() => {
-            this.reqsearch();
-          }, 1000);
         }
       } else {
         this.reqsearch();
@@ -1338,6 +1333,17 @@ export default {
         id: id,
         influencer_ids: influencerIds1,
       });
+
+      let comma = ",";
+      let flag = true;
+      if (influencerIds1.toLowerCase().includes(comma.toLowerCase())) {
+        console.log("字符串（忽略大小写）包含逗号");
+      } else {
+        this.reqsearch();
+        flag = false;
+      }
+
+      if (influencerIds1 == "" && flag) this.reqsearch();
     },
 
     //填写需求
@@ -1613,7 +1619,8 @@ export default {
           item.title == "" &&
           item.influencer_info[0]?.ifinfluencerInfo == true
         ) {
-          if (item.id) {
+          if (item.id && this.num != item.id) {
+            this.num = item.id;
             needsDelete({
               id: item.id,
               source: 0,

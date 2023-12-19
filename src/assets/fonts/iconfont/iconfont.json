@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "32810967",
+      "name": "tips",
+      "font_class": "tips",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "38494879",
+      "name": "step",
+      "font_class": "step",
+      "unicode": "e682",
+      "unicode_decimal": 59010
+    },
+    {
       "icon_id": "10635077",
       "name": "分享",
       "font_class": "share",

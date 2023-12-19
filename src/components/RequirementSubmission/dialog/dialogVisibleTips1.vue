@@ -8,7 +8,7 @@
       center
     >
       <div class="tips1">
-        <h1>
+        <h1 style="transition: opacity 0.3s ease-in-out" class="imgtext">
           <span v-if="index == 0">
             点击“
             <div>+</div>
@@ -30,7 +30,11 @@
             复制”按钮，为对应变体，快速创建需求</span
           >
         </h1>
-        <img :src="imgurl[index]" alt="" />
+        <img
+          :src="imgurl[index]"
+          style="transition: opacity 0.3s ease-in-out"
+          class="img"
+        />
         <div class="btn">
           <button @click="beforeClose">跳过</button>
           <button @click="goOne">下一步</button>
@@ -62,10 +66,21 @@ export default {
       }, 1000);
     },
     goOne() {
-      this.index++;
-      if (this.index == 4) {
-        this.beforeClose();
-      }
+      // 在切换图片之前，先将图片的透明度设置为 0
+      document.querySelector(".img").style.opacity = 0;
+      document.querySelector(".imgtext").style.opacity = 0;
+
+      // 等待过渡效果完成后，再切换图片
+      setTimeout(() => {
+        this.index++;
+        if (this.index == 4) {
+          this.beforeClose();
+        }
+
+        // 切换图片后，将图片的透明度设置回 1
+        document.querySelector(".img").style.opacity = 1;
+        document.querySelector(".imgtext").style.opacity = 1;
+      }, 300); // 这里的延迟时间应该和 transition 属性中指定的时间相同
     },
   },
 };

@@ -1,8 +1,6 @@
 import axios from "axios";
-import { Message, MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import store from "@/store";
-import config from "../../config";
-import { refreshToken } from "@/api";
 import router from '@/router'
 
 const service = axios.create({
@@ -12,7 +10,7 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-    if (config.url == "/api/needs/template") {
+    if (config.url == "/api/needs/template" || config.url == '/api/needs/inviteTemplate') {
         config.headers['Content-Type'] = 'multipart/form-data'
     } else {
         config.headers['Content-Type'] = 'application/json'
@@ -29,13 +27,13 @@ service.interceptors.response.use(
     response => {
         const res = response.data;
         const reg = /^0.*0$|^0$/;
-        if (res.code !== 1) {
-            // Message({
-            //     message: res.msg,
-            //     type: 'error',
-            //     offset: 100,
-            //     duration: 5 * 1000
-            // })
+        if (res.code !== 1 && res.msg != '添加失败' && res.msg != 'budget不能为空' && res.msg != '数据格式错误' && res.msg != 'budget error') {
+            Message({
+                message: res.msg,
+                type: 'error',
+                offset: 100,
+                duration: 5 * 1000
+            })
             console.log(res.msg)
             if (res.code == 300 && reg.test(res.errorCode)) {
                 Message({

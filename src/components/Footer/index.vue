@@ -5,12 +5,6 @@
         :gutter="54"
         style="max-width: 1200px; margin: auto; padding-bottom: 28px"
       >
-        <!--                <el-col :span="5" style="padding-left: 0">-->
-        <!--                    <div style="max-width: 180px;margin: auto">-->
-        <!--                        <img :src="formData.footerlogo" alt="">-->
-        <!--                    </div>-->
-        <!--                    <p style="text-align: center;margin-top: 10px">{{ formData.name }}</p>-->
-        <!--                </el-col>-->
         <el-col :span="14">
           <p class="title">关于我们</p>
           <p>
@@ -59,7 +53,6 @@
 
 <script>
 import { getConfig } from "@/api";
-import { mapMutations } from "vuex";
 export default {
   name: "index",
   data() {

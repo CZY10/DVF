@@ -9,7 +9,6 @@ import Manage from "@/views/Manage";
 import Order from "@/views/Manage/Order";
 import Payment from "@/views/Manage/Payment";
 import Personal from "@/views/Manage/Personal";
-import ChatGPT from "@/views/ChatGPT";
 import webDeal from "@/views/webDeal/index.vue"
 import Requirement from "@/components/RequirementSubmission/index.vue"
 import Note from "@/components/RequirementSubmission/note.vue"
@@ -38,12 +37,6 @@ const routes = [
                 name: 'webDeal',
                 meta: { requiresAuth: false },
                 component: webDeal,
-            },
-            {
-                path: '/chatgpt',
-                name: 'chatgpt',
-                meta: { requiresAuth: true },
-                component: ChatGPT,
             },
             {
                 path: '/buyershowmanage',
@@ -81,6 +74,18 @@ const routes = [
                         meta: { requiresAuth: false },
                         component: Note,
                     },
+                    {
+                        path: '/Invitationfilling',
+                        name: 'Invitationfilling',
+                        meta: { requiresAuth: false },
+                        component: () => import('@/views/Invitationfilling/index.vue')
+                    },
+                    {
+                        path: '/datalistdialogIf',
+                        name: 'datalistdialogIf',
+                        meta: { requiresAuth: false },
+                        component: () => import('@/views/Invitationfilling/datalistdialog.vue')
+                    },
                 ]
             },
 
@@ -113,9 +118,6 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '@/views/Login')
     },
     {
@@ -145,7 +147,7 @@ VueRouter.prototype.push = function push(location) {
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-    if (to.fullPath == "/Note" || to.fullPath == "/datalistdialog") {
+    if (to.fullPath == "/Note" || to.fullPath == "/datalistdialog" || to.path == '/Invitationfilling' || to.path == '/datalistdialogIf') {
         store.commit('Index/setIsFalg', false)
     } else {
         store.commit('Index/setIsFalg', true)

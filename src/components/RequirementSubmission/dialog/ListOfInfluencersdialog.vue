@@ -4,6 +4,7 @@
       :visible.sync="datalistdialogVisible"
       width="983px"
       :before-close="beforeClose"
+      :close-on-click-modal="false"
     >
       <i class="el-icon-full-screen" v-screenfull></i>
 
@@ -821,11 +822,11 @@ export default {
         margin-top: 20px;
         display: flex;
         flex-wrap: wrap;
-        width: 1220px;
+        width: 103%;
 
         .product_li {
           height: 448px;
-          flex: 0 0 calc(25% - 20px);
+          flex: 0 0 calc(31%);
           margin-bottom: 30px;
           margin-right: 20px;
           border-radius: 6px;
@@ -1071,23 +1072,6 @@ export default {
         p {
           text-align: center;
           margin: 20px;
-        }
-      }
-    }
-  }
-
-  @media screen and (max-width: 1280px) {
-    .banxin {
-      width: 900px;
-
-      .product {
-        .product_ul {
-          width: 920px;
-
-          .product_li {
-            flex: 0 0 calc(31%);
-            transition: all 0.3s;
-          }
         }
       }
     }

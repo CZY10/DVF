@@ -1,6 +1,5 @@
 //请求方法
-import request, { createAPI } from "@/utils/request";
-import { log } from "video.js";
+import request from "@/utils/request";
 
 //post请求
 // export function login(data){
@@ -275,38 +274,7 @@ export function orderStep(data) {
         data
     })
 }
-//获取chatGPT列表
-export function chatgptList(data) {
-    return request({
-        url: '/api/chatgpt/index',
-        method: 'post',
-        data
-    })
-}
-//chatGPT消息发送
-export function createChatgpt(data) {
-    return request({
-        url: '/api/chatgpt/create',
-        method: 'post',
-        data
-    })
-}
-//引导添加企业微信
-export function addWeCom(data) {
-    return request({
-        url: '/api/home/qrcode',
-        method: 'post',
-        data
-    })
-}
-//检测企业微信是否添加成功
-export function checkEnterpriseQr(data) {
-    return request({
-        url: '/api/enterprise_wechat/check',
-        method: 'post',
-        data
-    })
-}
+
 //获取企业客服信息
 export function serviceInfo(data) {
     return request({
@@ -368,15 +336,6 @@ export function search(data) {
     })
 }
 
-// 提交拍摄需求
-export function create(data) {
-    return request({
-        url: "/api/order/create",
-        method: "post",
-        data
-    })
-}
-
 //编辑拍摄需求
 export function needsEdit(data) {
     return request({
@@ -385,15 +344,6 @@ export function needsEdit(data) {
         data
     })
 }
-
-//需求克隆
-// export function needsCopy(data) {
-//     return request({
-//         url: "/api/needs/copy",
-//         method: "post",
-//         data
-//     })
-// }
 
 //需求删除
 export function needsDelete(data) {
@@ -435,9 +385,6 @@ export function needsSubmit(data) {
 export function needsTemplate(data) {
     return request({
         url: "/api/needs/template",
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        },
         method: "post",
         data
     })
@@ -507,9 +454,46 @@ export function needsBudget(data) {
 }
 
 //拍摄需求首页
-export function needsIndex() {
+export function needsIndex(data) {
     return request({
         url: "/api/needs/index",
         method: "post",
+        data
+    })
+}
+
+// 邀请填写页勾选达人提交需求
+export function inviteSelectInfluencer(data) {
+    return request({
+        url: "/api/needs/inviteSelectInfluencer",
+        method: "post",
+        data
+    })
+}
+
+// 邀请填写页导入模板
+export function inviteTemplate(data) {
+    return request({
+        url: "/api/needs/inviteTemplate",
+        method: "post",
+        data
+    })
+}
+
+//邀请填写页删除需求的意向红人
+export function inviteRemoveInfluencer(data) {
+    return request({
+        url: "/api/needs/inviteRemoveInfluencer",
+        method: "post",
+        data
+    })
+}
+
+//邀请填写页需求提交
+export function inviteSubmit(data) {
+    return request({
+        url: "/api/needs/inviteSubmit",
+        method: "post",
+        data
     })
 }

@@ -47,6 +47,7 @@ export default {
       const res = await needsBudgetTip({
         id: this.video_id,
         budget_tip: "2",
+        source: 0,
       });
       if (res.code == 1) {
         this.reqsearch();

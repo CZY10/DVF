@@ -1,7 +1,7 @@
 <template>
   <div class="Deal">
     <div class="Deal-hearder">
-      <img src="./img/hearder01.png" alt="" @click="dialogVisible = true" />
+      <img src="./img/hearder01.webp" alt="" @click="dialogVisible = true" />
       <div>
         <ul>
           <li class="Deal-li">
@@ -48,7 +48,7 @@
 
       <div class="Deal-top1">
         <div>
-          <img src="./img/编组 71.png" alt="" />
+          <img src="./img/DealWZ71.webp" alt="" />
         </div>
         <div>
           <p class="p1">亚马逊站外促销平台TOP1</p>
@@ -145,12 +145,12 @@
                 <button @click="goVipon">点击了解更多</button>
               </div>
               <div class="Techbargains2">
-                <img src="./img/panel4.png" alt="" />
+                <img src="./img/panel4.webp" alt="" />
               </div>
             </li>
             <li>
               <div class="BensBargains2">
-                <img src="./img/panel3.png" alt="" />
+                <img src="./img/panel3.webp" alt="" />
               </div>
               <div class="BensBargains1">
                 <p class="p1">Ben's Bargains</p>
@@ -204,12 +204,12 @@
                 <button @click="goVipon">点击了解更多</button>
               </div>
               <div class="Techbargains2">
-                <img src="./img/panel7.png" alt="" />
+                <img src="./img/panel7.webp" alt="" />
               </div>
             </li>
             <li>
               <div class="BensBargains2">
-                <img src="./img/panel2.png" alt="" />
+                <img src="./img/panel2.webp" alt="" />
               </div>
               <div class="BensBargains1">
                 <p class="p1">Dealnews</p>
@@ -271,7 +271,7 @@
                 <button @click="goVipon">点击了解更多</button>
               </div>
               <div class="Techbargains2">
-                <img src="./img/panel5.png" alt="" />
+                <img src="./img/panel5.webp" alt="" />
               </div>
             </li>
             <li>
@@ -303,7 +303,7 @@
                 <button @click="goVipon">点击了解更多</button>
               </div>
               <div class="Techbargains2">
-                <img src="./img/panel6.png" alt="" />
+                <img src="./img/panel6.webp" alt="" />
               </div>
             </li>
           </div>
@@ -735,14 +735,14 @@
     </div>
     <div class="boxs" v-show="Vshow">
       <img
-        src="./img/8e39d5b4190eee58fabb93038ecb40d0.jpg"
+        src="./img/wx.webp"
         style="width: 100x; height: 100px; margin: 10px auto; display: block"
       />
       <p>扫码添加客服</p>
     </div>
-    <el-dialog :visible.sync="dialogVisible" width="15%">
+    <el-dialog :visible.sync="dialogVisible" width="280px">
       <img
-        src="./img/8e39d5b4190eee58fabb93038ecb40d0.jpg"
+        src="./img/wx.webp"
         style="width: 180x; height: 180px; margin: 0 auto; display: block"
       />
       <p

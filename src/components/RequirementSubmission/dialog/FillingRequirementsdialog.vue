@@ -22,6 +22,7 @@
                     v-model="ruleForm.name"
                     placeholder="中文填写，注明变体或型号，例：女性连衣裙（红色）"
                     :disabled="getstate != 0 && determine == 4"
+                    ref="ruleForm"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -65,6 +66,8 @@
                       :on-exceed="upload_exceed"
                       :class="{ 'hide-upload-btn': hideUploadBtn }"
                       :disabled="getstate != 0 && determine == 4"
+                      :on-success="handleAvatarSuccess"
+                      :on-progress="handleAvatarProgress"
                     >
                       <i slot="default" class="el-icon-plus"></i>
                       <div slot="file" slot-scope="{ file }">
@@ -87,8 +90,11 @@
                         </span>
                       </div>
                     </el-upload>
-                    <p style="font-size: 12px; margin-top: 10px; color: #999">
-                      请上传图片，不超过5M，支持jpg/png
+                    <p
+                      style="font-size: 12px; margin-top: 10px; color: #999"
+                      :class="{ isred: isred }"
+                    >
+                      {{ handletext }}
                     </p>
                   </div>
                 </el-form-item>
@@ -186,7 +192,15 @@
               </div>
             </el-form>
 
-            <div style="display: flex; justify-content: center; padding: 24px">
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                padding: 24px;
+                width: 461px;
+                box-sizing: border-box;
+              "
+            >
               <button
                 @click="submitForm(ruleForm)"
                 :class="{ ifsubmitbtn: ifsubmitbtn, submitbtn: true }"
@@ -307,23 +321,30 @@ export default {
       objold: {},
       ifxian: false,
       hideUploadBtn: false,
+      handletext: "请上传图片，不超过5M，支持jpg/png",
+      isred: false,
     };
   },
   methods: {
+    handleAvatarProgress() {
+      console.log("开始");
+      this.handletext = "图片正在上传中......";
+    },
+    handleAvatarSuccess() {
+      console.log("成功");
+      this.handletext = "请上传图片，不超过5M，支持jpg/png";
+    },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     upload_change: function (file, fileList) {
-      if (fileList.length >= 5) {
-        this.hideUploadBtn = true;
-      } else {
-        this.hideUploadBtn = false;
-      }
-
       if (file.raw.type == "image/jpeg" || file.raw.type == "image/png") {
         // 判断 > 5M
         if (file.size > 5242880) {
           fileList.pop();
           let msg_size = `图片过大，请重新上传`;
           this.$message.error(msg_size);
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           return false;
         }
         // 判断重名文件
@@ -334,6 +355,9 @@ export default {
           fileList.pop();
           let msg_repeat = `您上传的${file.name}，该文件有重名文件，请您重新上传。`;
           this.$message.error(msg_repeat);
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           return false;
         }
         if (file?.response?.code == 1) {
@@ -341,12 +365,24 @@ export default {
           this.fileList = JSON.parse(JSON.stringify(fileList));
         } else if (file?.response?.code == 0) {
           fileList.pop();
+          setTimeout(() => {
+            this.handletext = "请上传图片，不超过5M，支持jpg/png";
+          }, 1000);
           this.$message.error(file.response.msg);
           return false;
         }
       } else {
+        setTimeout(() => {
+          this.handletext = "请上传图片，不超过5M，支持jpg/png";
+        }, 1000);
         this.$message.error("图片格式错误，请重新上传");
         fileList.pop();
+      }
+
+      if (fileList.length >= 5) {
+        this.hideUploadBtn = true;
+      } else {
+        this.hideUploadBtn = false;
       }
     },
 
@@ -405,6 +441,7 @@ export default {
           photograph_demand: formName.ShootingRequirements,
           image: str,
           id: this.FillingRequirementid,
+          source: 0,
         };
         const res = await needsEdit(data);
         if (res.code == 1) {
@@ -433,6 +470,7 @@ export default {
           photograph_guide: this.formradioRequirements,
           photograph_demand: formName.ShootingRequirements,
           image: str,
+          source: 0,
         };
         const res = await needsEdit(data);
         if (res.code == 1) {
@@ -492,11 +530,15 @@ export default {
             if_product_link: this.formradioLink,
             photograph_demand: formName.ShootingRequirements,
             image: str,
+            source: 0,
           };
           const res = await createOrder(data);
           if (res.code == 1) {
             this.beforeClose();
             this.reqsearch();
+            let num = localStorage.getItem("addnum") - 1;
+            if (num <= 0) num = 0;
+            localStorage.setItem("addnum", num);
           } else {
             this.$message.error(res.msg);
           }
@@ -751,24 +793,31 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.ifxian = false;
         this.fileList = [];
         this.upload_List = [];
+        this.$nextTick(() => {
+          this.$refs["ruleForm"].fields[0].validateMessage = "";
+          this.$refs["ruleForm"].fields[0].validateState = "";
+        });
       } else {
         this.rules.name[0].required = true;
       }
     },
     formradioLink(newval) {
-      if (this.determine == 3) {
-        if (
-          this.ruleForm.name == this.RequirementsList.title &&
-          this.ruleForm.ShootingRequirements ==
-            this.RequirementsList.photograph_demand &&
-          this.ruleForm.notes == this.RequirementsList.description &&
-          this.RequirementsList.if_product_link == newval
-        ) {
-          this.ifsubmitbtn = false;
-        } else {
-          this.ifsubmitbtn = true;
-        }
+      if (newval == 1) {
+        this.fileList = [];
+        this.upload_List.forEach((item) => {
+          if (item.response) {
+            this.fileList.push({ ["url"]: item.response.data.url });
+          } else {
+            this.fileList.push({ ["url"]: item.url });
+          }
+        });
+        this.upload_List = this.fileList;
       }
+    },
+    handletext(newval) {
+      newval == "图片正在上传中......"
+        ? (this.isred = true)
+        : (this.isred = false);
     },
   },
 };
@@ -894,6 +943,10 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
     display: none;
   }
 }
+
+::v-deep(.el-form-item__error) {
+  margin-left: 10px;
+}
 </style>
 
 <style lang="less" scoped>
@@ -910,12 +963,14 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       font-size: 16px;
       font-weight: 600;
       color: #333333;
+      width: 461px;
     }
     .tiele {
       text-align: center;
       font-size: 12px;
       color: #999999;
       margin-top: 4px;
+      width: 461px;
     }
     .formitem {
       margin-top: 10px;
@@ -1081,5 +1136,9 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
   display: flex !important;
   justify-content: center;
   align-items: center;
+}
+
+.isred {
+  color: rgb(236, 53, 53) !important;
 }
 </style>

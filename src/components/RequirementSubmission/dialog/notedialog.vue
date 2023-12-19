@@ -4,6 +4,7 @@
       :visible.sync="NotedialogdialogVisible"
       width="880px"
       :show-close="true"
+      :close-on-click-modal="false"
       center
     >
       <div class="notedialog">
@@ -77,7 +78,7 @@
               </p>
               <p>
                 其中，<span class="spanbj">
-                  <span>①、②、④</span>
+                  <span>①、③、④</span>
                   需要您配合并及时完成
                 </span>
                 ，请您留意平台消息及账号经理的反馈
@@ -228,8 +229,22 @@ export default {
     updateScroll(event) {
       this.scrollTop = event.target.scrollTop;
     },
-    getscrollTop(num) {
-      this.$refs.scrollContainer.scrollTop = num;
+    getscrollTop(target) {
+      const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+      const start = this.$refs.scrollContainer.scrollTop;
+      const change = target - start;
+      const duration = 500;
+      let startTime;
+
+      const animateScroll = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = easeInOutQuad(Math.min(elapsed / duration, 1));
+        this.$refs.scrollContainer.scrollTop = start + change * progress;
+        if (elapsed < duration) requestAnimationFrame(animateScroll);
+      };
+
+      requestAnimationFrame(animateScroll);
     },
   },
   mounted() {},

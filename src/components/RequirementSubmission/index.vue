@@ -9,10 +9,20 @@
           <span @click="TipsdialogVisible1 = true">新手引导</span>
         </div>
         <div class="RequirementWenben-div2">
-          <!-- <div class="elIcon2">
-            <i class="iconfont icon-fx1"></i>
-            <span>邀请填写</span>
-          </div> -->
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="支持多人同时在线填写"
+            placement="top"
+          >
+            <div
+              class="elIcon2 tips7"
+              @click="InvitationFillingdialogVisble = true"
+            >
+              <i class="iconfont icon-fx1"></i>
+              <span>邀请填写</span>
+            </div>
+          </el-tooltip>
           <div class="elIcon2 tips6">
             <el-upload
               action=""
@@ -29,10 +39,17 @@
             <i class="iconfont icon-mb"></i>
             <a :href="fileDiz" style="cursor: pointer">下载模板</a>
           </div>
-          <!-- <div class="elIcon2" @click="reloadPage">
-            <i class="iconfont icon-sx"></i>
-            <span>刷新</span>
-          </div> -->
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击后同步他人填写的需求"
+            placement="top"
+          >
+            <div class="elIcon2 tips8" @click="reloadPage">
+              <i class="iconfont icon-sx"></i>
+              <span>刷新</span>
+            </div>
+          </el-tooltip>
         </div>
       </div>
       <div
@@ -41,7 +58,6 @@
           position: relative;
           border-radius: 4px;
           border: 1px solid #eeeeee;
-          height: 640px;
           box-sizing: border-box;
         "
       >
@@ -53,7 +69,6 @@
             color: '#333333',
             position: 'relative',
           }"
-          height="640"
           @selection-change="handleSelectionChange"
         >
           <el-table-column label="序号" width="70">
@@ -266,23 +281,20 @@
                         -webkit-line-clamp: 2;
                         text-overflow: ellipsis;
                         text-align: left;
+                        padding-left: 6px;
+                        box-sizing: border-box;
                       "
                       :title="scope.row.title"
                     >
                       {{ scope.row.title }}
                     </p>
                     <p
-                      style="
-                        font-size: 12px;
-                        font-family: PingFangSC-Regular, PingFang SC;
-                        font-weight: 400;
-                        color: #999999;
-                      "
+                      style="font-size: 12px; color: #999999"
                       v-if="scope.row.url"
                       @click="gocommodity(scope.row.url)"
                     >
-                      {{ scope.row.asin }}
-                      <i
+                      {{ scope.row.asin
+                      }}<i
                         class="iconfont icon-share"
                         style="
                           color: #a06cf3;
@@ -694,14 +706,19 @@
       :TipsdialogVisible1="TipsdialogVisible1"
       @getTipsdialogVisible1="getTipsdialogVisible1"
     ></dialogVisibleTips1>
+
+    <!-- 邀请填写弹窗 -->
+    <InvitationFillingdialog
+      :InvitationFillingdialogVisble="InvitationFillingdialogVisble"
+      @InvitationFillingdialogMsg="InvitationFillingdialogMsg"
+      :InvitationFillingdialoglink="InvitationFillingdialoglink"
+    ></InvitationFillingdialog>
   </div>
 </template>
 
 <script>
 import {
-  getShootRequire,
   search,
-  create,
   needsDelete,
   needsRemoveInfluencer,
   needsSubmit,
@@ -710,7 +727,6 @@ import {
   needsVideoNumin,
   needsBudget,
   needsIndex,
-  carOperate,
   needsSelectInfluencer,
 } from "@/api";
 import draggable from "vuedraggable";
@@ -719,33 +735,27 @@ import Tipsdialog from "./dialog/Tipsdialog.vue";
 import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
 import Notedialog from "./dialog/notedialog.vue";
 import dialogVisibleTips1 from "./dialog/dialogVisibleTips1.vue";
+import InvitationFillingdialog from "./dialog/InvitationFillingdialog.vue";
 import store from "@/store";
 import QRCode from "qrcodejs2";
+
 export default {
   data() {
     return {
       datalistdialogVisible: false,
       checked: false,
-      flags: false,
-      ispersonid: "",
-      input: "",
       formId: "",
       centerDialogVisibles: false,
-      radio: "1",
       tableData: [
         {
           flag: 1,
           influencer_info: [],
         },
       ],
-      errorShow: false,
-      isvideoSubmitDialogVisible: 0,
       checkWechatPaymentVal: "",
       checkAlipayPaymentVal: "",
-      fileList: [],
       handleSelectionChangeList: [],
       fileDiz: "",
-      iscg: false,
       FillingRequirementsdialogVisible: false,
       determine: 1,
       RequirementsList: {},
@@ -806,6 +816,8 @@ export default {
       style: "min-height:78px;display: block;",
       TipsdialogVisible1: false,
       deletecenterDialogVisiblesindex: 0,
+      InvitationFillingdialogVisble: false,
+      InvitationFillingdialoglink: "",
     };
   },
   components: {
@@ -815,6 +827,7 @@ export default {
     ListOfInfluencersdialog,
     Notedialog,
     dialogVisibleTips1,
+    InvitationFillingdialog,
   },
   methods: {
     goOrder() {},
@@ -846,6 +859,7 @@ export default {
       });
       needsDelete({
         id: this.formId,
+        source: 0,
       }).then((res) => {
         if (res.code == 1) {
           this.reqsearch();
@@ -875,15 +889,19 @@ export default {
       window.open(this.$router.resolve({ path: `/Note` }).href, "_blank");
     },
     reqsearch() {
-      search().then((res) => {
+      search({
+        source: 0,
+      }).then((res) => {
         if (res.code == 1) {
           if (res.data.data.length == 0) {
+            this.ifsubmitTo = false;
             res.data.data.push({
               flag: 1,
               influencer_info: [],
               title: "",
               video_num: "1",
             });
+            localStorage.setItem("addnum", 0);
           } else if (localStorage.getItem("addnum") != 0) {
             let num = localStorage.getItem("addnum") * 1;
             if (num > 0) {
@@ -957,6 +975,7 @@ export default {
     //提交
     submitTo() {
       if (this.ifsubmitTo) {
+        this.ifsubmitTo = false;
         const loading = this.$loading({
           lock: true,
           text: "提交中...",
@@ -966,7 +985,11 @@ export default {
         });
         const arr = [];
         this.tableData.forEach((item) => {
-          if (item.id && item.title != "") {
+          if (
+            item.id &&
+            item.title != "" &&
+            item.budget * 1 >= item.video_num * 300
+          ) {
             arr.push(item.id);
           }
         });
@@ -975,7 +998,7 @@ export default {
           id: id,
         })
           .then((res) => {
-            if (res.code == 1) {
+            if (res.code == 1 && res.data.renew == 0) {
               this.reqsearch();
               loading.close();
               this.payDepositDialogVisible = true;
@@ -1005,57 +1028,23 @@ export default {
                 res.data.order[1].order.out_trade_no
               );
             } else {
-              this.$message.error(res.msg);
+              loading.close();
+              this.reqsearch();
+              setTimeout(() => {
+                this.ifsubmitTo = true;
+                console.log(this.ifsubmitTo);
+              }, 1000);
+              this.showMessage(res.msg);
             }
           })
           .catch((res) => {
             loading.close();
             this.$message.error(res);
           });
-      } else if (this.tableData.length == 1 || this.tableDataTitle == true) {
-        const h = this.$createElement;
-        this.$message({
-          message: h("p", { style: "display: flex" }, [
-            h(
-              "div",
-              {
-                style:
-                  "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
-              },
-              "¡"
-            ),
-            h(
-              "span",
-              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
-              "您还没有添加任何需求，请添加需求再提交"
-            ),
-          ]),
-          iconClass: "iconfont",
-          offset: 140,
-          customClass: "customClasssuccess",
-        });
       } else if (this.checked == false) {
-        const h = this.$createElement;
-        this.$message({
-          message: h("p", { style: "display: flex" }, [
-            h(
-              "div",
-              {
-                style:
-                  "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
-              },
-              "¡"
-            ),
-            h(
-              "span",
-              { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
-              "请先阅读并同意《视频拍摄服务及售后说明》"
-            ),
-          ]),
-          iconClass: "iconfont",
-          offset: 140,
-          customClass: "customClasssuccess",
-        });
+        this.showMessage("请先阅读并同意《视频拍摄服务及售后说明》");
+      } else {
+        this.showMessage("您还没有添加任何需求，请添加需求再提交");
       }
     },
     //跳转商品详情
@@ -1122,6 +1111,7 @@ export default {
 
       if (num >= 5 && localStorage.getItem("handleChange") == "true") {
         const h = this.$createElement;
+
         let msg = this.$message({
           message: h("p", { style: "display: flex;align-items: center;" }, [
             h(
@@ -1166,6 +1156,7 @@ export default {
           const res = await needsVideoNumin({
             id: id + "",
             video_num: num + "",
+            source: 0,
           });
           if (res.code == 1) {
             this.budgetChange(budget, index, num);
@@ -1335,11 +1326,22 @@ export default {
     getTipsdialogVisible1(msg) {
       this.TipsdialogVisible1 = msg;
     },
+    InvitationFillingdialogMsg(msg) {
+      this.InvitationFillingdialogVisble = msg;
+    },
 
     //拍摄预算修改
     budgetChange(val, index, num) {
       if (val * 1 < 300 * num) {
-        this.ifsubmitTo = false;
+        if (this.checked) {
+          this.ifsubmitTo = false;
+          this.tableData.map((item) => {
+            if (item.budget >= item.video_num * 300) {
+              this.ifsubmitTo = true;
+            }
+          });
+        }
+
         this.$nextTick(() => {
           if (val != "") {
             this.$refs[
@@ -1353,14 +1355,7 @@ export default {
           this.$refs["ruleForm" + index].fields[0].validateState = "error";
         });
       } else {
-        let flag = true;
-        this.tableData.map((item) => {
-          if (item.budget < item.video_num * 300 && item.title != "") {
-            flag = false;
-          }
-        });
-        console.log(flag);
-        if (this.checked && flag) this.ifsubmitTo = true;
+        if (this.checked) this.ifsubmitTo = true;
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
           this.$refs["ruleForm" + index].fields[0].validateState = "";
@@ -1371,6 +1366,7 @@ export default {
       await needsBudget({
         id: id,
         budget: val,
+        source: 0,
       }).then((res) => {
         if (res.code == 1) {
           this.budgetChange(val, index, num);
@@ -1421,27 +1417,8 @@ export default {
             });
           } else {
             loading.close();
-            const h = this.$createElement;
-            this.$message({
-              message: h("p", { style: "display: flex" }, [
-                h(
-                  "div",
-                  {
-                    style:
-                      "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
-                  },
-                  "¡"
-                ),
-                h(
-                  "span",
-                  { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
-                  "导入失败，请检查Excel表格是否按模板格式填写"
-                ),
-              ]),
-              iconClass: "iconfont",
-              offset: 140,
-              customClass: "customClasssuccess",
-            });
+
+            this.showMessage("导入失败，请检查Excel表格是否按模板格式填写");
           }
         })
         .catch((res) => {
@@ -1456,10 +1433,13 @@ export default {
 
     //请求拍摄需求首页接口
     async getneedsIndex() {
-      let res = await needsIndex();
+      let res = await needsIndex({
+        source: 0,
+      });
       if (res.code == 1) {
         this.fileDiz = res.data.file;
         this.ifGuide = res.data.if_guide;
+        this.InvitationFillingdialoglink = res.data.invite_url;
         if (res.data.if_guide == 1) {
           this.NotedialogdialogVisible = true;
         }
@@ -1501,6 +1481,16 @@ export default {
           element: ".tips6",
           position: "left",
         },
+        {
+          title: "点击这里，邀请同事填写需求",
+          element: ".tips7",
+          position: "left",
+        },
+        {
+          title: "点击这里刷新，同步接收同事填写的需求",
+          element: ".tips8",
+          position: "left",
+        },
       ];
       this.$intro()
         .setOptions(this.introOption)
@@ -1517,6 +1507,31 @@ export default {
           console.log("确认完毕之后执行的事件");
         })
         .start();
+    },
+
+    //警告提示
+    showMessage(text) {
+      const h = this.$createElement;
+      this.$message({
+        message: h("p", { style: "display: flex" }, [
+          h(
+            "div",
+            {
+              style:
+                "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+            },
+            "¡"
+          ),
+          h(
+            "span",
+            { style: "font-size: 12px;color: #FFFFFF;margin:0 0 0 6px" },
+            text
+          ),
+        ]),
+        iconClass: "iconfont",
+        offset: 140,
+        customClass: "customClasssuccess",
+      });
     },
   },
   mounted() {
@@ -1544,6 +1559,7 @@ export default {
           if (item.id) {
             needsDelete({
               id: item.id,
+              source: 0,
             }).then((res) => {
               if (res.code == 1) {
                 this.reqsearch();
@@ -1578,12 +1594,9 @@ export default {
         this.tableDataTitle == false &&
         this.tableData.length != 1
       ) {
-        this.ifsubmitTo = true;
         this.tableData.forEach((item) => {
-          if (item.title != "") {
-            console.log(item);
-            if (item.budget == "" || item.budget * 1 < item.video_num * 300)
-              this.ifsubmitTo = false;
+          if (item.budget * 1 >= item.video_num * 300) {
+            this.ifsubmitTo = true;
           }
         });
       } else {
@@ -1605,6 +1618,8 @@ export default {
   border: none;
   box-sizing: border-box;
   margin-top: 0px;
+  height: calc(100vh - 365px);
+  overflow-y: auto;
 }
 
 ::v-deep .el-table .cell::before {
@@ -1679,6 +1694,7 @@ export default {
     #eee5fc 100%
   );
   min-height: calc(100vh - 67px);
+
   .RequirementBoxBanxin {
     width: 1200px;
     margin: 0 auto;
@@ -2014,7 +2030,7 @@ export default {
 .influencerInfo {
   width: 32px;
   height: 32px;
-  background: #796cf3;
+  background: #a06cf3;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -2097,6 +2113,10 @@ export default {
   i:hover {
     opacity: 1;
   }
+}
+
+::v-deep(.el-table) {
+  height: 100%;
 }
 </style>
 
@@ -2471,7 +2491,6 @@ export default {
   font-size: 16px !important;
   width: 80%;
   color: #333;
-  white-space: nowrap;
 }
 .warper {
   width: 200px;

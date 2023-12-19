@@ -32,8 +32,7 @@ Vue.use(elTableInfiniteScroll)
 let token = localStorage.getItem('token')
 let nowData = Math.round(new Date() / 1000);
 
-
-if (token) {
+if (token && window.location.pathname != '/Invitationfilling') {
   let expiretime = localStorage.getItem('expiretime')
   store.commit('login/setToken', token)
   store.commit('login/setUserInfo', localStorage.getItem('userInfo'))

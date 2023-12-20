@@ -670,7 +670,7 @@ export default {
       } else {
         let result = this.influencersList
           .flat()
-          .map((item) => item.id)
+          .map((item) => item.id_unique || item.id)
           .join(",");
 
         if (result != "") {

@@ -313,7 +313,7 @@
                   <div
                     @click="openFillingRequirementsdialog(scope.$index)"
                     class="tableyaoq-div"
-                    v-if="scope.row.url != ''"
+                    v-if="scope.row.url != '' || scope.row.image.length != 0"
                   >
                     <p>详情</p>
                     <i class="iconfont icon-tx"></i>
@@ -595,15 +595,19 @@
           ></i>
         </el-alert>
         <h5 style="display: flex; justify-content: center">
-          <p style="margin-right: 5px">定金金额 :</p>
           ¥<span>{{ orderData[0].order.price }}</span>
         </h5>
-        <p>
+        <p>定金金额</p>
+        <p style="margin-bottom: 10px">
+          订单号：
+          <span>{{ orderData[0].order.order_id }}</span>
+        </p>
+        <!-- <p>
           共计<span style="color: #ff2c4c">{{ orderCount }}</span
           >笔
-        </p>
+        </p> -->
 
-        <div v-if="orderData[0].order.order_id.length >= 9">
+        <!-- <div v-if="orderData[0].order.order_id.length >= 9">
           <p class="textp1" v-if="iforderid">
             订单号：<span
               v-for="(item, index) in orderData[0].order.order_id"
@@ -649,7 +653,7 @@
               >
             </span>
           </p>
-        </div>
+        </div> -->
 
         <el-tabs type="border-card">
           <el-tab-pane>
@@ -832,7 +836,7 @@ export default {
         {
           order: {
             price: "",
-            order_id: [],
+            order_id: "",
           },
         },
       ],
@@ -1001,9 +1005,8 @@ export default {
                 item.budget != 0
                   ? (this.tableData[index].budget = item.budget * 1)
                   : (this.tableData[index].budget = "");
-
-                this.budgetChange(item.budget, index, item.video_num);
               }
+              this.budgetChange(item.budget, index, item.video_num);
             } else if (!item.flag && item.flag != undefined) {
               this.tableData[index].budget = "";
               this.budgetChange(item.budget, index, item.video_num);
@@ -1090,10 +1093,10 @@ export default {
                 });
               });
               this.orderData = res.data.order;
-              this.orderData[0].order.order_id =
-                res.data.order[0].order.order_id.split(",");
+              // this.orderData[0].order.order_id =
+              //   res.data.order[0].order.order_id.split(",");
 
-              this.orderCount = res.data.order_count;
+              // this.orderCount = res.data.order_count;
               this.handlerCheckWechatPayment(
                 res.data.order[0].order.out_trade_no
               );
@@ -1410,7 +1413,10 @@ export default {
         if (this.checked) {
           this.ifsubmitTo = false;
           this.tableData.map((item) => {
-            if (item.budget >= item.video_num * 300) {
+            if (
+              (item.budget >= item.video_num * 300 && item.url != "") ||
+              (item.budget >= item.video_num * 300 && item.image.length != 0)
+            ) {
               this.ifsubmitTo = true;
             }
           });
@@ -1429,7 +1435,23 @@ export default {
           this.$refs["ruleForm" + index].fields[0].validateState = "error";
         });
       } else {
-        if (this.checked) this.ifsubmitTo = true;
+        let flag = false;
+        this.tableData.map((item) => {
+          if (
+            (item.budget >= item.video_num * 300 &&
+              item.title != "" &&
+              item.url != "") ||
+            (item.budget >= item.video_num * 300 &&
+              item.title != "" &&
+              item.image.length != 0)
+          ) {
+            flag = true;
+          }
+        });
+        console.log(flag && this.checked);
+        flag && this.checked
+          ? (this.ifsubmitTo = true)
+          : (this.ifsubmitTo = false);
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
           this.$refs["ruleForm" + index].fields[0].validateState = "";
@@ -1674,7 +1696,10 @@ export default {
         this.tableData.length != 1
       ) {
         this.tableData.forEach((item) => {
-          if (item.budget * 1 >= item.video_num * 300) {
+          if (
+            (item.budget * 1 >= item.video_num * 300 && item.url != "") ||
+            (item.budget * 1 >= item.video_num * 300 && item.image.length != 0)
+          ) {
             this.ifsubmitTo = true;
           }
         });

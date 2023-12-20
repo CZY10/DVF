@@ -297,7 +297,7 @@
                   <div
                     @click="openFillingRequirementsdialog(scope.$index)"
                     class="tableyaoq-div"
-                    v-if="scope.row.url != ''"
+                    v-if="scope.row.url != '' || scope.row.image.length != 0"
                   >
                     <p>详情</p>
                     <i class="iconfont icon-tx"></i>
@@ -1114,7 +1114,10 @@ export default {
       if (val * 1 < 300 * num) {
         this.ifsubmitTo = false;
         this.tableData.map((item) => {
-          if (item.budget >= item.video_num * 300) {
+          if (
+            (item.budget >= item.video_num * 300 && item.url != "") ||
+            (item.budget >= item.video_num * 300 && item.image.length != 0)
+          ) {
             this.ifsubmitTo = true;
           }
         });
@@ -1134,11 +1137,18 @@ export default {
       } else {
         let flag = false;
         this.tableData.map((item) => {
-          if (item.budget >= item.video_num * 300 && item.title != "") {
+          if (
+            (item.budget >= item.video_num * 300 &&
+              item.title != "" &&
+              item.url != "") ||
+            (item.budget >= item.video_num * 300 &&
+              item.title != "" &&
+              item.image.length != 0)
+          ) {
             flag = true;
           }
         });
-        if (flag) this.ifsubmitTo = true;
+        flag ? (this.ifsubmitTo = true) : (this.ifsubmitTo = false);
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
           this.$refs["ruleForm" + index].fields[0].validateState = "";

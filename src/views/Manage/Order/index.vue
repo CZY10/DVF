@@ -469,7 +469,7 @@
 
     <!--支付尾款-->
     <el-dialog
-      title="请尽快支付订单"
+      title="请尽快支付"
       :visible.sync="paymentDialog"
       v-if="paymentDialog"
       @close="handleClose"
@@ -480,7 +480,7 @@
     >
       <div class="payment_content">
         <h4>¥{{ orderData.price }}</h4>
-        <p v-if="orderIdFlex">合并订单金额</p>
+        <p v-if="orderIdFlex">合并金额</p>
         <p v-if="orderIdFlex == false">订单金额</p>
         <el-tabs type="border-card">
           <el-tab-pane>
@@ -1215,7 +1215,7 @@
     </el-dialog>
     <!--支付定金-->
     <el-dialog
-      title="请尽快支付定金"
+      title="请尽快支付"
       @close="handleClose"
       :visible.sync="payDepositDialogVisible"
       v-if="payDepositDialogVisible"
@@ -1244,9 +1244,6 @@
         </el-alert>
         <h5>¥{{ orderData.price }}</h5>
         <p>定金金额</p>
-        <p>
-          订单号：<span>{{ orderData.order_id }}</span>
-        </p>
         <el-tabs type="border-card">
           <el-tab-pane>
             <span
@@ -1305,7 +1302,7 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-        <!-- <div class="group_26 flex-row">
+        <div class="group_26 flex-row">
           <div class="image-text_40 flex-row justify-between">
             <img
               class="thumbnail_26"
@@ -1320,7 +1317,7 @@
               >
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </el-dialog>
     <!--支付完成-->
@@ -1898,7 +1895,6 @@ export default {
       //微信
       payOrder({
         order_id: this.orderId,
-        type: type,
         payment: "wechat",
       })
         .then((res) => {
@@ -1923,7 +1919,6 @@ export default {
       //支付宝
       payOrder({
         order_id: this.orderId,
-        type: type,
         payment: "alipay",
       })
         .then((res) => {

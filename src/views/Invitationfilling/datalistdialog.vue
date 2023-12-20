@@ -688,7 +688,7 @@ export default {
   async beforeDestroy() {
     let result = this.influencersList
       .flat()
-      .map((item) => item.id_unique || item.id)
+      .map((item) => item.id)
       .join(",");
 
     let url = new URL(window.location.href);

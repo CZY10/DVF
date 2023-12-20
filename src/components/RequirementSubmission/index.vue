@@ -595,19 +595,15 @@
           ></i>
         </el-alert>
         <h5 style="display: flex; justify-content: center">
+          <p style="margin-right: 5px">定金金额 :</p>
           ¥<span>{{ orderData[0].order.price }}</span>
         </h5>
-        <p>定金金额</p>
-        <p style="margin-bottom: 10px">
-          订单号：
-          <span>{{ orderData[0].order.order_id }}</span>
-        </p>
-        <!-- <p>
+        <p>
           共计<span style="color: #ff2c4c">{{ orderCount }}</span
           >笔
-        </p> -->
+        </p>
 
-        <!-- <div v-if="orderData[0].order.order_id.length >= 9">
+        <div v-if="orderData[0].order.order_id.length >= 9">
           <p class="textp1" v-if="iforderid">
             订单号：<span
               v-for="(item, index) in orderData[0].order.order_id"
@@ -653,7 +649,7 @@
               >
             </span>
           </p>
-        </div> -->
+        </div>
 
         <el-tabs type="border-card">
           <el-tab-pane>
@@ -836,7 +832,7 @@ export default {
         {
           order: {
             price: "",
-            order_id: "",
+            order_id: [],
           },
         },
       ],
@@ -1093,10 +1089,10 @@ export default {
                 });
               });
               this.orderData = res.data.order;
-              // this.orderData[0].order.order_id =
-              //   res.data.order[0].order.order_id.split(",");
+              this.orderData[0].order.order_id =
+                res.data.order[0].order.order_id.split(",");
 
-              // this.orderCount = res.data.order_count;
+              this.orderCount = res.data.order_count;
               this.handlerCheckWechatPayment(
                 res.data.order[0].order.out_trade_no
               );

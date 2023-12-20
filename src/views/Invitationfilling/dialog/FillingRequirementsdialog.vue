@@ -28,8 +28,11 @@
               </div>
 
               <div class="formitem_div">
-                <span class="formitem_span">*</span>
-                <el-form-item label="产品链接/图片" prop="link">
+                <el-form-item
+                  label="产品链接/图片"
+                  prop="link"
+                  class="name nametop"
+                >
                   <div class="formitem_radio">
                     <el-radio
                       v-model="formradioLink"
@@ -149,7 +152,7 @@
                     v-model="ruleForm.ShootingRequirements"
                     :autosize="{ minRows: 7, maxRows: 7 }"
                     resize="none"
-                    placeholder="1、简要描述视频要体现的要点，不超过3点
+                    placeholder="1、简要描述视频要展示的要点，不超过3点
 2、特殊情形/要求，请说明：
      ①. 产品特殊，如仅适配特定配件或型号
      ②. 要求特定场地的，如：汽车、泳池、海滩等
@@ -300,6 +303,13 @@ export default {
           {
             max: 25,
             message: "长度在25个字符以内",
+            trigger: "change",
+          },
+        ],
+        link: [
+          {
+            required: true,
+            message: "请上传产品链接或图片",
             trigger: "change",
           },
         ],
@@ -783,6 +793,14 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
             this.upload_List = arr.map((item) => ({ ["url"]: item }));
           }
         }
+
+        if (this.fileList.length == 0 && this.ruleForm.link == "") {
+          this.$nextTick(() => {
+            this.$refs["ruleForm"].fields[1].validateMessage =
+              "请上传产品链接或图片";
+            this.$refs["ruleForm"].fields[1].validateState = "error";
+          });
+        }
       }
     },
     isFillingRequirementsdialogVisible(newval) {
@@ -804,6 +822,8 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.$nextTick(() => {
           this.$refs["ruleForm"].fields[0].validateMessage = "";
           this.$refs["ruleForm"].fields[0].validateState = "";
+          this.$refs["ruleForm"].fields[1].validateMessage = "";
+          this.$refs["ruleForm"].fields[1].validateState = "";
         });
       } else {
         this.rules.name[0].required = true;
@@ -895,6 +915,17 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
 ::v-deep(.name) {
   .el-input {
     padding-left: 9px;
+  }
+}
+
+::v-deep(.nametop) {
+  .el-form-item__content {
+    position: relative;
+    .el-form-item__error {
+      margin-left: 275px;
+      position: absolute;
+      top: 10px;
+    }
   }
 }
 

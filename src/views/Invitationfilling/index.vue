@@ -277,12 +277,7 @@
                       {{ scope.row.title }}
                     </p>
                     <p
-                      style="
-                        font-size: 12px;
-                        font-family: PingFangSC-Regular, PingFang SC;
-                        font-weight: 400;
-                        color: #999999;
-                      "
+                      style="font-size: 12px; color: #999999; min-width: 105px"
                       v-if="scope.row.url"
                       @click="gocommodity(scope.row.url)"
                     >
@@ -296,15 +291,25 @@
                         "
                       ></i>
                     </p>
-                    <p v-else style="color: #999999">--</p>
+                    <p v-else style="color: #999999; min-width: 105px">--</p>
                   </div>
 
                   <div
                     @click="openFillingRequirementsdialog(scope.$index)"
                     class="tableyaoq-div"
+                    v-if="scope.row.url != ''"
                   >
                     <p>详情</p>
                     <i class="iconfont icon-tx"></i>
+                  </div>
+
+                  <div
+                    @click="openFillingRequirementsdialog(scope.$index)"
+                    class="tableyaoq-div2"
+                    v-else
+                  >
+                    <p>详情</p>
+                    <i class="el-icon-warning"></i>
                   </div>
                 </div>
               </div>
@@ -823,7 +828,8 @@ export default {
           if (
             item.id &&
             item.title != "" &&
-            item.budget * 1 >= item.video_num * 300
+            item.budget * 1 >= item.video_num * 300 &&
+            item.url != ""
           ) {
             arr.push(item.id);
           }
@@ -1656,6 +1662,21 @@ export default {
       }
 
       .table-yaoq {
+        .tableyaoq-div2 {
+          display: flex;
+          align-items: center;
+          color: #ed4014;
+          margin-left: 15px;
+          font-size: 12px;
+          p {
+            white-space: nowrap;
+          }
+          .el-icon-warning {
+            margin-left: 3px;
+            margin-top: 1px;
+            font-size: 16px;
+          }
+        }
         .tableyaoq-div {
           display: flex;
           align-items: center;

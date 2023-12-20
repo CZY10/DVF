@@ -288,7 +288,12 @@
                       {{ scope.row.title }}
                     </p>
                     <p
-                      style="font-size: 12px; color: #999999; min-width: 105px"
+                      style="
+                        font-size: 12px;
+                        color: #999999;
+                        min-width: 105px;
+                        text-align: left;
+                      "
                       v-if="scope.row.url"
                       @click="gocommodity(scope.row.url)"
                     >

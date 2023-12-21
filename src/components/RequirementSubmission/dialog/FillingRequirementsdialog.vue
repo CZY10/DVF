@@ -436,6 +436,7 @@ export default {
 
     //修改拍摄要求
     async submitForm(formName) {
+      console.log(this.determine);
       if (this.ifsubmitbtn && this.determine == 1) {
         let image = [];
         this.upload_List.forEach((item) =>
@@ -490,6 +491,7 @@ export default {
           this.$message.error(res.msg);
         }
       } else if (this.ifsubmitbtn && this.determine * 1 == 3) {
+        this.ifsubmitbtn = false;
         if (
           this.objold.description == formName.notes &&
           this.objold.url == formName.link &&

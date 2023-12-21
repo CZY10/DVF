@@ -492,6 +492,7 @@ export default {
           this.$message.error(res.msg);
         }
       } else if (this.ifsubmitbtn && this.determine * 1 == 3) {
+        this.ifsubmitbtn = false;
         if (
           this.objold.description == formName.notes &&
           this.objold.url == formName.link &&

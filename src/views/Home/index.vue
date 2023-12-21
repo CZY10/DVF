@@ -1,64 +1,44 @@
 <template>
   <div class="home">
     <div class="banner">
-      <el-carousel
-        height="340px"
-        :interval="3000"
-        autoplay
-        indicator-position="none"
-        arrow="always"
-      >
+      <el-carousel height="825px" :interval="3000" :autoplay="false">
         <el-carousel-item v-for="(item, index) in 2" :key="item">
-          <a
-            :href="
-              index == 0
-                ? '/videohome'
-                : index == 1
-                ? 'https://seller.vipona.com/account/login'
-                : ''
-            "
-            target="_blank"
-            style="width: 100%; height: 100%"
-          >
-            <div class="carousel_item" :class="'carousel-item' + index">
-              <div class="item_box">
-                <h5 :style="index == 0 ? 'color:#ffffff' : 'color:#333333'">
-                  {{
-                    index == 0
-                      ? "微胖联盟 Amazon Influencer 视频服务第一站"
-                      : "微胖联盟 海外Deal站"
-                  }}
-                </h5>
-                <div class="description">
-                  {{ index == 0 ? "" : "官方Deal联盟 一手推广资源" }}
+          <div style="width: 100%; height: 100%">
+            <div class="carousel_item carousel-item0" v-if="index == 0">
+              <div class="banner1">
+                <div class="left">
+                  <h1>Amazon Influencer买家秀视频服务</h1>
+                  <p class="title">关联视频/主图视频/A+视频/QA视频/广告视频</p>
+                  <div class="dome"></div>
+                  <ul>
+                    <li><i class="iconfont icon-gx"></i>提升产品转化</li>
+                    <li><i class="iconfont icon-gx"></i>增加购买信心</li>
+                    <li><i class="iconfont icon-gx"></i>抢夺竞品流量</li>
+                    <li><i class="iconfont icon-gx"></i>减少售后及差评</li>
+                    <li><i class="iconfont icon-gx"></i>红人引流背书</li>
+                  </ul>
+
+                  <div class="btn">
+                    <button>挑选红人</button>
+                    <a href="">了解更多></a>
+                  </div>
                 </div>
-                <div v-if="index == 0" style="text-align: center">
-                  <el-button
-                    class="banner_btn"
-                    @click.stop="handleConsult"
-                    round
-                    >立即咨询</el-button
-                  >
-                </div>
-                <div v-else style="text-align: center">
-                  <el-button class="banner_btn" round>立即咨询</el-button>
+                <div class="rigth">
+                  <img src="@/assets/images/home/rens.webp" alt="" />
                 </div>
               </div>
             </div>
-          </a>
+            <div class="carousel_item carousel-item1" v-if="index == 1"></div>
+          </div>
         </el-carousel-item>
       </el-carousel>
     </div>
     <!--拍买家秀-->
-    <div class="buyshow">
+    <div class="buyshow ShootingBuyerShows">
       <div class="description_item">
-        <div class="item"><i class="iconfont icon-gf"></i>官方渠道</div>
-        <div class="item"><i class="iconfont icon-zy"></i>正规资源</div>
-        <div class="item"><i class="iconfont icon-jg"></i>一手价格</div>
-        <div class="item"><i class="iconfont icon-ys1"></i>严审交付</div>
-        <div class="item"><i class="iconfont icon-fw1"></i>服务保障</div>
+        <li></li>
       </div>
-      <div class="auto1200 pt60">
+      <div class="auto1200">
         <div class="flex_between">
           <div class="flex_style header_style">
             <h5>拍买家秀 <i class="iconfont icon-line"></i></h5>
@@ -82,38 +62,36 @@
             </ul>
           </div>
         </div>
-        <div
-          class="flex_style"
-          v-for="(i, index) in influenceList"
-          v-show="activeIndex == index"
-          :key="index"
-          style="
-            flex-flow: row wrap;
-            align-content: flex-start;
-            justify-content: flex-start;
-          "
-        >
-          <a
-            target="_blank"
-            :href="token ? '/homepage:' + item.id : '/login'"
-            v-for="(item, ind) in i.influencerList"
-            :key="ind"
-            class="buyshowItem"
+        <div class="datastyle">
+          <div
+            :class="{ flex_style: true, item: activeIndex == index }"
+            v-for="(i, index) in influenceList"
+            :key="index"
           >
-            <div class="item_img"><img :src="item.image" alt="" /></div>
-            <div class="flex_between item_pic">
-              <h5>NO.{{ item.id }}</h5>
-              <div>
-                <b v-if="item.price != '视产品而定'" style="font-weight: normal"
-                  >￥</b
-                ><span>{{ item.price }}</span>
+            <a
+              target="_blank"
+              :href="token ? '/homepage:' + item.id : '/login'"
+              v-for="(item, ind) in i.influencerList"
+              :key="ind"
+              class="buyshowItem"
+            >
+              <div class="item_img"><img :src="item.image" alt="" /></div>
+              <div class="flex_between item_pic">
+                <h5>NO.{{ item.id }}</h5>
+                <div>
+                  <b
+                    v-if="item.price != '视产品而定'"
+                    style="font-weight: normal"
+                    >￥</b
+                  ><span>{{ item.price }}</span>
+                </div>
               </div>
-            </div>
-            <div class="flex_between item_title">
-              <div class="title_style">{{ item.type }}</div>
-              <span>交付{{ item.order_count }}笔</span>
-            </div>
-          </a>
+              <div class="flex_between item_title">
+                <div class="title_style">{{ item.type }}</div>
+                <span>交付{{ item.order_count }}笔</span>
+              </div>
+            </a>
+          </div>
         </div>
         <div class="flex_between button_box">
           <a :href="token ? '/buyershow' : '/login'"
@@ -364,14 +342,10 @@ export default {
       fbList: [],
       isShowTag: true,
       token: "",
-      ids: 196,
       influenceList: {},
       formData: {},
       isShowDialog: false,
-      fbbaseURLX: `https://seller.vipona.com/hot/fb-detail?id=`,
       fbbaseURLC: `https://hkatest.myvipon.com/hot/fb-detail?id=`,
-      dealBaseURLX: `https://seller.vipona.com/hot/deal-detail?id=`,
-      dealBaseURLC: `https://hkatest.myvipon.com/hot/deal-detail?id=`,
       ViponSrc: "",
       DealSrc: "",
       FbSrc: "",
@@ -443,10 +417,6 @@ export default {
       } else {
         this.$router.push("/login?source=vipon_deal&action=hot/deal");
       }
-    },
-    handleConsult(event) {
-      event.preventDefault();
-      this.isShowDialog = true;
     },
     //获取公共配置信息
     getContent() {
@@ -602,37 +572,72 @@ export default {
       width: 100%;
       background-size: 100% 100%;
       background-repeat: no-repeat;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .item_box {
-        padding-bottom: 26px;
-        h5 {
-          font-size: 36px;
-          font-weight: 600;
-          color: #ffffff;
-          line-height: 50px;
-          text-align: center;
+
+      .banner1 {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+
+        .left {
+          margin-top: 144px;
+          width: 620px;
+          h1 {
+            font-size: 38px;
+            font-weight: bold;
+            color: #ffffff;
+            font-style: oblique;
+            white-space: nowrap;
+          }
+          .title {
+            font-size: 19px;
+            color: #d3d3d3;
+            margin-top: 22px;
+          }
+          .dome {
+            width: 36px;
+            height: 5px;
+            background: #ffffff;
+            border-radius: 3px;
+            margin-top: 29px;
+          }
+          ul {
+            width: 440px;
+            margin-top: 49px;
+            li {
+              font-size: 21px;
+              color: #ffffff;
+              float: left;
+              margin-right: 59px;
+              margin-bottom: 24px;
+              i {
+                color: #fef76d;
+                margin-right: 5px;
+              }
+            }
+          }
+          .btn {
+            margin-top: 245px;
+            font-size: 18px;
+            button {
+              width: 206px;
+              height: 45px;
+              background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+              border-radius: 6px;
+              cursor: pointer;
+              color: #fff;
+              border: none;
+              font-size: 18px;
+              margin-right: 38px;
+            }
+          }
         }
-        .description {
-          text-align: center;
-          padding-top: 4px;
-          font-size: 14px;
-          color: #666666;
-          line-height: 20px;
-        }
-        .banner_btn {
-          margin-top: 30px;
-          color: #ffffff;
-          background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-          padding: 15px 69px;
-          border: none;
-          border-radius: 22px;
+        .rigth {
+          margin-top: 81px;
         }
       }
     }
     .carousel-item0 {
-      background-image: url("../../assets/images/home/banner1.png");
+      background-image: url("../../assets/images/home/banner1.webp");
     }
     .carousel-item1 {
       background-image: url("../../assets/images/home/banner2.png");
@@ -648,66 +653,15 @@ export default {
     );
     .description_item {
       position: relative;
-      top: -40px;
+      top: -120px;
       z-index: 99;
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .item {
-        width: 216px;
-        height: 80px;
-        background: linear-gradient(
-          180deg,
-          #f2f0fe 0%,
-          #ffffff 43%,
-          #ffffff 100%
-        );
-        box-shadow: 0px 11px 11px 0px rgba(233, 229, 254, 0.6);
-        border-radius: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 600;
-        i {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: pink;
-          font-size: 20px;
-          color: #ffffff;
-          font-weight: normal;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-right: 16px;
-        }
-        &:nth-child(1) {
-          i {
-            background: #ff9c17;
-          }
-        }
-        &:nth-child(2) {
-          i {
-            background: #24deb8;
-          }
-        }
-        &:nth-child(3) {
-          i {
-            background: #00b2ff;
-          }
-        }
-        &:nth-child(4) {
-          i {
-            background: #8360ff;
-          }
-        }
-        &:nth-child(5) {
-          i {
-            background: #e6401f;
-          }
-        }
+      margin: 0 auto;
+      width: 1200px;
+      height: 196px;
+      background: #ffffff;
+      box-shadow: 0px 10px 12px 0px rgba(162, 164, 166, 0.08);
+      border-radius: 12px;
+      li {
       }
     }
     .buyshow_type {
@@ -744,7 +698,10 @@ export default {
       width: 216px;
       margin: 0 12px 30px 12px;
       position: relative;
+      top: 0;
       cursor: pointer;
+      border-bottom: 3px solid #fff;
+      transition: all 0.2s;
       .item_img {
         height: 154px;
         border-radius: 10px;
@@ -791,7 +748,7 @@ export default {
     }
     .buyshowItem:hover {
       border-bottom: 3px solid #796cf3;
-      position: relative;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
       top: -7px;
       .item_title {
         padding-bottom: 5px !important;
@@ -802,7 +759,7 @@ export default {
       padding-bottom: 100px;
       .el-button {
         background: #3442ff linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-        border-radius: 20px;
+        border-radius: 6px;
         font-size: 14px;
         color: #ffffff;
         width: 300px;
@@ -1099,7 +1056,7 @@ export default {
           width: 180px;
           height: 40px;
           font-size: 14px;
-          border-radius: 20px;
+          border-radius: 6px;
         }
         .btn_type {
           background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
@@ -1184,5 +1141,35 @@ export default {
   background-color: #f0f0f0 !important;
   color: #333333 !important;
   font-size: 14px;
+}
+</style>
+<style lang="less" scoped>
+.home {
+  // 拍买家秀
+  .ShootingBuyerShows {
+    .auto1200 {
+      .datastyle {
+        position: relative;
+        min-height: 565px;
+        .flex_style {
+          position: absolute;
+          flex-flow: row wrap;
+          align-content: flex-start;
+          justify-content: flex-start;
+          opacity: 0;
+          transition: all 0.3s;
+        }
+        .item {
+          opacity: 1;
+          z-index: 100;
+        }
+      }
+    }
+  }
+}
+</style>
+<style lang="less" scoped>
+::v-deep(.el-carousel__indicators--horizontal) {
+  bottom: 140px;
 }
 </style>

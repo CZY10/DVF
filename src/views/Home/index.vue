@@ -36,7 +36,13 @@
     <!--拍买家秀-->
     <div class="buyshow ShootingBuyerShows">
       <div class="description_item">
-        <li></li>
+        <li v-for="(item, index) in items" :key="index">
+          <img :src="item.img" />
+          <div>
+            <p>{{ item.title }}</p>
+            <p>{{ item.description }}</p>
+          </div>
+        </li>
       </div>
       <div class="auto1200">
         <div class="flex_between">
@@ -256,6 +262,7 @@
             flex-flow: row wrap;
             align-content: flex-start;
             justify-content: flex-start;
+            min-height: 665px;
           "
         >
           <!-- href="https://seller.vipona.com/account/login" -->
@@ -349,6 +356,48 @@ export default {
       ViponSrc: "",
       DealSrc: "",
       FbSrc: "",
+      items: [
+        {
+          title: "上市企业",
+          description: "隶属浔兴股份，实力护航",
+          img: require("@/assets/images/home/ssqy.webp"),
+        },
+        {
+          title: "签约红人",
+          description: "签约本土1000+优质红人",
+          img: require("@/assets/images/home/qyhr.webp"),
+        },
+        {
+          title: "严审质量",
+          description: "平台严格把控视频质量",
+          img: require("@/assets/images/home/yszl.webp"),
+        },
+        {
+          title: "服务保障",
+          description: "专业海外团队一对一服务",
+          img: require("@/assets/images/home/fwbz.webp"),
+        },
+        {
+          title: "快速交付",
+          description: "收货后约1~3周完成交付",
+          img: require("@/assets/images/home/ksjf.webp"),
+        },
+        {
+          title: "包含版权",
+          description: "200+影响者视频无需另付版权费",
+          img: require("@/assets/images/home/bhbq.webp"),
+        },
+        {
+          title: "指定标题/封面",
+          description: "支持指定视频标题/封面",
+          img: require("@/assets/images/home/zdbt.webp"),
+        },
+        {
+          title: "图片POST",
+          description: "支持通过影响者发布产品图片",
+          img: require("@/assets/images/home/tppost.webp"),
+        },
+      ],
     };
   },
   mounted() {
@@ -661,7 +710,33 @@ export default {
       background: #ffffff;
       box-shadow: 0px 10px 12px 0px rgba(162, 164, 166, 0.08);
       border-radius: 12px;
+      padding: 30px 45px;
+      box-sizing: border-box;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-content: space-between;
       li {
+        display: flex;
+        width: 21%;
+        img {
+          width: 70px;
+          height: 52px;
+        }
+        div {
+          padding-left: 14px;
+          p:nth-child(1) {
+            margin: 3px 0 8px 0;
+            font-weight: 600;
+            color: #333333;
+            font-size: 16px;
+          }
+          p:nth-child(2) {
+            font-size: 12px;
+            color: #999999;
+            white-space: nowrap;
+          }
+        }
       }
     }
     .buyshow_type {
@@ -775,9 +850,13 @@ export default {
       border-radius: 10px;
       padding: 20px 20px 54px 20px;
       width: 216px;
+      height: 345px;
       margin: 0 12px 30px 12px;
       position: relative;
       cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid #fff;
+      top: 0;
       .user_info {
         .header_img {
           width: 64px;
@@ -820,6 +899,7 @@ export default {
           margin: 3px;
           font-size: 12px;
           color: #999999;
+          transition: all 0.2s;
           &:hover {
             border: 1px solid #796cf3;
             color: #796cf3;
@@ -848,8 +928,8 @@ export default {
     }
     .fbItem:hover {
       border-bottom: 3px solid #796cf3;
-      position: relative;
       top: -7px;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
       > ul {
         padding-bottom: 20px !important;
       }
@@ -864,6 +944,9 @@ export default {
       box-sizing: border-box;
       position: relative;
       cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid #fff;
+      top: 0;
       > div {
         width: 182px;
         position: relative;
@@ -920,6 +1003,7 @@ export default {
             font-weight: 200;
             cursor: pointer;
             color: #999999;
+            transition: all 0.2s;
             &:hover {
               border: 1px solid #796cf3;
               color: #796cf3;
@@ -949,16 +1033,17 @@ export default {
       border-radius: 10px;
       border: 1px solid #eeeeee;
       transform: perspective(800px) rotateX(30deg);
-      //padding-bottom: 40px;
     }
     .dealItem:hover {
       border-bottom: 3px solid #796cf3;
-      position: relative;
       border-radius: 10px;
       top: -7px;
       .deal_list {
         padding-bottom: 15px !important;
       }
+    }
+    .dealItem:hover:before {
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
     }
   }
   .vipon_box {

@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <div class="banner">
-      <el-carousel height="825px" :interval="3000" :autoplay="false">
+      <!-- :autoplay="false" -->
+      <el-carousel height="825px" :interval="3000">
         <el-carousel-item v-for="(item, index) in 2" :key="item">
           <div style="width: 100%; height: 100%">
             <div class="carousel_item carousel-item0" v-if="index == 0">
@@ -19,8 +20,8 @@
                   </ul>
 
                   <div class="btn">
-                    <button>挑选红人</button>
-                    <a href="">了解更多></a>
+                    <button @click="gobuyershow">挑选红人</button>
+                    <a href="/videohome" target="_bannk">了解更多></a>
                   </div>
                 </div>
                 <div class="rigth">
@@ -311,6 +312,61 @@
       </div>
     </div>
 
+    <!-- 我们的服务 -->
+    <div class="buyshow Ourservices">
+      <div class="auto1200" style="padding: 100px 0">
+        <div class="flex_style header_style">
+          <h5>我们的服务 <i class="iconfont icon-line"></i></h5>
+          <span>买家秀视频+Deal站推广，一对一专属服务</span>
+        </div>
+
+        <div class="boby">
+          <ul class="top">
+            <li><span>1000</span><span>+</span><span>红人数量</span></li>
+            <li><span>100</span><span>+</span><span>渠道</span></li>
+            <li><span>50</span><span>+</span><span>售后团队</span></li>
+            <li><span>9</span><span></span><span>年资历</span></li>
+          </ul>
+          <img src="@/assets/images/home/Ourservices.webp" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <!-- 客户反馈 -->
+    <div class="Customerfeedback">
+      <div class="auto1200" style="padding: 100px 0">
+        <div class="flex_style header_style">
+          <h5>客户反馈 <i class="iconfont icon-line"></i></h5>
+          <span>效果怎么样，客户说了算</span>
+        </div>
+
+        <ul
+          class="grid"
+          data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'
+        >
+          <li
+            v-for="(item, index) in Opiniondata"
+            :key="index"
+            class="grid-item"
+          >
+            <img :src="item.image" />
+          </li>
+        </ul>
+
+        <p class="look" v-if="Opiniondata.length == 8">
+          <span @click="gethomehighOpinion(OpiniondataTotal)"
+            >查看全部 <i class="el-icon-arrow-down"></i
+          ></span>
+        </p>
+
+        <p class="look" v-else>
+          <span @click="gethomehighOpinion(8)"
+            >收起 <i class="el-icon-arrow-up"></i
+          ></span>
+        </p>
+      </div>
+    </div>
+
     <div class="tag_style" v-show="isShowTag">
       <div class="auto1200 flex_between">
         <h5>
@@ -332,9 +388,17 @@
 </template>
 
 <script>
-import { influenceData, fbData, dealData, getConfig } from "@/api";
+import {
+  influenceData,
+  fbData,
+  dealData,
+  getConfig,
+  homehighOpinion,
+} from "@/api";
 import Footer from "@/components/Footer";
 import ConsultDialog from "@/components/ConsultDialog";
+import Masonry from "masonry-layout"; // Vue项目的引入方式
+import router from "@/router";
 export default {
   name: "index",
   components: {
@@ -398,7 +462,17 @@ export default {
           img: require("@/assets/images/home/tppost.webp"),
         },
       ],
+      Opiniondata: [],
+      OpiniondataTotal: 8,
     };
+  },
+  updated() {
+    var grid = document.querySelector(".grid");
+    var msnry = new Masonry(grid, {
+      // options...
+      itemSelector: ".grid-item",
+      columnWidth: 300,
+    });
   },
   mounted() {
     this.token = localStorage.getItem("token");
@@ -406,6 +480,7 @@ export default {
     this.handleTakePlanList();
     this.getFBData();
     this.getDealData();
+    this.gethomehighOpinion("8");
     if (localStorage.getItem("configObj")) {
       this.formData = JSON.parse(localStorage.getItem("configObj"));
     } else {
@@ -515,6 +590,31 @@ export default {
           console.log(err);
         });
     },
+
+    //获取主页好评数据
+    async gethomehighOpinion(pageSize) {
+      const res = await homehighOpinion({
+        page: 1,
+        pageSize,
+      });
+      if (res.code == 1) {
+        this.Opiniondata = res.data.data;
+        this.OpiniondataTotal = res.data.total;
+
+        setTimeout(() => {
+          var grid = document.querySelector(".grid");
+          var msnry = new Masonry(grid, {
+            // options...
+            itemSelector: ".grid-item",
+            columnWidth: 300,
+          });
+        }, 500);
+      }
+    },
+    gobuyershow() {
+      router.push("/buyershow");
+    },
+
     //fb详情页
     godetailsFb(item) {
       let loginHref = `http://testai.blhltd.com`;
@@ -1248,6 +1348,73 @@ export default {
           opacity: 1;
           z-index: 100;
         }
+      }
+    }
+  }
+
+  //我们的服务
+  .Ourservices {
+    .auto1200 {
+      .boby {
+        width: 1200px;
+        height: 551px;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px 60px 0;
+        box-sizing: border-box;
+        .top {
+          width: 1080px;
+          height: 96px;
+          background: rgba(209, 97, 246, 0.1);
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+          span:nth-child(1) {
+            color: #d161f6;
+            font-size: 43px;
+          }
+          span:nth-child(2) {
+            color: #d161f6;
+            position: relative;
+            top: -23px;
+          }
+          span:nth-child(3) {
+            color: #666666;
+            margin-left: 8px;
+          }
+        }
+
+        img {
+          margin-top: 38px;
+        }
+      }
+    }
+  }
+
+  //客户反馈
+  .Customerfeedback {
+    .auto1200 {
+      ul {
+        li {
+          width: 277px;
+          margin-bottom: 30px;
+          border-radius: 20px;
+          transition: all 0.2s;
+          img {
+            width: 100%;
+          }
+        }
+        li:hover {
+          box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+          transform: scale(1.1);
+        }
+      }
+
+      .look {
+        text-align: center;
+        margin-top: 40px;
+        cursor: pointer;
       }
     }
   }

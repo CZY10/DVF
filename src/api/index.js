@@ -497,3 +497,13 @@ export function inviteSubmit(data) {
         data
     })
 }
+
+//大主页好评数据
+export function homehighOpinion(data) {
+    return request({
+        url: "/api/home/highOpinion",
+        method: "post",
+        data
+    })
+
+}

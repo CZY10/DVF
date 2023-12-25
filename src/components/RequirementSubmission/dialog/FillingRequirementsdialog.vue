@@ -734,6 +734,10 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       deep: true, // 可以深度检测到 obj 对象的属性值的变化
     },
     upload_List(newval) {
+      newval.length != 0
+        ? (this.rules.link[0].required = false)
+        : (this.rules.link[0].required = true);
+
       newval.length >= 5
         ? (this.hideUploadBtn = true)
         : (this.hideUploadBtn = false);

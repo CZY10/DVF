@@ -9,7 +9,7 @@ function resolve(dir) {
 module.exports = defineConfig({
   transpileDependencies: false,
   publicPath: '/',
-  outputDir: process.env.NODE_ENV === 'development' ? 'test' : 'dist',
+  outputDir: process.env.NODE_ENV === 'development' ? 'test' : 'test',
   assetsDir: 'static',
   lintOnSave: false,
   productionSourceMap: false,

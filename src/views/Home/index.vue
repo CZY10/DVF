@@ -29,7 +29,35 @@
                 </div>
               </div>
             </div>
-            <div class="carousel_item carousel-item1" v-if="index == 1"></div>
+            <div class="carousel_item carousel-item1" v-if="index == 1">
+              <div class="banner1">
+                <div class="left" style="position: relative; left: 180px">
+                  <h1>亚马逊站外推广服务</h1>
+                  <p class="title">
+                    Slickdeals/DealNews/Techbargains/Ben's
+                    Bargains/Vipon/FB群组...
+                  </p>
+                  <div class="dome"></div>
+                  <ul>
+                    <li><i class="iconfont icon-gx"></i>官方Deal联盟</li>
+                    <li><i class="iconfont icon-gx"></i>一手推广资源</li>
+                    <li><i class="iconfont icon-gx"></i>最快当天上贴</li>
+                    <li><i class="iconfont icon-gx"></i>效果可追踪</li>
+                    <li><i class="iconfont icon-gx"></i>定制推广方案</li>
+                  </ul>
+
+                  <div class="btn">
+                    <button class="button2" @click="gobuyershow">
+                      立即推广
+                    </button>
+                    <a href="/videohome" target="_bannk">了解更多></a>
+                  </div>
+                </div>
+                <div class="rigth2">
+                  <img src="@/assets/images/home/logs.webp" alt="" />
+                </div>
+              </div>
+            </div>
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -778,10 +806,20 @@ export default {
               font-size: 18px;
               margin-right: 38px;
             }
+
+            a {
+              color: #c3c3c3;
+            }
+            .button2 {
+              background: #ff9c17 !important;
+            }
           }
         }
         .rigth {
           margin-top: 81px;
+        }
+        .rigth2 {
+          margin-top: 60px;
         }
       }
     }
@@ -789,7 +827,7 @@ export default {
       background-image: url("../../assets/images/home/banner1.webp");
     }
     .carousel-item1 {
-      background-image: url("../../assets/images/home/banner2.png");
+      background-image: url("../../assets/images/home/banner2.webp");
     }
   }
   .buyshow {

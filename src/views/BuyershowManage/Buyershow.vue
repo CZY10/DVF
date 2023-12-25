@@ -444,6 +444,8 @@ export default {
         this.isloading = true;
         this.currentPage = 1;
         this.RenderingData();
+      } else {
+        this.dialogVisiblelogin = true;
       }
     },
 
@@ -465,17 +467,16 @@ export default {
         this.themeValue = "";
         this.categoryValue = "";
         this.priceval = "";
-      } else {
-        this.getdata(
-          this.currentPage,
-          this.pageSize,
-          this.genderValue,
-          this.categoryValue,
-          this.themeValue,
-          this.priceval,
-          this.searchforval
-        );
       }
+      this.getdata(
+        this.currentPage,
+        this.pageSize,
+        this.genderValue,
+        this.categoryValue,
+        this.themeValue,
+        this.priceval,
+        this.searchforval
+      );
     },
 
     //获取数据

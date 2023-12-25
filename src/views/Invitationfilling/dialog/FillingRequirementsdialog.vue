@@ -659,6 +659,36 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         this.$message.error("解析失败");
       }
     },
+
+    // 判断是不能提交
+    ifsubmitisTrue() {
+      if (
+        (this.ruleForm.name != "" &&
+          this.formradioLink == 1 &&
+          this.ruleForm.link != "" &&
+          this.formradioRequirements == "2") ||
+        (this.ruleForm.name != "" &&
+          this.formradioLink == 1 &&
+          this.ruleForm.link != "" &&
+          this.formradioRequirements == "1" &&
+          this.ruleForm.ShootingRequirements != "") ||
+        (this.ruleForm.name != "" &&
+          this.formradioLink == 2 &&
+          this.upload_List.length != 0 &&
+          this.formradioRequirements == "1" &&
+          this.ruleForm.ShootingRequirements != "") ||
+        (this.ruleForm.name != "" &&
+          this.formradioLink == 2 &&
+          this.upload_List.length != 0 &&
+          this.formradioRequirements == "2")
+      ) {
+        this.ifsubmitbtn = true;
+      } else {
+        this.ifsubmitbtn = false;
+      }
+
+      console.log(this.ifsubmitbtn);
+    },
   },
   mounted() {
     this.token = localStorage.getItem("token");
@@ -687,7 +717,8 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         } else if (
           newVal.name != "" &&
           this.upload_List.length != 0 &&
-          newVal.ShootingRequirements != ""
+          newVal.ShootingRequirements != "" &&
+          this.formradioLink == 2
         ) {
           this.ifsubmitbtn = true;
         } else {
@@ -710,53 +741,45 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       deep: true, // 可以深度检测到 obj 对象的属性值的变化
     },
     upload_List(newval) {
-      if (newval.length >= 5) {
-        this.hideUploadBtn = true;
-        // console.log(newval, this.hideUploadBtn);
-      } else {
-        this.hideUploadBtn = false;
-      }
+      newval.length >= 5
+        ? (this.hideUploadBtn = true)
+        : (this.hideUploadBtn = false);
 
-      if (
-        (this.formradioLink == "2" &&
-          newval.length != 0 &&
-          this.ruleForm.name != "" &&
-          this.formradioRequirements == "2") ||
-        (this.formradioLink == "2" &&
-          newval.length != 0 &&
-          this.ruleForm.name != "" &&
-          this.ruleForm.ShootingRequirements != "")
-      ) {
-        this.ifsubmitbtn = true;
+      if (this.determine == 3) {
+        // 需要判断两个数组长度
+        if (
+          newval.length === this.RequirementsList.image.length ||
+          newval.length == 0
+        ) {
+          // 一一比较元素值，有一个不相等就不等
+          for (let i = 0; i < newval.length; i++) {
+            if (newval[i].url !== this.RequirementsList.image[i]) {
+              this.ifsubmitbtn = true;
+              return;
+            }
+          }
+          this.ifsubmitbtn = false;
+        } else {
+          this.ifsubmitbtn = true;
+        }
       } else {
-        this.ifsubmitbtn = false;
+        this.$nextTick(() => this.ifsubmitisTrue());
       }
     },
     formradioRequirements(newval) {
-      if (
-        newval == "2" &&
-        this.ruleForm.name != "" &&
-        this.ruleForm.link != ""
-      ) {
-        this.ifsubmitbtn = true;
-      } else if (
-        newval == "2" &&
-        this.ruleForm.name != "" &&
-        this.upload_List.length != 0
-      ) {
-        this.ifsubmitbtn = true;
-      } else if (this.ruleForm.ShootingRequirements == "") {
-        this.ifsubmitbtn = false;
-      }
-
       if (this.determine == 3) {
         if (
           this.ruleForm.name == this.RequirementsList.title &&
           this.ruleForm.link == this.RequirementsList.url &&
           this.ruleForm.notes == this.RequirementsList.description &&
           this.RequirementsList.photograph_guide == newval
-        )
+        ) {
           this.ifsubmitbtn = false;
+        } else {
+          this.ifsubmitbtn = true;
+        }
+      } else {
+        this.$nextTick(() => this.ifsubmitisTrue());
       }
     },
     Fillinthetemplateval(newval) {
@@ -842,6 +865,14 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         });
         this.upload_List = this.fileList;
       }
+      this.$nextTick(() => {
+        if (this.determine != 3) this.ifsubmitisTrue();
+      });
+
+      this.$nextTick(() => {
+        this.$refs["ruleForm"].fields[1].validateMessage = "";
+        this.$refs["ruleForm"].fields[1].validateState = "";
+      });
     },
     handletext(newval) {
       newval == "图片正在上传中......"

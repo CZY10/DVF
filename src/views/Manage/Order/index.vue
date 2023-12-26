@@ -1772,6 +1772,12 @@ export default {
       };
       this.allSatisfy1 = this.allSatisfy(this.multipleSelection, condition1);
       this.allSatisfy2 = this.allSatisfy(this.multipleSelection, condition2);
+      console.log(
+        this.allSatisfy1,
+        "condition1",
+        this.allSatisfy2,
+        "condition2"
+      );
 
       this.multipleSelection.forEach((item) => {
         arr.push(item.id);
@@ -2353,7 +2359,6 @@ export default {
         }
       });
     },
-
     tableListener() {
       // console.log("监听表格dom对象的滚动事件");
       let that = this;

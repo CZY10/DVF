@@ -2000,11 +2000,11 @@ export default {
                 } else if (_this.allSatisfy2) {
                   _this.paymentType = 1;
                   _this.paymentCompletedDialogVisible = true;
-                } else {
-                  _this.paymentType = 2;
+                } else if (_this.paymentType == 2) {
                   _this.MergepaymentslogVisible = true;
+                } else {
+                  _this.paymentCompletedDialogVisible = true;
                 }
-                console.log(_this.paymentType);
 
                 clearInterval(_this.checkWechatPaymentVal);
                 clearInterval(_this.checkAlipayPaymentVal);
@@ -2030,16 +2030,16 @@ export default {
                 _this.payDepositDialogVisible = false;
                 _this.paymentDialog = false;
 
-                console.log(_this.allSatisfy1, _this.allSatisfy2);
                 if (_this.allSatisfy1) {
                   _this.paymentType = 0;
                   _this.paymentCompletedDialogVisible = true;
                 } else if (_this.allSatisfy2) {
                   _this.paymentType = 1;
                   _this.paymentCompletedDialogVisible = true;
-                } else {
-                  _this.paymentType = 2;
+                } else if (_this.paymentType == 2) {
                   _this.MergepaymentslogVisible = true;
+                } else {
+                  _this.paymentCompletedDialogVisible = true;
                 }
                 clearInterval(_this.checkAlipayPaymentVal);
                 clearInterval(_this.checkWechatPaymentVal);

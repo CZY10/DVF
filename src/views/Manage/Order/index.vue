@@ -233,7 +233,7 @@
                   scope.row.apply_refund_deposit == 1 && scope.row.status == 1
                 "
                 class="Thprice"
-                style="right: 65px"
+                style="right: 55px"
               >
                 正在退还
               </div>
@@ -1324,10 +1324,7 @@
     <el-dialog
       :visible.sync="paymentCompletedDialogVisible"
       width="360px"
-      @close="
-        tableData = [];
-        getOrderList();
-      "
+      @close="updata()"
       :close-on-click-modal="false"
       class="payment_completed_dialog"
       center
@@ -1350,12 +1347,7 @@
           请尽快将样品寄送至达人收货地址，如已寄送，请及时上传样品寄送信息；点击【查看地址】即可获取达人收获信息~
         </p>
         <div class="button_box know_btn">
-          <el-button
-            @click="
-              paymentCompletedDialogVisible = false;
-              this.tableData = [];
-              getOrderList();
-            "
+          <el-button @click="paymentCompletedDialogVisible = false"
             >我知道了</el-button
           >
         </div>
@@ -1695,8 +1687,7 @@ export default {
     },
     MergepaymentslogVisible(newVal) {
       if (newVal == false) {
-        this.tableData = [];
-        this.getOrderList();
+        this.updata();
       }
     },
   },
@@ -1711,6 +1702,7 @@ export default {
     getMergepaymentslogMsg(msg) {
       this.MergepaymentslogVisible = msg;
     },
+
     tableRowClassName({ row, rowIndex }) {
       if (row.merge !== 0) {
         return "warning-row";
@@ -1879,6 +1871,7 @@ export default {
           if (res.code == 1) {
             this.pageState = true;
             this.iftableListener = true;
+
             res.data.data.forEach((item) => {
               this.tableData.push(item);
             });
@@ -2065,8 +2058,7 @@ export default {
           if (res.code === 1) {
             this.returnDepositDialog = false;
             this.$message.success("申请成功！");
-            this.tableData = [];
-            this.getOrderList();
+            this.updata();
           }
         })
         .catch((err) => {
@@ -2103,8 +2095,7 @@ export default {
               this.ruleCommentForm.complete = 0;
               this.ruleCommentForm.quality = 0;
               this.ruleCommentForm.cycle = 0;
-              this.tableData = [];
-              this.getOrderList();
+              this.updata();
             }
           })
           .catch((err) => {
@@ -2202,8 +2193,7 @@ export default {
               if (res.code === 1) {
                 this.submitDialog = false;
                 this.$message.success("样品寄送信息提交成功!");
-                this.tableData = [];
-                this.getOrderList();
+                this.updata();
               }
             })
             .catch((err) => {
@@ -2354,8 +2344,7 @@ export default {
       }).then((res) => {
         if (res.code == 1) {
           this.checkVideoDialog = false;
-          this.tableData = [];
-          this.getOrderList();
+          this.updata();
         }
       });
     },
@@ -2375,6 +2364,26 @@ export default {
             //请求接口的代码
             that.getOrderList();
           }
+        }
+      });
+    },
+
+    //更新最新的数据
+    updata() {
+      this.pageSize = this.currentPage * 20;
+      this.currentPage = 1;
+      orderList({
+        keyword: this.form.keywords,
+        date: this.form.dateValue,
+        pageSize: this.pageSize,
+        page: this.currentPage,
+        message: this.isMessage,
+        order: this.order,
+        orderType: this.orderType,
+      }).then((res) => {
+        if (res.code == 1) {
+          this.tableData = res.data.data;
+          this.totalPage = res.data.last_page;
         }
       });
     },

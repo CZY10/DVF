@@ -458,8 +458,6 @@ export default {
         if (res.code == 1) {
           this.beforeClose();
           this.reqsearch();
-        } else {
-          this.$message.error(res.msg);
         }
       } else if (this.ifsubmitbtn && this.determine == 2) {
         let image = [];
@@ -488,8 +486,6 @@ export default {
         if (res.code == 1) {
           this.beforeClose();
           this.reqsearch();
-        } else {
-          this.$message.error(res.msg);
         }
       } else if (this.ifsubmitbtn && this.determine * 1 == 3) {
         this.ifsubmitbtn = false;
@@ -558,8 +554,6 @@ export default {
             let num = localStorage.getItem("addnum") - 1;
             if (num <= 0) num = 0;
             localStorage.setItem("addnum", num);
-          } else {
-            this.$message.error(res.msg);
           }
         }
       } else if (this.ifsubmitbtn && this.determine == 4) {
@@ -582,8 +576,6 @@ export default {
         if (res.code == 1) {
           this.reqsearch();
           this.beforeClose();
-        } else {
-          this.$message.error(res.msg);
         }
       }
     },

@@ -10,7 +10,7 @@ function resolve(dir) {
 module.exports = defineConfig({
   transpileDependencies: false,
   publicPath: '/',
-  outputDir: process.env.NODE_ENV === 'development' ? 'test' : 'dist',
+  outputDir: process.env.VUE_APP_BASE_URL === 'http://testaiapi.blhltd.com' ? 'test' : 'dist',
   assetsDir: 'static',
   lintOnSave: false,
   productionSourceMap: false,
@@ -37,7 +37,7 @@ module.exports = defineConfig({
         $: "jquery",
         jQuery: 'jquery',
         'windows.jQuery': 'jquery',
-      }) 
+      })
     ],
     resolve: {
       alias: {

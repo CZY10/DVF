@@ -741,11 +741,16 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         });
       } else {
         this.rules.link[0].required = true;
-        this.$nextTick(() => {
-          this.$refs["ruleForm"].fields[1].validateMessage =
-            "请上传产品链接或图片";
-          this.$refs["ruleForm"].fields[1].validateState = "error";
-        });
+        if (
+          this.ruleForm.link == "" &&
+          this.isFillingRequirementsdialogVisible == true
+        ) {
+          this.$nextTick(() => {
+            this.$refs["ruleForm"].fields[1].validateMessage =
+              "请上传产品链接或图片";
+            this.$refs["ruleForm"].fields[1].validateState = "error";
+          });
+        }
       }
 
       newval.length >= 5

@@ -1060,10 +1060,14 @@ export default {
         const arr = [];
         this.tableData.forEach((item) => {
           if (
-            item.id &&
-            item.title != "" &&
-            item.budget * 1 >= item.video_num * 300 &&
-            item.url != ""
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.url != "") ||
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.image.length != 0)
           ) {
             arr.push(item.id);
           }

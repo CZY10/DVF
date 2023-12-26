@@ -1322,7 +1322,6 @@
     </el-dialog>
     <!--支付完成-->
     <el-dialog
-      :title="paymentType == 0 ? '定金支付成功' : '订单支付成功'"
       :visible.sync="paymentCompletedDialogVisible"
       width="360px"
       @close="
@@ -1996,15 +1995,16 @@ export default {
                 _this.paymentDialog = false;
 
                 if (_this.allSatisfy1) {
-                  _this.paymentType == 0;
+                  _this.paymentType = 0;
                   _this.paymentCompletedDialogVisible = true;
                 } else if (_this.allSatisfy2) {
-                  _this.paymentType == 1;
+                  _this.paymentType = 1;
                   _this.paymentCompletedDialogVisible = true;
                 } else {
-                  _this.paymentType == 2;
+                  _this.paymentType = 2;
                   _this.MergepaymentslogVisible = true;
                 }
+                console.log(_this.paymentType);
 
                 clearInterval(_this.checkWechatPaymentVal);
                 clearInterval(_this.checkAlipayPaymentVal);

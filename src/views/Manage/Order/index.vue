@@ -1731,10 +1731,9 @@ export default {
       if (
         row.status == 2 ||
         row.status == 3 ||
-        row.status == 0 ||
         row.status == 4 ||
         row.status == 5 ||
-        row.influencer_id == null
+        (row.status == 1 && row.influencer_id == null)
       ) {
         return false;
       } else {
@@ -1870,15 +1869,19 @@ export default {
       this.getOrderList();
     },
 
+    findIndex(array, id) {
+      return array.findIndex((item) => item.id === id);
+    },
+
     //删除订单
     handleRemoveOrder() {
+      let index = this.findIndex(this.tableData, this.orderId);
       orderDelete({ order_id: this.orderId })
         .then((res) => {
           if (res.code === 1) {
             this.$message.success("删除成功！");
             this.deleteOrderDialog = false;
-            this.tableData = [];
-            this.getOrderList();
+            this.tableData.splice(index, 1);
           }
         })
         .catch((err) => {

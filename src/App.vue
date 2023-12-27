@@ -17,29 +17,24 @@ export default {
   data() {
     return {
       isRouterAlive: true,
-      isToken: false,
-      action: "",
-      source: "",
+      action: this.$route.query.action || localStorage.getItem("action") || "",
+      source: this.$route.query.source || localStorage.getItem("source") || "",
       fullscreenLoading: false,
     };
   },
   mounted() {
-    if (this.isToken == true && this.source == "vipon_deal") {
+    if (localStorage.getItem("token") && this.source == "vipon_deal") {
       const loading = this.$loading({
         lock: true,
         text: "Loading",
         spinner: "el-icon-loading",
         background: "#fff",
       });
-      setTimeout(() => {
-        loading.close();
-      }, 10000);
 
       if (this.action == "account/login") {
-        localStorage.removeItem("source");
-        localStorage.removeItem("action");
-        localStorage.removeItem("token");
-        this.$store.commit("resetState");
+        loading.close();
+        localStorage.clear();
+        this.$store.commit("login/resetState");
         this.$router.push("/login");
       } else {
         let url = new URL(window.location.href);
@@ -52,26 +47,17 @@ export default {
         })
           .then((res) => {
             if (res.code == 1) {
+              loading.close();
               localStorage.removeItem("source");
               localStorage.removeItem("action");
               window.location.href = res.data.jump;
             }
           })
           .catch((res) => {
+            loading.close();
             console.log(res);
           });
       }
-    }
-  },
-  created() {
-    this.source =
-      this.$route.query.source || localStorage.getItem("source") || "";
-    this.action =
-      this.$route.query.action || localStorage.getItem("action") || "";
-    if (window.localStorage.token) {
-      this.isToken = true;
-    } else {
-      this.isToken = false;
     }
   },
   methods: {

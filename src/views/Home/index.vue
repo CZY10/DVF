@@ -47,10 +47,10 @@
                   </ul>
 
                   <div class="btn">
-                    <button class="button2" @click="gobuyershow">
+                    <button class="button2" @click="goPromotion">
                       立即推广
                     </button>
-                    <a href="/videohome" target="_bannk">了解更多></a>
+                    <a href="/webDeal" target="_bannk">了解更多></a>
                   </div>
                 </div>
                 <div class="rigth2">
@@ -495,12 +495,14 @@ export default {
     };
   },
   updated() {
-    var grid = document.querySelector(".grid");
-    var msnry = new Masonry(grid, {
-      // options...
-      itemSelector: ".grid-item",
-      columnWidth: 300,
-    });
+    setTimeout(() => {
+      var grid = document.querySelector(".grid");
+      new Masonry(grid, {
+        // options...
+        itemSelector: ".grid-item",
+        columnWidth: 300,
+      });
+    }, 500);
   },
   mounted() {
     this.token = localStorage.getItem("token");
@@ -628,19 +630,15 @@ export default {
       if (res.code == 1) {
         this.Opiniondata = res.data.data;
         this.OpiniondataTotal = res.data.total;
-
-        setTimeout(() => {
-          var grid = document.querySelector(".grid");
-          var msnry = new Masonry(grid, {
-            // options...
-            itemSelector: ".grid-item",
-            columnWidth: 300,
-          });
-        }, 500);
       }
     },
     gobuyershow() {
       router.push("/buyershow");
+    },
+    goPromotion() {
+      process.env.NODE_ENV == "production"
+        ? window.open("https://seller.vipona.com/hot/fb")
+        : window.open("https://hkatest.myvipon.com/hot/fb");
     },
 
     //fb详情页

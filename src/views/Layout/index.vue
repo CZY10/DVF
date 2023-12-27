@@ -6,51 +6,16 @@
     </el-col>
 
     <div
-      style="
-        width: 75px;
-        height: 75px;
-        position: fixed;
-        right: 30px;
-        top: 650px;
-        cursor: pointer;
-      "
-      v-if="remreruKa && flags"
+      v-if="flags"
       @mouseover="remreruKb = true"
       @mouseout="remreruKb = false"
-      @click="handlerClick"
+      @click="isShowComDialog = true"
+      class="dome"
     >
-      <img src="@/assets/images/ben.png" alt="" />
+      <p>领福利</p>
+      <div v-show="remreruKb" @click="flags = false">x</div>
     </div>
 
-    <p
-      style="
-        position: fixed;
-        right: 45px;
-        top: 702px;
-        color: #333333;
-        cursor: pointer;
-      "
-      v-if="remreruKa && flags"
-    >
-      领福利
-    </p>
-    <div
-      style="
-        height: 8;
-        width: 8px;
-        position: fixed;
-        right: 35px;
-        top: 640px;
-        cursor: pointer;
-      "
-      v-if="remreruKa && flags"
-      v-show="remreruKb"
-      @click="remreruK"
-      @mouseover="remreruKb = true"
-      @mouseout="remreruKb = false"
-    >
-      x
-    </div>
     <ConsultDialog :visible.sync="isShowComDialog"></ConsultDialog>
   </el-row>
 </template>
@@ -65,10 +30,8 @@ export default {
   data() {
     return {
       remreruKb: false,
-      remreruKa: true,
       flags: true,
       isShowComDialog: false,
-      flag: true,
     };
   },
   components: {
@@ -89,15 +52,6 @@ export default {
   },
   methods: {
     ...mapMutations("Index", ["setIsFalg"]),
-    remreruK() {
-      this.remreruKa = false;
-    },
-    handlerClick() {
-      this.isShowComDialog = true;
-      if (localStorage.getItem("configObj") != null) {
-        this.configData = JSON.parse(localStorage.getItem("configObj"));
-      }
-    },
   },
   watch: {
     $route: function (to, from) {
@@ -117,4 +71,24 @@ export default {
 </script>
 
 <style scoped>
+.dome {
+  width: 75px;
+  height: 75px;
+  position: fixed;
+  right: 30px;
+  top: 700px;
+  cursor: pointer;
+  background: url("@/assets/images/ben.png");
+}
+
+.dome > p {
+  text-align: center;
+  margin-top: 52px;
+}
+
+.dome > div {
+  position: relative;
+  top: -80px;
+  left: 65px;
+}
 </style>

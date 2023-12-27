@@ -664,6 +664,9 @@ export default {
       }
     },
   },
+  beforeDestroy() {
+    clearInterval(this.checkQrCode);
+  },
 };
 </script>
 

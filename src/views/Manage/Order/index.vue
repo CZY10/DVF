@@ -2370,7 +2370,10 @@ export default {
 
     //更新最新的数据
     updata() {
-      this.pageSize = this.currentPage * 20;
+      this.currentPage == 1 && this.pageSize != 20
+        ? (this.pageSize = this.pageSize)
+        : (this.pageSize = this.currentPage * 20);
+
       this.currentPage = 1;
       orderList({
         keyword: this.form.keywords,

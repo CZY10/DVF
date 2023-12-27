@@ -233,7 +233,7 @@
                   scope.row.apply_refund_deposit == 1 && scope.row.status == 1
                 "
                 class="Thprice"
-                style="right: 65px"
+                style="right: 55px"
               >
                 正在退还
               </div>
@@ -303,7 +303,7 @@
                 >
                 <div class="normal_style" v-else>/</div>
                 <div
-                  class="normal_style"
+                  class="operation_btn"
                   v-if="scope.row.apply_refund_deposit == 1"
                   style="
                     font-size: 12px;
@@ -469,7 +469,7 @@
 
     <!--支付尾款-->
     <el-dialog
-      title="请尽快支付订单"
+      title="请尽快支付"
       :visible.sync="paymentDialog"
       v-if="paymentDialog"
       @close="handleClose"
@@ -480,11 +480,8 @@
     >
       <div class="payment_content">
         <h4>¥{{ orderData.price }}</h4>
-        <p v-if="orderIdFlex">合并订单金额</p>
+        <p v-if="orderIdFlex">合并金额</p>
         <p v-if="orderIdFlex == false">订单金额</p>
-        <!-- <p>
-          订单号：<span>{{ orderData.order_id }}</span>
-        </p> -->
         <el-tabs type="border-card">
           <el-tab-pane>
             <span
@@ -1218,7 +1215,7 @@
     </el-dialog>
     <!--支付定金-->
     <el-dialog
-      title="请尽快支付定金"
+      title="请尽快支付"
       @close="handleClose"
       :visible.sync="payDepositDialogVisible"
       v-if="payDepositDialogVisible"
@@ -1247,9 +1244,6 @@
         </el-alert>
         <h5>¥{{ orderData.price }}</h5>
         <p>定金金额</p>
-        <p>
-          订单号：<span>{{ orderData.order_id }}</span>
-        </p>
         <el-tabs type="border-card">
           <el-tab-pane>
             <span
@@ -1308,17 +1302,29 @@
             </div>
           </el-tab-pane>
         </el-tabs>
+        <div class="group_26 flex-row">
+          <div class="image-text_40 flex-row justify-between">
+            <img
+              class="thumbnail_26"
+              referrerpolicy="no-referrer"
+              src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngadd69f7b6dbb5a1080befad2c5168f68a6705b339b5967fdd3f737c59baf4d89"
+            />
+            <div class="text-group_14">
+              <span class="text_98">1、订单支付成功后，</span>
+              <span class="text_99">定金</span>
+              <span class="paragraph_1"
+                >将原路退回至您的「支付宝/微信」账户；<br />2、完成订单支付，代表服务正式生效。在完成交付之前，平台不会将你的款项支付给达人。</span
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </el-dialog>
     <!--支付完成-->
     <el-dialog
-      :title="paymentType == 0 ? '定金支付成功' : '订单支付成功'"
       :visible.sync="paymentCompletedDialogVisible"
       width="360px"
-      @close="
-        tableData = [];
-        getOrderList();
-      "
+      @close="updata()"
       :close-on-click-modal="false"
       class="payment_completed_dialog"
       center
@@ -1341,18 +1347,12 @@
           请尽快将样品寄送至达人收货地址，如已寄送，请及时上传样品寄送信息；点击【查看地址】即可获取达人收获信息~
         </p>
         <div class="button_box know_btn">
-          <el-button
-            @click="
-              paymentCompletedDialogVisible = false;
-              this.tableData = [];
-              getOrderList();
-            "
+          <el-button @click="paymentCompletedDialogVisible = false"
             >我知道了</el-button
           >
         </div>
       </div>
     </el-dialog>
-
     <!-- 查看地址 -->
     <el-dialog
       title="请尽快将产品寄送到以下地址"
@@ -1372,6 +1372,7 @@
       </div>
     </el-dialog>
 
+    <!-- 查看红人弹窗 -->
     <el-dialog
       title="已选红人"
       :visible.sync="centerDialogVisibleXinz"
@@ -1393,7 +1394,12 @@
         >
           <img
             :src="item.image"
-            style="width: 40px; height: 40px; border-radius: 50%"
+            style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+            "
           />
           <p>No.{{ item.user_id }}</p>
           <p style="color: #796cf3; margin-top: 4px; white-space: nowrap">
@@ -1402,7 +1408,6 @@
         </li>
       </ul>
     </el-dialog>
-
     <!-- 填写要求弹窗 -->
     <FillingRequirementsdialog
       :isFillingRequirementsdialogVisible="FillingRequirementsdialogVisible"
@@ -1413,6 +1418,12 @@
       :reqsearch="clearOrderList"
       :getstate="getstate"
     ></FillingRequirementsdialog>
+
+    <!-- 合并支付弹窗 -->
+    <Mergepaymentslog
+      :MergepaymentslogVisible="MergepaymentslogVisible"
+      @getMergepaymentslogMsg="getMergepaymentslogMsg"
+    ></Mergepaymentslog>
   </div>
 </template>
 
@@ -1437,6 +1448,7 @@ import {
 import QRCode from "qrcodejs2";
 import { mapMutations } from "vuex";
 import FillingRequirementsdialog from "@/components/RequirementSubmission/dialog/FillingRequirementsdialog.vue";
+import Mergepaymentslog from "./dialog/Mergepaymentslog.vue";
 export default {
   name: "order",
   data() {
@@ -1609,6 +1621,9 @@ export default {
       FillingRequirementid: 0,
       getstate: 0,
       iftableListener: true,
+      MergepaymentslogVisible: false,
+      allSatisfy1: false,
+      allSatisfy2: false,
     };
   },
   created() {
@@ -1670,6 +1685,11 @@ export default {
         }
       });
     },
+    MergepaymentslogVisible(newVal) {
+      if (newVal == false) {
+        this.updata();
+      }
+    },
   },
   methods: {
     ...mapMutations("order", ["setIsMessage", "setMessage", "setIsRead"]),
@@ -1677,9 +1697,12 @@ export default {
     //在父组件中声明这个函数，用于接收子组件传回的值
     getChildMsg(msg) {
       this.getstate = 0;
-      console.log(this.getstate);
       this.FillingRequirementsdialogVisible = msg;
     },
+    getMergepaymentslogMsg(msg) {
+      this.MergepaymentslogVisible = msg;
+    },
+
     tableRowClassName({ row, rowIndex }) {
       if (row.merge !== 0) {
         return "warning-row";
@@ -1696,17 +1719,16 @@ export default {
     },
     //当选择项发生变化时会触发该事件
     handleSelectionChange(val) {
-      console.log(val);
       this.multipleSelection = val;
       let num = 0;
       this.multipleSelection.map((item) => {
         num = num + item.price * 1;
       });
-      this.priceNum = num;
+      this.priceNum = num.toFixed(2);
 
       setTimeout(() => {
         var element = document.querySelector(".is-indeterminate");
-        element.classList.remove("is-indeterminate");
+        element?.classList.remove("is-indeterminate");
       }, 10);
     },
     //当用户手动勾选全选 Checkbox 时触发的事件
@@ -1716,26 +1738,44 @@ export default {
       if (
         row.status == 2 ||
         row.status == 3 ||
-        row.status == 0 ||
         row.status == 4 ||
         row.status == 5 ||
-        row.influencer_id == null
+        (row.status == 1 && row.influencer_id == null)
       ) {
         return false;
       } else {
         return true;
       }
     },
+
+    allSatisfy(array, condition) {
+      return array.every(condition);
+    },
     //合并支付
     ConsolidatedPayment() {
       const arr = [];
+
+      var condition1 = function (item) {
+        return item.status == 0;
+      };
+      var condition2 = function (item) {
+        return item.status == 1;
+      };
+      this.allSatisfy1 = this.allSatisfy(this.multipleSelection, condition1);
+      this.allSatisfy2 = this.allSatisfy(this.multipleSelection, condition2);
+      console.log(
+        this.allSatisfy1,
+        "condition1",
+        this.allSatisfy2,
+        "condition2"
+      );
+
       this.multipleSelection.forEach((item) => {
         arr.push(item.id);
       });
       const str = arr.join(",");
       this.orderId = str;
-      console.log(this.orderId);
-      this.handlePaymentOrder(1);
+      this.handlePaymentOrder(2);
       this.orderIdFlex = true;
     },
     //获取拍摄场景列表
@@ -1831,6 +1871,7 @@ export default {
           if (res.code == 1) {
             this.pageState = true;
             this.iftableListener = true;
+
             res.data.data.forEach((item) => {
               this.tableData.push(item);
             });
@@ -1855,15 +1896,19 @@ export default {
       this.getOrderList();
     },
 
+    findIndex(array, id) {
+      return array.findIndex((item) => item.id === id);
+    },
+
     //删除订单
     handleRemoveOrder() {
+      let index = this.findIndex(this.tableData, this.orderId);
       orderDelete({ order_id: this.orderId })
         .then((res) => {
           if (res.code === 1) {
             this.$message.success("删除成功！");
             this.deleteOrderDialog = false;
-            this.tableData = [];
-            this.getOrderList();
+            this.tableData.splice(index, 1);
           }
         })
         .catch((err) => {
@@ -1873,14 +1918,15 @@ export default {
     //支付定金/尾款
     handlePaymentOrder(type) {
       this.orderIdFlex = false;
+
       type === 0
         ? (this.payDepositDialogVisible = true)
         : (this.paymentDialog = true);
+
       this.paymentType = type;
       //微信
       payOrder({
         order_id: this.orderId,
-        type: type,
         payment: "wechat",
       })
         .then((res) => {
@@ -1905,7 +1951,6 @@ export default {
       //支付宝
       payOrder({
         order_id: this.orderId,
-        type: type,
         payment: "alipay",
       })
         .then((res) => {
@@ -1941,7 +1986,19 @@ export default {
               if (res.data.status === "success") {
                 _this.payDepositDialogVisible = false;
                 _this.paymentDialog = false;
-                _this.paymentCompletedDialogVisible = true;
+
+                if (_this.allSatisfy1) {
+                  _this.paymentType = 0;
+                  _this.paymentCompletedDialogVisible = true;
+                } else if (_this.allSatisfy2) {
+                  _this.paymentType = 1;
+                  _this.paymentCompletedDialogVisible = true;
+                } else if (_this.paymentType == 2) {
+                  _this.MergepaymentslogVisible = true;
+                } else {
+                  _this.paymentCompletedDialogVisible = true;
+                }
+
                 clearInterval(_this.checkWechatPaymentVal);
                 clearInterval(_this.checkAlipayPaymentVal);
               }
@@ -1965,7 +2022,18 @@ export default {
               if (res.data.status === "success") {
                 _this.payDepositDialogVisible = false;
                 _this.paymentDialog = false;
-                _this.paymentCompletedDialogVisible = true;
+
+                if (_this.allSatisfy1) {
+                  _this.paymentType = 0;
+                  _this.paymentCompletedDialogVisible = true;
+                } else if (_this.allSatisfy2) {
+                  _this.paymentType = 1;
+                  _this.paymentCompletedDialogVisible = true;
+                } else if (_this.paymentType == 2) {
+                  _this.MergepaymentslogVisible = true;
+                } else {
+                  _this.paymentCompletedDialogVisible = true;
+                }
                 clearInterval(_this.checkAlipayPaymentVal);
                 clearInterval(_this.checkWechatPaymentVal);
               }
@@ -1990,8 +2058,7 @@ export default {
           if (res.code === 1) {
             this.returnDepositDialog = false;
             this.$message.success("申请成功！");
-            this.tableData = [];
-            this.getOrderList();
+            this.updata();
           }
         })
         .catch((err) => {
@@ -2028,8 +2095,7 @@ export default {
               this.ruleCommentForm.complete = 0;
               this.ruleCommentForm.quality = 0;
               this.ruleCommentForm.cycle = 0;
-              this.tableData = [];
-              this.getOrderList();
+              this.updata();
             }
           })
           .catch((err) => {
@@ -2127,8 +2193,7 @@ export default {
               if (res.code === 1) {
                 this.submitDialog = false;
                 this.$message.success("样品寄送信息提交成功!");
-                this.tableData = [];
-                this.getOrderList();
+                this.updata();
               }
             })
             .catch((err) => {
@@ -2279,8 +2344,7 @@ export default {
       }).then((res) => {
         if (res.code == 1) {
           this.checkVideoDialog = false;
-          this.tableData = [];
-          this.getOrderList();
+          this.updata();
         }
       });
     },
@@ -2296,14 +2360,38 @@ export default {
           if (that.currentPage < that.totalPage && that.iftableListener) {
             //当前页数小于总页数就请求
             that.currentPage++; //当前页数自增
+
             //请求接口的代码
             that.getOrderList();
           }
         }
       });
     },
+
+    //更新最新的数据
+    updata() {
+      this.currentPage == 1 && this.pageSize != 20
+        ? (this.pageSize = this.pageSize)
+        : (this.pageSize = this.currentPage * 20);
+
+      this.currentPage = 1;
+      orderList({
+        keyword: this.form.keywords,
+        date: this.form.dateValue,
+        pageSize: this.pageSize,
+        page: this.currentPage,
+        message: this.isMessage,
+        order: this.order,
+        orderType: this.orderType,
+      }).then((res) => {
+        if (res.code == 1) {
+          this.tableData = res.data.data;
+          this.totalPage = res.data.last_page;
+        }
+      });
+    },
   },
-  components: { FillingRequirementsdialog },
+  components: { FillingRequirementsdialog, Mergepaymentslog },
 };
 </script>
 <style lang="less">
@@ -2957,10 +3045,6 @@ export default {
       margin-left: 0;
     }
 
-    .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
-      margin-left: 0;
-    }
-
     .el-tabs--border-card > .el-tabs__header .el-tabs__item {
       color: #999999;
       font-family: PingFangSC-Semibold, PingFang SC;
@@ -2970,8 +3054,7 @@ export default {
       height: 42px;
     }
 
-    .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
-    .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
+    .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
       font-weight: 600;
       color: #333333;
       background: #f6f5ff;
@@ -3850,7 +3933,7 @@ export default {
 .group_26 {
   background-color: rgba(244, 242, 255, 1);
   border-radius: 4px;
-  width: 420px;
+  width: 100%;
   height: 94px;
 }
 

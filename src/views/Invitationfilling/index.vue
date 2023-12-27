@@ -279,9 +279,9 @@
                     <p
                       style="
                         font-size: 12px;
-                        font-family: PingFangSC-Regular, PingFang SC;
-                        font-weight: 400;
                         color: #999999;
+                        min-width: 105px;
+                        text-align: left;
                       "
                       v-if="scope.row.url"
                       @click="gocommodity(scope.row.url)"
@@ -296,15 +296,25 @@
                         "
                       ></i>
                     </p>
-                    <p v-else style="color: #999999">--</p>
+                    <p v-else style="color: #999999; min-width: 105px">--</p>
                   </div>
 
                   <div
                     @click="openFillingRequirementsdialog(scope.$index)"
                     class="tableyaoq-div"
+                    v-if="scope.row.url != '' || scope.row.image.length != 0"
                   >
                     <p>详情</p>
                     <i class="iconfont icon-tx"></i>
+                  </div>
+
+                  <div
+                    @click="openFillingRequirementsdialog(scope.$index)"
+                    class="tableyaoq-div2"
+                    v-else
+                  >
+                    <p>详情</p>
+                    <i class="el-icon-warning"></i>
                   </div>
                 </div>
               </div>
@@ -646,6 +656,7 @@ export default {
       tipsImg3: require("../../assets/images/tipsImg/tips3.webp"),
       tipsImg4: require("../../assets/images/tipsImg/tips4.webp"),
       ifGuide: 0,
+      num: 0,
     };
   },
   components: {
@@ -820,9 +831,14 @@ export default {
         const arr = [];
         this.tableData.forEach((item) => {
           if (
-            item.id &&
-            item.title != "" &&
-            item.budget * 1 >= item.video_num * 300
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.url != "") ||
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.image.length != 0)
           ) {
             arr.push(item.id);
           }
@@ -847,7 +863,6 @@ export default {
           })
           .catch((res) => {
             loading.close();
-            this.$message.error(res);
           });
       } else if (this.tableData.length == 1 || this.tableDataTitle == true) {
         this.showMessage("您还没有添加任何需求，请添加需求再提交");
@@ -979,10 +994,6 @@ export default {
               influencer_ids: itempop.id,
               url_mark: needs,
               auth: localStorage.getItem("said"),
-            }).then((res) => {
-              if (res.code == 1) {
-                this.reqsearch();
-              }
             });
           }
         });
@@ -992,9 +1003,6 @@ export default {
             .map((item) => item.id.toString())
             .join(",");
           this.getneedsSelectInfluencer(id, influencerIds1);
-          setTimeout(() => {
-            this.reqsearch();
-          }, 1000);
         } else {
           let influencerIds1 = this.tableData[
             this.differentIndices[0]
@@ -1030,9 +1038,6 @@ export default {
             this.tableData[this.differentIndices[1]].id,
             influencerIds2
           );
-          setTimeout(() => {
-            this.reqsearch();
-          }, 1000);
         }
       } else {
         this.reqsearch();
@@ -1056,6 +1061,17 @@ export default {
         influencer_ids: influencerIds1,
         auth: localStorage.getItem("said"),
       });
+
+      let comma = ",";
+      let flag = true;
+      if (influencerIds1.toLowerCase().includes(comma.toLowerCase())) {
+        console.log("字符串（忽略大小写）包含逗号");
+      } else {
+        this.reqsearch();
+        flag = false;
+      }
+
+      if (influencerIds1 == "" && flag) this.reqsearch();
     },
 
     //填写需求
@@ -1106,7 +1122,10 @@ export default {
       if (val * 1 < 300 * num) {
         this.ifsubmitTo = false;
         this.tableData.map((item) => {
-          if (item.budget >= item.video_num * 300) {
+          if (
+            (item.budget >= item.video_num * 300 && item.url != "") ||
+            (item.budget >= item.video_num * 300 && item.image.length != 0)
+          ) {
             this.ifsubmitTo = true;
           }
         });
@@ -1126,11 +1145,18 @@ export default {
       } else {
         let flag = false;
         this.tableData.map((item) => {
-          if (item.budget >= item.video_num * 300 && item.title != "") {
+          if (
+            (item.budget >= item.video_num * 300 &&
+              item.title != "" &&
+              item.url != "") ||
+            (item.budget >= item.video_num * 300 &&
+              item.title != "" &&
+              item.image.length != 0)
+          ) {
             flag = true;
           }
         });
-        if (flag) this.ifsubmitTo = true;
+        flag ? (this.ifsubmitTo = true) : (this.ifsubmitTo = false);
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
           this.$refs["ruleForm" + index].fields[0].validateState = "";
@@ -1339,7 +1365,8 @@ export default {
           item.title == "" &&
           item.influencer_info[0]?.ifinfluencerInfo == true
         ) {
-          if (item.id) {
+          if (item.id && this.num != item.id) {
+            this.num = item.id;
             needsDelete({
               id: item.id,
               source: 1,
@@ -1653,6 +1680,21 @@ export default {
       }
 
       .table-yaoq {
+        .tableyaoq-div2 {
+          display: flex;
+          align-items: center;
+          color: #ed4014;
+          margin-left: 15px;
+          font-size: 12px;
+          p {
+            white-space: nowrap;
+          }
+          .el-icon-warning {
+            margin-left: 3px;
+            margin-top: 1px;
+            font-size: 16px;
+          }
+        }
         .tableyaoq-div {
           display: flex;
           align-items: center;

@@ -281,7 +281,6 @@
                         -webkit-line-clamp: 2;
                         text-overflow: ellipsis;
                         text-align: left;
-                        padding-left: 6px;
                         box-sizing: border-box;
                       "
                       :title="scope.row.title"
@@ -289,7 +288,12 @@
                       {{ scope.row.title }}
                     </p>
                     <p
-                      style="font-size: 12px; color: #999999"
+                      style="
+                        font-size: 12px;
+                        color: #999999;
+                        min-width: 105px;
+                        text-align: left;
+                      "
                       v-if="scope.row.url"
                       @click="gocommodity(scope.row.url)"
                     >
@@ -303,15 +307,30 @@
                         "
                       ></i>
                     </p>
-                    <p v-else style="color: #999999">--</p>
+                    <p
+                      v-else
+                      style="color: #999999; min-width: 105px; text-align: left"
+                    >
+                      --
+                    </p>
                   </div>
 
                   <div
                     @click="openFillingRequirementsdialog(scope.$index)"
                     class="tableyaoq-div"
+                    v-if="scope.row.url != '' || scope.row.image.length != 0"
                   >
                     <p>详情</p>
                     <i class="iconfont icon-tx"></i>
+                  </div>
+
+                  <div
+                    @click="openFillingRequirementsdialog(scope.$index)"
+                    class="tableyaoq-div2"
+                    v-else
+                  >
+                    <p>详情</p>
+                    <i class="el-icon-warning"></i>
                   </div>
                 </div>
               </div>
@@ -580,12 +599,65 @@
             "
           ></i>
         </el-alert>
-        <h5>¥{{ orderData[0].order.price }}</h5>
-        <p>定金金额</p>
+        <h5 style="display: flex; justify-content: center">
+          <p style="margin-right: 5px">定金金额 :</p>
+          ¥<span>{{ orderData[0].order.price }}</span>
+        </h5>
         <p>
-          订单号：
-          <span>{{ orderData[0].order.order_id }}</span>
+          共计<span style="color: #ff2c4c; margin-right: 2px">{{
+            orderCount
+          }}</span
+          >笔
         </p>
+
+        <div v-if="orderData[0].order.order_id.length >= 9">
+          <p class="textp1" v-if="iforderid">
+            订单号：<span
+              v-for="(item, index) in orderData[0].order.order_id"
+              :key="index"
+            >
+              <span v-if="index < 5">{{ item }}</span>
+              <span v-if="index < 4">,</span>
+            </span>
+            <span
+              style="cursor: pointer; margin-left: 5px"
+              @click="addiforderid"
+              >... 全部 <i class="el-icon-arrow-down"></i
+            ></span>
+          </p>
+
+          <p class="textp2" v-else>
+            订单号：<span
+              v-for="(item, index) in orderData[0].order.order_id"
+              :key="index"
+              >{{ item
+              }}<span v-if="index !== orderData[0].order.order_id.length - 1"
+                >,
+              </span> </span
+            ><span
+              style="cursor: pointer; margin-left: 5px"
+              @click="addiforderid"
+              >收起 <i class="el-icon-arrow-up"></i>
+            </span>
+          </p>
+        </div>
+
+        <div v-else>
+          <p class="textp1">
+            订单号：<span
+              v-for="(item, index) in orderData[0].order.order_id"
+              :key="index"
+            >
+              <span v-if="index < orderData[0].order.order_id.length">{{
+                item
+              }}</span>
+              <span v-if="index < orderData[0].order.order_id.length - 1"
+                >,</span
+              >
+            </span>
+          </p>
+        </div>
+
         <el-tabs type="border-card">
           <el-tab-pane>
             <span
@@ -767,7 +839,7 @@ export default {
         {
           order: {
             price: "",
-            order_id: "",
+            order_id: [],
           },
         },
       ],
@@ -818,6 +890,9 @@ export default {
       deletecenterDialogVisiblesindex: 0,
       InvitationFillingdialogVisble: false,
       InvitationFillingdialoglink: "",
+      orderCount: 0,
+      iforderid: true,
+      num: 0,
     };
   },
   components: {
@@ -933,9 +1008,8 @@ export default {
                 item.budget != 0
                   ? (this.tableData[index].budget = item.budget * 1)
                   : (this.tableData[index].budget = "");
-
-                this.budgetChange(item.budget, index, item.video_num);
               }
+              this.budgetChange(item.budget, index, item.video_num);
             } else if (!item.flag && item.flag != undefined) {
               this.tableData[index].budget = "";
               this.budgetChange(item.budget, index, item.video_num);
@@ -986,9 +1060,14 @@ export default {
         const arr = [];
         this.tableData.forEach((item) => {
           if (
-            item.id &&
-            item.title != "" &&
-            item.budget * 1 >= item.video_num * 300
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.url != "") ||
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.image.length != 0)
           ) {
             arr.push(item.id);
           }
@@ -1021,6 +1100,10 @@ export default {
                 });
               });
               this.orderData = res.data.order;
+              this.orderData[0].order.order_id =
+                res.data.order[0].order.order_id.split(",");
+
+              this.orderCount = res.data.order_count;
               this.handlerCheckWechatPayment(
                 res.data.order[0].order.out_trade_no
               );
@@ -1211,10 +1294,6 @@ export default {
             const itempop = item.influencer_info.pop();
             needsSelectInfluencer({
               influencer_ids: itempop.user_id,
-            }).then((res) => {
-              if (res.code == 1) {
-                this.reqsearch();
-              }
             });
           }
         });
@@ -1224,9 +1303,6 @@ export default {
             .map((item) => item.user_id.toString())
             .join(",");
           this.getneedsSelectInfluencer(id, influencerIds1);
-          setTimeout(() => {
-            this.reqsearch();
-          }, 1000);
         } else {
           let influencerIds1 = this.tableData[
             this.differentIndices[0]
@@ -1262,9 +1338,6 @@ export default {
             this.tableData[this.differentIndices[1]].id,
             influencerIds2
           );
-          setTimeout(() => {
-            this.reqsearch();
-          }, 1000);
         }
       } else {
         this.reqsearch();
@@ -1285,6 +1358,17 @@ export default {
         id: id,
         influencer_ids: influencerIds1,
       });
+
+      let comma = ",";
+      let flag = true;
+      if (influencerIds1.toLowerCase().includes(comma.toLowerCase())) {
+        console.log("字符串（忽略大小写）包含逗号");
+      } else {
+        this.reqsearch();
+        flag = false;
+      }
+
+      if (influencerIds1 == "" && flag) this.reqsearch();
     },
 
     //填写需求
@@ -1336,7 +1420,10 @@ export default {
         if (this.checked) {
           this.ifsubmitTo = false;
           this.tableData.map((item) => {
-            if (item.budget >= item.video_num * 300) {
+            if (
+              (item.budget >= item.video_num * 300 && item.url != "") ||
+              (item.budget >= item.video_num * 300 && item.image.length != 0)
+            ) {
               this.ifsubmitTo = true;
             }
           });
@@ -1355,7 +1442,23 @@ export default {
           this.$refs["ruleForm" + index].fields[0].validateState = "error";
         });
       } else {
-        if (this.checked) this.ifsubmitTo = true;
+        let flag = false;
+        this.tableData.map((item) => {
+          if (
+            (item.budget >= item.video_num * 300 &&
+              item.title != "" &&
+              item.url != "") ||
+            (item.budget >= item.video_num * 300 &&
+              item.title != "" &&
+              item.image.length != 0)
+          ) {
+            flag = true;
+          }
+        });
+        console.log(flag && this.checked);
+        flag && this.checked
+          ? (this.ifsubmitTo = true)
+          : (this.ifsubmitTo = false);
         this.$nextTick(() => {
           this.$refs["ruleForm" + index].fields[0].validateMessage = "";
           this.$refs["ruleForm" + index].fields[0].validateState = "";
@@ -1533,6 +1636,10 @@ export default {
         customClass: "customClasssuccess",
       });
     },
+
+    addiforderid() {
+      this.iforderid = !this.iforderid;
+    },
   },
   mounted() {
     // setTimeout(() => {
@@ -1556,7 +1663,8 @@ export default {
           item.title == "" &&
           item.influencer_info[0]?.ifinfluencerInfo == true
         ) {
-          if (item.id) {
+          if (item.id && this.num != item.id) {
+            this.num = item.id;
             needsDelete({
               id: item.id,
               source: 0,
@@ -1595,7 +1703,10 @@ export default {
         this.tableData.length != 1
       ) {
         this.tableData.forEach((item) => {
-          if (item.budget * 1 >= item.video_num * 300) {
+          if (
+            (item.budget * 1 >= item.video_num * 300 && item.url != "") ||
+            (item.budget * 1 >= item.video_num * 300 && item.image.length != 0)
+          ) {
             this.ifsubmitTo = true;
           }
         });
@@ -1841,6 +1952,21 @@ export default {
       }
 
       .table-yaoq {
+        .tableyaoq-div2 {
+          display: flex;
+          align-items: center;
+          color: #ed4014;
+          margin-left: 15px;
+          font-size: 12px;
+          p {
+            white-space: nowrap;
+          }
+          .el-icon-warning {
+            margin-left: 3px;
+            margin-top: 1px;
+            font-size: 16px;
+          }
+        }
         .tableyaoq-div {
           display: flex;
           align-items: center;
@@ -2124,7 +2250,6 @@ export default {
 .pay_deposit_dialog {
   h5 {
     font-size: 22px;
-    font-family: PingFangSC-Semibold, PingFang SC;
     font-weight: 600;
     color: #ff2c4c;
     line-height: 30px;
@@ -2134,16 +2259,21 @@ export default {
 
   p {
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #999999;
     line-height: 20px;
     text-align: center;
     padding: 5px 0;
+  }
 
-    span {
-      color: rgba(51, 51, 51, 1);
-    }
+  .textp1 {
+    width: 370px;
+    margin: 0 auto 15px;
+  }
+  .textp2 {
+    text-align: left;
+    width: 370px;
+    margin: 0 auto 15px;
   }
 
   ul {
@@ -2314,6 +2444,8 @@ export default {
   .el-tabs--border-card {
     border: 1px solid #eeeeee;
     margin-top: 15px;
+    width: 370px;
+    margin: 0 auto;
   }
 
   .el-tabs--border-card > .el-tabs__header .el-tabs__item + .el-tabs__item {
@@ -2338,16 +2470,10 @@ export default {
     height: 42px;
   }
 
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active,
-  .el-tabs--border-card > .el-tabs__header .el-tabs__item:hover {
-    font-weight: 600;
-    color: #333333;
+  ::v-deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active) {
     background: #f6f5ff;
     border-bottom: 2px solid #796cf3;
-
-    i {
-      font-weight: normal;
-    }
+    color: #333333;
   }
 
   .el-tabs--border-card > .el-tabs__header {

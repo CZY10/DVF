@@ -2473,7 +2473,6 @@ export default {
   ::v-deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active) {
     background: #f6f5ff;
     border-bottom: 2px solid #796cf3;
-    font-weight: 600;
     color: #333333;
   }
 

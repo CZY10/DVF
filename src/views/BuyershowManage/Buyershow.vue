@@ -218,6 +218,8 @@
               <span class="test1" v-if="item.istrue == false">已选择</span>
               <span class="test1" v-else>选择</span>
             </div>
+
+            <div class="logo_id"></div>
           </li>
         </ul>
         <div v-else class="product_div">
@@ -1060,6 +1062,28 @@ export default {
 
           .product_list:hover {
             height: 295px;
+          }
+
+          .logo_id {
+            height: 23px;
+            width: 50px;
+            background: #ffdd99;
+            position: absolute;
+            right: -3px;
+            top: 0;
+            border-bottom-left-radius: 5px;
+          }
+          .logo_id::before {
+            content: "";
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 10px 10px 0;
+            border-color: transparent #ffdd99 transparent transparent;
+            position: absolute;
+            left: -7px;
+            top: 0;
+            border-bottom-left-radius: 10px;
           }
         }
       }

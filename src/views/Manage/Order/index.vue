@@ -949,6 +949,7 @@
                 :class="{ hide_upload: isHide }"
                 ref="upload"
                 :action="localhost + '/api/common/upload'"
+                :data="{ source: 'normal' }"
                 :on-change="changeUpload"
                 list-type="picture-card"
                 :on-success="uploadSuccess"
@@ -1158,6 +1159,7 @@
         <div>
           <el-upload
             :action="localhost + '/api/common/upload'"
+            :data="{ source: 'normal' }"
             ref="chatUpload"
             class="chat_upload"
             list-type="picture-card"

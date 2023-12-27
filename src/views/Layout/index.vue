@@ -10,7 +10,7 @@
       @mouseover="remreruKb = true"
       @mouseout="remreruKb = false"
       @click="isShowComDialog = true"
-      class="dome"
+      class="remreru"
     >
       <p>领福利</p>
       <div v-show="remreruKb" @click="flags = false">x</div>
@@ -52,6 +52,20 @@ export default {
   },
   methods: {
     ...mapMutations("Index", ["setIsFalg"]),
+    handleScroll() {
+      if (this.$route.fullPath == "/") {
+        let scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop; //滑动的距离
+        if (scrollTop <= 300) {
+          document.querySelector(".remreru").style.opacity = "0";
+        } else {
+          document.querySelector(".remreru").style.opacity = "1";
+        }
+      }
+    },
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll, true);
   },
   watch: {
     $route: function (to, from) {
@@ -71,7 +85,7 @@ export default {
 </script>
 
 <style scoped>
-.dome {
+.remreru {
   width: 75px;
   height: 75px;
   position: fixed;
@@ -79,14 +93,15 @@ export default {
   top: 700px;
   cursor: pointer;
   background: url("@/assets/images/ben.png");
+  transition: all 0.3s;
 }
 
-.dome > p {
+.remreru > p {
   text-align: center;
   margin-top: 52px;
 }
 
-.dome > div {
+.remreru > div {
   position: relative;
   top: -80px;
   left: 65px;

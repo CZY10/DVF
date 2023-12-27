@@ -831,10 +831,14 @@ export default {
         const arr = [];
         this.tableData.forEach((item) => {
           if (
-            item.id &&
-            item.title != "" &&
-            item.budget * 1 >= item.video_num * 300 &&
-            item.url != ""
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.url != "") ||
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.image.length != 0)
           ) {
             arr.push(item.id);
           }
@@ -859,7 +863,6 @@ export default {
           })
           .catch((res) => {
             loading.close();
-            this.$message.error(res);
           });
       } else if (this.tableData.length == 1 || this.tableDataTitle == true) {
         this.showMessage("您还没有添加任何需求，请添加需求再提交");

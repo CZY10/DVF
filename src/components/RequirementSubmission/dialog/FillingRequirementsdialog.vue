@@ -670,8 +670,6 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       } else {
         this.ifsubmitbtn = false;
       }
-
-      console.log(this.ifsubmitbtn);
     },
   },
   mounted() {
@@ -725,9 +723,25 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
       deep: true, // 可以深度检测到 obj 对象的属性值的变化
     },
     upload_List(newval) {
-      newval.length != 0
-        ? (this.rules.link[0].required = false)
-        : (this.rules.link[0].required = true);
+      if (newval.length != 0) {
+        this.rules.link[0].required = false;
+        this.$nextTick(() => {
+          this.$refs["ruleForm"].fields[1].validateMessage = "";
+          this.$refs["ruleForm"].fields[1].validateState = "";
+        });
+      } else {
+        this.rules.link[0].required = true;
+        if (
+          this.ruleForm.link == "" &&
+          this.isFillingRequirementsdialogVisible == true
+        ) {
+          this.$nextTick(() => {
+            this.$refs["ruleForm"].fields[1].validateMessage =
+              "请上传产品链接或图片";
+            this.$refs["ruleForm"].fields[1].validateState = "error";
+          });
+        }
+      }
 
       newval.length >= 5
         ? (this.hideUploadBtn = true)
@@ -807,11 +821,11 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         }
 
         if (this.fileList.length == 0 && this.ruleForm.link == "") {
-          this.$nextTick(() => {
+          setTimeout(() => {
             this.$refs["ruleForm"].fields[1].validateMessage =
               "请上传产品链接或图片";
             this.$refs["ruleForm"].fields[1].validateState = "error";
-          });
+          }, 500);
         }
       }
     },
@@ -858,10 +872,12 @@ https://www.amazon.com/gp/product/B0C3375GZL?m=A1LDY0ENXBBJ38&th=1
         if (this.determine != 3) this.ifsubmitisTrue();
       });
 
-      this.$nextTick(() => {
-        this.$refs["ruleForm"].fields[1].validateMessage = "";
-        this.$refs["ruleForm"].fields[1].validateState = "";
-      });
+      if (this.fileList.length != 0 || this.ruleForm.link != "") {
+        this.$nextTick(() => {
+          this.$refs["ruleForm"].fields[1].validateMessage = "";
+          this.$refs["ruleForm"].fields[1].validateState = "";
+        });
+      }
     },
     handletext(newval) {
       newval == "图片正在上传中......"

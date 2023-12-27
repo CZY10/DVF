@@ -604,7 +604,9 @@
           ¥<span>{{ orderData[0].order.price }}</span>
         </h5>
         <p>
-          共计<span style="color: #ff2c4c">{{ orderCount }}</span
+          共计<span style="color: #ff2c4c; margin-right: 2px">{{
+            orderCount
+          }}</span
           >笔
         </p>
 
@@ -620,7 +622,7 @@
             <span
               style="cursor: pointer; margin-left: 5px"
               @click="addiforderid"
-              >全部 <i class="el-icon-arrow-down"></i
+              >... 全部 <i class="el-icon-arrow-down"></i
             ></span>
           </p>
 
@@ -1058,10 +1060,14 @@ export default {
         const arr = [];
         this.tableData.forEach((item) => {
           if (
-            item.id &&
-            item.title != "" &&
-            item.budget * 1 >= item.video_num * 300 &&
-            item.url != ""
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.url != "") ||
+            (item.id &&
+              item.title != "" &&
+              item.budget * 1 >= item.video_num * 300 &&
+              item.image.length != 0)
           ) {
             arr.push(item.id);
           }

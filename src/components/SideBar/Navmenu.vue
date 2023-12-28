@@ -681,29 +681,21 @@ export default {
     },
     //退出登录
     handlerLogOut() {
-      this.$confirm("您真的要退出本次登录吗？", "退出登录")
-        .then(() => {
-          this.$store.commit("login/clearUserInfo");
-          localStorage.clear("serviceInfoList");
-          switch (this.$route.name) {
-            case "order":
-              window.location.href = "/";
-              break;
-            case "payment":
-              window.location.href = "/";
-              break;
-            case "personal":
-              window.location.href = "/";
-              break;
-            case "chatgpt":
-              window.location.href = "/";
-              break;
-            default:
-              window.location.href = this.$route.fullPath;
-          }
+      this.$confirm("您真的要退出本次登录吗？", "退出登录").then(() => {
+        this.$store.commit("login/clearUserInfo");
+        localStorage.clear();
+        console.log(this.$route.name);
+        if (
+          this.$route.name == "buyershow" ||
+          this.$route.name == "videohome" ||
+          this.$route.name == "webDeal"
+        ) {
           this.reload();
-        })
-        .catch((err) => {});
+        } else {
+          this.reload();
+          router.push("/");
+        }
+      });
     },
 
     //获取公共配置信息

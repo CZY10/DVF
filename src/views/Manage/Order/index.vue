@@ -1368,7 +1368,7 @@
         </div>
       </div>
       <div style="width: 100%; display: flex; justify-content: center">
-        <el-button class="elDialogDz-btn" @click="IselDialogDz">
+        <el-button class="elDialogDz-btn" @click="centerDialogVisible = false">
           我知道了
         </el-button>
       </div>
@@ -1691,6 +1691,9 @@ export default {
       if (newVal == false) {
         this.updata();
       }
+    },
+    centerDialogVisible(newval) {
+      if (newval == false) this.updata();
     },
   },
   methods: {
@@ -2326,12 +2329,6 @@ export default {
         }
       });
     },
-
-    //关闭查看地址
-    IselDialogDz() {
-      this.centerDialogVisible = false;
-    },
-
     goDrxqy(id) {
       window.open(
         this.$router.resolve({ path: `/homepage:${id}` }).href,

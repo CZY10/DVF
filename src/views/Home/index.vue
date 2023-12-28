@@ -656,9 +656,6 @@ export default {
       } else if (process.env.NODE_ENV == "development") {
         this.fbbaseURLC = `https://hkatest.myvipon.com`;
         loginHref = `http://testai.blhltd.com`;
-      } else {
-        this.fbbaseURLC = `https://hkatest.myvipon.com`;
-        loginHref = `http://localhost:8088`;
       }
 
       if (localStorage.getItem("token")) {
@@ -679,9 +676,6 @@ export default {
       } else if (process.env.NODE_ENV == "development") {
         this.fbbaseURLC = `https://hkatest.myvipon.com`;
         loginHref = `http://testai.blhltd.com`;
-      } else {
-        this.fbbaseURLC = `https://hkatest.myvipon.com`;
-        loginHref = `http://localhost:8088`;
       }
 
       if (localStorage.getItem("token")) {

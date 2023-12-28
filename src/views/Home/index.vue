@@ -835,13 +835,7 @@ export default {
     }
   }
   .buyshow {
-    background: linear-gradient(
-      225deg,
-      #eceefa 0%,
-      #f7f8fa 20%,
-      #f7f8fa 61%,
-      #f2edfa 100%
-    );
+    background: linear-gradient(225deg, #f2edfa 0%, #f7f8fa 27%, #f7f8fa 100%);
     .description_item {
       position: relative;
       top: -120px;
@@ -1239,6 +1233,7 @@ export default {
             color: #666666;
             line-height: 20px;
             padding-top: 4px;
+            white-space: nowrap;
           }
           &:first-child {
             padding-left: 0;
@@ -1374,6 +1369,13 @@ export default {
 .home {
   // 拍买家秀
   .ShootingBuyerShows {
+    background: linear-gradient(
+      225deg,
+      #eceefa 0%,
+      #f7f8fa 20%,
+      #f7f8fa 61%,
+      #f2edfa 100%
+    ) !important;
     .auto1200 {
       .datastyle {
         position: relative;

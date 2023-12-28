@@ -369,7 +369,7 @@
         </div>
 
         <ul
-          class="grid"
+          ref="grid"
           data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'
         >
           <li
@@ -382,13 +382,13 @@
         </ul>
 
         <p class="look" v-if="Opiniondata.length == 8">
-          <span @click="gethomehighOpinion(OpiniondataTotal)"
+          <span @click="gethomehighOpinion(OpiniondataTotal, 1000)"
             >查看全部 <i class="el-icon-arrow-down"></i
           ></span>
         </p>
 
         <p class="look" v-else>
-          <span @click="gethomehighOpinion(8)"
+          <span @click="gethomehighOpinion(8, 50)"
             >收起 <i class="el-icon-arrow-up"></i
           ></span>
         </p>
@@ -494,15 +494,8 @@ export default {
       OpiniondataTotal: 8,
     };
   },
-  updated() {
-    setTimeout(() => {
-      var grid = document.querySelector(".grid");
-      new Masonry(grid, {
-        // options...
-        itemSelector: ".grid-item",
-        columnWidth: 300,
-      });
-    }, 500);
+  created() {
+    this.gethomehighOpinion(8, 3000);
   },
   mounted() {
     this.token = localStorage.getItem("token");
@@ -510,7 +503,6 @@ export default {
     this.handleTakePlanList();
     this.getFBData();
     this.getDealData();
-    this.gethomehighOpinion("8");
     if (localStorage.getItem("configObj")) {
       this.formData = JSON.parse(localStorage.getItem("configObj"));
     } else {
@@ -622,7 +614,13 @@ export default {
     },
 
     //获取主页好评数据
-    async gethomehighOpinion(pageSize) {
+    async gethomehighOpinion(pageSize, time) {
+      if (time == 1000) {
+        let offsetHeight = this.$refs.grid.offsetHeight;
+        this.$refs.grid.style.minHeight = offsetHeight + 1000 + "px";
+      }
+      if (time == 50) this.$refs.grid.style.minHeight = "auto";
+
       const res = await homehighOpinion({
         page: 1,
         pageSize,
@@ -630,6 +628,14 @@ export default {
       if (res.code == 1) {
         this.Opiniondata = res.data.data;
         this.OpiniondataTotal = res.data.total;
+        setTimeout(() => {
+          new Masonry(this.$refs.grid, {
+            // options...
+            itemSelector: ".grid-item",
+            columnWidth: 300,
+          });
+          this.$refs.grid.style.opacity = "1";
+        }, time);
       }
     },
     gobuyershow() {
@@ -1430,8 +1436,10 @@ export default {
 
   //客户反馈
   .Customerfeedback {
+    overflow: hidden;
     .auto1200 {
       ul {
+        opacity: 0;
         li {
           width: 277px;
           margin-bottom: 30px;

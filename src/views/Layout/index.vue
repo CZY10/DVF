@@ -65,6 +65,7 @@ export default {
     },
   },
   mounted() {
+    document.querySelector(".remreru").style.opacity = "0";
     window.addEventListener("scroll", this.handleScroll, true);
   },
   watch: {

@@ -2,14 +2,22 @@
   <div class="home">
     <div class="banner">
       <!-- :autoplay="false" -->
-      <el-carousel height="825px" :interval="3000">
+      <el-carousel height="745px" :interval="3500" arrow="never">
         <el-carousel-item v-for="(item, index) in 2" :key="item">
-          <div style="width: 100%; height: 100%">
+          <div
+            style="
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(to right, #f7f8fa, #f2edfa);
+            "
+          >
             <div class="carousel_item carousel-item0" v-if="index == 0">
               <div class="banner1">
                 <div class="left">
                   <h1>Amazon Influencer买家秀视频服务</h1>
-                  <p class="title">关联视频/主图视频/A+视频/QA视频/广告视频</p>
+                  <p class="title">
+                    关联视频/主图视频/A+视频/QA视频/广告视频/TK视频素材
+                  </p>
                   <div class="dome"></div>
                   <ul>
                     <li><i class="iconfont icon-gx"></i>提升产品转化</li>
@@ -77,7 +85,7 @@
         <div class="flex_between">
           <div class="flex_style header_style">
             <h5>拍买家秀 <i class="iconfont icon-line"></i></h5>
-            <span>500+本土达人 签约合作</span>
+            <span>1000+本土红人 签约合作</span>
           </div>
           <div>
             <ul class="flex_style buyshow_type">
@@ -118,7 +126,7 @@
                     v-if="item.price != '视产品而定'"
                     style="font-weight: normal"
                     >￥</b
-                  ><span>{{ item.price }}</span>
+                  ><span style="font-size: 16px">{{ item.price }}</span>
                 </div>
               </div>
               <div class="flex_between item_title">
@@ -363,7 +371,7 @@
     <!-- 客户反馈 -->
     <div class="Customerfeedback">
       <div class="auto1200" style="padding: 100px 0">
-        <div class="flex_style header_style">
+        <div class="flex_style header_style" style="padding: 0">
           <h5>客户反馈 <i class="iconfont icon-line"></i></h5>
           <span>效果怎么样，客户说了算</span>
         </div>
@@ -379,11 +387,13 @@
           >
             <img :src="item.image" />
           </li>
+
+          <div class="masking-out"></div>
         </ul>
 
-        <p class="look" v-if="Opiniondata.length == 8">
-          <span @click="gethomehighOpinion(OpiniondataTotal, 1000)"
-            >查看全部 <i class="el-icon-arrow-down"></i
+        <p class="look" v-if="Opiniondata.length != totaldata">
+          <span @click="gethomehighOpinion(OpiniondataTotal, 500)"
+            >查看更多 <i class="el-icon-arrow-down"></i
           ></span>
         </p>
 
@@ -395,7 +405,7 @@
       </div>
     </div>
 
-    <div class="tag_style" v-show="isShowTag">
+    <div class="tag_style" :class="{ isShowTag: isShowTag }">
       <div class="auto1200 flex_between">
         <h5>
           怎么推广，效果最好？
@@ -405,9 +415,17 @@
             >+买家秀首单<span style="color: #ff9c17">50元优惠</span></span
           >
         </h5>
-        <el-button round @click="isShowDialog = true">立即获取</el-button>
+        <el-button round @click="isShowDialog = false">立即获取</el-button>
       </div>
-      <i class="el-icon-close close_btn" @click="isShowTag = false"></i>
+      <i
+        class="el-icon-close close_btn"
+        @click="
+          () => {
+            isShowTag = false;
+            ifShowTag = false;
+          }
+        "
+      ></i>
     </div>
     <!--footer-->
     <Footer></Footer>
@@ -439,7 +457,8 @@ export default {
       fbActiveIndex: 0,
       dealList: [],
       fbList: [],
-      isShowTag: true,
+      isShowTag: false,
+      ifShowTag: true,
       token: "",
       influenceList: {},
       formData: {},
@@ -492,6 +511,7 @@ export default {
       ],
       Opiniondata: [],
       OpiniondataTotal: 8,
+      totaldata: 0,
     };
   },
   created() {
@@ -499,7 +519,6 @@ export default {
   },
   mounted() {
     this.token = localStorage.getItem("token");
-    this.isShowTag = this.token ? false : true;
     this.handleTakePlanList();
     this.getFBData();
     this.getDealData();
@@ -508,9 +527,17 @@ export default {
     } else {
       this.getContent();
     }
-  },
 
+    if (!localStorage.getItem("token"))
+      window.addEventListener("scroll", this.handleScroll, true);
+  },
   methods: {
+    handleScroll() {
+      var scrollTop = window.scrollY || window.pageYOffset;
+      scrollTop >= 2000 && this.ifShowTag
+        ? (this.isShowTag = true)
+        : (this.isShowTag = false);
+    },
     //   vipon自助发帖跳转
     goVipon() {
       if (window.localStorage.getItem("token")) {
@@ -615,20 +642,18 @@ export default {
 
     //获取主页好评数据
     async gethomehighOpinion(pageSize, time) {
-      if (time == 1000) {
-        let offsetHeight = this.$refs.grid.offsetHeight;
-        this.$refs.grid.style.minHeight = offsetHeight + 1000 + "px";
-      }
-      if (time == 50) this.$refs.grid.style.minHeight = "auto";
-
       const res = await homehighOpinion({
         page: 1,
         pageSize,
       });
       if (res.code == 1) {
+        this.OpiniondataTotal = res.data.per_page + 4;
+        this.totaldata = res.data.total;
         this.Opiniondata = res.data.data;
-        this.OpiniondataTotal = res.data.total;
+        this.$refs.grid.style.overflow = "hidden";
+
         setTimeout(() => {
+          this.$refs.grid.style.overflow = "visible";
           new Masonry(this.$refs.grid, {
             // options...
             itemSelector: ".grid-item",
@@ -754,7 +779,7 @@ export default {
         justify-content: center;
 
         .left {
-          margin-top: 144px;
+          margin-top: 104px;
           width: 620px;
           h1 {
             font-size: 38px;
@@ -765,7 +790,7 @@ export default {
           }
           .title {
             font-size: 19px;
-            color: #d3d3d3;
+            color: #efedfe;
             margin-top: 22px;
           }
           .dome {
@@ -784,6 +809,7 @@ export default {
               float: left;
               margin-right: 59px;
               margin-bottom: 24px;
+              font-family: "DingTalk", sans-serif;
               i {
                 color: #fef76d;
                 margin-right: 5px;
@@ -806,7 +832,7 @@ export default {
             }
 
             a {
-              color: #c3c3c3;
+              color: #efedfe;
             }
             .button2 {
               background: #ff9c17 !important;
@@ -814,10 +840,14 @@ export default {
           }
         }
         .rigth {
-          margin-top: 81px;
+          margin-top: 64px;
         }
         .rigth2 {
-          margin-top: 60px;
+          margin-top: 72px;
+          width: 960px;
+          img {
+            width: 100%;
+          }
         }
       }
     }
@@ -1006,7 +1036,6 @@ export default {
         flex: 1;
         .name {
           font-size: 16px;
-          font-weight: 600;
           color: #333333;
           line-height: 22px;
           margin-bottom: 8px;
@@ -1108,7 +1137,6 @@ export default {
         .deal_name {
           padding-top: 45px;
           font-size: 16px;
-          font-weight: 600;
           color: #333333;
           line-height: 22px;
           text-align: center;
@@ -1129,8 +1157,6 @@ export default {
             padding: 5px 10px;
             margin: 3px;
             font-size: 12px;
-            cursor: pointer;
-            font-weight: 200;
             cursor: pointer;
             color: #999999;
             transition: all 0.2s;
@@ -1155,7 +1181,7 @@ export default {
       left: 8px;
       top: 0;
       right: 8px;
-      bottom: -11px;
+      bottom: -10px;
       display: block;
       content: "";
       padding: 14px;
@@ -1284,9 +1310,13 @@ export default {
           color: #333333;
           margin-left: 20px;
         }
+        .btn_plain:hover {
+          background: #f6f7ff;
+        }
       }
     }
   }
+
   .tag_style {
     background: #796cf3;
     height: 70px;
@@ -1295,6 +1325,9 @@ export default {
     left: 0;
     right: 0;
     z-index: 999;
+    opacity: 0;
+    transition: all 0.3s ease-out;
+
     > div {
       height: 100%;
       align-items: center;
@@ -1348,6 +1381,24 @@ export default {
       text-align: center;
       font-size: 16px;
       color: #ffffff;
+    }
+  }
+  .isShowTag {
+    opacity: 1;
+    animation: slideUp 0.5s ease-out;
+  }
+  .slideout {
+    animation: slideout 0.5s ease-out;
+  }
+
+  @keyframes slideUp {
+    0% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
     }
   }
 }
@@ -1411,6 +1462,7 @@ export default {
           span:nth-child(1) {
             color: #d161f6;
             font-size: 43px;
+            font-family: "FetteMittelschrift", sans-serif;
           }
           span:nth-child(2) {
             color: #d161f6;
@@ -1435,11 +1487,13 @@ export default {
     overflow: hidden;
     .auto1200 {
       ul {
+        padding-top: 30px;
         opacity: 0;
+        position: relative;
+        transition: all 0.3s;
         li {
           width: 277px;
           margin-bottom: 30px;
-          border-radius: 20px;
           transition: all 0.2s;
           img {
             width: 100%;
@@ -1448,6 +1502,22 @@ export default {
         li:hover {
           box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
           transform: scale(1.1);
+          z-index: 100;
+        }
+
+        .masking-out {
+          height: 300px;
+          width: 1200px;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.5) 50%,
+            #fff 100%
+          );
+          z-index: 10;
+          position: absolute;
+          bottom: 0;
+          pointer-events: none;
         }
       }
 

@@ -1167,6 +1167,7 @@
             :on-error="handleUploadError"
             :headers="{ token: token }"
             :before-upload="beforeUpload"
+            :on-progress="handleAvatarProgress"
           >
             <i slot="default" class="el-icon-plus"></i>
             <div slot="file" slot-scope="{ file }" style="height: inherit">
@@ -1191,6 +1192,9 @@
               </span>
             </div>
           </el-upload>
+          <p v-show="handletext != ''" style="color: #f56c6c">
+            {{ handletext }}
+          </p>
         </div>
         <div
           style="text-align: center; margin-top: 24px"
@@ -1626,6 +1630,7 @@ export default {
       MergepaymentslogVisible: false,
       allSatisfy1: false,
       allSatisfy2: false,
+      handletext: "",
     };
   },
   created() {
@@ -2133,10 +2138,13 @@ export default {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isFileType) {
         this.$message.error("上传头像图片只能是 JPG 格式或者 PNG 格式!");
+        this.isHide = false;
       }
       if (!isLt5M) {
         this.$message.error("上传头像图片大小不能超过 5MB!");
+        this.isHide = false;
       }
+
       return isFileType && isLt5M;
     },
     handleRemove(file) {
@@ -2300,7 +2308,14 @@ export default {
       this.sampleForm.file = "";
       this.feedback_images_length = this.$refs.chatUpload.uploadFiles.length;
     },
+    //上传开始
+    handleAvatarProgress() {
+      console.log("开始上传");
+      this.handletext = "图片正在上传中......";
+    },
+
     handleUploadSuccess(res, file) {
+      this.handletext = "";
       this.chatForm.feedback_images.push(res.data.url);
       this.feedback_images_length = this.$refs.chatUpload.uploadFiles.length;
     },

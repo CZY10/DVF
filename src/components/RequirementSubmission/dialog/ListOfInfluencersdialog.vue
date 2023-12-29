@@ -240,6 +240,12 @@
                   <span class="test1" v-if="item.istrue == false">已选择</span>
                   <span class="test1" v-else>选择</span>
                 </div>
+                <div class="iconfont logo_id" v-if="item.logo_id.length != 0">
+                  <p>
+                    <i class="icon-bq"></i>
+                    <span>含版权</span>
+                  </p>
+                </div>
               </li>
             </ul>
             <div v-else class="product_div">
@@ -1061,6 +1067,29 @@ export default {
 
           .product_list:hover {
             height: 295px;
+          }
+
+          .logo_id {
+            position: absolute;
+            right: -3px;
+            top: 0;
+            p {
+              position: relative;
+              i {
+                color: #ffdd99;
+                font-size: 23px;
+                position: absolute;
+                right: 0;
+              }
+              span {
+                position: absolute;
+                right: 6px;
+                top: 3px;
+                white-space: nowrap;
+                color: #4e3003;
+                font-size: 12px;
+              }
+            }
           }
         }
       }

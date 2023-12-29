@@ -2137,7 +2137,6 @@ export default {
       if (!isLt5M) {
         this.$message.error("上传头像图片大小不能超过 5MB!");
       }
-      this.isHide = false;
       return isFileType && isLt5M;
     },
     handleRemove(file) {

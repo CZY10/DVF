@@ -1514,7 +1514,7 @@ export default {
             180deg,
             rgba(255, 255, 255, 0) 0%,
             rgba(255, 255, 255, 0.5) 50%,
-            #fff 100%
+            #f7f8fa 100%
           );
           z-index: 10;
           position: absolute;

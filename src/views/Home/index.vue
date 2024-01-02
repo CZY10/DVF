@@ -161,7 +161,7 @@
 
     <!--vipon自主发帖-->
     <div class="vipon_box">
-      <div class="auto1200 pt60 pb100">
+      <div class="auto1200 pt100 pb100">
         <div class="flex_style header_style">
           <h5>Vipon自助发帖 <i class="iconfont icon-line"></i></h5>
           <span>亚马逊站外Deal网站</span
@@ -222,7 +222,7 @@
 
     <!--FB推广-->
     <div class="buyshow">
-      <div class="auto1200 pt60">
+      <div class="auto1200 pt100">
         <div class="flex_between">
           <div class="flex_style header_style">
             <h5>FB推广 <i class="iconfont icon-line"></i></h5>
@@ -303,7 +303,7 @@
 
     <!--Deal推广-->
     <div class="buyshow" style="background: #ffffff">
-      <div class="auto1200 pt60">
+      <div class="auto1200 pt100">
         <div class="flex_style header_style">
           <h5>Deal推广 <i class="iconfont icon-line"></i></h5>
           <span>官方渠道 一手资源</span>
@@ -409,7 +409,7 @@
             >+买家秀首单<span style="color: #ff9c17">50元优惠</span></span
           >
         </h5>
-        <el-button round @click="isShowDialog = false">立即获取</el-button>
+        <el-button round @click="isShowDialog = true">立即获取</el-button>
       </div>
       <i
         class="el-icon-close close_btn"
@@ -718,8 +718,8 @@ export default {
 .pb100 {
   padding-bottom: 100px;
 }
-.pt60 {
-  padding-top: 60px;
+.pt100 {
+  padding-top: 100px;
 }
 .auto1200 {
   max-width: 1200px !important;
@@ -780,11 +780,10 @@ export default {
             font-size: 38px;
             font-weight: bold;
             color: #ffffff;
-            font-style: oblique;
             white-space: nowrap;
           }
           .title {
-            font-size: 19px;
+            font-size: 18px;
             color: #efedfe;
             margin-top: 22px;
           }
@@ -799,11 +798,12 @@ export default {
             width: 440px;
             margin-top: 49px;
             li {
-              font-size: 21px;
+              font-size: 18px;
               color: #ffffff;
               float: left;
               margin-right: 59px;
               margin-bottom: 24px;
+              min-width: 134px;
               i {
                 color: #fef76d;
                 margin-right: 5px;
@@ -812,7 +812,6 @@ export default {
           }
           .btn {
             margin-top: 245px;
-            font-size: 18px;
             button {
               width: 206px;
               height: 45px;
@@ -821,7 +820,6 @@ export default {
               cursor: pointer;
               color: #fff;
               border: none;
-              font-size: 18px;
               margin-right: 38px;
             }
 

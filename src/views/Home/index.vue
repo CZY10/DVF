@@ -1,68 +1,106 @@
 <template>
   <div class="home">
     <div class="banner">
-      <el-carousel
-        height="340px"
-        :interval="3000"
-        autoplay
-        indicator-position="none"
-        arrow="always"
-      >
+      <!-- :autoplay="false" -->
+      <el-carousel height="745px" :interval="3500" arrow="never">
         <el-carousel-item v-for="(item, index) in 2" :key="item">
-          <a
-            :href="
-              index == 0
-                ? '/videohome'
-                : index == 1
-                ? 'https://seller.vipona.com/account/login'
-                : ''
-            "
-            target="_blank"
-            style="width: 100%; height: 100%"
-          >
-            <div class="carousel_item" :class="'carousel-item' + index">
-              <div class="item_box">
-                <h5 :style="index == 0 ? 'color:#ffffff' : 'color:#333333'">
-                  {{
-                    index == 0
-                      ? "微胖联盟 Amazon Influencer 视频服务第一站"
-                      : "微胖联盟 海外Deal站"
-                  }}
-                </h5>
-                <div class="description">
-                  {{ index == 0 ? "" : "官方Deal联盟 一手推广资源" }}
+          <div style="width: 100%; height: 100%">
+            <div class="carousel_item carousel-item0" v-if="index == 0">
+              <div class="banner1">
+                <div class="left">
+                  <h1>Amazon Influencer买家秀视频服务</h1>
+                  <p class="title">
+                    关联视频/主图视频/A+视频/QA视频/广告视频/TK视频素材
+                  </p>
+                  <div class="dome"></div>
+                  <ul>
+                    <li><i class="iconfont icon-gx"></i>提升产品转化</li>
+                    <li><i class="iconfont icon-gx"></i>增加购买信心</li>
+                    <li><i class="iconfont icon-gx"></i>抢夺竞品流量</li>
+                    <li><i class="iconfont icon-gx"></i>减少售后及差评</li>
+                    <li><i class="iconfont icon-gx"></i>红人引流背书</li>
+                  </ul>
+
+                  <div class="btn">
+                    <button @click="gobuyershow">挑选红人</button>
+                    <a href="/videohome" target="_bannk">了解更多></a>
+                  </div>
                 </div>
-                <div v-if="index == 0" style="text-align: center">
-                  <el-button
-                    class="banner_btn"
-                    @click.stop="handleConsult"
-                    round
-                    >立即咨询</el-button
-                  >
-                </div>
-                <div v-else style="text-align: center">
-                  <el-button class="banner_btn" round>立即咨询</el-button>
+                <div class="rigth">
+                  <img src="@/assets/images/home/rens.webp" alt="" />
                 </div>
               </div>
             </div>
-          </a>
+            <div class="carousel_item carousel-item1" v-if="index == 1">
+              <div class="banner1">
+                <div class="left" style="position: relative; left: 180px">
+                  <h1>亚马逊站外推广服务</h1>
+                  <p class="title">
+                    Slickdeals/DealNews/Techbargains/Ben's
+                    Bargains/Vipon/FB群组...
+                  </p>
+                  <div class="dome"></div>
+                  <ul>
+                    <li><i class="iconfont icon-gx"></i>官方Deal联盟</li>
+                    <li><i class="iconfont icon-gx"></i>一手推广资源</li>
+                    <li><i class="iconfont icon-gx"></i>最快当天上贴</li>
+                    <li><i class="iconfont icon-gx"></i>效果可追踪</li>
+                    <li><i class="iconfont icon-gx"></i>定制推广方案</li>
+                  </ul>
+
+                  <div class="btn">
+                    <button class="button2" @click="goPromotion">
+                      立即推广
+                    </button>
+                    <a href="/webDeal" target="_bannk">了解更多></a>
+                  </div>
+                </div>
+                <div class="rigth2">
+                  <img src="@/assets/images/home/logs.webp" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
         </el-carousel-item>
       </el-carousel>
     </div>
-    <!--拍买家秀-->
-    <div class="buyshow">
+
+    <!-- 我们的服务 -->
+    <div class="buyshow Ourservices">
       <div class="description_item">
-        <div class="item"><i class="iconfont icon-gf"></i>官方渠道</div>
-        <div class="item"><i class="iconfont icon-zy"></i>正规资源</div>
-        <div class="item"><i class="iconfont icon-jg"></i>一手价格</div>
-        <div class="item"><i class="iconfont icon-ys1"></i>严审交付</div>
-        <div class="item"><i class="iconfont icon-fw1"></i>服务保障</div>
+        <li v-for="(item, index) in items" :key="index">
+          <img :src="item.img" />
+          <div>
+            <p>{{ item.title }}</p>
+            <p>{{ item.description }}</p>
+          </div>
+        </li>
       </div>
-      <div class="auto1200 pt60">
+      <div class="auto1200">
+        <div class="flex_style header_style">
+          <h5>我们的服务 <i class="iconfont icon-line"></i></h5>
+          <span>买家秀视频+站外推广，一对一专属服务</span>
+        </div>
+
+        <div class="boby">
+          <ul class="top">
+            <li><span>1000</span><span>+</span><span>红人数量</span></li>
+            <li><span>100</span><span>+</span><span>推广渠道</span></li>
+            <li><span>50</span><span>+</span><span>售后团队</span></li>
+            <li><span>9</span><span></span><span>年资历</span></li>
+          </ul>
+          <img src="@/assets/images/home/Ourservices.webp" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <!--拍买家秀-->
+    <div class="buyshow ShootingBuyerShows">
+      <div class="auto1200">
         <div class="flex_between">
           <div class="flex_style header_style">
             <h5>拍买家秀 <i class="iconfont icon-line"></i></h5>
-            <span>500+本土达人 签约合作</span>
+            <span>1000+本土红人 签约合作</span>
           </div>
           <div>
             <ul class="flex_style buyshow_type">
@@ -82,42 +120,40 @@
             </ul>
           </div>
         </div>
-        <div
-          class="flex_style"
-          v-for="(i, index) in influenceList"
-          v-show="activeIndex == index"
-          :key="index"
-          style="
-            flex-flow: row wrap;
-            align-content: flex-start;
-            justify-content: flex-start;
-          "
-        >
-          <a
-            target="_blank"
-            :href="token ? '/homepage:' + item.id : '/login'"
-            v-for="(item, ind) in i.influencerList"
-            :key="ind"
-            class="buyshowItem"
+        <div class="datastyle">
+          <div
+            :class="{ flex_style: true, item: activeIndex == index }"
+            v-for="(i, index) in influenceList"
+            :key="index"
           >
-            <div class="item_img"><img :src="item.image" alt="" /></div>
-            <div class="flex_between item_pic">
-              <h5>NO.{{ item.id }}</h5>
-              <div>
-                <b v-if="item.price != '视产品而定'" style="font-weight: normal"
-                  >￥</b
-                ><span>{{ item.price }}</span>
+            <a
+              target="_blank"
+              :href="token ? '/homepage:' + item.id : '/login'"
+              v-for="(item, ind) in i.influencerList"
+              :key="ind"
+              class="buyshowItem"
+            >
+              <div class="item_img"><img :src="item.image" alt="" /></div>
+              <div class="flex_between item_pic">
+                <h5>NO.{{ item.id }}</h5>
+                <div>
+                  <b
+                    v-if="item.price != '视产品而定'"
+                    style="font-weight: normal"
+                    >￥</b
+                  ><span style="font-size: 16px">{{ item.price }}</span>
+                </div>
               </div>
-            </div>
-            <div class="flex_between item_title">
-              <div class="title_style">{{ item.type }}</div>
-              <span>交付{{ item.order_count }}笔</span>
-            </div>
-          </a>
+              <div class="flex_between item_title">
+                <div class="title_style">{{ item.type }}</div>
+                <span>交付{{ item.order_count }}笔</span>
+              </div>
+            </a>
+          </div>
         </div>
         <div class="flex_between button_box">
           <a :href="token ? '/buyershow' : '/login'"
-            ><el-button round>挑选达人拍摄</el-button></a
+            ><el-button round>挑选红人拍摄</el-button></a
           >
         </div>
       </div>
@@ -278,6 +314,7 @@
             flex-flow: row wrap;
             align-content: flex-start;
             justify-content: flex-start;
+            min-height: 665px;
           "
         >
           <!-- href="https://seller.vipona.com/account/login" -->
@@ -325,8 +362,44 @@
         </div>
       </div>
     </div>
+    <!-- 客户反馈 -->
+    <div class="Customerfeedback">
+      <div class="auto1200" style="padding: 100px 0">
+        <div class="flex_style header_style" style="padding: 0">
+          <h5>客户反馈 <i class="iconfont icon-line"></i></h5>
+          <span>效果怎么样，客户说了算</span>
+        </div>
 
-    <div class="tag_style" v-show="isShowTag">
+        <ul
+          ref="grid"
+          data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'
+        >
+          <li
+            v-for="(item, index) in Opiniondata"
+            :key="index"
+            class="grid-item"
+          >
+            <img :src="item.image" />
+          </li>
+
+          <div class="masking-out"></div>
+        </ul>
+
+        <p class="look" v-if="Opiniondata.length != totaldata">
+          <span @click="gethomehighOpinion(OpiniondataTotal, 500)"
+            >查看更多 <i class="el-icon-arrow-down"></i
+          ></span>
+        </p>
+
+        <p class="look" v-else>
+          <span @click="gethomehighOpinion(8, 0)"
+            >收起 <i class="el-icon-arrow-up"></i
+          ></span>
+        </p>
+      </div>
+    </div>
+
+    <div class="tag_style" :class="{ isShowTag: isShowTag }">
       <div class="auto1200 flex_between">
         <h5>
           怎么推广，效果最好？
@@ -336,9 +409,17 @@
             >+买家秀首单<span style="color: #ff9c17">50元优惠</span></span
           >
         </h5>
-        <el-button round @click="isShowDialog = true">立即获取</el-button>
+        <el-button round @click="isShowDialog = false">立即获取</el-button>
       </div>
-      <i class="el-icon-close close_btn" @click="isShowTag = false"></i>
+      <i
+        class="el-icon-close close_btn"
+        @click="
+          () => {
+            isShowTag = false;
+            ifShowTag = false;
+          }
+        "
+      ></i>
     </div>
     <!--footer-->
     <Footer></Footer>
@@ -347,9 +428,17 @@
 </template>
 
 <script>
-import { influenceData, fbData, dealData, getConfig } from "@/api";
+import {
+  influenceData,
+  fbData,
+  dealData,
+  getConfig,
+  homehighOpinion,
+} from "@/api";
 import Footer from "@/components/Footer";
 import ConsultDialog from "@/components/ConsultDialog";
+import Masonry from "masonry-layout"; // Vue项目的引入方式
+import router from "@/router";
 export default {
   name: "index",
   components: {
@@ -362,24 +451,65 @@ export default {
       fbActiveIndex: 0,
       dealList: [],
       fbList: [],
-      isShowTag: true,
+      isShowTag: false,
+      ifShowTag: true,
       token: "",
-      ids: 196,
       influenceList: {},
       formData: {},
       isShowDialog: false,
-      fbbaseURLX: `https://seller.vipona.com/hot/fb-detail?id=`,
       fbbaseURLC: `https://hkatest.myvipon.com/hot/fb-detail?id=`,
-      dealBaseURLX: `https://seller.vipona.com/hot/deal-detail?id=`,
-      dealBaseURLC: `https://hkatest.myvipon.com/hot/deal-detail?id=`,
       ViponSrc: "",
       DealSrc: "",
       FbSrc: "",
+      items: [
+        {
+          title: "上市企业",
+          description: "隶属浔兴股份，实力护航",
+          img: require("@/assets/images/home/ssqy.webp"),
+        },
+        {
+          title: "签约红人",
+          description: "签约本土1000+优质红人",
+          img: require("@/assets/images/home/qyhr.webp"),
+        },
+        {
+          title: "严审质量",
+          description: "平台严格把控视频质量",
+          img: require("@/assets/images/home/yszl.webp"),
+        },
+        {
+          title: "服务保障",
+          description: "专业海外团队一对一服务",
+          img: require("@/assets/images/home/fwbz.webp"),
+        },
+        {
+          title: "快速交付",
+          description: "收货后约1~3周完成交付",
+          img: require("@/assets/images/home/ksjf.webp"),
+        },
+        {
+          title: "包含版权",
+          description: "200+影响者视频无需另付版权费",
+          img: require("@/assets/images/home/bhbq.webp"),
+        },
+        {
+          title: "指定标题/封面",
+          description: "支持指定视频标题/封面",
+          img: require("@/assets/images/home/zdbt.webp"),
+        },
+        {
+          title: "图片POST",
+          description: "支持通过影响者发布产品图片",
+          img: require("@/assets/images/home/tppost.webp"),
+        },
+      ],
+      Opiniondata: [],
+      OpiniondataTotal: 8,
+      totaldata: 0,
     };
   },
   mounted() {
     this.token = localStorage.getItem("token");
-    this.isShowTag = this.token ? false : true;
     this.handleTakePlanList();
     this.getFBData();
     this.getDealData();
@@ -388,9 +518,21 @@ export default {
     } else {
       this.getContent();
     }
-  },
 
+    if (!localStorage.getItem("token"))
+      window.addEventListener("scroll", this.handleScroll, true);
+
+    this.$nextTick(() => {
+      this.gethomehighOpinion(8, 3000);
+    });
+  },
   methods: {
+    handleScroll() {
+      var scrollTop = window.scrollY || window.pageYOffset;
+      scrollTop >= 2000 && this.ifShowTag
+        ? (this.isShowTag = true)
+        : (this.isShowTag = false);
+    },
     //   vipon自助发帖跳转
     goVipon() {
       if (window.localStorage.getItem("token")) {
@@ -444,10 +586,6 @@ export default {
         this.$router.push("/login?source=vipon_deal&action=hot/deal");
       }
     },
-    handleConsult(event) {
-      event.preventDefault();
-      this.isShowDialog = true;
-    },
     //获取公共配置信息
     getContent() {
       getConfig()
@@ -496,6 +634,39 @@ export default {
           console.log(err);
         });
     },
+
+    //获取主页好评数据
+    async gethomehighOpinion(pageSize, time) {
+      const res = await homehighOpinion({
+        page: 1,
+        pageSize,
+      });
+      if (res.code == 1) {
+        this.OpiniondataTotal = res.data.per_page + 4;
+        this.totaldata = res.data.total;
+        this.Opiniondata = res.data.data;
+        this.$refs.grid.style.overflow = "hidden";
+
+        setTimeout(() => {
+          this.$refs.grid.style.overflow = "visible";
+          new Masonry(this.$refs.grid, {
+            // options...
+            itemSelector: ".grid-item",
+            columnWidth: 300,
+          });
+          this.$refs.grid.style.opacity = "1";
+        }, time);
+      }
+    },
+    gobuyershow() {
+      router.push("/buyershow");
+    },
+    goPromotion() {
+      process.env.NODE_ENV == "production"
+        ? window.open("https://seller.vipona.com/hot/fb")
+        : window.open("https://hkatest.myvipon.com/hot/fb");
+    },
+
     //fb详情页
     godetailsFb(item) {
       let loginHref = `http://testai.blhltd.com`;
@@ -505,9 +676,6 @@ export default {
       } else if (process.env.NODE_ENV == "development") {
         this.fbbaseURLC = `https://hkatest.myvipon.com`;
         loginHref = `http://testai.blhltd.com`;
-      } else {
-        this.fbbaseURLC = `https://hkatest.myvipon.com`;
-        loginHref = `http://localhost:8088`;
       }
 
       if (localStorage.getItem("token")) {
@@ -528,9 +696,6 @@ export default {
       } else if (process.env.NODE_ENV == "development") {
         this.fbbaseURLC = `https://hkatest.myvipon.com`;
         loginHref = `http://testai.blhltd.com`;
-      } else {
-        this.fbbaseURLC = `https://hkatest.myvipon.com`;
-        loginHref = `http://localhost:8088`;
       }
 
       if (localStorage.getItem("token")) {
@@ -602,110 +767,128 @@ export default {
       width: 100%;
       background-size: 100% 100%;
       background-repeat: no-repeat;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .item_box {
-        padding-bottom: 26px;
-        h5 {
-          font-size: 36px;
-          font-weight: 600;
-          color: #ffffff;
-          line-height: 50px;
-          text-align: center;
+
+      .banner1 {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+
+        .left {
+          margin-top: 104px;
+          width: 620px;
+          h1 {
+            font-size: 38px;
+            font-weight: bold;
+            color: #ffffff;
+            font-style: oblique;
+            white-space: nowrap;
+          }
+          .title {
+            font-size: 19px;
+            color: #efedfe;
+            margin-top: 22px;
+          }
+          .dome {
+            width: 36px;
+            height: 5px;
+            background: #ffffff;
+            border-radius: 3px;
+            margin-top: 29px;
+          }
+          ul {
+            width: 440px;
+            margin-top: 49px;
+            li {
+              font-size: 21px;
+              color: #ffffff;
+              float: left;
+              margin-right: 59px;
+              margin-bottom: 24px;
+              i {
+                color: #fef76d;
+                margin-right: 5px;
+              }
+            }
+          }
+          .btn {
+            margin-top: 245px;
+            font-size: 18px;
+            button {
+              width: 206px;
+              height: 45px;
+              background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
+              border-radius: 6px;
+              cursor: pointer;
+              color: #fff;
+              border: none;
+              font-size: 18px;
+              margin-right: 38px;
+            }
+
+            a {
+              color: #efedfe;
+            }
+            .button2 {
+              background: #ff9c17 !important;
+            }
+          }
         }
-        .description {
-          text-align: center;
-          padding-top: 4px;
-          font-size: 14px;
-          color: #666666;
-          line-height: 20px;
+        .rigth {
+          margin-top: 64px;
         }
-        .banner_btn {
-          margin-top: 30px;
-          color: #ffffff;
-          background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-          padding: 15px 69px;
-          border: none;
-          border-radius: 22px;
+        .rigth2 {
+          margin-top: 72px;
+          width: 960px;
+          img {
+            width: 100%;
+          }
         }
       }
     }
     .carousel-item0 {
-      background-image: url("../../assets/images/home/banner1.png");
+      background-image: url("../../assets/images/home/banner1.webp");
     }
     .carousel-item1 {
-      background-image: url("../../assets/images/home/banner2.png");
+      background-image: url("../../assets/images/home/banner2.webp");
     }
   }
   .buyshow {
-    background: linear-gradient(
-      225deg,
-      #eceefa 0%,
-      #f7f8fa 20%,
-      #f7f8fa 61%,
-      #f2edfa 100%
-    );
+    background: linear-gradient(225deg, #f2edfa 0%, #f7f8fa 27%, #f7f8fa 100%);
     .description_item {
       position: relative;
-      top: -40px;
+      top: -120px;
       z-index: 99;
-      max-width: 1200px;
-      margin: auto;
+      margin: 0 auto;
+      width: 1200px;
+      height: 196px;
+      background: #ffffff;
+      box-shadow: 0px 10px 12px 0px rgba(162, 164, 166, 0.08);
+      border-radius: 12px;
+      padding: 30px 45px;
+      box-sizing: border-box;
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      align-items: center;
-      .item {
-        width: 216px;
-        height: 80px;
-        background: linear-gradient(
-          180deg,
-          #f2f0fe 0%,
-          #ffffff 43%,
-          #ffffff 100%
-        );
-        box-shadow: 0px 11px 11px 0px rgba(233, 229, 254, 0.6);
-        border-radius: 10px;
+      align-content: space-between;
+      li {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 600;
-        i {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: pink;
-          font-size: 20px;
-          color: #ffffff;
-          font-weight: normal;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-right: 16px;
+        width: 21%;
+        img {
+          width: 70px;
+          height: 52px;
         }
-        &:nth-child(1) {
-          i {
-            background: #ff9c17;
+        div {
+          padding-left: 14px;
+          p:nth-child(1) {
+            margin: 3px 0 8px 0;
+            font-weight: 600;
+            color: #333333;
+            font-size: 16px;
           }
-        }
-        &:nth-child(2) {
-          i {
-            background: #24deb8;
-          }
-        }
-        &:nth-child(3) {
-          i {
-            background: #00b2ff;
-          }
-        }
-        &:nth-child(4) {
-          i {
-            background: #8360ff;
-          }
-        }
-        &:nth-child(5) {
-          i {
-            background: #e6401f;
+          p:nth-child(2) {
+            font-size: 12px;
+            color: #999999;
+            white-space: nowrap;
           }
         }
       }
@@ -744,7 +927,10 @@ export default {
       width: 216px;
       margin: 0 12px 30px 12px;
       position: relative;
+      top: 0;
       cursor: pointer;
+      border-bottom: 3px solid #fff;
+      transition: all 0.2s;
       .item_img {
         height: 154px;
         border-radius: 10px;
@@ -791,7 +977,7 @@ export default {
     }
     .buyshowItem:hover {
       border-bottom: 3px solid #796cf3;
-      position: relative;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
       top: -7px;
       .item_title {
         padding-bottom: 5px !important;
@@ -802,7 +988,7 @@ export default {
       padding-bottom: 100px;
       .el-button {
         background: #3442ff linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-        border-radius: 20px;
+        border-radius: 6px;
         font-size: 14px;
         color: #ffffff;
         width: 300px;
@@ -818,9 +1004,13 @@ export default {
       border-radius: 10px;
       padding: 20px 20px 54px 20px;
       width: 216px;
+      height: 345px;
       margin: 0 12px 30px 12px;
       position: relative;
       cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid #fff;
+      top: 0;
       .user_info {
         .header_img {
           width: 64px;
@@ -840,7 +1030,6 @@ export default {
         flex: 1;
         .name {
           font-size: 16px;
-          font-weight: 600;
           color: #333333;
           line-height: 22px;
           margin-bottom: 8px;
@@ -863,6 +1052,7 @@ export default {
           margin: 3px;
           font-size: 12px;
           color: #999999;
+          transition: all 0.2s;
           &:hover {
             border: 1px solid #796cf3;
             color: #796cf3;
@@ -891,8 +1081,8 @@ export default {
     }
     .fbItem:hover {
       border-bottom: 3px solid #796cf3;
-      position: relative;
       top: -7px;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
       > ul {
         padding-bottom: 20px !important;
       }
@@ -907,6 +1097,9 @@ export default {
       box-sizing: border-box;
       position: relative;
       cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid #fff;
+      top: 0;
       > div {
         width: 182px;
         position: relative;
@@ -938,7 +1131,6 @@ export default {
         .deal_name {
           padding-top: 45px;
           font-size: 16px;
-          font-weight: 600;
           color: #333333;
           line-height: 22px;
           text-align: center;
@@ -960,9 +1152,8 @@ export default {
             margin: 3px;
             font-size: 12px;
             cursor: pointer;
-            font-weight: 200;
-            cursor: pointer;
             color: #999999;
+            transition: all 0.2s;
             &:hover {
               border: 1px solid #796cf3;
               color: #796cf3;
@@ -984,7 +1175,7 @@ export default {
       left: 8px;
       top: 0;
       right: 8px;
-      bottom: -11px;
+      bottom: -10px;
       display: block;
       content: "";
       padding: 14px;
@@ -992,16 +1183,17 @@ export default {
       border-radius: 10px;
       border: 1px solid #eeeeee;
       transform: perspective(800px) rotateX(30deg);
-      //padding-bottom: 40px;
     }
     .dealItem:hover {
       border-bottom: 3px solid #796cf3;
-      position: relative;
       border-radius: 10px;
       top: -7px;
       .deal_list {
         padding-bottom: 15px !important;
       }
+    }
+    .dealItem:hover:before {
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
     }
   }
   .vipon_box {
@@ -1055,6 +1247,7 @@ export default {
             color: #666666;
             line-height: 20px;
             padding-top: 4px;
+            white-space: nowrap;
           }
           &:first-child {
             padding-left: 0;
@@ -1099,7 +1292,7 @@ export default {
           width: 180px;
           height: 40px;
           font-size: 14px;
-          border-radius: 20px;
+          border-radius: 6px;
         }
         .btn_type {
           background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
@@ -1111,9 +1304,13 @@ export default {
           color: #333333;
           margin-left: 20px;
         }
+        .btn_plain:hover {
+          background: #f6f7ff;
+        }
       }
     }
   }
+
   .tag_style {
     background: #796cf3;
     height: 70px;
@@ -1122,6 +1319,9 @@ export default {
     left: 0;
     right: 0;
     z-index: 999;
+    opacity: 0;
+    transition: all 0.3s ease-out;
+
     > div {
       height: 100%;
       align-items: center;
@@ -1177,6 +1377,24 @@ export default {
       color: #ffffff;
     }
   }
+  .isShowTag {
+    opacity: 1;
+    animation: slideUp 0.5s ease-out;
+  }
+  .slideout {
+    animation: slideout 0.5s ease-out;
+  }
+
+  @keyframes slideUp {
+    0% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 }
 </style>
 <style>
@@ -1184,5 +1402,138 @@ export default {
   background-color: #f0f0f0 !important;
   color: #333333 !important;
   font-size: 14px;
+}
+</style>
+<style lang="less" scoped>
+.home {
+  // 拍买家秀
+  .ShootingBuyerShows {
+    padding-top: 100px;
+    background: linear-gradient(
+      225deg,
+      #eceefa 0%,
+      #f7f8fa 20%,
+      #f7f8fa 61%,
+      #f2edfa 100%
+    ) !important;
+    .auto1200 {
+      .datastyle {
+        position: relative;
+        min-height: 565px;
+        .flex_style {
+          position: absolute;
+          flex-flow: row wrap;
+          align-content: flex-start;
+          justify-content: flex-start;
+          opacity: 0;
+          transition: all 0.3s;
+        }
+        .item {
+          opacity: 1;
+          z-index: 100;
+        }
+      }
+    }
+  }
+
+  //我们的服务
+  .Ourservices {
+    background: #ffffff !important;
+    padding-bottom: 100px;
+    .auto1200 {
+      .boby {
+        width: 1200px;
+        height: 551px;
+        background: #fafbfc;
+        border-radius: 20px;
+        padding: 30px 60px 0;
+        box-sizing: border-box;
+        .top {
+          width: 1080px;
+          height: 96px;
+          background: rgba(209, 97, 246, 0.1);
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+          span:nth-child(1) {
+            color: #d161f6;
+            font-size: 43px;
+            font-family: "FetteMittelschrift", sans-serif;
+          }
+          span:nth-child(2) {
+            color: #d161f6;
+            position: relative;
+            top: -23px;
+          }
+          span:nth-child(3) {
+            color: #666666;
+            margin-left: 8px;
+          }
+        }
+
+        img {
+          margin-top: 38px;
+          width: 1085px;
+        }
+      }
+    }
+  }
+
+  //客户反馈
+  .Customerfeedback {
+    background: linear-gradient(225deg, #f2edfa 0%, #f7f8fa 27%, #f7f8fa 100%);
+    overflow: hidden;
+    .auto1200 {
+      ul {
+        padding-top: 30px;
+        opacity: 0;
+        position: relative;
+        transition: all 0.3s;
+        li {
+          width: 277px;
+          margin-bottom: 30px;
+          transition: all 0.3s;
+          img {
+            width: 100%;
+            transition: all 0.3s;
+          }
+        }
+        li:hover {
+          transform: scale(1.05);
+          z-index: 100;
+        }
+        li:hover img {
+          box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+        }
+
+        .masking-out {
+          height: 300px;
+          width: 1200px;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.5) 50%,
+            #f7f8fa 100%
+          );
+          z-index: 10;
+          position: absolute;
+          bottom: 0;
+          pointer-events: none;
+        }
+      }
+
+      .look {
+        text-align: center;
+        margin-top: 40px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+</style>
+<style lang="less" scoped>
+::v-deep(.el-carousel__indicators--horizontal) {
+  bottom: 140px;
 }
 </style>

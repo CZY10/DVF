@@ -16,7 +16,6 @@
         <el-menu-item style="float: right" @click="dialogVisible = true"
           >加群交流</el-menu-item
         >
-        <!--                <el-menu-item style="float: right;" index="3"><a href="">新手指南</a></el-menu-item>-->
       </el-menu>
     </div>
     <div class="content">
@@ -107,7 +106,7 @@
                       @click="handleSubmitForm('ruleForm')"
                       round
                       >提交</el-button
-                    ><!--ruleForm.phone == '' || ruleForm.verificationCode == ''-->
+                    >
                   </el-form-item>
                 </el-form>
                 <p class="privacy_agreement">
@@ -207,7 +206,7 @@
                     @click="handleSubmitForm('ruleForm')"
                     round
                     >提交</el-button
-                  ><!--ruleForm.phone == '' || ruleForm.verificationCode == ''-->
+                  >
                 </el-form-item>
               </el-form>
               <p class="privacy_agreement">
@@ -426,7 +425,7 @@ export default {
             this.qrImg = res.data.qrcode_url;
             this.wechatToken = res.data.wechat_token;
             this.isRefresh = false;
-            // this.startCron();
+            this.startCron();
             this.handleCheckQr();
           }
         })
@@ -663,6 +662,9 @@ export default {
         // this.$message.error('请登录!')
       }
     },
+  },
+  beforeDestroy() {
+    clearInterval(this.checkQrCode);
   },
 };
 </script>

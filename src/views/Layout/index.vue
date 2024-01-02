@@ -6,51 +6,16 @@
     </el-col>
 
     <div
-      style="
-        width: 75px;
-        height: 75px;
-        position: fixed;
-        right: 30px;
-        top: 650px;
-        cursor: pointer;
-      "
-      v-if="remreruKa && flags"
+      v-if="flags"
       @mouseover="remreruKb = true"
       @mouseout="remreruKb = false"
-      @click="handlerClick"
+      @click="isShowComDialog = true"
+      class="remreru"
     >
-      <img src="@/assets/images/ben.png" alt="" />
+      <p>领福利</p>
+      <div v-show="remreruKb" @click="flags = false">x</div>
     </div>
 
-    <p
-      style="
-        position: fixed;
-        right: 45px;
-        top: 702px;
-        color: #333333;
-        cursor: pointer;
-      "
-      v-if="remreruKa && flags"
-    >
-      领福利
-    </p>
-    <div
-      style="
-        height: 8;
-        width: 8px;
-        position: fixed;
-        right: 35px;
-        top: 640px;
-        cursor: pointer;
-      "
-      v-if="remreruKa && flags"
-      v-show="remreruKb"
-      @click="remreruK"
-      @mouseover="remreruKb = true"
-      @mouseout="remreruKb = false"
-    >
-      x
-    </div>
     <ConsultDialog :visible.sync="isShowComDialog"></ConsultDialog>
   </el-row>
 </template>
@@ -65,10 +30,8 @@ export default {
   data() {
     return {
       remreruKb: false,
-      remreruKa: true,
       flags: true,
       isShowComDialog: false,
-      flag: true,
     };
   },
   components: {
@@ -89,15 +52,21 @@ export default {
   },
   methods: {
     ...mapMutations("Index", ["setIsFalg"]),
-    remreruK() {
-      this.remreruKa = false;
-    },
-    handlerClick() {
-      this.isShowComDialog = true;
-      if (localStorage.getItem("configObj") != null) {
-        this.configData = JSON.parse(localStorage.getItem("configObj"));
+    handleScroll() {
+      if (this.$route.fullPath == "/") {
+        let scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop; //滑动的距离
+        if (scrollTop <= 300) {
+          document.querySelector(".remreru").style.opacity = "0";
+        } else {
+          document.querySelector(".remreru").style.opacity = "1";
+        }
       }
     },
+  },
+  mounted() {
+    document.querySelector(".remreru").style.opacity = "0";
+    window.addEventListener("scroll", this.handleScroll, true);
   },
   watch: {
     $route: function (to, from) {
@@ -117,4 +86,25 @@ export default {
 </script>
 
 <style scoped>
+.remreru {
+  width: 75px;
+  height: 75px;
+  position: fixed;
+  right: 30px;
+  top: 700px;
+  cursor: pointer;
+  background: url("@/assets/images/ben.png");
+  transition: all 0.3s;
+}
+
+.remreru > p {
+  text-align: center;
+  margin-top: 52px;
+}
+
+.remreru > div {
+  position: relative;
+  top: -80px;
+  left: 65px;
+}
 </style>

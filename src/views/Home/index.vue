@@ -138,7 +138,7 @@
         </div>
         <div class="flex_between button_box">
           <a :href="token ? '/buyershow' : '/login'"
-            ><el-button round>挑选达人拍摄</el-button></a
+            ><el-button round>挑选红人拍摄</el-button></a
           >
         </div>
       </div>

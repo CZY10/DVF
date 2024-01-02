@@ -14,10 +14,6 @@
     src: url("../../assets/fonts/FetteMittelschrift-Regular.ttf") format('truetype');
 }
 
-@font-face {
-    font-family: 'DingTalk';
-    src: url('../../assets/fonts/DingTalk JinBuTi.ttf') format('truetype');
-}
 
 img[src=""],
 img:not([src]) {

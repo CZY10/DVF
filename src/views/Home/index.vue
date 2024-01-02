@@ -4,13 +4,7 @@
       <!-- :autoplay="false" -->
       <el-carousel height="745px" :interval="3500" arrow="never">
         <el-carousel-item v-for="(item, index) in 2" :key="item">
-          <div
-            style="
-              width: 100%;
-              height: 100%;
-              background: linear-gradient(to right, #f7f8fa, #f2edfa);
-            "
-          >
+          <div style="width: 100%; height: 100%">
             <div class="carousel_item carousel-item0" v-if="index == 0">
               <div class="banner1">
                 <div class="left">
@@ -70,8 +64,9 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    <!--拍买家秀-->
-    <div class="buyshow ShootingBuyerShows">
+
+    <!-- 我们的服务 -->
+    <div class="buyshow Ourservices">
       <div class="description_item">
         <li v-for="(item, index) in items" :key="index">
           <img :src="item.img" />
@@ -81,6 +76,26 @@
           </div>
         </li>
       </div>
+      <div class="auto1200">
+        <div class="flex_style header_style">
+          <h5>我们的服务 <i class="iconfont icon-line"></i></h5>
+          <span>买家秀视频+站外推广，一对一专属服务</span>
+        </div>
+
+        <div class="boby">
+          <ul class="top">
+            <li><span>1000</span><span>+</span><span>红人数量</span></li>
+            <li><span>100</span><span>+</span><span>推广渠道</span></li>
+            <li><span>50</span><span>+</span><span>售后团队</span></li>
+            <li><span>9</span><span></span><span>年资历</span></li>
+          </ul>
+          <img src="@/assets/images/home/Ourservices.webp" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <!--拍买家秀-->
+    <div class="buyshow ShootingBuyerShows">
       <div class="auto1200">
         <div class="flex_between">
           <div class="flex_style header_style">
@@ -347,27 +362,6 @@
         </div>
       </div>
     </div>
-
-    <!-- 我们的服务 -->
-    <div class="buyshow Ourservices">
-      <div class="auto1200" style="padding: 100px 0">
-        <div class="flex_style header_style">
-          <h5>我们的服务 <i class="iconfont icon-line"></i></h5>
-          <span>买家秀视频+Deal站推广，一对一专属服务</span>
-        </div>
-
-        <div class="boby">
-          <ul class="top">
-            <li><span>1000</span><span>+</span><span>红人数量</span></li>
-            <li><span>100</span><span>+</span><span>渠道</span></li>
-            <li><span>50</span><span>+</span><span>售后团队</span></li>
-            <li><span>9</span><span></span><span>年资历</span></li>
-          </ul>
-          <img src="@/assets/images/home/Ourservices.webp" alt="" />
-        </div>
-      </div>
-    </div>
-
     <!-- 客户反馈 -->
     <div class="Customerfeedback">
       <div class="auto1200" style="padding: 100px 0">
@@ -398,7 +392,7 @@
         </p>
 
         <p class="look" v-else>
-          <span @click="gethomehighOpinion(8, 50)"
+          <span @click="gethomehighOpinion(8, 0)"
             >收起 <i class="el-icon-arrow-up"></i
           ></span>
         </p>
@@ -514,9 +508,6 @@ export default {
       totaldata: 0,
     };
   },
-  created() {
-    this.gethomehighOpinion(8, 3000);
-  },
   mounted() {
     this.token = localStorage.getItem("token");
     this.handleTakePlanList();
@@ -530,6 +521,10 @@ export default {
 
     if (!localStorage.getItem("token"))
       window.addEventListener("scroll", this.handleScroll, true);
+
+    this.$nextTick(() => {
+      this.gethomehighOpinion(8, 3000);
+    });
   },
   methods: {
     handleScroll() {
@@ -809,7 +804,6 @@ export default {
               float: left;
               margin-right: 59px;
               margin-bottom: 24px;
-              font-family: "DingTalk", sans-serif;
               i {
                 color: #fef76d;
                 margin-right: 5px;
@@ -1414,6 +1408,7 @@ export default {
 .home {
   // 拍买家秀
   .ShootingBuyerShows {
+    padding-top: 100px;
     background: linear-gradient(
       225deg,
       #eceefa 0%,
@@ -1443,11 +1438,13 @@ export default {
 
   //我们的服务
   .Ourservices {
+    background: #ffffff !important;
+    padding-bottom: 100px;
     .auto1200 {
       .boby {
         width: 1200px;
         height: 551px;
-        background: #ffffff;
+        background: #fafbfc;
         border-radius: 20px;
         padding: 30px 60px 0;
         box-sizing: border-box;
@@ -1477,6 +1474,7 @@ export default {
 
         img {
           margin-top: 38px;
+          width: 1085px;
         }
       }
     }
@@ -1484,6 +1482,7 @@ export default {
 
   //客户反馈
   .Customerfeedback {
+    background: linear-gradient(225deg, #f2edfa 0%, #f7f8fa 27%, #f7f8fa 100%);
     overflow: hidden;
     .auto1200 {
       ul {
@@ -1494,15 +1493,18 @@ export default {
         li {
           width: 277px;
           margin-bottom: 30px;
-          transition: all 0.2s;
+          transition: all 0.3s;
           img {
             width: 100%;
+            transition: all 0.3s;
           }
         }
         li:hover {
-          box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
-          transform: scale(1.1);
+          transform: scale(1.05);
           z-index: 100;
+        }
+        li:hover img {
+          box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
         }
 
         .masking-out {

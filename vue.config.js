@@ -2,6 +2,7 @@ const path = require('path')
 const { defineConfig } = require('@vue/cli-service')
 const port = process.env.port || process.env.npm_config_port || 8088
 const webpack = require('webpack')
+
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -42,6 +43,6 @@ module.exports = defineConfig({
       alias: {
         '@': resolve('src'),
       }
-    }
+    },
   },
 })

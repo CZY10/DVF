@@ -9,12 +9,43 @@
 
 }
 
-img[src=""],
-img:not([src]){
-    opacity:0;
+@font-face {
+    font-family: 'FetteMittelschrift';
+    src: url("../../assets/fonts/FetteMittelschrift-Regular.ttf") format('truetype');
 }
 
-body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {
+
+img[src=""],
+img:not([src]) {
+    opacity: 0;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td {
     margin: 0;
     padding: 0;
 }
@@ -23,19 +54,34 @@ body {
     background: #fff;
     color: #555;
     font-size: 14px;
-    font-family: '微软雅黑',Verdana, Arial, Helvetica, sans-serif;
+    font-family: '微软雅黑', Verdana, Arial, Helvetica, sans-serif;
 }
 
-td, th, caption {
+td,
+th,
+caption {
     font-size: 14px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: normal;
     font-size: 100%;
 }
 
-address, caption, cite, code, dfn, em, strong, th, var {
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+strong,
+th,
+var {
     font-style: normal;
     font-weight: normal;
 }
@@ -53,11 +99,16 @@ img {
     border: none;
 }
 
-ol, ul, li {
+ol,
+ul,
+li {
     list-style: none;
 }
 
-input, textarea, select, button {
+input,
+textarea,
+select,
+button {
     font: 14px Verdana, Helvetica, Arial, sans-serif;
 }
 
@@ -81,14 +132,17 @@ html {
 .clearfix {
     *zoom: 1;
 }
-.el-dialog__wrapper{
+
+.el-dialog__wrapper {
     display: grid;
     align-items: center;
 }
+
 .el-dialog {
     margin: 0 auto !important;
 }
-.el-dialog__header{
+
+.el-dialog__header {
     padding-top: 30px !important;
     font-size: 16px;
     font-family: PingFangSC-Semibold, PingFang SC;
@@ -97,51 +151,61 @@ html {
     line-height: 22px;
     padding-bottom: 0;
 }
-.el-dialog--center .el-dialog__body{
+
+.el-dialog--center .el-dialog__body {
     padding: 12px 30px 24px;
 }
-.el-dialog__headerbtn .el-dialog__close{
+
+.el-dialog__headerbtn .el-dialog__close {
     color: #333333;
     font-size: 20px;
 }
-.el-dialog{
+
+.el-dialog {
     border-radius: 20px;
 }
-.el-dialog__title{
+
+.el-dialog__title {
     font-size: 16px;
     font-family: PingFangSC-Semibold, PingFang SC;
     font-weight: 600;
     color: #333333;
     line-height: 22px;
 }
+
 /*按钮禁用样式*/
-.disabled_btn{
-   background: #CCCCCC !important;
+.disabled_btn {
+    background: #CCCCCC !important;
 }
+
 /*table滚动条样式*/
 .el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar {
-    width:6px;
+    width: 6px;
 }
+
 /* 滚动槽 */
 .el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-track {
-    border-radius:10px;
+    border-radius: 10px;
 }
+
 /* 滚动条滑块 */
 .el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-thumb {
-    border-radius:10px;
-    background:rgba(0,0,0,0.1);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
 }
+
 .el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-thumb:window-inactive {
-    background:#D8D8D8;
+    background: #D8D8D8;
 }
 
 
 /*播放按钮*/
-.video-js{
+.video-js {
     background: none !important;
     position: initial;
 }
-.video_content .video-js .vjs-big-play-button{
+
+.video_content .video-js .vjs-big-play-button {
     height: 80px !important;
     width: 80px !important;
     -webkit-border-radius: 50% !important;
@@ -150,32 +214,40 @@ html {
     background: white !important;
     line-height: 76px;
 }
-.video_content .video-js .vjs-big-play-button .vjs-icon-placeholder:before{
+
+.video_content .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
     color: #333333;
     font-size: 1.63em !important;
 }
-.video_content .vjs-big-play-centered .vjs-big-play-button{
+
+.video_content .vjs-big-play-centered .vjs-big-play-button {
     margin-top: -40px !important;
 }
+
 .video_content .vjs-paused .vjs-big-play-button,
 .video_content .vjs-paused.vjs-has-started .vjs-big-play-button {
     display: block !important;
 }
+
 .video_content .video-js .vjs-time-control {
     display: block !important;
 }
+
 .video_content .video-js .vjs-remaining-time {
     display: none !important;
 }
+
 /*表格排序颜色*/
-.el-table .ascending .sort-caret.ascending{
+.el-table .ascending .sort-caret.ascending {
     border-bottom-color: #796CF3;
 }
-.el-table .descending .sort-caret.descending{
+
+.el-table .descending .sort-caret.descending {
     border-top-color: #796CF3;
 }
+
 /*单选框样式*/
-.el-radio__input.is-checked .el-radio__inner{
+.el-radio__input.is-checked .el-radio__inner {
     border-color: #796CF3;
     background: #796CF3;
 }

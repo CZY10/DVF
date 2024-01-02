@@ -221,9 +221,9 @@
                 <span class="test1" v-if="item.istrue == false">已选择</span>
                 <span class="test1" v-else>选择</span>
               </div>
-              <div class="iconfont logo_id" v-if="item.logo_id.length != 0">
+              <div class="logo_id" v-if="item.logo_id.length != 0">
                 <p>
-                  <i class="icon-bq"></i>
+                  <i class="iconfont icon-bq"></i>
                   <span>含版权</span>
                 </p>
               </div>
@@ -854,6 +854,7 @@ export default {
               object-fit: cover;
               width: 100%;
               height: 100%;
+              border-radius: 7px;
             }
           }
 
@@ -1070,7 +1071,7 @@ export default {
 
           .logo_id {
             position: absolute;
-            right: -3px;
+            right: -2px;
             top: 0;
             p {
               position: relative;
@@ -1082,7 +1083,7 @@ export default {
               }
               span {
                 position: absolute;
-                right: 6px;
+                right: 7px;
                 top: 3px;
                 white-space: nowrap;
                 color: #4e3003;

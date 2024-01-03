@@ -503,7 +503,7 @@ export default {
           img: require("@/assets/images/home/tppost.webp"),
         },
       ],
-      Opiniondata: [],
+      Opiniondata: [1, 2, 3, 4, 5, 6, 7, 8],
       OpiniondataTotal: 8,
       totaldata: 0,
     };

@@ -6,6 +6,7 @@
 
 <script>
 import { determineDeal } from "@/api/index";
+import router from "./router";
 export default {
   name: "app",
   provide() {
@@ -59,8 +60,9 @@ export default {
           loading.close();
           console.log(res);
         });
-    } else {
+    } else if (this.action == "account/login") {
       localStorage.clear();
+      router.push("/login");
     }
   },
   methods: {

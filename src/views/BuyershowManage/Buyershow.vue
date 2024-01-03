@@ -659,6 +659,7 @@ export default {
 
     // 删除同步列表
     SynchronizeList(index) {
+      console.log(index);
       var addbtndom = this.$refs.addbtndom;
       this.datalist[index].istrue = true;
       this.$nextTick(() => {
@@ -707,7 +708,7 @@ export default {
       } else {
         newval.forEach((isitem) => {
           var index = this.datalist.findIndex(
-            (item) => item.id == isitem.user_id
+            (item) => item.user_id == isitem.user_id
           );
           this.SynchronizeList(index);
         });

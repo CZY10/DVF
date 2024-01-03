@@ -39,21 +39,10 @@ export default {
     Navmenu,
     ConsultDialog,
   },
-  created() {
-    if (
-      this.$route.fullPath == "/videohome" ||
-      this.$route.fullPath == "/buyershow" ||
-      this.$route.fullPath == "/"
-    ) {
-      this.flags = true;
-    } else {
-      this.flags = false;
-    }
-  },
   methods: {
     ...mapMutations("Index", ["setIsFalg"]),
     handleScroll() {
-      if (this.$route.fullPath == "/") {
+      if (this.$route.fullPath == "/" && this.flags) {
         let scrollTop =
           document.documentElement.scrollTop || document.body.scrollTop; //滑动的距离
         if (scrollTop <= 300) {
@@ -65,20 +54,21 @@ export default {
     },
   },
   mounted() {
-    document.querySelector(".remreru").style.opacity = "0";
+    if (
+      (this.$route.fullPath != "/videohome" && this.flags) ||
+      (to.fullPath != "/buyershow" && this.flags)
+    ) {
+      document.querySelector(".remreru").style.opacity = "0";
+    }
     window.addEventListener("scroll", this.handleScroll, true);
   },
   watch: {
     $route: function (to, from) {
       // 处理路径变化的逻辑
-      if (
-        to.fullPath == "/" ||
-        to.fullPath == "/videohome" ||
-        to.fullPath == "/buyershow"
-      ) {
-        this.flags = true;
+      if (to.fullPath == "/videohome" || to.fullPath == "/buyershow") {
+        document.querySelector(".remreru").style.opacity = "1";
       } else {
-        this.flags = false;
+        document.querySelector(".remreru").style.opacity = "0";
       }
     },
   },

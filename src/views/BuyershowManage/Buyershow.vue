@@ -660,12 +660,14 @@ export default {
     // 删除同步列表
     SynchronizeList(index) {
       var addbtndom = this.$refs.addbtndom;
-      this.datalist[index].istrue = true;
-      this.$nextTick(() => {
-        addbtndom[index].classList.remove("addlistbj");
-        addbtndom[index].classList.add("product_btn");
-        addbtndom[index].querySelector(".test1").textContent = "选择";
-      });
+      if (index != -1) {
+        this.datalist[index].istrue = true;
+        this.$nextTick(() => {
+          addbtndom[index].classList.remove("addlistbj");
+          addbtndom[index].classList.add("product_btn");
+          addbtndom[index].querySelector(".test1").textContent = "选择";
+        });
+      }
     },
 
     //去达人详情页

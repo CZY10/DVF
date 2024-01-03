@@ -503,7 +503,7 @@ export default {
           img: require("@/assets/images/home/tppost.webp"),
         },
       ],
-      Opiniondata: [1, 2, 3, 4, 5, 6, 7, 8],
+      Opiniondata: [],
       OpiniondataTotal: 8,
       totaldata: 0,
     };
@@ -646,7 +646,6 @@ export default {
         this.totaldata = res.data.total;
         this.Opiniondata = res.data.data;
         this.$refs.grid.style.overflow = "hidden";
-
         setTimeout(() => {
           this.$refs.grid.style.overflow = "visible";
           new Masonry(this.$refs.grid, {
@@ -654,7 +653,6 @@ export default {
             itemSelector: ".grid-item",
             columnWidth: 300,
           });
-          this.$refs.grid.style.opacity = "1";
         }, time);
       }
     },
@@ -1485,7 +1483,6 @@ export default {
     .auto1200 {
       ul {
         padding-top: 30px;
-        opacity: 0;
         position: relative;
         transition: all 0.3s;
         li {

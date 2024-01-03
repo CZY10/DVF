@@ -649,7 +649,7 @@ export default {
       let _this = this;
       _this.RequirementLists.flat().forEach((items) => {
         let index = _this.datalist.findIndex(
-          (item) => item.id == items.user_id
+          (item) => item.user_id == items.user_id
         );
         if (index != -1) {
           _this.datalist[index].istrue = false;
@@ -659,7 +659,6 @@ export default {
 
     // 删除同步列表
     SynchronizeList(index) {
-      console.log(index);
       var addbtndom = this.$refs.addbtndom;
       this.datalist[index].istrue = true;
       this.$nextTick(() => {
@@ -703,7 +702,7 @@ export default {
     },
     Requiremenitems(newval) {
       if (!Array.isArray(newval)) {
-        var index = this.datalist.findIndex((item) => item.id == newval);
+        var index = this.datalist.findIndex((item) => item.user_id == newval);
         this.SynchronizeList(index);
       } else {
         newval.forEach((isitem) => {

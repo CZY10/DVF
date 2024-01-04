@@ -147,7 +147,7 @@
                   ￥<span>{{ item.lower_price }}-{{ item.highest_price }}</span>
                 </div>
 
-                <div class="product_list_rigth" v-else style="font-size: 11px">
+                <div class="product_list_rigth" v-else style="font-size: 12px">
                   视产品而定
                 </div>
               </div>
@@ -340,6 +340,7 @@
 import { getCategory, getSearchList, carOperate, carList } from "@/api";
 import store from "@/store";
 import router from "@/router";
+import { mapState } from "vuex";
 
 export default {
   name: "buyershow",
@@ -371,14 +372,11 @@ export default {
       dialogVisiblelogins: false,
     };
   },
-  components: {},
-  created() {
-    this.requirementlist = this.RequirementLists;
-  },
   computed: {
-    RequirementLists() {
-      return store.state.Index.RequirementList;
-    },
+    ...mapState({
+      RequirementLists: (state) => state.Index.RequirementList,
+      randomNumber: (state) => state.Index.updata,
+    }),
     Requiremenitems() {
       return store.state.Index.Requiremenitem;
     },
@@ -715,6 +713,31 @@ export default {
         });
       }
     },
+    randomNumber(newval) {
+      var addbtndom = this.$refs.addbtndom;
+      this.datalist.forEach((item, index) => {
+        item.istrue = true;
+        this.$nextTick(() => {
+          addbtndom[index].classList.remove("addlistbj");
+          addbtndom[index].classList.add("product_btn");
+          addbtndom[index].querySelector(".test1").textContent = "选择";
+        });
+      });
+
+      setTimeout(() => {
+        this.RequirementLists.flat().forEach((isitem) => {
+          var index = this.datalist.findIndex(
+            (item) => item.user_id == isitem.user_id
+          );
+          this.datalist[index].istrue = false;
+          this.$nextTick(() => {
+            addbtndom[index].classList.remove("product_btn");
+            addbtndom[index].classList.add("addlistbj");
+            addbtndom[index].querySelector(".test1").textContent = "已选择";
+          });
+        });
+      }, 500);
+    },
   },
 };
 </script>
@@ -857,7 +880,8 @@ export default {
               object-fit: cover;
               width: 100%;
               height: 100%;
-              border-radius: 8px;
+              border-top-right-radius: 8px;
+              border-top-left-radius: 8px;
             }
           }
 

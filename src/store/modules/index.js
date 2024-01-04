@@ -15,7 +15,8 @@ export default {
             themeValue: "",
             searchforval: "",
             priceval: ""
-        }
+        },
+        updata: 0
     },
     mutations: {
         setIsFalg(state, payload) {
@@ -45,6 +46,9 @@ export default {
         },
         setdataobj(state, payload) {
             state.dataobj = payload
+        },
+        setupdata(state, payload) {
+            state.updata = payload
         }
     },
     actions: {

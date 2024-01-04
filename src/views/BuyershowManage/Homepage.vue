@@ -30,7 +30,17 @@
                 </div>
               </div>
               <p class="id-moneyrigth">
-                <span class="money">￥1203</span>
+                <span class="money" v-if="userInfo.price_type == 0"
+                  >￥{{ userInfo.price }}</span
+                >
+
+                <span class="money" v-else-if="userInfo.price_type == 1">
+                  ￥{{ userInfo.lower_price }}-{{ userInfo.highest_price }}
+                </span>
+
+                <span class="money" v-else style="font-size: 16px">
+                  视产品而定
+                </span>
               </p>
             </div>
 
@@ -83,13 +93,27 @@
               </div>
             </div>
 
-            <button>
+            <button @click="addlist" :class="{ Donotclick: Donotclick }">
+              <span class="icon">+</span>
               <i class="iconfont icon-gwc"></i>
-              <span>选择</span>
+              <span>{{ Donotclick ? "已选择" : "选择" }}</span>
             </button>
           </div>
         </div>
-        <div class="bottom"></div>
+        <div class="bottom">
+          <h1>生活照</h1>
+
+          <ul v-if="Lifephotoslist.length != 0">
+            <li v-for="(item, index) in Lifephotoslist" :key="index">
+              <img :src="item.image" />
+            </li>
+          </ul>
+
+          <div class="emptyimg" v-else>
+            <img src="@/assets/images/empty_img.png" />
+            <p>暂无照片</p>
+          </div>
+        </div>
       </div>
       <div class="rigth"></div>
     </div>
@@ -97,22 +121,33 @@
 </template>
 
 <script>
-import { influencerDetail } from "@/api";
+import { influencerDetail, carOperate, carList, getLifephotos } from "@/api";
+import { mapState } from "vuex";
+import store from "@/store";
 export default {
   name: "homepage",
   data() {
     return {
       id: "",
       userInfo: {},
+      Donotclick: false,
+      Lifephotoslist: [],
     };
+  },
+  computed: {
+    ...mapState({
+      requirementList: (state) => state.Index.RequirementList,
+    }),
   },
   mounted() {
     this.id = window.location.href.substr(
       window.location.href.lastIndexOf(":") + 1
     );
     this.getInfluencerDetail();
+    this.getLifephotos();
   },
   methods: {
+    //获取红人信息
     getInfluencerDetail() {
       influencerDetail({
         id: this.id,
@@ -120,11 +155,77 @@ export default {
         .then((res) => {
           if (res.code === 1) {
             this.userInfo = res.data;
+
+            this.Donotclick = this.requirementList.flat().some((item) => {
+              return item.user_id == res.data.user_id;
+            });
           }
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+
+    //获取生活照
+    async getLifephotos() {
+      let data = {
+        influencer_id: 163,
+        pageSize: 15,
+        page: 1,
+      };
+
+      const res = await getLifephotos(data);
+      if (res.code == 1) {
+        this.Lifephotoslist = res.data.data;
+      }
+    },
+
+    //添加需求
+    async addlist() {
+      if (this.Donotclick == false) {
+        this.Donotclick = true;
+        this.createBall(event.clientX - 20, event.clientY - 20);
+        const res = await carOperate({
+          influencer_id: this.userInfo.user_id,
+          type: 1,
+        });
+        if (res.code == 1) {
+          carList().then((res) => {
+            store.commit("Index/setRequirementList", res.data.list);
+            store.commit("Index/setRequirementFirst", res.data.first);
+          });
+        }
+      }
+    },
+
+    createBall(left, top) {
+      const bar = document.createElement("ball");
+      bar.style.position = "fixed";
+      bar.style.left = left + "px";
+      bar.style.top = top + "px";
+      bar.style.width = "30px";
+      bar.style.height = "30px";
+      bar.style.borderRadius = "50%";
+      bar.style.backgroundColor = "#d161f6";
+      bar.style.transition =
+        "left .6s linear, top .6s cubic-bezier(0.5, 0.5, 1, 1)";
+      document.body.appendChild(bar);
+      setTimeout(() => {
+        const x = document.body.clientWidth - 400;
+        const y = 0;
+        bar.style.top = y + "px";
+        bar.style.left = x + "px";
+      }, 0);
+      bar.ontransitionend = function () {
+        this.remove();
+      };
+    },
+  },
+  watch: {
+    requirementList(newValue) {
+      this.Donotclick = newValue.flat().some((item) => {
+        return item.user_id == this.userInfo.user_id;
+      });
     },
   },
 };
@@ -316,16 +417,90 @@ export default {
             border: none;
             cursor: pointer;
             color: #fff;
+            transition: all 0.3s;
+            padding-right: 13px;
             i {
               margin-right: 3px;
             }
+            .icon {
+              font-weight: 900;
+              margin-bottom: 2px;
+              opacity: 0;
+              transition: all 0.3s;
+              margin-right: 2px;
+            }
+          }
+
+          button:hover {
+            background: #c034ee;
+          }
+          button:hover .icon {
+            opacity: 1;
+          }
+
+          .Donotclick {
+            background: #ccc;
+          }
+          .Donotclick:hover {
+            background: #ccc;
+          }
+          .Donotclick:hover .icon {
+            opacity: 0;
           }
         }
       }
       .bottom {
-        height: 501px;
-        background: darkcyan;
+        height: 500px;
+        background: #fff;
         margin-top: 20px;
+        padding: 15px 20px 20px 20px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        h1 {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333333;
+          padding-bottom: 15px;
+        }
+
+        ul {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          height: 428px;
+          overflow-y: auto;
+          width: 101%;
+          padding-right: 13px;
+          li {
+            width: 104px;
+            height: 104px;
+            margin-bottom: 4px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+              width: 100%;
+              object-fit: cover;
+            }
+          }
+        }
+
+        .emptyimg {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-content: center;
+
+          img {
+            width: 200px;
+          }
+          p {
+            color: #999999;
+            font-size: 12px;
+          }
+        }
       }
     }
     .rigth {

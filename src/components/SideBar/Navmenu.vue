@@ -452,6 +452,18 @@ export default {
     }
   },
   mounted() {
+    let _this = this;
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") {
+        console.log("页面在前台");
+        let randomNumber = Math.random();
+        store.commit("Index/setupdata", randomNumber);
+        _this.getcarList();
+      } else if (document.visibilityState === "hidden") {
+        console.log("页面在后台");
+      }
+    });
+
     if (localStorage.getItem("videoUrl") == "undefined") this.getContent();
     if (localStorage.getItem("videoUrl")) {
     } else {
@@ -597,7 +609,6 @@ export default {
           this.differentIndices = [];
           this.onEndarr = [];
           this.onStartarr = [];
-          // this.getcarList();
         });
       } else {
         let influencerIds1 = this.RequirementLists[itemindex]

@@ -507,3 +507,13 @@ export function homehighOpinion(data) {
     })
 
 }
+
+// 获取生活照列表
+export function getLifephotos(data) {
+    return request({
+        url: "/api/influencer/livePhoto",
+        method: "post",
+        data
+    })
+
+}

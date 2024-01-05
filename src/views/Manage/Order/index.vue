@@ -3239,8 +3239,8 @@ export default {
 /*分页样式*/
 .el-pagination.is-background .el-pager li:not(.disabled).active {
   background: #ffffff !important;
-  color: #776cf3 !important;
-  border: 1px solid #776cf3;
+  color: #d161f6 !important;
+  border: 1px solid #d161f6;
 }
 
 .el-pagination.is-background .btn-next,

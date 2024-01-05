@@ -517,3 +517,13 @@ export function getLifephotos(data) {
     })
 
 }
+
+//获取视频列表
+export function getInfluencerVideo(data) {
+    return request({
+        url: "/api/influencer/video",
+        method: "post",
+        data
+    })
+
+}

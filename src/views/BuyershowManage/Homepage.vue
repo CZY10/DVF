@@ -103,9 +103,9 @@
         <div class="bottom">
           <h1>生活照</h1>
 
-          <ul v-if="Lifephotoslist.length != 0">
+          <ul v-if="Lifephotoslist.length != 0" ref="Lifephotoslistdom">
             <li v-for="(item, index) in Lifephotoslist" :key="index">
-              <img :src="item.image" />
+              <el-image :src="item.image" :preview-src-list="srcList" />
             </li>
           </ul>
 
@@ -115,15 +115,96 @@
           </div>
         </div>
       </div>
-      <div class="rigth"></div>
+      <div class="rigth">
+        <div class="top">
+          <h1>个人简介</h1>
+          <ul>
+            <li v-for="(item, index) in userInfo.signature" :key="index">
+              <span class="dian"></span> <span>{{ item }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="bottom">
+          <div class="Tabs">
+            <div :class="{ ifVideoImages: ifVideoImages }">
+              <span @click="ifVideoImages = !ifVideoImages">视频</span>
+            </div>
+            <div :class="{ ifVideoImages: !ifVideoImages }">
+              <span @click="ifVideoImages = !ifVideoImages">图片post</span>
+            </div>
+          </div>
+          <div class="videoimages">
+            <div class="switch" ref="switch">
+              <div class="video-content">
+                <div v-if="videodatas.length > 0">
+                  <ul ref="videolistHeigth">
+                    <li v-for="item in videodatas" :key="item.id">
+                      <div
+                        class="cover"
+                        @click="addvideoLog(item.file, item.desc)"
+                      >
+                        <el-image :src="item.coverimage" fit="cover" />
+                        <i class="el-icon-caret-right"></i>
+                        <div class="masking-out"></div>
+                      </div>
+                      <p class="desc" :title="item.desc">
+                        {{ item.desc }}
+                      </p>
+                    </li>
+                  </ul>
+                  <template>
+                    <div class="paging">
+                      <el-pagination
+                        background
+                        :page-sizes="[15, 30, 45]"
+                        layout="prev, pager, next, sizes, jumper"
+                        :total="total"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                      >
+                      </el-pagination>
+                    </div>
+                  </template>
+                </div>
+
+                <div class="emptyimg" v-else>
+                  <img src="@/assets/images/empty_img.png" />
+                  <p>暂无视频</p>
+                </div>
+              </div>
+              <div class="images-content">
+                <div class="emptyimg">
+                  <img src="@/assets/images/empty_img.png" />
+                  <p>暂无照片</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <videoLog
+      :videoLog="videoLog"
+      @getvideoLog="getvideoLog"
+      :videoLogscr="videoLogscr"
+      :videoLogtitle="videoLogtitle"
+    ></videoLog>
   </div>
 </template>
 
 <script>
-import { influencerDetail, carOperate, carList, getLifephotos } from "@/api";
+import {
+  influencerDetail,
+  carOperate,
+  carList,
+  getLifephotos,
+  getInfluencerVideo,
+} from "@/api";
 import { mapState } from "vuex";
 import store from "@/store";
+import videoLog from "./HomepageLog/videoLog.vue";
 export default {
   name: "homepage",
   data() {
@@ -132,6 +213,18 @@ export default {
       userInfo: {},
       Donotclick: false,
       Lifephotoslist: [],
+      srcList: [],
+      ifVideoImages: true,
+      videodatas: [],
+      videoLog: false,
+      videoLogscr: "",
+      videoLogtitle: "",
+      total: 0,
+      currentPage: 1,
+      pageSize: 15,
+      LifephotospageSize: 20,
+      Lifephotospage: 1,
+      scrollHandler: null,
     };
   },
   computed: {
@@ -145,6 +238,7 @@ export default {
     );
     this.getInfluencerDetail();
     this.getLifephotos();
+    this.getvideos();
   },
   methods: {
     //获取红人信息
@@ -168,15 +262,61 @@ export default {
 
     //获取生活照
     async getLifephotos() {
+      let _this = this;
       let data = {
-        influencer_id: 163,
-        pageSize: 15,
-        page: 1,
+        influencer_id: this.id,
+        pageSize: this.LifephotospageSize,
+        page: this.Lifephotospage,
       };
 
       const res = await getLifephotos(data);
       if (res.code == 1) {
-        this.Lifephotoslist = res.data.data;
+        res.data.data.forEach((item) => {
+          this.Lifephotoslist.push(item);
+          this.srcList.push(item.image);
+        });
+        if (
+          res.data.total >= this.Lifephotoslist.length &&
+          this.scrollHandler == null &&
+          res.data.total > 20
+        ) {
+          this.scrollHandler = () => {
+            let element = this.$refs.Lifephotoslistdom;
+            var scrollBottomDistance =
+              element.scrollHeight - element.scrollTop - element.clientHeight;
+            if (scrollBottomDistance <= 0) {
+              this.Lifephotospage++;
+              this.getLifephotos();
+            }
+          };
+          this.$nextTick(() => {
+            let element = this.$refs.Lifephotoslistdom;
+            element.addEventListener("scroll", this.scrollHandler);
+          });
+        } else {
+          let element = this.$refs.Lifephotoslistdom;
+          element?.removeEventListener("scroll", this.scrollHandler);
+        }
+      }
+    },
+
+    //获取视频列表
+    async getvideos() {
+      let data = {
+        influencer_id: this.id,
+        page: this.currentPage,
+        pageSize: this.pageSize,
+      };
+
+      const res = await getInfluencerVideo(data);
+      if (res.code == 1) {
+        this.videodatas = res.data.data;
+        this.total = res.data.total;
+        this.$nextTick(() => {
+          document.getElementsByClassName(
+            "el-pagination__jump"
+          )[0].childNodes[0].nodeValue = "跳转";
+        });
       }
     },
 
@@ -196,6 +336,13 @@ export default {
           });
         }
       }
+    },
+
+    //播放视频
+    addvideoLog(url, name) {
+      this.videoLogscr = url;
+      this.videoLogtitle = name;
+      this.videoLog = true;
     },
 
     createBall(left, top) {
@@ -220,6 +367,19 @@ export default {
         this.remove();
       };
     },
+
+    getvideoLog(val) {
+      this.videoLog = val;
+    },
+
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.getvideos();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.getvideos();
+    },
   },
   watch: {
     requirementList(newValue) {
@@ -227,6 +387,29 @@ export default {
         return item.user_id == this.userInfo.user_id;
       });
     },
+    ifVideoImages(newValue) {
+      if (newValue) {
+        this.$refs.switch.style.left = 0;
+      } else {
+        this.$refs.switch.style.left = "-820px";
+      }
+    },
+    pageSize(newval) {
+      switch (newval) {
+        case 30:
+          this.$refs.videolistHeigth.style.maxHeight = 2000 + "px";
+          break;
+        case 45:
+          this.$refs.videolistHeigth.style.maxHeight = 3000 + "px";
+          break;
+        default:
+          this.$refs.videolistHeigth.style.maxHeight = 1000 + "px";
+          break;
+      }
+    },
+  },
+  components: {
+    videoLog,
   },
 };
 </script>
@@ -468,6 +651,7 @@ export default {
           justify-content: space-between;
           flex-wrap: wrap;
           height: 428px;
+          // height: 200px;
           overflow-y: auto;
           width: 101%;
           padding-right: 13px;
@@ -479,10 +663,6 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            img {
-              width: 100%;
-              object-fit: cover;
-            }
           }
         }
 
@@ -505,8 +685,199 @@ export default {
     }
     .rigth {
       width: 820px;
-      background: saddlebrown;
+      .top {
+        width: 100%;
+        padding: 16px 20px 26px;
+        background: #ffffff;
+        border-radius: 6px;
+        border: 1px solid #eeeeee;
+        box-sizing: border-box;
+        h1 {
+          font-weight: 600;
+          color: #333333;
+          font-size: 16px;
+        }
+
+        ul {
+          margin-top: 30px;
+          padding-left: 20px;
+          li {
+            display: flex;
+            align-items: center;
+            color: #666666;
+            margin-bottom: 10px;
+            .dian {
+              width: 4px;
+              height: 4px;
+              display: block;
+              background: #666666;
+              border-radius: 50%;
+              margin-right: 6px;
+            }
+          }
+        }
+      }
+
+      .bottom {
+        margin-top: 20px;
+        width: 100%;
+        padding-bottom: 20px;
+        .Tabs {
+          height: 58px;
+          background: #ffffff;
+          border-radius: 6px;
+          display: flex;
+          padding: 0 30px;
+          div {
+            line-height: 58px;
+            margin-right: 30px;
+            color: #999999;
+            font-size: 16px;
+            transition: all 0.3s;
+            border-bottom: 2px solid #fff;
+            span {
+              cursor: pointer;
+            }
+          }
+          .ifVideoImages {
+            font-weight: 600;
+            color: #333333;
+            border-bottom: 2px solid #333333;
+          }
+        }
+
+        .videoimages {
+          width: 100%;
+          overflow: hidden;
+          margin-top: 10px;
+          .switch {
+            width: 1640px;
+            display: flex;
+            position: relative;
+            left: 0;
+            transition: all 0.5s ease 0s;
+
+            div {
+              width: 820px;
+              .emptyimg {
+                height: 700px;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                background: #ffffff;
+
+                img {
+                  width: 200px;
+                }
+                p {
+                  color: #999999;
+                  font-size: 12px;
+                }
+              }
+            }
+            .video-content {
+              border-radius: 6px;
+              ul {
+                max-height: 1000px;
+                min-height: 1000px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-content: flex-start;
+                transition: all 0.3s;
+                overflow: hidden;
+                li {
+                  width: 266px;
+                  height: 190px;
+                  background: #fff;
+                  border-radius: 6px;
+                  overflow: hidden;
+                  margin-bottom: 10px;
+                  .cover {
+                    width: 100%;
+                    height: 149px;
+                    position: relative;
+                    cursor: pointer;
+                    .el-image {
+                      width: 100%;
+                      height: 100%;
+                    }
+                    .masking-out {
+                      width: 266px;
+                      height: 80px;
+                      background: linear-gradient(
+                        360deg,
+                        rgba(0, 0, 0, 0.89) 0%,
+                        rgba(0, 0, 0, 0) 100%
+                      );
+                      z-index: 10;
+                      position: absolute;
+                      bottom: 0;
+                      pointer-events: none;
+                    }
+                    .el-icon-caret-right {
+                      width: 30px;
+                      height: 30px;
+                      background: rgba(0, 0, 0, 0.4);
+                      border-radius: 50%;
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      right: 0;
+                      bottom: 0;
+                      margin: auto;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    }
+                    .el-icon-caret-right:before {
+                      color: #fff;
+                      font-size: 22px;
+                    }
+                  }
+                }
+              }
+              .desc {
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 0 20px;
+                color: #333333;
+                font-size: 12px;
+                margin-top: 12px;
+              }
+
+              .paging {
+                margin-top: 20px;
+                .el-pagination {
+                  display: flex;
+                  justify-content: center;
+                }
+              }
+            }
+            .images-content {
+              border-radius: 6px;
+            }
+          }
+        }
+      }
     }
   }
+}
+</style>
+
+<style lang="less" scoped>
+::v-deep(.el-pagination__jump) {
+  margin-left: 0;
+}
+
+::v-deep(.el-pagination__sizes .el-input .el-input__inner:hover) {
+  border-color: #d161f6;
+}
+
+::v-deep(.el-input .el-input__inner:focus) {
+  border-color: #d161f6;
 }
 </style>

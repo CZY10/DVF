@@ -53,7 +53,9 @@ export default {
           if (res.code == 1) {
             localStorage.removeItem("source");
             localStorage.removeItem("action");
-            window.location.href = res.data.jump;
+            res.data.jump
+              ? (window.location.href = res.data.jump)
+              : loading.close();
           }
         })
         .catch((res) => {
@@ -62,7 +64,7 @@ export default {
         });
     } else if (this.action == "account/login") {
       localStorage.clear();
-      router.push("/login");
+      window.location.href = "/login";
     }
   },
   methods: {

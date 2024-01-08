@@ -4,9 +4,15 @@
       <div class="left">
         <div class="top">
           <div class="img">
-            <img :src="userInfo.image" />
+            <el-image :src="userInfo.image" fit="cover">
+              <div slot="placeholder" class="image-slot">
+                加载中<span class="dot">...</span>
+              </div>
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture-outline"></i></div
+            ></el-image>
 
-            <div class="logo_id">
+            <div class="logo_id" v-show="userInfo.logo_id?.length != 0">
               <p>
                 <i class="iconfont icon-bq"></i>
                 <span>含版权</span>
@@ -103,7 +109,7 @@
         <div class="bottom">
           <h1>生活照</h1>
 
-          <ul v-if="Lifephotoslist.length != 0" ref="Lifephotoslistdom">
+          <ul v-if="Lifephotoslist?.length != 0" ref="Lifephotoslistdom">
             <li v-for="(item, index) in Lifephotoslist" :key="index">
               <el-image :src="item.image" :preview-src-list="srcList" />
             </li>
@@ -136,7 +142,7 @@
           <div class="videoimages">
             <div class="switch" ref="switch">
               <div class="video-content">
-                <div v-if="videodatas.length > 0">
+                <div v-if="videodatas?.length > 0">
                   <ul ref="videolistHeigth">
                     <li v-for="item in videodatas" :key="item.id">
                       <div
@@ -174,7 +180,30 @@
                 </div>
               </div>
               <div class="images-content">
-                <div class="emptyimg">
+                <div v-if="imagepostlist?.length > 0">
+                  <ul ref="imglistHeigth">
+                    <li v-for="item in imagepostlist" :key="item.id">
+                      <el-image :src="item.image" fit="cover" />
+                    </li>
+                  </ul>
+
+                  <template>
+                    <div class="paging">
+                      <el-pagination
+                        background
+                        :page-sizes="[20, 30, 40]"
+                        layout="prev, pager, next, sizes, jumper"
+                        :total="imageposttotal"
+                        @size-change="imagepostChange"
+                        @current-change="imagepostCurrentChange"
+                        :current-page="currentPage"
+                      >
+                      </el-pagination>
+                    </div>
+                  </template>
+                </div>
+
+                <div class="emptyimg" v-else>
                   <img src="@/assets/images/empty_img.png" />
                   <p>暂无照片</p>
                 </div>
@@ -191,6 +220,22 @@
       :videoLogscr="videoLogscr"
       :videoLogtitle="videoLogtitle"
     ></videoLog>
+
+    <el-dialog
+      title="温馨提示"
+      center
+      :visible.sync="dialogVisiblelogin"
+      width="300px"
+    >
+      <p style="text-align: center; margin-top: 15px; white-space: nowrap">
+        您还没有登录，登录后即可继续操作
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="goLogin" class="dialogVisibleloginbtn"
+          >去登录</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -201,10 +246,12 @@ import {
   carList,
   getLifephotos,
   getInfluencerVideo,
+  getImagepostlist,
 } from "@/api";
 import { mapState } from "vuex";
 import store from "@/store";
 import videoLog from "./HomepageLog/videoLog.vue";
+import router from "@/router";
 export default {
   name: "homepage",
   data() {
@@ -222,9 +269,14 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 15,
-      LifephotospageSize: 20,
+      LifephotospageSize: 18,
       Lifephotospage: 1,
       scrollHandler: null,
+      imagepostlist: [],
+      imageposttotal: 0,
+      imagepostSize: 20,
+      imageposCpage: 1,
+      dialogVisiblelogin: false,
     };
   },
   computed: {
@@ -239,8 +291,12 @@ export default {
     this.getInfluencerDetail();
     this.getLifephotos();
     this.getvideos();
+    this.getpostImagelists();
   },
   methods: {
+    goLogin() {
+      router.push("/login");
+    },
     //获取红人信息
     getInfluencerDetail() {
       influencerDetail({
@@ -262,7 +318,6 @@ export default {
 
     //获取生活照
     async getLifephotos() {
-      let _this = this;
       let data = {
         influencer_id: this.id,
         pageSize: this.LifephotospageSize,
@@ -276,7 +331,7 @@ export default {
           this.srcList.push(item.image);
         });
         if (
-          res.data.total >= this.Lifephotoslist.length &&
+          res.data.total >= this.Lifephotoslist?.length &&
           this.scrollHandler == null &&
           res.data.total > 20
         ) {
@@ -312,17 +367,43 @@ export default {
       if (res.code == 1) {
         this.videodatas = res.data.data;
         this.total = res.data.total;
-        this.$nextTick(() => {
-          document.getElementsByClassName(
-            "el-pagination__jump"
-          )[0].childNodes[0].nodeValue = "跳转";
-        });
+        if (this.videodatas?.length > 0) {
+          setTimeout(() => {
+            document.getElementsByClassName(
+              "el-pagination__jump"
+            )[0].childNodes[0].nodeValue = "跳转";
+          }, 1000);
+        }
+      }
+    },
+
+    //获取图片post列表
+    async getpostImagelists() {
+      let data = {
+        influencer_id: this.id,
+        page: this.imageposCpage,
+        pageSize: this.imagepostSize,
+      };
+      const res = await getImagepostlist(data);
+      if (res.code == 1) {
+        this.imagepostlist = res.data.data;
+        this.imageposttotal = res.data.total;
+
+        if (this.imagepostlist?.length > 0) {
+          setTimeout(() => {
+            document.getElementsByClassName(
+              "el-pagination__jump"
+            )[1].childNodes[0].nodeValue = "跳转";
+          }, 1000);
+        }
       }
     },
 
     //添加需求
     async addlist() {
-      if (this.Donotclick == false) {
+      if (!localStorage.getItem("token")) this.dialogVisiblelogin = true;
+
+      if (this.Donotclick == false && localStorage.getItem("token")) {
         this.Donotclick = true;
         this.createBall(event.clientX - 20, event.clientY - 20);
         const res = await carOperate({
@@ -372,6 +453,7 @@ export default {
       this.videoLog = val;
     },
 
+    //视频切换页码
     handleSizeChange(val) {
       this.pageSize = val;
       this.getvideos();
@@ -379,6 +461,16 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
       this.getvideos();
+    },
+
+    //图片post切换页码
+    imagepostChange(val) {
+      this.imagepostSize = val;
+      this.getpostImagelists();
+    },
+    imagepostCurrentChange(val) {
+      this.imageposCpage = val;
+      this.getpostImagelists();
     },
   },
   watch: {
@@ -404,6 +496,19 @@ export default {
           break;
         default:
           this.$refs.videolistHeigth.style.maxHeight = 1000 + "px";
+          break;
+      }
+    },
+    imagepostSize(newval) {
+      switch (newval) {
+        case 30:
+          this.$refs.imglistHeigth.style.maxHeight = 1035 * 2 + "px";
+          break;
+        case 40:
+          this.$refs.imglistHeigth.style.maxHeight = 1035 * 3 + "px";
+          break;
+        default:
+          this.$refs.imglistHeigth.style.maxHeight = 1035 + "px";
           break;
       }
     },
@@ -434,11 +539,16 @@ export default {
           width: 100%;
           height: 364px;
           position: relative;
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+          .el-image {
             border-top-right-radius: 8px;
+            height: 100%;
+            width: 100%;
+            .image-slot {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100%;
+            }
           }
 
           .logo_id {
@@ -633,7 +743,7 @@ export default {
         }
       }
       .bottom {
-        height: 500px;
+        height: 490px;
         background: #fff;
         margin-top: 20px;
         padding: 15px 20px 20px 20px;
@@ -648,21 +758,23 @@ export default {
 
         ul {
           display: flex;
-          justify-content: space-between;
           flex-wrap: wrap;
-          height: 428px;
+          height: 420px;
           // height: 200px;
           overflow-y: auto;
           width: 101%;
           padding-right: 13px;
           li {
-            width: 104px;
-            height: 104px;
+            width: 101px;
+            height: 101px;
             margin-bottom: 4px;
+            margin-right: 4px;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            background: #000;
+            border-radius: 4px;
           }
         }
 
@@ -776,6 +888,14 @@ export default {
                 }
               }
             }
+
+            .paging {
+              margin-top: 20px;
+              .el-pagination {
+                display: flex;
+                justify-content: center;
+              }
+            }
             .video-content {
               border-radius: 6px;
               ul {
@@ -848,17 +968,29 @@ export default {
                 font-size: 12px;
                 margin-top: 12px;
               }
-
-              .paging {
-                margin-top: 20px;
-                .el-pagination {
-                  display: flex;
-                  justify-content: center;
-                }
-              }
             }
             .images-content {
               border-radius: 6px;
+              ul {
+                display: flex;
+                flex-wrap: wrap;
+                align-content: flex-start;
+                width: 101%;
+                transition: all 0.3s;
+                max-height: 1035px;
+                min-height: 1035px;
+                li {
+                  width: 197px;
+                  height: 197px;
+                  border-radius: 6px;
+                  overflow: hidden;
+                  margin: 0 10px 10px 0;
+                  .el-image {
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+              }
             }
           }
         }
@@ -879,5 +1011,15 @@ export default {
 
 ::v-deep(.el-input .el-input__inner:focus) {
   border-color: #d161f6;
+}
+
+.dialogVisibleloginbtn {
+  width: 120px;
+  height: 32px;
+  background: #d161f6;
+  border-radius: 5px;
+  color: #fff;
+  line-height: 8px;
+  border: none;
 }
 </style>

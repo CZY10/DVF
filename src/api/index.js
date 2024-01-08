@@ -527,3 +527,13 @@ export function getInfluencerVideo(data) {
     })
 
 }
+
+//获取图片post列表
+export function getImagepostlist(data) {
+    return request({
+        url: "/api/influencer/postPhoto",
+        method: "post",
+        data
+    })
+
+}

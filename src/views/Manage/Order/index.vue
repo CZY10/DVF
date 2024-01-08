@@ -2698,26 +2698,6 @@ export default {
     border-top: 1px solid #eeeeee;
   }
 
-  /* 设置滚动条的样式 */
-  .chat-message-body::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  /* 滚动槽 */
-  .chat-message-body::-webkit-scrollbar-track {
-    border-radius: 10px;
-  }
-
-  /* 滚动条滑块 */
-  .chat-message-body::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  .chat-message-body::-webkit-scrollbar-thumb:window-inactive {
-    background: #d8d8d8;
-  }
-
   .chat-message-body .nothing {
     display: flex;
     justify-content: center;
@@ -2739,30 +2719,6 @@ export default {
     display: flex;
     flex-direction: row-reverse;
     overflow: auto;
-  }
-
-  /* 设置滚动条的样式 */
-  .message-row-left::-webkit-scrollbar,
-  .message-row-right::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  /* 滚动槽 */
-  .message-row-left::-webkit-scrollbar-track,
-  .message-row-right::-webkit-scrollbar-track {
-    border-radius: 10px;
-  }
-
-  /* 滚动条滑块 */
-  .message-row-left::-webkit-scrollbar-thumb,
-  .message-row-right::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  .message-row-left::-webkit-scrollbar-thumb:window-inactive,
-  .message-row-right::-webkit-scrollbar-thumb:window-inactive {
-    background: #d8d8d8;
   }
 
   .message-row-right .message-body {
@@ -3678,26 +3634,6 @@ export default {
       padding-right: 10px;
       margin: 0 12px;
       overflow: auto;
-
-      /* 设置滚动条的样式 */
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      /* 滚动槽 */
-      &::-webkit-scrollbar-track {
-        border-radius: 10px;
-      }
-
-      /* 滚动条滑块 */
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: rgba(0, 0, 0, 0.1);
-      }
-
-      &::-webkit-scrollbar-thumb:window-inactive {
-        background: #d8d8d8;
-      }
 
       .radio_style1 {
         background: rgba(131, 96, 255, 0.04);

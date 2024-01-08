@@ -1485,6 +1485,7 @@ export default {
         padding-top: 30px;
         position: relative;
         transition: all 0.3s;
+        display: flex;
         li {
           width: 277px;
           margin-bottom: 30px;

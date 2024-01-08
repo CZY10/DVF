@@ -1334,27 +1334,6 @@ export default {
   color: #d161f6 !important;
 }
 
-/* 定义滚动条的宽度 */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-/* 定义滚动条轨道的样式 */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* 定义滚动条滑块的样式 */
-::-webkit-scrollbar-thumb {
-  background: #cecece;
-  border-radius: 10px;
-}
-
-/* 定义滚动条滑块在鼠标悬停时的样式 */
-::-webkit-scrollbar-thumb:hover {
-  background: #bdbdbd;
-}
-
 .el-pagination .el-select .el-input .el-input__inner {
   color: #999;
 }

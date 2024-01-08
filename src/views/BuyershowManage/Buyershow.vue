@@ -751,9 +751,9 @@ export default {
     #ecf2ff 60%,
     #eee5fc 100%
   );
-  height: calc(100vh - 67px);
-  overflow-x: hidden;
+  min-height: calc(100vh - 67px);
   position: relative;
+  height: 100%;
 
   .banxin {
     width: 1200px;
@@ -1370,27 +1370,6 @@ export default {
 <style>
 .el-select-dropdown__item.selected {
   color: #d161f6 !important;
-}
-
-/* 定义滚动条的宽度 */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-/* 定义滚动条轨道的样式 */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* 定义滚动条滑块的样式 */
-::-webkit-scrollbar-thumb {
-  background: #cecece;
-  border-radius: 10px;
-}
-
-/* 定义滚动条滑块在鼠标悬停时的样式 */
-::-webkit-scrollbar-thumb:hover {
-  background: #bdbdbd;
 }
 
 .el-pagination .el-select .el-input .el-input__inner {

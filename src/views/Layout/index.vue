@@ -81,7 +81,7 @@ export default {
   height: 75px;
   position: fixed;
   right: 30px;
-  top: 700px;
+  bottom: 200px;
   cursor: pointer;
   background: url("@/assets/images/ben.png");
   transition: all 0.3s;

@@ -125,10 +125,14 @@
         <div class="bottom">
           <div class="Tabs">
             <div :class="{ ifVideoImages: ifVideoImages }">
-              <span @click="ifVideoImages = !ifVideoImages">视频案例</span>
+              <span @click="() => {
+                if (!ifVideoImages) ifVideoImages = !ifVideoImages
+              }">视频案例</span>
             </div>
             <div :class="{ ifVideoImages: !ifVideoImages }">
-              <span @click="ifVideoImages = !ifVideoImages">图片post</span>
+              <span @click="() => {
+                if (ifVideoImages) ifVideoImages = !ifVideoImages
+              }">图片post</span>
             </div>
           </div>
           <div class="videoimages">
@@ -166,7 +170,7 @@
                 <div v-if="imagepostlist?.length > 0">
                   <ul ref="imglistHeigth">
                     <li v-for="item in imagepostlist" :key="item.id">
-                      <el-image :src="item.image" fit="cover" />
+                      <el-image :src="item.image" fit="cover" :preview-src-list="imagepostsrcList" />
                     </li>
                   </ul>
 
@@ -243,6 +247,7 @@ export default {
       imagepostSize: 16,
       imageposCpage: 1,
       dialogVisiblelogin: false,
+      imagepostsrcList: []
     };
   },
   computed: {
@@ -355,6 +360,10 @@ export default {
       if (res.code == 1) {
         this.imagepostlist = res.data.data;
         this.imageposttotal = res.data.total;
+        this.imagepostsrcList = [];
+        this.imagepostlist.forEach(item => {
+          this.imagepostsrcList.push(item.image)
+        })
 
         if (this.imagepostlist?.length > 0) {
           setTimeout(() => {
@@ -854,7 +863,6 @@ export default {
           height: 58px;
           background: #ffffff;
           border-radius: 6px 6px 0px 0px;
-          border-bottom: 1px solid #eee;
           display: flex;
           padding: 0 30px;
 
@@ -863,8 +871,6 @@ export default {
             margin-right: 30px;
             color: #999999;
             font-size: 16px;
-            transition: all 0.3s;
-            border-bottom: 2px solid #fff;
 
             span {
               cursor: pointer;
@@ -874,8 +880,24 @@ export default {
           .ifVideoImages {
             font-weight: 600;
             color: #333333;
-            border-bottom: 2px solid #333333;
+            position: relative;
           }
+
+          .ifVideoImages::after {
+            content: '';
+            display: block;
+            width: 30px;
+            /* 自定义长度 */
+            height: 2px;
+            /* 边框高度 */
+            background-color: #D161F6;
+            position: absolute;
+            left: 17px;
+            bottom: 10px;
+            z-index: 100;
+
+          }
+
         }
 
         .videoimages {

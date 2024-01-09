@@ -34,6 +34,7 @@ export default {
     // http://localhost:8088/login?source=vipon_deal&action=account%2Flogin
     // http://localhost:8088/?source=e0e57252845a98f8cbf2ac07d12ad23a
     if (
+      this.source == 'vipon_deal' &&
       this.action != "account/login" &&
       localStorage.getItem("token") &&
       this.action != ""

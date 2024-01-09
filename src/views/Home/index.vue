@@ -33,7 +33,7 @@
             </div>
             <div class="carousel_item carousel-item1" v-if="index == 1">
               <div class="banner1">
-                <div class="left" style="position: relative; left: 180px">
+                <div class="left" style="position: relative; left: 160px">
                   <h1>亚马逊站外推广服务</h1>
                   <p class="title">
                     Slickdeals/DealNews/Techbargains/Ben's
@@ -836,7 +836,7 @@ export default {
           margin-top: 72px;
           width: 960px;
           img {
-            width: 100%;
+            width: 960px;
           }
         }
       }
@@ -1377,9 +1377,6 @@ export default {
     opacity: 1;
     animation: slideUp 0.5s ease-out;
   }
-  .slideout {
-    animation: slideout 0.5s ease-out;
-  }
 
   @keyframes slideUp {
     0% {
@@ -1531,5 +1528,9 @@ export default {
 <style lang="less" scoped>
 ::v-deep(.el-carousel__indicators--horizontal) {
   bottom: 140px;
+}
+
+::v-deep(.el-carousel__indicators--horizontal) {
+  z-index: 1000;
 }
 </style>

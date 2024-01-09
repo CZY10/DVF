@@ -9,8 +9,9 @@
                 加载中<span class="dot">...</span>
               </div>
               <div slot="error" class="image-slot">
-                <i class="el-icon-picture-outline"></i></div
-            ></el-image>
+                <i class="el-icon-picture-outline"></i>
+              </div>
+            </el-image>
 
             <div class="logo_id" v-show="userInfo.logo_id?.length != 0">
               <p>
@@ -24,21 +25,17 @@
             <div class="id-money">
               <div class="id-moneyleft">
                 <span class="id">No.{{ userInfo.user_id }}</span>
-                <div
-                  :class="{
-                    yxlz: userInfo.type == '影响力者',
-                    smhr: userInfo.type == '社媒红人',
-                    sr: userInfo.type == '素人',
-                    szr: userInfo.type == '数字人',
-                  }"
-                >
+                <div :class="{
+                  yxlz: userInfo.type == '影响力者',
+                  smhr: userInfo.type == '社媒红人',
+                  sr: userInfo.type == '素人',
+                  szr: userInfo.type == '数字人',
+                }">
                   {{ userInfo.type }}
                 </div>
               </div>
               <p class="id-moneyrigth">
-                <span class="money" v-if="userInfo.price_type == 0"
-                  >￥{{ userInfo.price }}</span
-                >
+                <span class="money" v-if="userInfo.price_type == 0">￥{{ userInfo.price }}</span>
 
                 <span class="money" v-else-if="userInfo.price_type == 1">
                   ￥{{ userInfo.lower_price }}-{{ userInfo.highest_price }}
@@ -68,10 +65,7 @@
             <div class="Introductionitem">
               <div class="name">性别</div>
               <div class="content2">
-                <i
-                  class="el-icon-female"
-                  v-if="userInfo.genderdata == 'female'"
-                ></i>
+                <i class="el-icon-female" v-if="userInfo.genderdata == 'female'"></i>
                 <i class="el-icon-male" v-else></i>
                 <span>{{ userInfo.genderdata == "female" ? "女" : "男" }}</span>
               </div>
@@ -79,8 +73,7 @@
             <div class="Introductionitem">
               <div class="name">年龄</div>
               <div class="content1">
-                <span style="margin-right: 2px">{{ userInfo.age }}</span
-                ><span>岁</span>
+                <span style="margin-right: 2px">{{ userInfo.age }}</span><span>岁</span>
               </div>
             </div>
             <div class="Introductionitem">
@@ -94,8 +87,7 @@
             <div class="Introductionitem">
               <div class="name">交付周期</div>
               <div class="content4">
-                <span>{{ userInfo.leadtime_id }}</span
-                ><b>（样品收货后）</b>
+                <span>{{ userInfo.leadtime_id }}</span><b>（样品收货后）</b>
               </div>
             </div>
 
@@ -133,7 +125,7 @@
         <div class="bottom">
           <div class="Tabs">
             <div :class="{ ifVideoImages: ifVideoImages }">
-              <span @click="ifVideoImages = !ifVideoImages">视频</span>
+              <span @click="ifVideoImages = !ifVideoImages">视频案例</span>
             </div>
             <div :class="{ ifVideoImages: !ifVideoImages }">
               <span @click="ifVideoImages = !ifVideoImages">图片post</span>
@@ -145,10 +137,7 @@
                 <div v-if="videodatas?.length > 0">
                   <ul ref="videolistHeigth">
                     <li v-for="item in videodatas" :key="item.id">
-                      <div
-                        class="cover"
-                        @click="addvideoLog(item.file, item.desc)"
-                      >
+                      <div class="cover" @click="addvideoLog(item.file, item.desc)">
                         <el-image :src="item.coverimage" fit="cover" />
                         <i class="el-icon-caret-right"></i>
                         <div class="masking-out"></div>
@@ -159,16 +148,10 @@
                     </li>
                   </ul>
                   <template>
-                    <div class="paging">
-                      <el-pagination
-                        background
-                        :page-sizes="[15, 30, 45]"
-                        layout="prev, pager, next, sizes, jumper"
-                        :total="total"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                      >
+                    <div class="paging" v-if="total > 15">
+                      <el-pagination background :page-sizes="[15, 30, 45]" layout="prev, pager, next, sizes, jumper"
+                        :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                        :current-page="currentPage">
                       </el-pagination>
                     </div>
                   </template>
@@ -188,16 +171,10 @@
                   </ul>
 
                   <template>
-                    <div class="paging">
-                      <el-pagination
-                        background
-                        :page-sizes="[20, 30, 40]"
-                        layout="prev, pager, next, sizes, jumper"
-                        :total="imageposttotal"
-                        @size-change="imagepostChange"
-                        @current-change="imagepostCurrentChange"
-                        :current-page="currentPage"
-                      >
+                    <div class="paging" v-if="imageposttotal > 16">
+                      <el-pagination background :page-sizes="[16, 32, 48]" layout="prev, pager, next, sizes, jumper"
+                        :total="imageposttotal" @size-change="imagepostChange" @current-change="imagepostCurrentChange"
+                        :current-page="currentPage">
                       </el-pagination>
                     </div>
                   </template>
@@ -214,26 +191,15 @@
       </div>
     </div>
 
-    <videoLog
-      :videoLog="videoLog"
-      @getvideoLog="getvideoLog"
-      :videoLogscr="videoLogscr"
-      :videoLogtitle="videoLogtitle"
-    ></videoLog>
+    <videoLog :videoLog="videoLog" @getvideoLog="getvideoLog" :videoLogscr="videoLogscr" :videoLogtitle="videoLogtitle">
+    </videoLog>
 
-    <el-dialog
-      title="温馨提示"
-      center
-      :visible.sync="dialogVisiblelogin"
-      width="300px"
-    >
+    <el-dialog title="温馨提示" center :visible.sync="dialogVisiblelogin" width="300px">
       <p style="text-align: center; margin-top: 15px; white-space: nowrap">
         您还没有登录，登录后即可继续操作
       </p>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="goLogin" class="dialogVisibleloginbtn"
-          >去登录</el-button
-        >
+        <el-button @click="goLogin" class="dialogVisibleloginbtn">去登录</el-button>
       </span>
     </el-dialog>
   </div>
@@ -269,12 +235,12 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 15,
-      LifephotospageSize: 18,
+      LifephotospageSize: 12,
       Lifephotospage: 1,
       scrollHandler: null,
       imagepostlist: [],
       imageposttotal: 0,
-      imagepostSize: 20,
+      imagepostSize: 16,
       imageposCpage: 1,
       dialogVisiblelogin: false,
     };
@@ -330,10 +296,11 @@ export default {
           this.Lifephotoslist.push(item);
           this.srcList.push(item.image);
         });
+
         if (
           res.data.total >= this.Lifephotoslist?.length &&
           this.scrollHandler == null &&
-          res.data.total > 20
+          res.data.total > 12
         ) {
           this.scrollHandler = () => {
             let element = this.$refs.Lifephotoslistdom;
@@ -348,7 +315,7 @@ export default {
             let element = this.$refs.Lifephotoslistdom;
             element.addEventListener("scroll", this.scrollHandler);
           });
-        } else {
+        } else if (this.scrollHandler != null && res.data.total == this.Lifephotoslist?.length) {
           let element = this.$refs.Lifephotoslistdom;
           element?.removeEventListener("scroll", this.scrollHandler);
         }
@@ -455,6 +422,7 @@ export default {
 
     //视频切换页码
     handleSizeChange(val) {
+      this.currentPage = 1;
       this.pageSize = val;
       this.getvideos();
     },
@@ -465,6 +433,7 @@ export default {
 
     //图片post切换页码
     imagepostChange(val) {
+      this.imageposCpage = 1;
       this.imagepostSize = val;
       this.getpostImagelists();
     },
@@ -489,10 +458,10 @@ export default {
     pageSize(newval) {
       switch (newval) {
         case 30:
-          this.$refs.videolistHeigth.style.maxHeight = 2000 + "px";
+          this.$refs.videolistHeigth.style.maxHeight = 1000 * 2 + "px";
           break;
         case 45:
-          this.$refs.videolistHeigth.style.maxHeight = 3000 + "px";
+          this.$refs.videolistHeigth.style.maxHeight = 1000 * 3 + "px";
           break;
         default:
           this.$refs.videolistHeigth.style.maxHeight = 1000 + "px";
@@ -501,14 +470,14 @@ export default {
     },
     imagepostSize(newval) {
       switch (newval) {
-        case 30:
-          this.$refs.imglistHeigth.style.maxHeight = 1035 * 2 + "px";
+        case 32:
+          this.$refs.imglistHeigth.style.maxHeight = 840 * 2 + "px";
           break;
-        case 40:
-          this.$refs.imglistHeigth.style.maxHeight = 1035 * 3 + "px";
+        case 48:
+          this.$refs.imglistHeigth.style.maxHeight = 840 * 3 + "px";
           break;
         default:
-          this.$refs.imglistHeigth.style.maxHeight = 1035 + "px";
+          this.$refs.imglistHeigth.style.maxHeight = 840 + "px";
           break;
       }
     },
@@ -521,28 +490,33 @@ export default {
 <style lang="less" scoped>
 #homepage {
   min-height: calc(100vh - 66px);
-  background: #f1f4f7
-    linear-gradient(225deg, #e6e9fe 0%, #f7f8fa 20%, #ecf2ff 60%, #eee5fc 100%);
+  background: #f1f4f7 linear-gradient(225deg, #e6e9fe 0%, #f7f8fa 20%, #ecf2ff 60%, #eee5fc 100%);
   overflow: hidden;
+
   .content {
     width: 1200px;
     margin: 30px auto 0;
     display: flex;
     justify-content: space-between;
+
     .left {
       width: 360px;
+
       .top {
         border-radius: 6px;
         overflow: hidden;
         background: #fff;
+
         .img {
           width: 100%;
           height: 364px;
           position: relative;
+
           .el-image {
             border-top-right-radius: 8px;
             height: 100%;
             width: 100%;
+
             .image-slot {
               display: flex;
               justify-content: center;
@@ -555,14 +529,17 @@ export default {
             position: absolute;
             right: -2px;
             top: 0;
+
             p {
               position: relative;
+
               i {
                 color: #ffdd99;
                 font-size: 23px;
                 position: absolute;
                 right: 0;
               }
+
               span {
                 position: absolute;
                 right: 7px;
@@ -577,18 +554,22 @@ export default {
 
         .information {
           padding: 20px;
+
           .id-money {
             display: flex;
             justify-content: space-between;
             align-items: center;
+
             .id-moneyleft {
               display: flex;
               align-items: center;
+
               .id {
                 font-weight: 600;
                 color: #333333;
                 font-size: 22px;
               }
+
               div {
                 font-size: 12px;
                 height: 22px;
@@ -597,23 +578,28 @@ export default {
                 margin-left: 12px;
                 border-radius: 2px;
               }
+
               .yxlz {
                 border: 1px solid #daeee9;
                 color: #00d9ad;
               }
+
               .smhr {
                 border: 1px solid #eedae9;
                 color: #f44eff;
               }
+
               .sr {
                 border: 1px solid #eee4da;
                 color: #f56422;
               }
+
               .szr {
                 border: 1px solid #dae6ee;
                 color: #00b2ff;
               }
             }
+
             .id-moneyrigth {
               .money {
                 font-weight: 600;
@@ -626,6 +612,7 @@ export default {
           .classification {
             margin-top: 12px;
             overflow: hidden;
+
             li {
               height: 20px;
               line-height: 20px;
@@ -638,6 +625,7 @@ export default {
               float: left;
             }
           }
+
           hr {
             border: none;
             border-top: 1px solid #eee;
@@ -649,39 +637,49 @@ export default {
             line-height: 20px;
             margin-bottom: 14px;
             display: flex;
+
             .name {
               width: 90px;
               color: #666666;
             }
+
             .content1 {
               display: flex;
               align-items: center;
               color: #333333;
+
               img {
                 width: 14px;
                 margin-right: 3px;
               }
             }
+
             .content2 {
               color: #333333;
+
               .el-icon-female {
                 color: #f44eff;
               }
+
               .el-icon-male {
                 color: #00b2ff;
               }
+
               span {
                 margin-left: 5px;
               }
             }
+
             .content3 {
               display: flex;
+
               li {
                 width: 24px;
                 height: 24px;
                 margin-right: 7px;
                 border: 1px solid #eeeeee;
                 border-radius: 50%;
+
                 img {
                   width: 100%;
                   height: 100%;
@@ -689,10 +687,12 @@ export default {
                 }
               }
             }
+
             .content4 {
               span {
                 color: #333333;
               }
+
               b {
                 font-size: 12px;
                 font-weight: 400;
@@ -712,9 +712,11 @@ export default {
             color: #fff;
             transition: all 0.3s;
             padding-right: 13px;
+
             i {
               margin-right: 3px;
             }
+
             .icon {
               font-weight: 900;
               margin-bottom: 2px;
@@ -727,6 +729,7 @@ export default {
           button:hover {
             background: #c034ee;
           }
+
           button:hover .icon {
             opacity: 1;
           }
@@ -734,21 +737,25 @@ export default {
           .Donotclick {
             background: #ccc;
           }
+
           .Donotclick:hover {
             background: #ccc;
           }
+
           .Donotclick:hover .icon {
             opacity: 0;
           }
         }
       }
+
       .bottom {
-        height: 490px;
         background: #fff;
         margin-top: 20px;
         padding: 15px 20px 20px 20px;
         border-radius: 8px;
         box-sizing: border-box;
+        height: 285px;
+
         h1 {
           font-size: 16px;
           font-weight: 600;
@@ -759,11 +766,12 @@ export default {
         ul {
           display: flex;
           flex-wrap: wrap;
-          height: 420px;
+          height: 210px;
           // height: 200px;
           overflow-y: auto;
           width: 101%;
           padding-right: 13px;
+
           li {
             width: 101px;
             height: 101px;
@@ -788,6 +796,7 @@ export default {
           img {
             width: 200px;
           }
+
           p {
             color: #999999;
             font-size: 12px;
@@ -795,15 +804,18 @@ export default {
         }
       }
     }
+
     .rigth {
       width: 820px;
+
       .top {
         width: 100%;
-        padding: 16px 20px 26px;
+        padding: 16px 20px;
         background: #ffffff;
         border-radius: 6px;
-        border: 1px solid #eeeeee;
         box-sizing: border-box;
+        min-height: 160px;
+
         h1 {
           font-weight: 600;
           color: #333333;
@@ -811,13 +823,16 @@ export default {
         }
 
         ul {
-          margin-top: 30px;
-          padding-left: 20px;
+          margin-top: 14px;
+          padding: 16px 20px;
+          background: #fafafa;
+
           li {
             display: flex;
             align-items: center;
             color: #666666;
             margin-bottom: 10px;
+
             .dian {
               width: 4px;
               height: 4px;
@@ -834,12 +849,15 @@ export default {
         margin-top: 20px;
         width: 100%;
         padding-bottom: 20px;
+
         .Tabs {
           height: 58px;
           background: #ffffff;
-          border-radius: 6px;
+          border-radius: 6px 6px 0px 0px;
+          border-bottom: 1px solid #eee;
           display: flex;
           padding: 0 30px;
+
           div {
             line-height: 58px;
             margin-right: 30px;
@@ -847,10 +865,12 @@ export default {
             font-size: 16px;
             transition: all 0.3s;
             border-bottom: 2px solid #fff;
+
             span {
               cursor: pointer;
             }
           }
+
           .ifVideoImages {
             font-weight: 600;
             color: #333333;
@@ -861,7 +881,7 @@ export default {
         .videoimages {
           width: 100%;
           overflow: hidden;
-          margin-top: 10px;
+
           .switch {
             width: 1640px;
             display: flex;
@@ -871,8 +891,9 @@ export default {
 
             div {
               width: 820px;
+
               .emptyimg {
-                height: 700px;
+                height: 775px;
                 display: flex;
                 align-items: center;
                 flex-direction: column;
@@ -882,6 +903,7 @@ export default {
                 img {
                   width: 200px;
                 }
+
                 p {
                   color: #999999;
                   font-size: 12px;
@@ -891,51 +913,60 @@ export default {
 
             .paging {
               margin-top: 20px;
+
               .el-pagination {
                 display: flex;
                 justify-content: center;
               }
             }
+
             .video-content {
               border-radius: 6px;
+
               ul {
-                max-height: 1000px;
-                min-height: 1000px;
+                min-height: 773px;
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: space-between;
                 align-content: flex-start;
                 transition: all 0.3s;
                 overflow: hidden;
+                padding: 10px;
+                background: #fff;
+                border-radius: 0px 0px 6px 6px;
+                box-sizing: border-box;
+
                 li {
-                  width: 266px;
+                  width: 260px;
                   height: 190px;
-                  background: #fff;
-                  border-radius: 6px;
                   overflow: hidden;
-                  margin-bottom: 10px;
+                  margin-bottom: 7px;
+
                   .cover {
                     width: 100%;
                     height: 149px;
                     position: relative;
                     cursor: pointer;
+                    border-radius: 6px;
+                    overflow: hidden;
+
                     .el-image {
                       width: 100%;
                       height: 100%;
                     }
+
                     .masking-out {
                       width: 266px;
                       height: 80px;
-                      background: linear-gradient(
-                        360deg,
-                        rgba(0, 0, 0, 0.89) 0%,
-                        rgba(0, 0, 0, 0) 100%
-                      );
+                      background: linear-gradient(360deg,
+                          rgba(0, 0, 0, 0.89) 0%,
+                          rgba(0, 0, 0, 0) 100%);
                       z-index: 10;
                       position: absolute;
                       bottom: 0;
                       pointer-events: none;
                     }
+
                     .el-icon-caret-right {
                       width: 30px;
                       height: 30px;
@@ -951,6 +982,7 @@ export default {
                       align-items: center;
                       justify-content: center;
                     }
+
                     .el-icon-caret-right:before {
                       color: #fff;
                       font-size: 22px;
@@ -958,6 +990,7 @@ export default {
                   }
                 }
               }
+
               .desc {
                 text-align: center;
                 white-space: nowrap;
@@ -969,8 +1002,10 @@ export default {
                 margin-top: 12px;
               }
             }
+
             .images-content {
               border-radius: 6px;
+
               ul {
                 display: flex;
                 flex-wrap: wrap;
@@ -978,13 +1013,18 @@ export default {
                 width: 101%;
                 transition: all 0.3s;
                 max-height: 1035px;
-                min-height: 1035px;
+                min-height: 763px;
+                padding: 10px;
+                padding-bottom: 0 !important;
+                background: #fff;
+
                 li {
-                  width: 197px;
+                  width: 192px;
                   height: 197px;
                   border-radius: 6px;
                   overflow: hidden;
                   margin: 0 10px 10px 0;
+
                   .el-image {
                     width: 100%;
                     height: 100%;

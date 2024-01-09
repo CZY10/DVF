@@ -1,23 +1,16 @@
 <template>
   <div id="buyershow">
     <el-backtop target="#buyershow">
-      <i class="iconfont icon-fhdb1" style="color: #999"></i
-    ></el-backtop>
+      <i class="iconfont icon-fhdb1" style="color: #999"></i></el-backtop>
 
     <div class="banxin">
       <div class="loading" v-if="isloading"></div>
 
       <!-- 搜索 -->
       <div class="searchfor">
-        <el-input
-          v-model="searchforval"
-          placeholder="输入产品名称/品类/红人编号"
-          class="inp"
-          @keyup.enter.native="getRenderingData"
-        ></el-input>
-        <el-button class="searchforbtn" @click="getRenderingData"
-          >搜索</el-button
-        >
+        <el-input v-model="searchforval" placeholder="输入产品名称/品类/红人编号" class="inp"
+          @keyup.enter.native="getRenderingData"></el-input>
+        <el-button class="searchforbtn" @click="getRenderingData">搜索</el-button>
       </div>
 
       <!-- 筛选 -->
@@ -25,10 +18,7 @@
         <div class="filter_header">
           <div class="filter_item">
             <span>达人性别</span>
-            <el-radio-group
-              v-model="genderValue"
-              @change="handlerSearchList('genderdata', genderValue)"
-            >
+            <el-radio-group v-model="genderValue" @change="handlerSearchList('genderdata', genderValue)">
               <el-radio-button label="">全部</el-radio-button>
               <el-radio-button label="male">男性</el-radio-button>
               <el-radio-button label="female">女性</el-radio-button>
@@ -36,44 +26,25 @@
           </div>
           <div class="filter_item">
             <span>产品品类</span>
-            <el-radio-group
-              v-model="categoryValue"
-              @change="handlerSearchList('category_id', categoryValue)"
-            >
+            <el-radio-group v-model="categoryValue" @change="handlerSearchList('category_id', categoryValue)">
               <el-radio-button label="">全部</el-radio-button>
-              <el-radio-button
-                v-for="(item, index) in categoryList"
-                :key="index"
-                :label="item.id"
-                >{{ item.name }}</el-radio-button
-              >
+              <el-radio-button v-for="(item, index) in categoryList" :key="index" :label="item.id">{{ item.name
+              }}</el-radio-button>
             </el-radio-group>
           </div>
           <div style="height: 1px; background-color: #eee"></div>
 
           <div class="filter_item" style="margin-top: 10px">
             <span>主题专区</span>
-            <el-radio-group
-              v-model="themeValue"
-              @change="handlerSearchList('theme_id', themeValue)"
-            >
+            <el-radio-group v-model="themeValue" @change="handlerSearchList('theme_id', themeValue)">
               <el-radio-button label=""> 全部 </el-radio-button>
-              <el-radio-button
-                v-for="(item, index) in themeList"
-                :key="index"
-                :label="item.id"
-              >
-                <div
-                  style="
+              <el-radio-button v-for="(item, index) in themeList" :key="index" :label="item.id">
+                <div style="
                     text-align: center;
                     position: relative;
                     padding-left: 23px;
-                  "
-                >
-                  <img
-                    src="@/assets/images/sp.png"
-                    style="position: absolute; left: 0; top: -6px"
-                  />
+                  ">
+                  <img src="@/assets/images/sp.png" style="position: absolute; left: 0; top: -6px" />
                   {{ item.name }}
                 </div>
               </el-radio-button>
@@ -88,11 +59,7 @@
           <div class="seek_div_span">找到 {{ total }} 个</div>
           <div class="seek_divd">
             <span>价格 ≤</span>
-            <el-input
-              v-model="priceval"
-              class="priceinp"
-              @change="getRenderingData"
-            ></el-input>
+            <el-input v-model="priceval" class="priceinp" @change="getRenderingData"></el-input>
             <span>元</span>
           </div>
         </div>
@@ -101,11 +68,7 @@
       <!-- 分类产品 -->
       <div class="product">
         <ul class="product_ul" v-if="datalist.length != 0">
-          <li
-            class="product_li"
-            v-for="(item, index) in datalist"
-            :key="item.user_id"
-          >
+          <li class="product_li" v-for="(item, index) in datalist" :key="item.user_id">
             <div class="product_li_img" @click="gohomepage(item.user_id)">
               <img :src="item.image" />
             </div>
@@ -113,22 +76,13 @@
               <div class="product_list_div1">
                 <div class="product_list_left">
                   <div class="product_list_no">No.{{ item.user_id }}</div>
-                  <div
-                    v-if="item.type == '影响力者'"
-                    class="product_list_typelv"
-                  >
+                  <div v-if="item.type == '影响力者'" class="product_list_typelv">
                     {{ item.type }}
                   </div>
-                  <div
-                    v-if="item.type == '社媒红人'"
-                    class="product_list_typeho"
-                  >
+                  <div v-if="item.type == '社媒红人'" class="product_list_typeho">
                     {{ item.type }}
                   </div>
-                  <div
-                    v-if="item.type == '数字人'"
-                    class="product_list_typelan"
-                  >
+                  <div v-if="item.type == '数字人'" class="product_list_typelan">
                     {{ item.type }}
                   </div>
                   <div v-if="item.type == '素人'" class="product_list_typechen">
@@ -140,10 +94,7 @@
                   ￥{{ item.price }}
                 </div>
 
-                <div
-                  class="product_list_rigth"
-                  v-else-if="item.price_type == 1"
-                >
+                <div class="product_list_rigth" v-else-if="item.price_type == 1">
                   ￥<span>{{ item.lower_price }}-{{ item.highest_price }}</span>
                 </div>
 
@@ -152,41 +103,30 @@
                 </div>
               </div>
 
-              <div
-                class="product_list_div2"
-                v-if="item.category_ids.length <= 5"
-                :title="categoryidarr[index]"
-              >
-                <li v-for="(item, index) in item.category_ids" :key="index">
-                  {{ item.name }}
-                </li>
-              </div>
-              <div v-else style="display: flex" :title="categoryidarr[index]">
-                <div class="product_list_div2">
-                  <li v-for="(item, index) in item.category_ids" :key="index">
-                    {{ item.name }}
-                  </li>
-                </div>
-                <span>...</span>
-              </div>
+              <div class="product_list_div2" v-if="item.category_ids.length <= 5" :title="categoryidarr[index]">
+          <li v-for="(item, index) in item.category_ids" :key="index">
+            {{ item.name }}
+          </li>
+      </div>
+      <div v-else style="display: flex" :title="categoryidarr[index]">
+        <div class="product_list_div2">
+          <li v-for="(item, index) in item.category_ids" :key="index">
+            {{ item.name }}
+          </li>
+        </div>
+        <span>...</span>
+      </div>
 
-              <div
-                style="height: 1px; background-color: #eee; margin-top: 15px"
-              ></div>
+      <div style="height: 1px; background-color: #eee; margin-top: 15px"></div>
 
-              <ul class="product_list_videos">
-                <li
-                  v-for="(items, indexviedeos) in isvideoslist[index]"
-                  :key="items.user_id"
-                  @click="openVideos(item.videos, indexviedeos)"
-                  :title="items.desc"
-                >
-                  <i class="iconfont icon-video" style="font-size: 14px"></i>
-                  <span> {{ items.desc }}</span>
-                </li>
+      <ul class="product_list_videos">
+        <li v-for="(items, indexviedeos) in isvideoslist[index]" :key="items.user_id"
+          @click="openVideos(item.videos, indexviedeos)" :title="items.desc">
+          <i class="iconfont icon-video" style="font-size: 14px"></i>
+          <span> {{ items.desc }}</span>
+        </li>
 
-                <li
-                  style="
+        <li style="
                     width: 22px;
                     text-align: center;
                     display: block;
@@ -197,143 +137,92 @@
                       ),
                       linear-gradient(270deg, #ffffff 0%, #fcf3ff 100%);
                     border-radius: 4px;
-                  "
-                  v-if="item.videos.length >= 12"
-                  @click="gohomepage(item.user_id)"
-                >
-                  . . .
-                </li>
-              </ul>
-            </div>
-            <div
-              @click="addlist(item, index, item.user_id)"
-              :class="{
-                product_btn: item.istrue != false,
-                addlistbj: item.istrue == false,
-              }"
-              ref="addbtndom"
-            >
-              <span class="icon">+</span>
-              <i class="iconfont icon-gwc" style="font-size: 14px"></i>
-              <span class="test1" v-if="item.istrue == false">已选择</span>
-              <span class="test1" v-else>选择</span>
-            </div>
-
-            <div class="logo_id" v-if="item.logo_id.length != 0">
-              <p>
-                <i class="iconfont icon-bq"></i>
-                <span>含版权</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-        <div v-else class="product_div">
-          <img src="@/assets/images/empty_img.png" alt="" />
-          <p>暂无搜索结果</p>
-        </div>
-      </div>
-
-      <template>
-        <div class="paging" v-show="datalist.length != 0">
-          <el-pagination
-            background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[12, 24, 48, 96]"
-            :page-size="per_page"
-            layout="total, prev, pager, next, sizes, jumper"
-            :total="total"
-          >
-          </el-pagination>
-        </div>
-      </template>
+                  " v-if="item.videos.length >= 12" @click="gohomepage(item.user_id)">
+          . . .
+        </li>
+      </ul>
+    </div>
+    <div @click="addlist(item, index, item.user_id)" :class="{
+      product_btn: item.istrue != false,
+      addlistbj: item.istrue == false,
+    }" ref="addbtndom">
+      <span class="icon">+</span>
+      <i class="iconfont icon-gwc" style="font-size: 14px"></i>
+      <span class="test1" v-if="item.istrue == false">已选择</span>
+      <span class="test1" v-else>选择</span>
     </div>
 
-    <el-dialog
-      :visible.sync="dialogVisible"
-      width="880px"
-      :close-on-click-modal="false"
-    >
-      <div class="eldialogVisble">
-        <div style="width: 650px">
-          <div class="leftVis">
-            <video
-              autoplay
-              controls
-              preload="none"
-              ref="myVideo"
-              @play="video_img = true"
-              @pause="video_img = false"
-            >
-              <source
-                :src="videoslist[videoslistindex]?.file"
-                type="video/mp4"
-              />
-            </video>
-            <div class="video_img" @click="videoplay" v-show="!video_img"></div>
-          </div>
-          <div class="title" :title="videoslist[videoslistindex]?.desc">
-            {{ videoslist[videoslistindex]?.desc }}
-          </div>
+    <div class="logo_id" v-if="item.logo_id.length != 0">
+      <p>
+        <i class="iconfont icon-bq"></i>
+        <span>含版权</span>
+      </p>
+    </div>
+    </li>
+    </ul>
+    <div v-else class="product_div">
+      <img src="@/assets/images/empty_img.png" alt="" />
+      <p>暂无搜索结果</p>
+    </div>
+  </div>
+
+  <template>
+    <div class="paging" v-show="datalist.length != 0">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="currentPage" :page-sizes="[12, 24, 48, 96]" :page-size="per_page"
+        layout="total, prev, pager, next, sizes, jumper" :total="total">
+      </el-pagination>
+    </div>
+  </template>
+  </div>
+
+  <el-dialog :visible.sync="dialogVisible" width="880px" :close-on-click-modal="false">
+    <div class="eldialogVisble">
+      <div style="width: 650px">
+        <div class="leftVis">
+          <video autoplay controls preload="none" ref="myVideo" @play="video_img = true" @pause="video_img = false">
+            <source :src="videoslist[videoslistindex]?.file" type="video/mp4" />
+          </video>
+          <div class="video_img" @click="videoplay" v-show="!video_img"></div>
         </div>
-        <div class="rigthlist">
-          <p class="rigthlist_p">作品案例</p>
-          <p
-            v-for="(item, index) in videoslist"
-            :key="item.id"
-            :class="{ videoslistcss: item.videoslistcss, falg: true }"
-            @click="SwitchVideo(videoslist, index)"
-            :title="item.desc"
-          >
-            <i class="iconfont icon-video"></i>
-            {{ item.desc }}
-          </p>
+        <div class="title" :title="videoslist[videoslistindex]?.desc">
+          {{ videoslist[videoslistindex]?.desc }}
         </div>
       </div>
-    </el-dialog>
+      <div class="rigthlist">
+        <p class="rigthlist_p">作品案例</p>
+        <p v-for="(item, index) in videoslist" :key="item.id" :class="{ videoslistcss: item.videoslistcss, falg: true }"
+          @click="SwitchVideo(videoslist, index)" :title="item.desc">
+          <i class="iconfont icon-video"></i>
+          {{ item.desc }}
+        </p>
+      </div>
+    </div>
+  </el-dialog>
 
-    <el-dialog
-      title="温馨提示"
-      center
-      :visible.sync="dialogVisiblelogin"
-      width="300px"
-    >
-      <p style="text-align: center; margin-top: 22px; padding-right: 20px">
-        您还没有登录，登录后即可继续操作
-      </p>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="goLogin" class="dialogVisibleloginbtn"
-          >去登录</el-button
-        >
-      </span>
-    </el-dialog>
+  <el-dialog title="温馨提示" center :visible.sync="dialogVisiblelogin" width="300px">
+    <p style="text-align: center; margin-top: 22px; padding-right: 20px">
+      您还没有登录，登录后即可继续操作
+    </p>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="goLogin" class="dialogVisibleloginbtn">去登录</el-button>
+    </span>
+  </el-dialog>
 
-    <el-dialog
-      title="温馨提示"
-      center
-      :visible.sync="dialogVisiblelogins"
-      width="300px"
-    >
-      <p
-        style="
+  <el-dialog title="温馨提示" center :visible.sync="dialogVisiblelogins" width="300px">
+    <p style="
           text-align: center;
           margin-top: 22px;
           padding: 0 20px;
           line-height: 1.6;
-        "
-      >
-        每一个视频可选<span style="color: #d161f6">0～5</span>个意向红人 <br />
-        未选择时，将由平台为您推荐
-      </p>
-      <span slot="footer" class="dialog-footer">
-        <el-button
-          class="dialogVisibleloginbtn"
-          @click="dialogVisiblelogins = false"
-          >知道了</el-button
-        >
-      </span>
-    </el-dialog>
+        ">
+      每一个视频可选<span style="color: #d161f6">0～5</span>个意向红人 <br />
+      未选择时，将由平台为您推荐
+    </p>
+    <span slot="footer" class="dialog-footer">
+      <el-button class="dialogVisibleloginbtn" @click="dialogVisiblelogins = false">知道了</el-button>
+    </span>
+  </el-dialog>
   </div>
 </template>
 <script>
@@ -394,7 +283,7 @@ export default {
     this.RenderingData();
     window.addEventListener("beforeunload", (e) => this.beforeunloadHandler(e));
   },
-  beforeUpdate() {},
+  beforeUpdate() { },
   methods: {
     goLogin() {
       router.push("/login");
@@ -587,8 +476,8 @@ export default {
             } else {
               this.requirementlist[this.requirementlist.length - 1].length < 5
                 ? this.requirementlist[this.requirementlist.length - 1].push(
-                    item
-                  )
+                  item
+                )
                 : this.requirementlist.push([item]);
             }
 
@@ -632,7 +521,7 @@ export default {
         "left .6s linear, top .6s cubic-bezier(0.5, 0.5, 1, 1)";
       document.body.appendChild(bar);
       setTimeout(() => {
-        const x = document.body.clientWidth - 450;
+        const x = document.body.clientWidth - 375;
         const y = 0;
         bar.style.top = y + "px";
         bar.style.left = x + "px";
@@ -744,13 +633,11 @@ export default {
 
 <style lang="less" scoped>
 #buyershow {
-  background: linear-gradient(
-    225deg,
-    #e6e9fe 0%,
-    #f7f8fa 20%,
-    #ecf2ff 60%,
-    #eee5fc 100%
-  );
+  background: linear-gradient(225deg,
+      #e6e9fe 0%,
+      #f7f8fa 20%,
+      #ecf2ff 60%,
+      #eee5fc 100%);
   min-height: calc(100vh - 67px);
   position: relative;
   height: 100%;
@@ -1067,6 +954,7 @@ export default {
             cursor: pointer;
             transition: all 0.3s;
             height: 30px;
+
             i {
               margin-right: 5px;
             }
@@ -1100,14 +988,17 @@ export default {
             position: absolute;
             right: -2px;
             top: 0;
+
             p {
               position: relative;
+
               i {
                 color: #ffdd99;
                 font-size: 23px;
                 position: absolute;
                 right: 0;
               }
+
               span {
                 position: absolute;
                 right: 7px;
@@ -1268,11 +1159,13 @@ export default {
       border: 1px solid #fff;
       border-radius: 4px 0 0 4px;
     }
+
     ::v-deep(.el-input__inner:hover) {
       border-color: #d161f6;
       border-radius: 4px 0 0 4px;
       border-right: none;
     }
+
     ::v-deep(.el-input__inner:focus) {
       border-color: #d161f6;
       border-radius: 4px 0 0 4px;
@@ -1357,8 +1250,7 @@ export default {
   background-color: rgba(255, 255, 255, 0);
 }
 
-::v-deep(.el-pagination.is-background .btn-next, .el-pagination.is-background
-    .btn-prev, .el-pagination.is-background .el-pager li) {
+::v-deep(.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li) {
   border-radius: 5px;
 }
 

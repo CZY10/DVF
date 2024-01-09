@@ -7,7 +7,7 @@
           <div style="width: 100%; height: 100%">
             <div class="carousel_item carousel-item0" v-if="index == 0">
               <div class="banner1">
-                <div class="left">
+                <div class="left" style="position: relative; left: 160px">
                   <h1>Amazon Influencer买家秀视频服务</h1>
                   <p class="title">
                     关联视频/主图视频/A+视频/QA视频/广告视频/TK视频素材
@@ -831,10 +831,19 @@ export default {
         }
         .rigth {
           margin-top: 64px;
+          width: 960px;
+          position: relative;
+          left: 30px;
+          img {
+            margin: 0 auto;
+            display: block;
+          }
         }
         .rigth2 {
           margin-top: 72px;
           width: 960px;
+          position: relative;
+          left: 30px;
           img {
             width: 960px;
           }

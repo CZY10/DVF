@@ -104,44 +104,29 @@
           </div>
           <div>
             <ul class="flex_style buyshow_type">
-              <li
-                v-for="(item, index) in influenceList"
-                :key="index"
-                @click="activeIndex = index"
-                :class="activeIndex == index ? 'activeStyle' : ''"
-              >
+              <li v-for="(item, index) in influenceList" :key="index" @click="activeIndex = index"
+                :class="activeIndex == index ? 'activeStyle' : ''">
                 {{ item.category_name }}
               </li>
-              <a :href="token ? '/buyershow' : '/login'"
-                ><li style="color: #999999; display: flex; align-items: center">
+              <a :href="token ? '/buyershow' : '/login'">
+                <li style="color: #999999; display: flex; align-items: center">
                   更多
-                  <i class="iconfont icon-more" style="font-size: 12px"></i></li
-              ></a>
+                  <i class="iconfont icon-more" style="font-size: 12px"></i>
+                </li>
+              </a>
             </ul>
           </div>
         </div>
         <div class="datastyle">
-          <div
-            :class="{ flex_style: true, item: activeIndex == index }"
-            v-for="(i, index) in influenceList"
-            :key="index"
-          >
-            <a
-              target="_blank"
-              :href="token ? '/homepage:' + item.id : '/login'"
-              v-for="(item, ind) in i.influencerList"
-              :key="ind"
-              class="buyshowItem"
-            >
+          <div :class="{ flex_style: true, item: activeIndex == index }" v-for="(i, index) in influenceList" :key="index">
+            <a target="_blank" :href="token ? '/homepage?id=' + item.id + '&user-id=' + item.user_id : '/login'"
+              v-for="(item, ind) in i.influencerList" :key="ind" class="buyshowItem">
               <div class="item_img"><img :src="item.image" alt="" /></div>
               <div class="flex_between item_pic">
                 <h5>NO.{{ item.id }}</h5>
                 <div>
-                  <b
-                    v-if="item.price != '视产品而定'"
-                    style="font-weight: normal"
-                    >￥</b
-                  ><span style="font-size: 16px">{{ item.price }}</span>
+                  <b v-if="item.price != '视产品而定'" style="font-weight: normal">￥</b><span style="font-size: 16px">{{
+                    item.price }}</span>
                 </div>
               </div>
               <div class="flex_between item_title">
@@ -152,9 +137,7 @@
           </div>
         </div>
         <div class="flex_between button_box">
-          <a :href="token ? '/buyershow' : '/login'"
-            ><el-button round>挑选红人拍摄</el-button></a
-          >
+          <a :href="token ? '/buyershow' : '/login'"><el-button round>挑选红人拍摄</el-button></a>
         </div>
       </div>
     </div>
@@ -164,16 +147,12 @@
       <div class="auto1200 pt100 pb100">
         <div class="flex_style header_style">
           <h5>Vipon自助发帖 <i class="iconfont icon-line"></i></h5>
-          <span>亚马逊站外Deal网站</span
-          ><i
-            class="iconfont icon-top"
-            style="
+          <span>亚马逊站外Deal网站</span><i class="iconfont icon-top" style="
               font-size: 20px;
               line-height: 57px;
               margin-left: 3px;
               color: #ff9c17;
-            "
-          ></i>
+            "></i>
         </div>
         <div class="vipon_content flex_style">
           <div class="vipon_img">
@@ -203,17 +182,9 @@
               </li>
             </ul>
             <div class="button_box">
-              <a style="color: #ffffff"
-                ><el-button class="btn_type" @click="goVipon"
-                  >发布促销</el-button
-                ></a
-              >
-              <a
-                target="_blank"
-                href="https://www.myvipon.cn/"
-                style="color: #333333"
-                ><el-button class="btn_plain">了解Vipon</el-button></a
-              >
+              <a style="color: #ffffff"><el-button class="btn_type" @click="goVipon">发布促销</el-button></a>
+              <a target="_blank" href="https://www.myvipon.cn/" style="color: #333333"><el-button
+                  class="btn_plain">了解Vipon</el-button></a>
             </div>
           </div>
         </div>
@@ -230,46 +201,27 @@
           </div>
           <div>
             <ul class="flex_style buyshow_type">
-              <li
-                v-for="(item, index) in fbList"
-                :key="index"
-                @click="fbActiveIndex = index"
-                :class="fbActiveIndex == index ? 'activeStyle' : ''"
-              >
+              <li v-for="(item, index) in fbList" :key="index" @click="fbActiveIndex = index"
+                :class="fbActiveIndex == index ? 'activeStyle' : ''">
                 {{ item.type }}
               </li>
             </ul>
           </div>
         </div>
-        <div
-          class="flex_style"
-          v-for="(i, index) in fbList"
-          :key="index"
-          v-show="fbActiveIndex == index"
-          style="
+        <div class="flex_style" v-for="(i, index) in fbList" :key="index" v-show="fbActiveIndex == index" style="
             flex-flow: row wrap;
             align-content: flex-start;
             justify-content: flex-start;
-          "
-        >
+          ">
           <!-- href="https://seller.vipona.com/account/login" -->
-          <a
-            target="_blank"
-            v-for="(item, ind) in i.productList"
-            :key="ind"
-            class="fbItem"
-            @click="godetailsFb(item)"
-          >
+          <a target="_blank" v-for="(item, ind) in i.productList" :key="ind" class="fbItem" @click="godetailsFb(item)">
             <div class="user_info flex_style">
               <div class="header_img"><img :src="item.logo" alt="" /></div>
               <div class="info_des">
                 <h5 class="name">{{ item.name }}</h5>
                 <div class="fan_style">
-                  <i
-                    class="iconfont icon-fs"
-                    style="font-size: 16px; color: #999999; margin-right: 4px"
-                  ></i
-                  >{{ item.fans }}
+                  <i class="iconfont icon-fs" style="font-size: 16px; color: #999999; margin-right: 4px"></i>{{ item.fans
+                  }}
                 </div>
               </div>
             </div>
@@ -277,26 +229,19 @@
               <li v-for="(i, index) in item.label" :key="index">{{ i }}#</li>
             </ul>
             <div class="fb_price">
-              <span style="color: #ff2c4c; padding-right: 6px; font-size: 12px"
-                >￥<span style="font-size: 20px">{{
-                  item.discount_price
-                }}</span></span
-              ><span
-                style="
+              <span style="color: #ff2c4c; padding-right: 6px; font-size: 12px">￥<span style="font-size: 20px">{{
+                item.discount_price
+              }}</span></span><span style="
                   color: #999999;
                   font-size: 12px;
                   text-decoration: line-through;
-                "
-                >¥{{ item.price }}</span
-              >
+                ">¥{{ item.price }}</span>
             </div>
           </a>
         </div>
         <div class="flex_between button_box">
           <!-- href="https://seller.vipona.com/account/login" -->
-          <a target="_blank" style="color: #ffffff"
-            ><el-button round @click="goFB">查看全部</el-button></a
-          >
+          <a target="_blank" style="color: #ffffff"><el-button round @click="goFB">查看全部</el-button></a>
         </div>
       </div>
     </div>
@@ -308,23 +253,14 @@
           <h5>Deal推广 <i class="iconfont icon-line"></i></h5>
           <span>官方渠道 一手资源</span>
         </div>
-        <div
-          class="flex_style"
-          style="
+        <div class="flex_style" style="
             flex-flow: row wrap;
             align-content: flex-start;
             justify-content: flex-start;
             min-height: 665px;
-          "
-        >
+          ">
           <!-- href="https://seller.vipona.com/account/login" -->
-          <a
-            target="_blank"
-            v-for="(item, index) in dealList"
-            :key="index"
-            class="dealItem"
-            @click="godetailsDeal(item)"
-          >
+          <a target="_blank" v-for="(item, index) in dealList" :key="index" class="dealItem" @click="godetailsDeal(item)">
             <div>
               <div class="deal_head">
                 <img :src="item.logo" alt="" />
@@ -338,27 +274,19 @@
                 </li>
               </ul>
               <div class="fb_price">
-                <span
-                  style="color: #ff2c4c; padding-right: 6px; font-size: 12px"
-                  >￥<span style="font-size: 20px">{{
-                    item.discount_price
-                  }}</span></span
-                ><span
-                  style="
+                <span style="color: #ff2c4c; padding-right: 6px; font-size: 12px">￥<span style="font-size: 20px">{{
+                  item.discount_price
+                }}</span></span><span style="
                     color: #999999;
                     font-size: 12px;
                     text-decoration: line-through;
-                  "
-                  >¥{{ item.price }}</span
-                >
+                  ">¥{{ item.price }}</span>
               </div>
             </div>
           </a>
         </div>
         <div class="flex_between button_box">
-          <a target="_blank" style="color: #ffffff"
-            ><el-button round @click="goDeal">查看全部</el-button></a
-          >
+          <a target="_blank" style="color: #ffffff"><el-button round @click="goDeal">查看全部</el-button></a>
         </div>
       </div>
     </div>
@@ -370,15 +298,8 @@
           <span>效果怎么样，客户说了算</span>
         </div>
 
-        <ul
-          ref="grid"
-          data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'
-        >
-          <li
-            v-for="(item, index) in Opiniondata"
-            :key="index"
-            class="grid-item"
-          >
+        <ul ref="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'>
+          <li v-for="(item, index) in Opiniondata" :key="index" class="grid-item">
             <img :src="item.image" />
           </li>
 
@@ -386,15 +307,11 @@
         </ul>
 
         <p class="look" v-if="Opiniondata.length != totaldata">
-          <span @click="gethomehighOpinion(OpiniondataTotal, 500)"
-            >查看更多 <i class="el-icon-arrow-down"></i
-          ></span>
+          <span @click="gethomehighOpinion(OpiniondataTotal, 500)">查看更多 <i class="el-icon-arrow-down"></i></span>
         </p>
 
         <p class="look" v-else>
-          <span @click="gethomehighOpinion(8, 0)"
-            >收起 <i class="el-icon-arrow-up"></i
-          ></span>
+          <span @click="gethomehighOpinion(8, 0)">收起 <i class="el-icon-arrow-up"></i></span>
         </p>
       </div>
     </div>
@@ -403,23 +320,16 @@
       <div class="auto1200 flex_between">
         <h5>
           怎么推广，效果最好？
-          <span style="margin-left: 30px"
-            >免费领取：价值99元<span style="color: #ff9c17"
-              >《产品推广诊断建议》</span
-            >+买家秀首单<span style="color: #ff9c17">50元优惠</span></span
-          >
+          <span style="margin-left: 30px">免费领取：价值99元<span style="color: #ff9c17">《产品推广诊断建议》</span>+买家秀首单<span
+              style="color: #ff9c17">50元优惠</span></span>
         </h5>
         <el-button round @click="isShowDialog = true">立即获取</el-button>
       </div>
-      <i
-        class="el-icon-close close_btn"
-        @click="
-          () => {
-            isShowTag = false;
-            ifShowTag = false;
-          }
-        "
-      ></i>
+      <i class="el-icon-close close_btn" @click="() => {
+        isShowTag = false;
+        ifShowTag = false;
+      }
+        "></i>
     </div>
     <!--footer-->
     <Footer></Footer>
@@ -716,32 +626,40 @@ export default {
 .pb100 {
   padding-bottom: 100px;
 }
+
 .pt100 {
   padding-top: 100px;
 }
+
 .auto1200 {
   max-width: 1200px !important;
   margin: auto;
 }
+
 .flex_between {
   display: flex;
   justify-content: space-between;
 }
+
 .flex_style {
   display: flex;
 }
+
 .home {
   a {
     text-decoration: none !important;
   }
+
   .header_style {
     padding-bottom: 30px;
+
     h5 {
       font-size: 32px;
       font-weight: 600;
       color: #333333;
       line-height: 45px;
       position: relative;
+
       i {
         position: absolute;
         right: 0;
@@ -751,6 +669,7 @@ export default {
         font-weight: normal;
       }
     }
+
     span {
       font-size: 14px;
       font-weight: 400;
@@ -759,6 +678,7 @@ export default {
       margin-left: 16px;
     }
   }
+
   .banner {
     .carousel_item {
       height: 100%;
@@ -774,17 +694,20 @@ export default {
         .left {
           margin-top: 104px;
           width: 620px;
+
           h1 {
             font-size: 38px;
             font-weight: bold;
             color: #ffffff;
             white-space: nowrap;
           }
+
           .title {
             font-size: 18px;
             color: #efedfe;
             margin-top: 22px;
           }
+
           .dome {
             width: 36px;
             height: 5px;
@@ -792,9 +715,11 @@ export default {
             border-radius: 3px;
             margin-top: 29px;
           }
+
           ul {
             width: 440px;
             margin-top: 49px;
+
             li {
               font-size: 18px;
               color: #ffffff;
@@ -802,14 +727,17 @@ export default {
               margin-right: 59px;
               margin-bottom: 24px;
               min-width: 134px;
+
               i {
                 color: #fef76d;
                 margin-right: 5px;
               }
             }
           }
+
           .btn {
             margin-top: 245px;
+
             button {
               width: 206px;
               height: 45px;
@@ -824,41 +752,50 @@ export default {
             a {
               color: #efedfe;
             }
+
             .button2 {
               background: #ff9c17 !important;
             }
           }
         }
+
         .rigth {
           margin-top: 64px;
           width: 960px;
           position: relative;
           left: 30px;
+
           img {
             margin: 0 auto;
             display: block;
           }
         }
+
         .rigth2 {
           margin-top: 72px;
           width: 960px;
           position: relative;
           left: 30px;
+
           img {
             width: 960px;
           }
         }
       }
     }
+
     .carousel-item0 {
       background-image: url("../../assets/images/home/banner1.webp");
     }
+
     .carousel-item1 {
       background-image: url("../../assets/images/home/banner2.webp");
     }
   }
+
   .buyshow {
     background: linear-gradient(225deg, #f2edfa 0%, #f7f8fa 27%, #f7f8fa 100%);
+
     .description_item {
       position: relative;
       top: -120px;
@@ -875,21 +812,26 @@ export default {
       flex-wrap: wrap;
       justify-content: space-between;
       align-content: space-between;
+
       li {
         display: flex;
         width: 21%;
+
         img {
           width: 70px;
           height: 52px;
         }
+
         div {
           padding-left: 14px;
+
           p:nth-child(1) {
             margin: 3px 0 8px 0;
             font-weight: 600;
             color: #333333;
             font-size: 16px;
           }
+
           p:nth-child(2) {
             font-size: 12px;
             color: #999999;
@@ -898,6 +840,7 @@ export default {
         }
       }
     }
+
     .buyshow_type {
       li {
         padding: 24px 20px 4px 20px;
@@ -906,11 +849,13 @@ export default {
         color: #666666;
       }
     }
+
     .activeStyle {
       font-size: 14px;
       font-weight: 600;
       color: #333333 !important;
       position: relative;
+
       &:before {
         position: absolute;
         left: 50%;
@@ -923,6 +868,7 @@ export default {
         border-radius: 2px;
       }
     }
+
     .buyshowItem {
       box-sizing: border-box;
       background: #ffffff;
@@ -936,36 +882,44 @@ export default {
       cursor: pointer;
       border-bottom: 3px solid #fff;
       transition: all 0.2s;
+
       .item_img {
         height: 154px;
         border-radius: 10px;
         overflow: hidden;
+
         img {
           width: 100%;
           height: 154px;
           object-fit: cover;
         }
       }
+
       .item_pic {
         padding: 16px 8px 9px 8px;
         align-items: center;
+
         h5 {
           font-size: 16px;
           font-weight: 600;
           color: #333333;
           line-height: 22px;
         }
-        > div {
+
+        >div {
           font-size: 15px;
           color: #ff2c4c;
+
           span {
             font-size: 20px;
           }
         }
       }
+
       .item_title {
         padding: 0 8px 8px 8px;
         line-height: 17px;
+
         .title_style {
           background: rgba(0, 217, 173, 0.1);
           border-radius: 9px;
@@ -974,23 +928,28 @@ export default {
           padding: 1px 6px;
           text-align: center;
         }
-        > span {
+
+        >span {
           font-size: 12px;
           color: #999999;
         }
       }
     }
+
     .buyshowItem:hover {
       border-bottom: 3px solid #796cf3;
       box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
       top: -7px;
+
       .item_title {
         padding-bottom: 5px !important;
       }
     }
+
     .button_box {
       justify-content: center;
       padding-bottom: 100px;
+
       .el-button {
         background: #3442ff linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
         border-radius: 6px;
@@ -1001,6 +960,7 @@ export default {
         border: none;
       }
     }
+
     /*FB推广*/
     .fbItem {
       box-sizing: border-box;
@@ -1016,6 +976,7 @@ export default {
       transition: all 0.2s;
       border-bottom: 3px solid #fff;
       top: 0;
+
       .user_info {
         .header_img {
           width: 64px;
@@ -1023,6 +984,7 @@ export default {
           border-radius: 50%;
           border: 1px solid #ffffff;
           overflow: hidden;
+
           img {
             width: 100%;
             height: 100%;
@@ -1030,25 +992,30 @@ export default {
           }
         }
       }
+
       .info_des {
         margin-left: 14px;
         flex: 1;
+
         .name {
           font-size: 16px;
           color: #333333;
           line-height: 22px;
           margin-bottom: 8px;
         }
+
         .fan_style {
           font-size: 14px;
           color: #999999;
           line-height: 20px;
         }
       }
-      > ul {
+
+      >ul {
         flex-flow: row wrap;
         justify-content: center;
         padding: 17px 0 30px 0;
+
         li {
           box-sizing: border-box;
           border-radius: 16px;
@@ -1058,12 +1025,14 @@ export default {
           font-size: 12px;
           color: #999999;
           transition: all 0.2s;
+
           &:hover {
             border: 1px solid #796cf3;
             color: #796cf3;
           }
         }
       }
+
       .fb_price {
         padding-top: 14px;
         text-align: center;
@@ -1073,6 +1042,7 @@ export default {
         right: 20px;
         border-top: 1px solid #eeeeee;
       }
+
       &:after {
         content: "";
         width: 29px;
@@ -1084,14 +1054,17 @@ export default {
         left: 24px;
       }
     }
+
     .fbItem:hover {
       border-bottom: 3px solid #796cf3;
       top: -7px;
       box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
-      > ul {
+
+      >ul {
         padding-bottom: 20px !important;
       }
     }
+
     //Deal推广
     .dealItem {
       padding: 14px;
@@ -1105,11 +1078,13 @@ export default {
       transition: all 0.2s;
       border-bottom: 3px solid #fff;
       top: 0;
-      > div {
+
+      >div {
         width: 182px;
         position: relative;
         top: 17px;
         padding-bottom: 40px;
+
         .deal_head {
           position: absolute;
           width: 70px;
@@ -1126,6 +1101,7 @@ export default {
           display: flex;
           justify-content: center;
           align-items: center;
+
           img {
             width: auto;
             height: auto;
@@ -1133,6 +1109,7 @@ export default {
             max-height: 38px;
           }
         }
+
         .deal_name {
           padding-top: 45px;
           font-size: 16px;
@@ -1142,6 +1119,7 @@ export default {
           padding-left: 14px;
           padding-right: 14px;
         }
+
         .deal_list {
           flex-flow: row wrap;
           justify-content: center;
@@ -1149,6 +1127,7 @@ export default {
           margin-bottom: 2px;
           padding-left: 14px;
           padding-right: 14px;
+
           li {
             box-sizing: border-box;
             border-radius: 16px;
@@ -1159,12 +1138,14 @@ export default {
             cursor: pointer;
             color: #999999;
             transition: all 0.2s;
+
             &:hover {
               border: 1px solid #796cf3;
               color: #796cf3;
             }
           }
         }
+
         .fb_price {
           text-align: center;
           position: absolute;
@@ -1175,6 +1156,7 @@ export default {
         }
       }
     }
+
     .dealItem:before {
       position: absolute;
       left: 8px;
@@ -1189,18 +1171,22 @@ export default {
       border: 1px solid #eeeeee;
       transform: perspective(800px) rotateX(30deg);
     }
+
     .dealItem:hover {
       border-bottom: 3px solid #796cf3;
       border-radius: 10px;
       top: -7px;
+
       .deal_list {
         padding-bottom: 15px !important;
       }
     }
+
     .dealItem:hover:before {
       box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
     }
   }
+
   .vipon_box {
     .vipon_img {
       img {
@@ -1209,9 +1195,11 @@ export default {
         object-fit: cover;
       }
     }
+
     .vipon_text {
       margin-left: 68px;
       width: 544px;
+
       h5 {
         font-size: 28px;
         font-weight: 600;
@@ -1219,6 +1207,7 @@ export default {
         line-height: 40px;
         padding: 66px 0 15px 0;
       }
+
       .subtitle {
         font-size: 14px;
         font-weight: 400;
@@ -1226,18 +1215,23 @@ export default {
         line-height: 20px;
         padding-bottom: 40px;
       }
+
       .vipon_list {
         margin-right: 15px;
+
         li {
           padding: 0 20px;
           position: relative;
+
           h4 {
             font-size: 42px;
             color: #333333;
             font-family: FetteMittelschrift-Regular, FetteMittelschrift;
+
             span {
               font-size: 24px;
               position: relative;
+
               &:before {
                 position: absolute;
                 right: -11px;
@@ -1246,7 +1240,8 @@ export default {
               }
             }
           }
-          > div {
+
+          >div {
             font-size: 14px;
             font-weight: 400;
             color: #666666;
@@ -1254,12 +1249,15 @@ export default {
             padding-top: 4px;
             white-space: nowrap;
           }
+
           &:first-child {
             padding-left: 0;
           }
+
           &:last-child {
             padding-right: 0;
           }
+
           &:after {
             content: "";
             position: absolute;
@@ -1277,6 +1275,7 @@ export default {
               }
             }
           }
+
           &:nth-child(3) {
             h4 span {
               &:before {
@@ -1284,6 +1283,7 @@ export default {
               }
             }
           }
+
           &:last-child {
             &:after {
               content: none;
@@ -1291,24 +1291,29 @@ export default {
           }
         }
       }
+
       .button_box {
         padding-top: 60px;
+
         .el-button {
           width: 180px;
           height: 40px;
           font-size: 14px;
           border-radius: 6px;
         }
+
         .btn_type {
           background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
           color: #ffffff;
           border: none;
         }
+
         .btn_plain {
           border: 1px solid #796cf3;
           color: #333333;
           margin-left: 20px;
         }
+
         .btn_plain:hover {
           background: #f6f7ff;
         }
@@ -1327,23 +1332,26 @@ export default {
     opacity: 0;
     transition: all 0.3s ease-out;
 
-    > div {
+    >div {
       height: 100%;
       align-items: center;
       position: relative;
       box-sizing: border-box;
       padding-left: 168px;
+
       &:after {
         content: url("../../assets/images/home/gift.png");
         position: absolute;
         left: 0;
         top: -22px;
       }
+
       h5 {
         font-size: 22px;
         font-weight: 600;
         color: #ffffff;
         line-height: 30px;
+
         span {
           font-size: 16px;
           font-weight: 600;
@@ -1351,6 +1359,7 @@ export default {
           line-height: 22px;
         }
       }
+
       .el-button {
         background: #ff9c17;
         padding: 11px 72px;
@@ -1359,6 +1368,7 @@ export default {
         font-weight: 600;
         color: #ffffff;
         position: relative;
+
         &::after {
           content: url("../../assets/images/home/cursor.png");
           width: 26px;
@@ -1369,6 +1379,7 @@ export default {
         }
       }
     }
+
     .close_btn {
       position: absolute;
       right: 0;
@@ -1382,6 +1393,7 @@ export default {
       color: #ffffff;
     }
   }
+
   .isShowTag {
     opacity: 1;
     animation: slideUp 0.5s ease-out;
@@ -1392,6 +1404,7 @@ export default {
       transform: translateY(100%);
       opacity: 0;
     }
+
     100% {
       transform: translateY(0);
       opacity: 1;
@@ -1408,20 +1421,21 @@ export default {
 </style>
 <style lang="less" scoped>
 .home {
+
   // 拍买家秀
   .ShootingBuyerShows {
     padding-top: 100px;
-    background: linear-gradient(
-      225deg,
-      #eceefa 0%,
-      #f7f8fa 20%,
-      #f7f8fa 61%,
-      #f2edfa 100%
-    ) !important;
+    background: linear-gradient(225deg,
+        #eceefa 0%,
+        #f7f8fa 20%,
+        #f7f8fa 61%,
+        #f2edfa 100%) !important;
+
     .auto1200 {
       .datastyle {
         position: relative;
         min-height: 565px;
+
         .flex_style {
           position: absolute;
           flex-flow: row wrap;
@@ -1430,6 +1444,7 @@ export default {
           opacity: 0;
           transition: all 0.3s;
         }
+
         .item {
           opacity: 1;
           z-index: 100;
@@ -1442,6 +1457,7 @@ export default {
   .Ourservices {
     background: #ffffff !important;
     padding-bottom: 100px;
+
     .auto1200 {
       .boby {
         width: 1200px;
@@ -1450,6 +1466,7 @@ export default {
         border-radius: 20px;
         padding: 30px 60px 0;
         box-sizing: border-box;
+
         .top {
           width: 1080px;
           height: 96px;
@@ -1458,16 +1475,19 @@ export default {
           display: flex;
           align-items: center;
           justify-content: space-evenly;
+
           span:nth-child(1) {
             color: #d161f6;
             font-size: 43px;
             font-family: "FetteMittelschrift", sans-serif;
           }
+
           span:nth-child(2) {
             color: #d161f6;
             position: relative;
             top: -23px;
           }
+
           span:nth-child(3) {
             color: #666666;
             margin-left: 8px;
@@ -1486,25 +1506,30 @@ export default {
   .Customerfeedback {
     background: linear-gradient(225deg, #f2edfa 0%, #f7f8fa 27%, #f7f8fa 100%);
     overflow: hidden;
+
     .auto1200 {
       ul {
         padding-top: 30px;
         position: relative;
         transition: all 0.3s;
         display: flex;
+
         li {
           width: 277px;
           margin-bottom: 30px;
           transition: all 0.3s;
+
           img {
             width: 100%;
             transition: all 0.3s;
           }
         }
+
         li:hover {
           transform: scale(1.05);
           z-index: 100;
         }
+
         li:hover img {
           box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
         }
@@ -1512,12 +1537,10 @@ export default {
         .masking-out {
           height: 300px;
           width: 1200px;
-          background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.5) 50%,
-            #f7f8fa 100%
-          );
+          background: linear-gradient(180deg,
+              rgba(255, 255, 255, 0) 0%,
+              rgba(255, 255, 255, 0.5) 50%,
+              #f7f8fa 100%);
           z-index: 10;
           position: absolute;
           bottom: 0;

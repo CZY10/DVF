@@ -300,14 +300,14 @@
 
         <ul ref="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'>
           <li v-for="(item, index) in Opiniondata" :key="index" class="grid-item">
-            <img :src="item.image" />
+            <img :src="item.image" @load="handleLoad" />
           </li>
 
           <div class="masking-out"></div>
         </ul>
 
         <p class="look" v-if="Opiniondata.length != totaldata">
-          <span @click="gethomehighOpinion(OpiniondataTotal, 500)">查看更多 <i class="el-icon-arrow-down"></i></span>
+          <span @click="gethomehighOpinion(OpiniondataTotal)">查看更多 <i class="el-icon-arrow-down"></i></span>
         </p>
 
         <p class="look" v-else>
@@ -416,8 +416,10 @@ export default {
       Opiniondata: [],
       OpiniondataTotal: 8,
       totaldata: 0,
+      imgsnum: 0
     };
   },
+
   mounted() {
     this.token = localStorage.getItem("token");
     this.handleTakePlanList();
@@ -432,11 +434,12 @@ export default {
     if (!localStorage.getItem("token"))
       window.addEventListener("scroll", this.handleScroll, true);
 
-    this.$nextTick(() => {
-      this.gethomehighOpinion(8, 3000);
-    });
+    this.gethomehighOpinion(8);
   },
   methods: {
+    handleLoad() {
+      this.imgsnum++
+    },
     handleScroll() {
       var scrollTop = window.scrollY || window.pageYOffset;
       scrollTop >= 2000 && this.ifShowTag
@@ -547,6 +550,8 @@ export default {
 
     //获取主页好评数据
     async gethomehighOpinion(pageSize, time) {
+      if (time === 0) this.imgsnum = 8
+
       const res = await homehighOpinion({
         page: 1,
         pageSize,
@@ -556,14 +561,17 @@ export default {
         this.totaldata = res.data.total;
         this.Opiniondata = res.data.data;
         this.$refs.grid.style.overflow = "hidden";
-        setTimeout(() => {
-          this.$refs.grid.style.overflow = "visible";
-          new Masonry(this.$refs.grid, {
-            // options...
-            itemSelector: ".grid-item",
-            columnWidth: 300,
-          });
-        }, time);
+
+        if (time === 0) {
+          setTimeout(() => {
+            new Masonry(this.$refs.grid, {
+              // options...
+              itemSelector: ".grid-item",
+              columnWidth: 300,
+            });
+            this.$refs.grid.style.overflow = "visible";
+          }, 0)
+        }
       }
     },
     gobuyershow() {
@@ -619,6 +627,19 @@ export default {
       }
     },
   },
+  watch: {
+    imgsnum(newval) {
+      console.log(newval, this.Opiniondata.length)
+      if (newval == this.Opiniondata.length) {
+        new Masonry(this.$refs.grid, {
+          // options...
+          itemSelector: ".grid-item",
+          columnWidth: 300,
+        });
+        this.$refs.grid.style.overflow = "visible";
+      }
+    }
+  }
 };
 </script>
 

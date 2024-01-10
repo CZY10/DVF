@@ -69,7 +69,7 @@
       <div class="product">
         <ul class="product_ul" v-if="datalist.length != 0">
           <li class="product_li" v-for="(item, index) in datalist" :key="item.user_id">
-            <div class="product_li_img" @click="gohomepage(item.user_id)">
+            <div class="product_li_img" @click="gohomepage(item.id, item.user_id)">
               <img :src="item.image" />
             </div>
             <div class="product_list">
@@ -137,7 +137,7 @@
                       ),
                       linear-gradient(270deg, #ffffff 0%, #fcf3ff 100%);
                     border-radius: 4px;
-                  " v-if="item.videos.length >= 12" @click="gohomepage(item.user_id)">
+                  " v-if="item.videos.length >= 12" @click="gohomepage(item.id, item.user_id)">
           . . .
         </li>
       </ul>
@@ -558,8 +558,8 @@ export default {
     },
 
     //去达人详情页
-    gohomepage(id) {
-      window.open(window.location.origin + "/homepage:" + id);
+    gohomepage(id, userid) {
+      window.open(window.location.origin + `/homepage?id=${id}&user-id=${userid}`);
     },
 
     handleSizeChange(val) {

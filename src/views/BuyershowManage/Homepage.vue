@@ -118,7 +118,8 @@
           <h1>个人简介</h1>
           <ul>
             <li v-for="(item, index) in userInfo.signature" :key="index">
-              <span class="dian"></span> <span>{{ item }}</span>
+              <span class="dian"></span>
+              <p>{{ item }}</p>
             </li>
           </ul>
         </div>
@@ -227,6 +228,7 @@ export default {
   data() {
     return {
       id: "",
+      userId: "",
       userInfo: {},
       Donotclick: false,
       Lifephotoslist: [],
@@ -256,9 +258,9 @@ export default {
     }),
   },
   mounted() {
-    this.id = window.location.href.substr(
-      window.location.href.lastIndexOf(":") + 1
-    );
+    var url = new URL(window.location.href);
+    this.userId = url.searchParams.get("user-id");
+    this.id = url.searchParams.get("id");
     this.getInfluencerDetail();
     this.getLifephotos();
     this.getvideos();
@@ -271,7 +273,7 @@ export default {
     //获取红人信息
     getInfluencerDetail() {
       influencerDetail({
-        id: this.id,
+        id: this.userId,
       })
         .then((res) => {
           if (res.code === 1) {
@@ -838,7 +840,6 @@ export default {
 
           li {
             display: flex;
-            align-items: center;
             color: #666666;
             margin-bottom: 10px;
 
@@ -849,6 +850,12 @@ export default {
               background: #666666;
               border-radius: 50%;
               margin-right: 6px;
+              margin-top: 8px;
+            }
+
+            p {
+              width: 730px;
+              word-wrap: break-word;
             }
           }
         }
@@ -870,6 +877,8 @@ export default {
             line-height: 58px;
             margin-right: 30px;
             color: #999999;
+            width: 68px;
+            text-align: center;
             font-size: 16px;
 
             span {
@@ -892,7 +901,7 @@ export default {
             /* 边框高度 */
             background-color: #D161F6;
             position: absolute;
-            left: 17px;
+            left: 19px;
             bottom: 10px;
             z-index: 100;
 
@@ -949,7 +958,6 @@ export default {
                 min-height: 773px;
                 display: flex;
                 flex-wrap: wrap;
-                justify-content: space-between;
                 align-content: flex-start;
                 transition: all 0.3s;
                 overflow: hidden;
@@ -957,12 +965,14 @@ export default {
                 background: #fff;
                 border-radius: 0px 0px 6px 6px;
                 box-sizing: border-box;
+                padding-right: 0px !important;
 
                 li {
                   width: 260px;
                   height: 190px;
                   overflow: hidden;
                   margin-bottom: 7px;
+                  margin-right: 10px;
 
                   .cover {
                     width: 100%;

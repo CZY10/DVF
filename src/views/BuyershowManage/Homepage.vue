@@ -341,7 +341,7 @@ export default {
       if (res.code == 1) {
         this.videodatas = res.data.data;
         this.total = res.data.total;
-        if (this.videodatas?.length > 0) {
+        if (this.total > 15) {
           setTimeout(() => {
             document.getElementsByClassName(
               "el-pagination__jump"
@@ -367,11 +367,13 @@ export default {
           this.imagepostsrcList.push(item.image)
         })
 
-        if (this.imagepostlist?.length > 0) {
+        let index = 0
+        this.total > 15 ? index = 1 : index = 0;
+        if (this.imageposttotal > 16) {
           setTimeout(() => {
             document.getElementsByClassName(
               "el-pagination__jump"
-            )[1].childNodes[0].nodeValue = "跳转";
+            )[index].childNodes[0].nodeValue = "跳转";
           }, 1000);
         }
       }
@@ -871,7 +873,7 @@ export default {
           background: #ffffff;
           border-radius: 6px 6px 0px 0px;
           display: flex;
-          padding: 0 30px;
+          padding: 0 20px;
 
           div {
             line-height: 58px;
@@ -961,14 +963,14 @@ export default {
                 align-content: flex-start;
                 transition: all 0.3s;
                 overflow: hidden;
-                padding: 10px;
+                padding: 10px 20px;
                 background: #fff;
                 border-radius: 0px 0px 6px 6px;
                 box-sizing: border-box;
                 padding-right: 0px !important;
 
                 li {
-                  width: 260px;
+                  width: 253px;
                   height: 190px;
                   overflow: hidden;
                   margin-bottom: 7px;
@@ -1042,17 +1044,16 @@ export default {
                 display: flex;
                 flex-wrap: wrap;
                 align-content: flex-start;
-                width: 101%;
                 transition: all 0.3s;
                 max-height: 1035px;
                 min-height: 763px;
-                padding: 10px;
-                padding-bottom: 0 !important;
+                padding: 10px 20px;
+                padding-right: 0 !important;
                 background: #fff;
 
                 li {
-                  width: 192px;
-                  height: 197px;
+                  width: 187px;
+                  height: 187px;
                   border-radius: 6px;
                   overflow: hidden;
                   margin: 0 10px 10px 0;

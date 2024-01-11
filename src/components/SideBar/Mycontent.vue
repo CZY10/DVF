@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-view/>
+        <router-view />
     </div>
 </template>
 
@@ -10,12 +10,4 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.header{
-    height: 40px;
-    border-bottom: 1px solid #cccccc;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-}
-</style>
+<style lang="less" scoped></style>

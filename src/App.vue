@@ -6,7 +6,6 @@
 
 <script>
 import { determineDeal } from "@/api/index";
-import router from "./router";
 export default {
   name: "app",
   provide() {

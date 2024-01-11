@@ -316,7 +316,7 @@
       </div>
     </div>
 
-    <div class="tag_style" :class="{ isShowTag: isShowTag }">
+    <div class="tag_style" :class="{ isShowTag: isShowTag }" :style="{ display: isdisplay }">
       <div class="auto1200 flex_between">
         <h5>
           怎么推广，效果最好？
@@ -326,7 +326,6 @@
         <el-button round @click="isShowDialog = true">立即获取</el-button>
       </div>
       <i class="el-icon-close close_btn" @click="() => {
-        isShowTag = false;
         ifShowTag = false;
       }
         "></i>
@@ -416,12 +415,15 @@ export default {
       Opiniondata: [],
       OpiniondataTotal: 8,
       totaldata: 0,
-      imgsnum: 0
+      imgsnum: 0,
+      isdisplay: 'break'
     };
   },
 
   mounted() {
     this.token = localStorage.getItem("token");
+    if (this.token) this.isdisplay = 'none'
+
     this.handleTakePlanList();
     this.getFBData();
     this.getDealData();
@@ -638,6 +640,9 @@ export default {
         });
         this.$refs.grid.style.overflow = "visible";
       }
+    },
+    ifShowTag(newval) {
+      if (newval == false) this.isdisplay = 'none'
     }
   }
 };

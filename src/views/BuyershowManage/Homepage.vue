@@ -635,6 +635,7 @@ export default {
               color: #666666;
               font-size: 12px;
               margin-right: 6px;
+              margin-bottom: 5px;
               float: left;
             }
           }
@@ -642,7 +643,7 @@ export default {
           hr {
             border: none;
             border-top: 1px solid #eee;
-            margin: 16px 0 18px;
+            margin: 11px 0 18px;
           }
 
           .Introductionitem {
@@ -779,15 +780,14 @@ export default {
         ul {
           display: flex;
           flex-wrap: wrap;
-          height: 210px;
+          height: 216px;
           // height: 200px;
           overflow-y: auto;
-          width: 101%;
-          padding-right: 13px;
+          width: 105%;
 
           li {
-            width: 101px;
-            height: 101px;
+            width: 104px;
+            height: 104px;
             margin-bottom: 4px;
             margin-right: 4px;
             overflow: hidden;
@@ -839,6 +839,7 @@ export default {
           margin-top: 14px;
           padding: 16px 20px;
           background: #fafafa;
+          border-radius: 6px;
 
           li {
             display: flex;
@@ -878,7 +879,7 @@ export default {
           div {
             line-height: 58px;
             margin-right: 30px;
-            color: #999999;
+            color: #333;
             width: 68px;
             text-align: center;
             font-size: 16px;
@@ -906,7 +907,7 @@ export default {
             left: 19px;
             bottom: 10px;
             z-index: 100;
-
+            border-radius: 1px;
           }
 
         }
@@ -932,6 +933,7 @@ export default {
                 flex-direction: column;
                 justify-content: center;
                 background: #ffffff;
+                border-radius: 0px 0px 6px 6px;
 
                 img {
                   width: 200px;

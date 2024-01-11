@@ -139,10 +139,6 @@ html {
     visibility: hidden;
 }
 
-.clearfix {
-    *zoom: 1;
-}
-
 .el-dialog__wrapper {
     display: grid;
     align-items: center;

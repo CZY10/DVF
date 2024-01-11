@@ -517,6 +517,7 @@ export default {
       bar.style.height = "30px";
       bar.style.borderRadius = "50%";
       bar.style.backgroundColor = "#d161f6";
+      // bar.style.backgroundImage = "url('你的图片URL')";
       bar.style.transition =
         "left .6s linear, top .6s cubic-bezier(0.5, 0.5, 1, 1)";
       document.body.appendChild(bar);

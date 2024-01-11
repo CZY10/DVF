@@ -686,6 +686,7 @@ export default {
 
             .content3 {
               display: flex;
+              align-items: center;
 
               li {
                 width: 24px;

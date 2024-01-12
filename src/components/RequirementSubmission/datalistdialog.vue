@@ -2,8 +2,7 @@
   <div style="background: #f5f7f9; margin-top: -67px">
     <div id="buyershow">
       <el-backtop target="#buyershow">
-        <i class="iconfont icon-fhdb1" style="color: #999"></i
-      ></el-backtop>
+        <i class="iconfont icon-fhdb1" style="color: #999"></i></el-backtop>
 
       <div class="topclon">
         <i class="iconfont icon-icfullscreenexit" @click="outcheckFull"></i>
@@ -13,15 +12,9 @@
         <div class="loading" v-if="isloading"></div>
         <!-- 搜索 -->
         <div class="searchfor">
-          <el-input
-            v-model="searchforval"
-            placeholder="输入产品名称/品类/红人编号"
-            class="inp"
-            @keyup.enter.native="getRenderingData"
-          ></el-input>
-          <el-button class="searchforbtn" @click="getRenderingData"
-            >搜索</el-button
-          >
+          <el-input v-model="searchforval" placeholder="输入产品名称/品类/红人编号" class="inp"
+            @keyup.enter.native="getRenderingData"></el-input>
+          <el-button class="searchforbtn" @click="getRenderingData">搜索</el-button>
         </div>
 
         <!-- 筛选 -->
@@ -29,10 +22,7 @@
           <div class="filter_header">
             <div class="filter_item">
               <span>达人性别</span>
-              <el-radio-group
-                v-model="genderValue"
-                @change="handlerSearchList('genderdata', genderValue)"
-              >
+              <el-radio-group v-model="genderValue" @change="handlerSearchList('genderdata', genderValue)">
                 <el-radio-button label="">全部</el-radio-button>
                 <el-radio-button label="male">男性</el-radio-button>
                 <el-radio-button label="female">女性</el-radio-button>
@@ -40,33 +30,19 @@
             </div>
             <div class="filter_item">
               <span>产品品类</span>
-              <el-radio-group
-                v-model="categoryValue"
-                @change="handlerSearchList('category_id', categoryValue)"
-              >
+              <el-radio-group v-model="categoryValue" @change="handlerSearchList('category_id', categoryValue)">
                 <el-radio-button label="">全部</el-radio-button>
-                <el-radio-button
-                  v-for="(item, index) in categoryList"
-                  :key="index"
-                  :label="item.id"
-                  >{{ item.name }}</el-radio-button
-                >
+                <el-radio-button v-for="(item, index) in categoryList" :key="index" :label="item.id">{{ item.name
+                }}</el-radio-button>
               </el-radio-group>
             </div>
             <div style="height: 1px; background-color: #eee"></div>
 
             <div class="filter_item" style="margin-top: 10px">
               <span>主题专区</span>
-              <el-radio-group
-                v-model="themeValue"
-                @change="handlerSearchList('theme_id', themeValue)"
-              >
+              <el-radio-group v-model="themeValue" @change="handlerSearchList('theme_id', themeValue)">
                 <el-radio-button label=""> 全部 </el-radio-button>
-                <el-radio-button
-                  v-for="(item, index) in themeList"
-                  :key="index"
-                  :label="item.id"
-                >
+                <el-radio-button v-for="(item, index) in themeList" :key="index" :label="item.id">
                   <div>
                     {{ item.name }}
                   </div>
@@ -82,11 +58,7 @@
             <div class="seek_div_span">找到 {{ total }} 个</div>
             <div class="seek_divd">
               <span>价格 ≤</span>
-              <el-input
-                v-model="priceval"
-                class="priceinp"
-                @change="getRenderingData"
-              ></el-input>
+              <el-input v-model="priceval" class="priceinp" @change="getRenderingData"></el-input>
               <span>元</span>
             </div>
           </div>
@@ -95,40 +67,24 @@
         <!-- 分类产品 -->
         <div class="product">
           <ul class="product_ul" v-if="datalist.length != 0">
-            <li
-              class="product_li"
-              v-for="(item, index) in datalist"
-              :key="item.user_id"
-            >
-              <div class="product_li_img" @click="gohomepage(item.user_id)">
+            <li class="product_li" v-for="(item, index) in datalist" :key="item.user_id">
+              <div class="product_li_img" @click="gohomepage(item.id, item.user_id)">
                 <img :src="item.image" />
               </div>
               <div class="product_list">
                 <div class="product_list_div1">
                   <div class="product_list_left">
                     <div class="product_list_no">No.{{ item.user_id }}</div>
-                    <div
-                      v-if="item.type == '影响力者'"
-                      class="product_list_typelv"
-                    >
+                    <div v-if="item.type == '影响力者'" class="product_list_typelv">
                       {{ item.type }}
                     </div>
-                    <div
-                      v-if="item.type == '社媒红人'"
-                      class="product_list_typeho"
-                    >
+                    <div v-if="item.type == '社媒红人'" class="product_list_typeho">
                       {{ item.type }}
                     </div>
-                    <div
-                      v-if="item.type == '数字人'"
-                      class="product_list_typelan"
-                    >
+                    <div v-if="item.type == '数字人'" class="product_list_typelan">
                       {{ item.type }}
                     </div>
-                    <div
-                      v-if="item.type == '素人'"
-                      class="product_list_typechen"
-                    >
+                    <div v-if="item.type == '素人'" class="product_list_typechen">
                       {{ item.type }}
                     </div>
                   </div>
@@ -137,59 +93,39 @@
                     ￥{{ item.price }}
                   </div>
 
-                  <div
-                    class="product_list_rigth"
-                    v-else-if="item.price_type == 1"
-                  >
-                    ￥<span
-                      >{{ item.lower_price }}-{{ item.highest_price }}</span
-                    >
+                  <div class="product_list_rigth" v-else-if="item.price_type == 1">
+                    ￥<span>{{ item.lower_price }}-{{ item.highest_price }}</span>
                   </div>
 
-                  <div
-                    class="product_list_rigth"
-                    v-else
-                    style="font-size: 11px"
-                  >
+                  <div class="product_list_rigth" v-else style="font-size: 11px">
                     视产品而定
                   </div>
                 </div>
 
-                <div
-                  class="product_list_div2"
-                  v-if="item.category_ids.length <= 5"
-                  :title="categoryidarr[index]"
-                >
-                  <li v-for="(item, index) in item.category_ids" :key="index">
-                    {{ item.name }}
-                  </li>
-                </div>
-                <div v-else style="display: flex" :title="categoryidarr[index]">
-                  <div class="product_list_div2">
-                    <li v-for="(item, index) in item.category_ids" :key="index">
-                      {{ item.name }}
-                    </li>
-                  </div>
-                  <span>...</span>
-                </div>
+                <div class="product_list_div2" v-if="item.category_ids.length <= 5" :title="categoryidarr[index]">
+            <li v-for="(item, index) in item.category_ids" :key="index">
+              {{ item.name }}
+            </li>
+        </div>
+        <div v-else style="display: flex" :title="categoryidarr[index]">
+          <div class="product_list_div2">
+            <li v-for="(item, index) in item.category_ids" :key="index">
+              {{ item.name }}
+            </li>
+          </div>
+          <span>...</span>
+        </div>
 
-                <div
-                  style="height: 1px; background-color: #eee; margin-top: 15px"
-                ></div>
+        <div style="height: 1px; background-color: #eee; margin-top: 15px"></div>
 
-                <ul class="product_list_videos">
-                  <li
-                    v-for="(items, indexviedeos) in isvideoslist[index]"
-                    :key="items.user_id"
-                    @click="openVideos(item.videos, indexviedeos)"
-                    :title="items.desc"
-                  >
-                    <i class="iconfont icon-video" style="font-size: 14px"></i>
-                    <span> {{ items.desc }}</span>
-                  </li>
+        <ul class="product_list_videos">
+          <li v-for="(items, indexviedeos) in isvideoslist[index]" :key="items.user_id"
+            @click="openVideos(item.videos, indexviedeos)" :title="items.desc">
+            <i class="iconfont icon-video" style="font-size: 14px"></i>
+            <span> {{ items.desc }}</span>
+          </li>
 
-                  <li
-                    style="
+          <li style="
                       width: 22px;
                       text-align: center;
                       display: block;
@@ -200,107 +136,68 @@
                         ),
                         linear-gradient(270deg, #ffffff 0%, #fcf3ff 100%);
                       border-radius: 4px;
-                    "
-                    v-if="item.videos.length >= 12"
-                    @click="gohomepage(item.user_id)"
-                  >
-                    . . .
-                  </li>
-                </ul>
-              </div>
-              <div
-                @click="addlist(item, index, item.istrue)"
-                :class="{
-                  product_btn: item.istrue != false,
-                  addlistbj: item.istrue == false,
-                }"
-                ref="addbtndom"
-              >
-                <span class="icon">+</span>
-                <i class="iconfont icon-gwc" style="font-size: 14px"></i>
-                <span class="test1" v-if="item.istrue == false">已选择</span>
-                <span class="test1" v-else>选择</span>
-              </div>
-              <div class="logo_id" v-if="item.logo_id.length != 0">
-                <p>
-                  <i class="iconfont icon-bq"></i>
-                  <span>含版权</span>
-                </p>
-              </div>
-            </li>
-          </ul>
-          <div v-else class="product_div">
-            <img src="@/assets/images/empty_img.png" alt="" />
-            <p>暂无搜索结果</p>
-          </div>
+                    " v-if="item.videos.length >= 12" @click="gohomepage(item.id, item.user_id)">
+            . . .
+          </li>
+        </ul>
+      </div>
+      <div @click="addlist(item, index, item.istrue)" :class="{
+        product_btn: item.istrue != false,
+        addlistbj: item.istrue == false,
+      }" ref="addbtndom">
+        <span class="icon">+</span>
+        <i class="iconfont icon-gwc" style="font-size: 14px"></i>
+        <span class="test1" v-if="item.istrue == false">已选择</span>
+        <span class="test1" v-else>选择</span>
+      </div>
+      <div class="logo_id" v-if="item.logo_id.length != 0">
+        <p>
+          <i class="iconfont icon-bq"></i>
+          <span>含版权</span>
+        </p>
+      </div>
+      </li>
+      </ul>
+      <div v-else class="product_div">
+        <img src="@/assets/images/empty_img.png" alt="" />
+        <p>暂无搜索结果</p>
+      </div>
+    </div>
+  </div>
+  <template>
+    <div class="paging" v-show="datalist.length != 0">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="currentPage" :page-sizes="[12, 24, 48, 96]" :page-size="per_page"
+        layout="total, prev, pager, next, sizes, jumper" :total="total" v-if="total != 0">
+      </el-pagination>
+    </div>
+  </template>
+
+  <el-dialog :visible.sync="dialogVisible" width="880px" :close-on-click-modal="false" :append-to-body="true"
+    custom-class="my-dialog">
+    <div class="eldialogVisble">
+      <div style="width: 650px">
+        <div class="leftVis">
+          <video autoplay controls preload="none" ref="myVideo" @play="video_img = true" @pause="video_img = false">
+            <source :src="videoslist[videoslistindex]?.file" type="video/mp4" />
+          </video>
+          <div class="video_img" @click="videoplay" v-show="!video_img"></div>
+        </div>
+        <div class="title" :title="videoslist[videoslistindex]?.desc">
+          {{ videoslist[videoslistindex]?.desc }}
         </div>
       </div>
-      <template>
-        <div class="paging" v-show="datalist.length != 0">
-          <el-pagination
-            background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[12, 24, 48, 96]"
-            :page-size="per_page"
-            layout="total, prev, pager, next, sizes, jumper"
-            :total="total"
-            v-if="total != 0"
-          >
-          </el-pagination>
-        </div>
-      </template>
-
-      <el-dialog
-        :visible.sync="dialogVisible"
-        width="880px"
-        :close-on-click-modal="false"
-        :append-to-body="true"
-        custom-class="my-dialog"
-      >
-        <div class="eldialogVisble">
-          <div style="width: 650px">
-            <div class="leftVis">
-              <video
-                autoplay
-                controls
-                preload="none"
-                ref="myVideo"
-                @play="video_img = true"
-                @pause="video_img = false"
-              >
-                <source
-                  :src="videoslist[videoslistindex]?.file"
-                  type="video/mp4"
-                />
-              </video>
-              <div
-                class="video_img"
-                @click="videoplay"
-                v-show="!video_img"
-              ></div>
-            </div>
-            <div class="title" :title="videoslist[videoslistindex]?.desc">
-              {{ videoslist[videoslistindex]?.desc }}
-            </div>
-          </div>
-          <div class="rigthlist">
-            <p class="rigthlist_p">作品案例</p>
-            <p
-              v-for="(item, index) in videoslist"
-              :key="item.id"
-              :class="{ videoslistcss: item.videoslistcss, falg: true }"
-              @click="SwitchVideo(videoslist, index)"
-              :title="item.desc"
-            >
-              <i class="iconfont icon-video"></i>
-              {{ item.desc }}
-            </p>
-          </div>
-        </div>
-      </el-dialog>
+      <div class="rigthlist">
+        <p class="rigthlist_p">作品案例</p>
+        <p v-for="(item, index) in videoslist" :key="item.id" :class="{ videoslistcss: item.videoslistcss, falg: true }"
+          @click="SwitchVideo(videoslist, index)" :title="item.desc">
+          <i class="iconfont icon-video"></i>
+          {{ item.desc }}
+        </p>
+      </div>
     </div>
+  </el-dialog>
+  </div>
   </div>
 </template>
 
@@ -671,8 +568,8 @@ export default {
     },
 
     //去达人详情页
-    gohomepage(id) {
-      window.open(window.location.origin + "/homepage:" + id);
+    gohomepage(id, userid) {
+      window.open(window.location.origin + `/homepage?id=${id}&user-id=${userid}`);
     },
 
     handleSizeChange(val) {
@@ -728,17 +625,21 @@ export default {
   overflow-x: hidden;
   position: relative;
   height: 100vh;
+
   .topclon {
     text-align: right;
     padding: 20px;
+
     i {
       font-size: 20px;
       cursor: pointer;
     }
+
     i:nth-child(1) {
       margin-right: 10px;
     }
   }
+
   .banxin {
     width: 1200px;
     margin: 0 auto;
@@ -778,6 +679,7 @@ export default {
           display: flex;
           align-items: baseline;
           padding: 1px 0;
+
           span {
             font-size: 14px;
             color: #999;
@@ -1047,6 +949,7 @@ export default {
             cursor: pointer;
             transition: all 0.3s;
             height: 30px;
+
             i {
               margin-right: 5px;
             }
@@ -1080,14 +983,17 @@ export default {
             position: absolute;
             right: -2px;
             top: 0;
+
             p {
               position: relative;
+
               i {
                 color: #ffdd99;
                 font-size: 23px;
                 position: absolute;
                 right: 0;
               }
+
               span {
                 position: absolute;
                 right: 7px;
@@ -1127,6 +1033,7 @@ export default {
     width: 100%;
     border-radius: 0 0 20px 20px;
   }
+
   @media screen and (max-width: 1280px) {
     .banxin {
       width: 900px;
@@ -1243,11 +1150,13 @@ export default {
       border: 1px solid #fff;
       border-radius: 4px 0 0 4px;
     }
+
     ::v-deep(.el-input__inner:hover) {
       border-color: #d161f6;
       border-radius: 4px 0 0 4px;
       border-right: none;
     }
+
     ::v-deep(.el-input__inner:focus) {
       border-color: #d161f6;
       border-radius: 4px 0 0 4px;
@@ -1332,8 +1241,7 @@ export default {
   background-color: rgba(255, 255, 255, 0);
 }
 
-::v-deep(.el-pagination.is-background .btn-next, .el-pagination.is-background
-    .btn-prev, .el-pagination.is-background .el-pager li) {
+::v-deep(.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li) {
   border-radius: 5px;
 }
 
@@ -1363,27 +1271,6 @@ export default {
 
 .el-select-dropdown__item.selected {
   color: #d161f6 !important;
-}
-
-/* 定义滚动条的宽度 */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-/* 定义滚动条轨道的样式 */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* 定义滚动条滑块的样式 */
-::-webkit-scrollbar-thumb {
-  background: #cecece;
-  border-radius: 10px;
-}
-
-/* 定义滚动条滑块在鼠标悬停时的样式 */
-::-webkit-scrollbar-thumb:hover {
-  background: #bdbdbd;
 }
 
 .el-pagination .el-select .el-input .el-input__inner {

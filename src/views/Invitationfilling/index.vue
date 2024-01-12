@@ -25,13 +25,8 @@
         </div>
         <div class="RequirementWenben-div2">
           <div class="elIcon2 tips6">
-            <el-upload
-              action=""
-              accept=".xls, .xlsx"
-              :show-file-list="false"
-              :multiple="false"
-              :http-request="httpRequest"
-            >
+            <el-upload action="" accept=".xls, .xlsx" :show-file-list="false" :multiple="false"
+              :http-request="httpRequest">
               <i class="iconfont icon-yq"></i>
               <span>批量导入</span>
             </el-upload>
@@ -42,25 +37,17 @@
           </div>
         </div>
       </div>
-      <div
-        class="loading-area"
-        style="
+      <div class="loading-area" style="
           position: relative;
           border-radius: 4px;
           border: 1px solid #eeeeee;
           box-sizing: border-box;
-        "
-      >
-        <el-table
-          ref="elTable"
-          :data="tableData"
-          :header-cell-style="{
-            background: '#F6F6F6',
-            color: '#333333',
-            position: 'relative',
-          }"
-          @selection-change="handleSelectionChange"
-        >
+        ">
+        <el-table ref="elTable" :data="tableData" :header-cell-style="{
+          background: '#F6F6F6',
+          color: '#333333',
+          position: 'relative',
+        }" @selection-change="handleSelectionChange">
           <el-table-column label="序号" width="70">
             <template slot-scope="scope">
               <div v-if="scope.row.flag != 2" style="padding-right: 30px">
@@ -80,42 +67,24 @@
                   </div>
                   <p>意向红人</p>
                 </el-tooltip>
-                <span style="color: #999999; font-size: 12px; margin-left: 4px"
-                  >(可上下左右拖动排序)</span
-                >
+                <span style="color: #999999; font-size: 12px; margin-left: 4px">(可上下左右拖动排序)</span>
               </div>
             </template>
             <template slot-scope="scope">
               <div v-if="scope.row.flag != 2">
                 <ul class="influencerInfoUl">
-                  <draggable
-                    v-model="scope.row.influencer_info"
-                    animation="100"
-                    @end="
-                      influencer_infoOnEnd(
-                        tableData,
-                        scope.$index,
-                        scope.row.id
-                      )
-                    "
-                    @start="influencer_infoOnStart(scope.row.influencer_info)"
-                    ghostClass="ghost"
-                    chosenClass="chosen"
-                    :forceFallback="true"
-                    group="people"
-                    handle=".mover"
-                  >
+                  <draggable v-model="scope.row.influencer_info" animation="100" @end="
+                    influencer_infoOnEnd(
+                      tableData,
+                      scope.$index,
+                      scope.row.id
+                    )
+                    " @start="influencer_infoOnStart(scope.row.influencer_info)" ghostClass="ghost"
+                    chosenClass="chosen" :forceFallback="true" group="people" handle=".mover">
                     <transition-group :style="style">
-                      <li
-                        class="influencerInfoLi isinfluencerInfoLi"
-                        v-for="(item, index) in scope.row.influencer_info"
-                        :key="index"
-                        @mousedown="influencerinfomousedown(item)"
-                      >
-                        <div
-                          v-if="item.ifinfluencerInfo"
-                          class="influencerInfoLi_div"
-                        >
+                      <li class="influencerInfoLi isinfluencerInfoLi" v-for="(item, index) in scope.row.influencer_info"
+                        :key="index" @mousedown="influencerinfomousedown(item)">
+                        <div v-if="item.ifinfluencerInfo" class="influencerInfoLi_div">
                           <div class="influencerInfo">
                             <i class="el-icon-user-solid"></i>
                           </div>
@@ -123,54 +92,41 @@
                         </div>
                         <div v-else class="influencerInfoLi_div mover">
                           <div style="position: relative">
-                            <img
-                              :src="item.image"
-                              style="
+                            <img :src="item.image" style="
                                 display: block;
                                 width: 32px;
                                 height: 32px;
                                 border-radius: 50%;
                                 object-fit: cover;
-                              "
-                              @click="gohomepage(item.user_id)"
-                            />
-                            <i
-                              class="el-icon-error delDiv"
-                              @click="delDr(item.id, scope.row.id)"
-                            ></i>
+                              " @click="gohomepage(item.id, item.user_id)" />
+                            <i class="el-icon-error delDiv" @click="delDr(item.id, scope.row.id)"></i>
                           </div>
-                          <p
-                            style="
+                          <p style="
                               font-size: 12px;
                               font-family: PingFangSC-Regular, PingFang SC;
                               font-weight: 400;
                               color: #999999;
                               max-width: 50px;
                               white-space: nowrap;
-                            "
-                          >
+                            ">
                             <span>No.{{ item.user_id }}</span>
                           </p>
-                          <p
-                            style="
+                          <p style="
                               font-size: 12px;
                               font-weight: 400;
                               color: #796cf3;
                               text-align: center;
-                            "
-                          >
+                            ">
                             {{ item.price }}
                           </p>
-                          <div
-                            :class="{
-                              indextop: true,
-                              indextop1: index == 0,
-                              indextop2: index == 1,
-                              indextop3: index == 2,
-                              indextop4: index == 3,
-                              indextop5: index == 4,
-                            }"
-                          >
+                          <div :class="{
+                            indextop: true,
+                            indextop1: index == 0,
+                            indextop2: index == 1,
+                            indextop3: index == 2,
+                            indextop4: index == 3,
+                            indextop5: index == 4,
+                          }">
                             {{ index + 1 }}
                           </div>
                         </div>
@@ -178,29 +134,20 @@
                     </transition-group>
                   </draggable>
 
-                  <li
-                    class="influencerInfoLiclass"
-                    v-if="scope.row.influencer_info.length != 5"
-                  >
-                    <div
-                      class="influencerInfoLi_div"
-                      v-if="scope.row.influencerInfo"
-                    >
+                  <li class="influencerInfoLiclass" v-if="scope.row.influencer_info.length != 5">
+                    <div class="influencerInfoLi_div" v-if="scope.row.influencerInfo">
                       <div class="influencerInfo">
                         <i class="el-icon-user-solid"></i>
                       </div>
                       <div class="influencerInfo2">平台推荐</div>
                     </div>
                     <div class="influencerInfoLi_div2">
-                      <div
-                        class="influencerInfo3"
-                        @click="
-                          Addinfluencers(
-                            scope.row.influencer_info,
-                            scope.row.id
-                          )
-                        "
-                      >
+                      <div class="influencerInfo3" @click="
+                        Addinfluencers(
+                          scope.row.influencer_info,
+                          scope.row.id
+                        )
+                        ">
                         +
                       </div>
                       <div class="influencerInfo2">添加</div>
@@ -214,55 +161,35 @@
             <template slot-scope="scope">
               <div v-if="scope.row.flag != 2">
                 <div v-if="scope.row.flag || scope.row.title == ''">
-                  <div
-                    style="
+                  <div style="
                       display: flex;
                       justify-content: center;
                       align-items: center;
-                    "
-                  >
-                    <div
-                      class="addbtn"
-                      @click="Fillintherequirements(scope.row.id)"
-                    >
+                    ">
+                    <div class="addbtn" @click="Fillintherequirements(scope.row.id)">
                       <i class="iconfont icon-tx"></i>
                       填写
                     </div>
                   </div>
                 </div>
-                <div
-                  v-else
-                  style="
+                <div v-else style="
                     display: flex;
                     align-items: center;
                     cursor: pointer;
                     justify-content: center;
-                  "
-                  class="table-yaoq"
-                >
-                  <div
-                    style="
+                  " class="table-yaoq">
+                  <div style="
                       height: 60px;
                       width: 60px;
                       border: 1px solid #f0f0f0;
                       padding: 1px;
-                    "
-                  >
-                    <img
-                      :src="scope.row.image[0]"
-                      style="width: 100%; height: 100%; object-fit: cover"
-                      v-if="scope.row.image.length != 0"
-                      @click="gocommodity(scope.row.url)"
-                    />
-                    <img
-                      src="@/assets/images/tp.png"
-                      v-else
-                      style="width: 20px; height: 20px; margin-top: 20px"
-                    />
+                    ">
+                    <img :src="scope.row.image[0]" style="width: 100%; height: 100%; object-fit: cover"
+                      v-if="scope.row.image.length != 0" @click="gocommodity(scope.row.url)" />
+                    <img src="@/assets/images/tp.png" v-else style="width: 20px; height: 20px; margin-top: 20px" />
                   </div>
                   <div style="margin-left: 5px">
-                    <p
-                      style="
+                    <p style="
                         width: 100px;
                         max-height: 3em;
                         overflow: hidden;
@@ -271,48 +198,32 @@
                         -webkit-line-clamp: 2;
                         text-overflow: ellipsis;
                         text-align: left;
-                      "
-                      :title="scope.row.title"
-                    >
+                      " :title="scope.row.title">
                       {{ scope.row.title }}
                     </p>
-                    <p
-                      style="
+                    <p style="
                         font-size: 12px;
                         color: #999999;
                         min-width: 105px;
                         text-align: left;
-                      "
-                      v-if="scope.row.url"
-                      @click="gocommodity(scope.row.url)"
-                    >
+                      " v-if="scope.row.url" @click="gocommodity(scope.row.url)">
                       {{ scope.row.asin }}
-                      <i
-                        class="iconfont icon-share"
-                        style="
+                      <i class="iconfont icon-share" style="
                           color: #a06cf3;
                           font-size: 12px;
                           margin-left: 3px;
-                        "
-                      ></i>
+                        "></i>
                     </p>
                     <p v-else style="color: #999999; min-width: 105px">--</p>
                   </div>
 
-                  <div
-                    @click="openFillingRequirementsdialog(scope.$index)"
-                    class="tableyaoq-div"
-                    v-if="scope.row.url != '' || scope.row.image.length != 0"
-                  >
+                  <div @click="openFillingRequirementsdialog(scope.$index)" class="tableyaoq-div"
+                    v-if="scope.row.url != '' || scope.row.image.length != 0">
                     <p>详情</p>
                     <i class="iconfont icon-tx"></i>
                   </div>
 
-                  <div
-                    @click="openFillingRequirementsdialog(scope.$index)"
-                    class="tableyaoq-div2"
-                    v-else
-                  >
+                  <div @click="openFillingRequirementsdialog(scope.$index)" class="tableyaoq-div2" v-else>
                     <p>详情</p>
                     <i class="el-icon-warning"></i>
                   </div>
@@ -324,57 +235,36 @@
             <template slot-scope="scope">
               <div v-if="scope.row.flag != 2" class="inputnumber">
                 <div class="tips4">
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="减少当前变体/型号的拍摄数量"
-                    placement="top"
-                  >
-                    <button
-                      @click="scope.row.video_num--"
-                      @mouseup="
-                        handleChange(
-                          scope.row.video_tip,
-                          scope.row.video_num - 1,
-                          scope.row.id,
-                          scope.row.budget,
-                          scope.$index
-                        )
-                      "
-                      :disabled="
-                        scope.row.video_num == 1 || scope.row.title == ''
-                      "
-                      :class="{
-                        disabled:
-                          scope.row.video_num == 1 || scope.row.title == '',
-                      }"
-                    >
+                  <el-tooltip class="item" effect="dark" content="减少当前变体/型号的拍摄数量" placement="top">
+                    <button @click="scope.row.video_num--" @mouseup="
+                      handleChange(
+                        scope.row.video_tip,
+                        scope.row.video_num - 1,
+                        scope.row.id,
+                        scope.row.budget,
+                        scope.$index
+                      )
+                      " :disabled="scope.row.video_num == 1 || scope.row.title == ''
+    " :class="{
+    disabled:
+      scope.row.video_num == 1 || scope.row.title == '',
+  }">
                       -
                     </button>
                   </el-tooltip>
                   <input type="text" v-model="scope.row.video_num" readonly />
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="增加当前变体/型号的拍摄数量"
-                    placement="top"
-                  >
-                    <button
-                      @click="scope.row.video_num++"
-                      @mouseup="
-                        handleChange(
-                          scope.row.video_tip,
-                          scope.row.video_num + 1,
-                          scope.row.id,
-                          scope.row.budget,
-                          scope.$index
-                        )
-                      "
-                      :disabled="scope.row.title == ''"
-                      :class="{
-                        disabled: scope.row.title == '',
-                      }"
-                    >
+                  <el-tooltip class="item" effect="dark" content="增加当前变体/型号的拍摄数量" placement="top">
+                    <button @click="scope.row.video_num++" @mouseup="
+                      handleChange(
+                        scope.row.video_tip,
+                        scope.row.video_num + 1,
+                        scope.row.id,
+                        scope.row.budget,
+                        scope.$index
+                      )
+                      " :disabled="scope.row.title == ''" :class="{
+    disabled: scope.row.title == '',
+  }">
                       +
                     </button>
                   </el-tooltip>
@@ -385,33 +275,22 @@
           <el-table-column label="拍摄预算/¥" width="140">
             <template slot-scope="scope">
               <div v-if="scope.row.flag != 2" style="padding-left: 25px">
-                <el-form
-                  :model="scope.row"
-                  :ref="'ruleForm' + scope.$index"
-                  class="elform"
-                >
+                <el-form :model="scope.row" :ref="'ruleForm' + scope.$index" class="elform">
                   <el-form-item prop="budget">
-                    <el-input
-                      v-model="scope.row.budget"
-                      style="height: 32px; width: 74px"
-                      class="elinput"
-                      @input="
-                        budgetChange(
-                          scope.row.budget,
-                          scope.$index,
-                          scope.row.video_num
-                        )
-                      "
-                      @blur="
-                        budgetBlur(
-                          scope.row.budget,
-                          scope.row.id,
-                          scope.$index,
-                          scope.row.video_num
-                        )
-                      "
-                      :disabled="scope.row.title == ''"
-                    ></el-input>
+                    <el-input v-model="scope.row.budget" style="height: 32px; width: 74px" class="elinput" @input="
+                      budgetChange(
+                        scope.row.budget,
+                        scope.$index,
+                        scope.row.video_num
+                      )
+                      " @blur="
+    budgetBlur(
+      scope.row.budget,
+      scope.row.id,
+      scope.$index,
+      scope.row.video_num
+    )
+    " :disabled="scope.row.title == ''"></el-input>
                   </el-form-item>
                 </el-form>
               </div>
@@ -420,42 +299,21 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div v-if="scope.row.flag != 2" style="padding-left: 20px">
-                <ul
-                  style="
+                <ul style="
                     display: flex;
                     justify-content: center;
                     flex-direction: column;
-                  "
-                >
+                  ">
                   <li class="operate" v-if="scope.row.title != ''">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="复制后可编辑创建其他变体/型号需求"
-                      placement="top"
-                    >
-                      <span
-                        class="operate1"
-                        @click="operatedialog(scope.$index)"
-                      >
-                        <i class="iconfont icon-fz"></i> 复制</span
-                      >
+                    <el-tooltip class="item" effect="dark" content="复制后可编辑创建其他变体/型号需求" placement="top">
+                      <span class="operate1" @click="operatedialog(scope.$index)">
+                        <i class="iconfont icon-fz"></i> 复制</span>
                     </el-tooltip>
                   </li>
                   <li class="operate">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="删除该行内容"
-                      placement="top"
-                      :enterable="false"
-                    >
-                      <span
-                        class="operate2"
-                        @click="deletesubmitForm(scope.row.id, scope.$index)"
-                      >
-                        <i class="iconfont icon-sc"></i> 删除</span
-                      >
+                    <el-tooltip class="item" effect="dark" content="删除该行内容" placement="top" :enterable="false">
+                      <span class="operate2" @click="deletesubmitForm(scope.row.id, scope.$index)">
+                        <i class="iconfont icon-sc"></i> 删除</span>
                     </el-tooltip>
                   </li>
                 </ul>
@@ -463,12 +321,7 @@
 
               <div v-else style="padding-left: 25px">
                 <div class="adddemand">
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="新增一行"
-                    placement="top"
-                  >
+                  <el-tooltip class="item" effect="dark" content="新增一行" placement="top">
                     <i class="el-icon-circle-plus" @click="adddemand"></i>
                   </el-tooltip>
                 </div>
@@ -482,16 +335,10 @@
       </div>
     </div>
 
-    <el-dialog
-      title="请确认"
-      :visible.sync="centerDialogVisibles"
-      width="20%"
-      center
-    >
+    <el-dialog title="请确认" :visible.sync="centerDialogVisibles" width="20%" center>
       <p style="text-align: center">是否删除该拍摄需求？</p>
       <span slot="footer" class="dialog-footer">
-        <button
-          style="
+        <button style="
             width: 120px;
             height: 32px;
             border-radius: 5px;
@@ -499,13 +346,10 @@
             cursor: pointer;
             margin: 0 5px;
             color: #999999;
-          "
-          @click="centerDialogVisibles = false"
-        >
+          " @click="centerDialogVisibles = false">
           取 消
         </button>
-        <button
-          style="
+        <button style="
             width: 120px;
             height: 32px;
             background: #d161f6;
@@ -514,57 +358,35 @@
             border: none;
             margin: 0 5px;
             color: #ffffff;
-          "
-          @click="deletecenterDialogVisibles"
-        >
+          " @click="deletecenterDialogVisibles">
           确 定
         </button>
       </span>
     </el-dialog>
 
     <!-- 达人列表 -->
-    <ListOfInfluencersdialog
-      :datalistdialogVisible="datalistdialogVisible"
-      @setdatalistdialogVisible="getdatalistlogMsg"
-      :influencersList="influencersList"
-      :influencersListid="influencersListid"
-      @getlist="getlist"
-    ></ListOfInfluencersdialog>
+    <ListOfInfluencersdialog :datalistdialogVisible="datalistdialogVisible" @setdatalistdialogVisible="getdatalistlogMsg"
+      :influencersList="influencersList" :influencersListid="influencersListid" @getlist="getlist">
+    </ListOfInfluencersdialog>
 
     <!-- 填写要求弹窗 -->
-    <FillingRequirementsdialog
-      :isFillingRequirementsdialogVisible="FillingRequirementsdialogVisible"
-      @isFillingRequirementsdialogVisible="getChildMsg"
-      :reqsearch="reqsearch"
-      :determine="determine"
-      :RequirementsList="RequirementsList"
-      :FillingRequirementid="FillingRequirementid"
-    ></FillingRequirementsdialog>
+    <FillingRequirementsdialog :isFillingRequirementsdialogVisible="FillingRequirementsdialogVisible"
+      @isFillingRequirementsdialogVisible="getChildMsg" :reqsearch="reqsearch" :determine="determine"
+      :RequirementsList="RequirementsList" :FillingRequirementid="FillingRequirementid"></FillingRequirementsdialog>
 
     <!-- 温馨提示 -->
-    <Tipsdialog
-      :TipsdialogdialogVisible="TipsdialogdialogVisible"
-      @getTipsdialogMsg="getTipsdialogMsg"
-      :video_id="video_id"
-      :reqsearch="reqsearch"
-    ></Tipsdialog>
+    <Tipsdialog :TipsdialogdialogVisible="TipsdialogdialogVisible" @getTipsdialogMsg="getTipsdialogMsg"
+      :video_id="video_id" :reqsearch="reqsearch"></Tipsdialog>
 
     <!-- 温馨提示弹窗 -->
-    <Notedialog
-      @getNotedialogMsg="getNotedialogMsg"
-      :NotedialogdialogVisible="NotedialogdialogVisible"
-    ></Notedialog>
+    <Notedialog @getNotedialogMsg="getNotedialogMsg" :NotedialogdialogVisible="NotedialogdialogVisible"></Notedialog>
 
-    <dialogVisibleTips1
-      :TipsdialogVisible1="TipsdialogVisible1"
-      @getTipsdialogVisible1="getTipsdialogVisible1"
-    ></dialogVisibleTips1>
+    <dialogVisibleTips1 :TipsdialogVisible1="TipsdialogVisible1" @getTipsdialogVisible1="getTipsdialogVisible1">
+    </dialogVisibleTips1>
 
     <!-- 上传成功弹窗 -->
-    <Successfullyejectedialog
-      :Successfullyejectedialog="Successfullyejectedialog"
-      @getSuccessfullyejectedialogMsg="getSuccessfullyejectedialogMsg"
-    ></Successfullyejectedialog>
+    <Successfullyejectedialog :Successfullyejectedialog="Successfullyejectedialog"
+      @getSuccessfullyejectedialogMsg="getSuccessfullyejectedialogMsg"></Successfullyejectedialog>
   </div>
 </template>
 
@@ -719,11 +541,8 @@ export default {
       });
     },
     //点击跳转homepage
-    gohomepage(id) {
-      window.open(
-        this.$router.resolve({ path: `/homepage:${id}` }).href,
-        "_blank"
-      );
+    gohomepage(id, userid) {
+      window.open(window.location.origin + `/homepage?id=${id}&user-id=${userid}`);
     },
     reqsearch() {
       let url = new URL(window.location.href);
@@ -1417,6 +1236,7 @@ export default {
   text-align: center;
   padding: 0 10px;
 }
+
 ::v-deep(.el-input__inner:focus) {
   border-color: #a06cf3;
 }
@@ -1437,6 +1257,7 @@ export default {
   margin-top: 16px;
   margin-bottom: 16px;
 }
+
 ::v-deep(.el-form-item__error) {
   width: 100%;
   color: #f56c6c !important;
@@ -1450,6 +1271,7 @@ export default {
   color: #333 !important;
   transition: all 0.3s;
 }
+
 ::v-deep(.el-upload:hover) {
   color: #a06cf3 !important;
 }
@@ -1465,13 +1287,11 @@ export default {
 
 <style lang="less" scoped>
 .RequirementBox {
-  background: linear-gradient(
-    225deg,
-    #e6e9fe 0%,
-    #f7f8fa 20%,
-    #ecf2ff 60%,
-    #eee5fc 100%
-  );
+  background: linear-gradient(225deg,
+      #e6e9fe 0%,
+      #f7f8fa 20%,
+      #ecf2ff 60%,
+      #eee5fc 100%);
   min-height: 100vh;
   margin-top: -67px;
 
@@ -1484,6 +1304,7 @@ export default {
     display: flex;
     align-items: center;
     padding: 0 30px;
+
     img {
       cursor: pointer;
     }
@@ -1517,6 +1338,7 @@ export default {
       height: 0;
     }
   }
+
   .headertitle {
     width: 100%;
     height: 30px;
@@ -1525,6 +1347,7 @@ export default {
     line-height: 30px;
     overflow: hidden;
     position: fixed;
+
     p {
       width: 1200px;
       margin: 0 auto;
@@ -1538,6 +1361,7 @@ export default {
     margin: 0 auto;
     overflow: hidden;
     min-height: calc(100vh - 97px);
+
     .hearder {
       font-size: 20px;
       font-family: PingFangSC-Semibold, PingFang SC;
@@ -1558,16 +1382,19 @@ export default {
         font-size: 14px;
         display: flex;
         color: #333333;
+
         span {
           cursor: pointer;
           transition: all 0.3s;
         }
+
         div {
           width: 1px;
           height: 13px;
           background: #333333;
           margin: 3px 7px 0;
         }
+
         span:hover {
           color: #a06cf3;
         }
@@ -1575,6 +1402,7 @@ export default {
 
       .RequirementWenben-div2 {
         display: flex;
+
         .elIcon2 {
           display: flex;
           align-items: center;
@@ -1583,18 +1411,22 @@ export default {
           margin-left: 20px;
           transition: all 0.3s;
           cursor: pointer;
+
           .iconfont {
             margin-right: 5px;
           }
+
           a {
             text-decoration: none;
             color: #333;
             transition: all 0.3s;
           }
         }
+
         .elIcon2:hover {
           color: #a06cf3 !important;
         }
+
         .elIcon2:hover a {
           color: #a06cf3 !important;
         }
@@ -1631,25 +1463,31 @@ export default {
         font-size: 12px;
         height: 30px;
         line-height: 30px;
+
         span {
           cursor: pointer;
           transition: all 0.3s;
+
           .iconfont {
             font-size: 12px;
             margin-right: 3px;
           }
         }
+
         .operate2:hover {
           color: #f56c6c;
         }
+
         .operate1:hover {
           color: #a06cf3;
         }
       }
+
       .inputnumber {
         display: flex;
         justify-content: center;
         padding-left: 15px;
+
         button {
           width: 18px;
           height: 18px;
@@ -1664,16 +1502,19 @@ export default {
           background-color: rgba(199, 179, 230, 0.2);
           color: #a06cf3;
         }
+
         .disabled:hover {
           background: #f6f6f6 !important;
           color: #b3b3b3 !important;
         }
+
         input {
           border: none;
           width: 40px;
           text-align: center;
           color: #333333;
         }
+
         input:focus {
           outline: none;
         }
@@ -1686,24 +1527,29 @@ export default {
           color: #ed4014;
           margin-left: 15px;
           font-size: 12px;
+
           p {
             white-space: nowrap;
           }
+
           .el-icon-warning {
             margin-left: 3px;
             margin-top: 1px;
             font-size: 16px;
           }
         }
+
         .tableyaoq-div {
           display: flex;
           align-items: center;
           color: #a06cf3;
           margin-left: 15px;
           font-size: 12px;
+
           p {
             white-space: nowrap;
           }
+
           .icon-tx {
             transition: all 0.3s;
             margin-left: 5px;
@@ -1711,15 +1557,18 @@ export default {
             opacity: 0;
           }
         }
+
         .tableyaoq-div:hover .icon-tx {
           opacity: 1;
         }
       }
     }
+
     .RequirementBtn {
       margin-top: 30px;
       display: flex;
       justify-content: center;
+
       button {
         transition: all 0.3s;
         width: 160px;
@@ -1782,12 +1631,14 @@ export default {
   cursor: pointer;
   float: left;
   width: 60px;
+
   .influencerInfoLi_div {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     margin-top: 10px;
+
     .indextop {
       width: 16px;
       height: 14px;
@@ -1807,15 +1658,19 @@ export default {
     .indextop1 {
       opacity: 1;
     }
+
     .indextop2 {
       opacity: 0.8;
     }
+
     .indextop3 {
       opacity: 0.6;
     }
+
     .indextop4 {
       opacity: 0.4;
     }
+
     .indextop5 {
       opacity: 0.2;
     }
@@ -1828,15 +1683,18 @@ export default {
     color: #999999 !important;
   }
 }
+
 .influencerInfoLiclass {
   display: flex;
   justify-content: center;
+
   .influencerInfoLi_div {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 60px;
     margin: 10px 7px 0;
+
     .influencerInfo2 {
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -1844,10 +1702,12 @@ export default {
       color: #999999 !important;
     }
   }
+
   .influencerInfoLi_div2 {
     width: 60px;
     margin-top: 10px;
     height: 55px;
+
     .influencerInfo3 {
       width: 32px;
       height: 32px;
@@ -1859,6 +1719,7 @@ export default {
       margin: 0 auto;
       transition: all 0.3s;
     }
+
     .influencerInfo2 {
       font-size: 12px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -1872,6 +1733,7 @@ export default {
     color: #a06cf3 !important;
     background-color: rgba(199, 179, 230, 0.2);
   }
+
   .influencerInfoLi_div2:hover .influencerInfo2 {
     color: #a06cf3 !important;
   }
@@ -1960,6 +1822,7 @@ export default {
     transition: all, 0.3s;
     opacity: 0.4;
   }
+
   i:hover {
     opacity: 1;
   }
@@ -1990,11 +1853,13 @@ export default {
 }
 
 .el-table {
+
   // 每行鼠标经过得样式
-  .el-table__body tr:hover > td {
+  .el-table__body tr:hover>td {
     background-color: #ffffff !important;
   }
-  .el-table__body tr.current-row > td {
+
+  .el-table__body tr.current-row>td {
     background-color: #fff !important;
   }
 }

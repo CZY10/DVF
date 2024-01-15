@@ -1,18 +1,9 @@
 <template>
   <div>
     <div class="header">
-      <el-menu
-        :default-active="$route.path"
-        class="el-menu-demo"
-        id="menu_box"
-        router
-        mode="horizontal"
-        active-text-color="#333333"
-        text-color="#666666"
-      >
-        <a
-          href="/"
-          style="
+      <el-menu :default-active="$route.path" class="el-menu-demo" id="menu_box" router mode="horizontal"
+        active-text-color="#333333" text-color="#666666">
+        <a href="/" style="
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,20 +11,11 @@
             padding: 0 20px;
             height: 30px;
             margin-top: 16px;
-          "
-          ><img :src="logoImg" style="width: 100%; height: 100%"
-        /></a>
+          "><img :src="logoImg" style="width: 100%; height: 100%" /></a>
         <el-menu-item index="/" class="el-menu-itempadding">首页</el-menu-item>
-        <el-menu-item index="/buyershow" class="el-menu-itempadding"
-          >红人视频</el-menu-item
-        >
+        <el-menu-item index="/buyershow" class="el-menu-itempadding">红人视频</el-menu-item>
         <el-menu-item class="el-menu-itempadding">
-          <a
-            :href="ViponSrc"
-            target="_blank"
-            style="height: 100%; line-height: 62px"
-            ><span>站外推广</span></a
-          >
+          <a :href="ViponSrc" target="_blank" style="height: 100%; line-height: 62px"><span>站外推广</span></a>
         </el-menu-item>
         <el-submenu style="float: left" index="1">
           <template slot="title"><span>联盟介绍</span></template>
@@ -46,23 +28,11 @@
             </el-menu-item>
           </div>
         </el-submenu>
-        <el-menu-item
-          v-if="!isLogin"
-          style="float: right; margin: 0 20px"
-          index="/login"
-          ><el-button class="login_btn" round
-            >登陆/注册</el-button
-          ></el-menu-item
-        >
-        <el-submenu
-          v-else
-          index="/manage"
-          style="float: right; border-radius: 10px"
-        >
-          <template slot="title"
-            ><span class="user_info_box"
-              ><img :src="avatar" width="36px" height="36px" alt="" /></span
-          ></template>
+        <el-menu-item v-if="!isLogin" style="float: right; margin: 0 20px" index="/login"><el-button class="login_btn"
+            round>登陆/注册</el-button></el-menu-item>
+        <el-submenu v-else index="/manage" style="float: right; border-radius: 10px">
+          <template slot="title"><span class="user_info_box"><img :src="avatar" width="36px" height="36px"
+                alt="" /></span></template>
           <div style="padding: 0 6px">
             <el-menu-item>
               <span @click="gomanageOrder">订单信息</span>
@@ -73,46 +43,22 @@
           </div>
         </el-submenu>
 
-        <el-menu-item
-          class="icon_hover_style"
-          style="float: right; padding: 0; margin: 0 10px 0 0px"
-          index="/manage/order"
-          @click="changeIsMessage"
-        >
-          <el-badge
-            :value="messageCount"
-            :hidden="messageCount == 0"
-            style="height: 64px; margin-bottom: 4px"
-          >
-            <i
-              class="el-icon-chat-dot-round"
-              style="color: #666666; font-size: 18px; margin-right: 3px"
-            ></i>
+        <el-menu-item class="icon_hover_style" style="float: right; padding: 0; margin: 0 10px 0 0px"
+          index="/manage/order" @click="changeIsMessage">
+          <el-badge :value="messageCount" :hidden="messageCount == 0" style="height: 64px; margin-bottom: 4px">
+            <i class="el-icon-chat-dot-round" style="color: #666666; font-size: 18px; margin-right: 3px"></i>
             <span>消息</span>
           </el-badge>
         </el-menu-item>
 
-        <el-menu-item
-          v-if="token"
-          style="float: right; padding-left: 0; margin-right: 20px"
-        >
-          <el-popover
-            placement="bottom"
-            popper-class="menu_popover"
-            trigger="click"
-          >
-            <div
-              slot="reference"
-              style="
+        <el-menu-item v-if="token" style="float: right; padding-left: 0; margin-right: 20px">
+          <el-popover placement="bottom" popper-class="menu_popover" trigger="click">
+            <div slot="reference" style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
-              "
-            >
-              <i
-                class="iconfont icon-kf"
-                style="margin-right: 4px; color: #666666"
-              ></i>
+              ">
+              <i class="iconfont icon-kf" style="margin-right: 4px; color: #666666"></i>
               <span style="padding-top: 1px">咨询</span>
             </div>
             <div>
@@ -128,11 +74,8 @@
                     交付订单：<span>{{ serviceInfoList.pay_order }}</span>
                   </li>
                   <li>
-                    客户评价：<el-rate
-                      v-model="serviceInfoList.customer_reviews"
-                      disabled
-                      :colors="['#796CF3', '#796CF3', '#796CF3']"
-                    ></el-rate>
+                    客户评价：<el-rate v-model="serviceInfoList.customer_reviews" disabled
+                      :colors="['#796CF3', '#796CF3', '#796CF3']"></el-rate>
                   </li>
                   <li>
                     客户投诉：<span>{{ serviceInfoList.customer_report }}</span>
@@ -159,9 +102,7 @@
 
         <el-submenu style="float: right" index="">
           <template slot="title">
-            <i class="el-icon-video-play" style="margin-right: 0px"></i
-            ><span>帮助</span></template
-          >
+            <i class="el-icon-video-play" style="margin-right: 0px"></i><span>帮助</span></template>
           <el-menu-item style="width: 139px">
             <li class="menu-item-li" @click="centerDialogVisible = true">
               视频教程
@@ -178,16 +119,11 @@
 
         <el-menu-item style="float: right; display: flex; align-items: center">
           <!-- close-delay="1000000" -->
-          <el-popover
-            placement="top-start"
-            trigger="hover"
-            v-model="popovermodel"
-          >
+          <el-popover placement="top-start" trigger="hover" v-model="popovermodel">
             <div class="elmenuitembox" v-if="RequirementListlength == 0">
               <img src="../../assets/images/empty_img.png" alt="" />
               <p>
-                每个视频需求可选<span style="color: #d161f6">0～5</span
-                >个意向红人
+                每个视频需求可选<span style="color: #d161f6">0～5</span>个意向红人
               </p>
               <p>未选择时，将由平台为您推荐最合适的红人</p>
             </div>
@@ -197,79 +133,53 @@
                   <thead>
                     <th>视频</th>
                     <th>
-                      已选意向达人<span style="font-size: 12px; color: #999"
-                        >(可上下左右拖动排序)</span
-                      >
+                      已选意向达人<span style="font-size: 12px; color: #999">(可上下左右拖动排序)</span>
                     </th>
                     <th>操作</th>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="(item, index) in RequirementLists"
-                      :key="item.user_id"
-                    >
+                    <tr v-for="(item, index) in RequirementLists" :key="item.user_id">
                       <td>视频{{ index + 1 }}</td>
                       <td>
-                        <draggable
-                          v-model="RequirementLists[index]"
-                          group="people"
-                          animation="300"
-                          @start="onStart"
-                          @end="
-                            onEnd(
-                              RequirementLists[index],
-                              index,
-                              RequirementLists
-                            )
-                          "
-                          ghostClass="ghost"
-                          chosenClass="chosen"
-                          :forceFallback="true"
-                        >
+                        <draggable v-model="RequirementLists[index]" group="people" animation="300" @start="onStart" @end="
+                          onEnd(
+                            RequirementLists[index],
+                            index,
+                            RequirementLists
+                          )
+                          " ghostClass="ghost" chosenClass="chosen" :forceFallback="true">
                           <transition-group :style="style">
-                            <div
-                              class="draggableItem"
-                              v-for="(element, elementindex) in item"
-                              :key="elementindex"
+                            <div class="draggableItem" v-for="(element, elementindex) in item" :key="elementindex"
                               @mousedown="
                                 itemmousedown(RequirementLists, element)
-                              "
-                              @mouseup="
-                                itemmouseup(
-                                  RequirementLists,
-                                  element,
-                                  elementindex
-                                )
-                              "
-                            >
+                                " @mouseup="
+    itemmouseup(
+      RequirementLists,
+      element,
+      elementindex
+    )
+    ">
                               <img :src="element.image" alt="" />
                               <p class="userp">No.{{ element.user_id }}</p>
                               <p class="pricep">
-                                <span v-if="element.price_type != 2">￥</span
-                                >{{ element.price }}
+                                <span v-if="element.price_type != 2">￥</span>{{ element.price }}
                               </p>
-                              <i
-                                class="el-icon-error"
-                                @click="
-                                  deleteitem(
-                                    item,
-                                    element.user_id,
-                                    index,
-                                    elementindex
-                                  )
-                                "
-                              ></i>
-                              <div
-                                :class="{
-                                  indextop: true,
-                                  indextop1: elementindex == 0,
-                                  indextop2: elementindex == 1,
-                                  indextop3: elementindex == 2,
-                                  indextop4: elementindex == 3,
-                                  indextop5: elementindex == 4,
-                                }"
-                                ref="iftop"
-                              >
+                              <i class="el-icon-error" @click="
+                                deleteitem(
+                                  item,
+                                  element.user_id,
+                                  index,
+                                  elementindex
+                                )
+                                "></i>
+                              <div :class="{
+                                indextop: true,
+                                indextop1: elementindex == 0,
+                                indextop2: elementindex == 1,
+                                indextop3: elementindex == 2,
+                                indextop4: elementindex == 3,
+                                indextop5: elementindex == 4,
+                              }" ref="iftop">
                                 {{ elementindex + 1 }}
                               </div>
                             </div>
@@ -277,10 +187,7 @@
                         </draggable>
                       </td>
                       <td>
-                        <i
-                          class="el-icon-delete"
-                          @click="deletelist(item, index)"
-                        ></i>
+                        <i class="el-icon-delete" @click="deletelist(item, index)"></i>
                       </td>
                     </tr>
                   </tbody>
@@ -297,12 +204,7 @@
               </div>
             </div>
 
-            <el-button
-              slot="reference"
-              class="elmenuitembtn"
-              @click="SubmitRequirements"
-              ref="elmenuitembtndom"
-            >
+            <el-button slot="reference" class="elmenuitembtn" @click="SubmitRequirements" ref="elmenuitembtndom">
               <span>提交需求</span>
               <div class="number" v-if="RequirementListlength !== 0">
                 {{ RequirementListlength }}
@@ -314,16 +216,7 @@
     </div>
 
     <el-dialog :visible.sync="centerDialogVisible" width="50%" center>
-      <video
-        width="100%"
-        height="100%"
-        autoplay
-        controls
-        preload="none"
-        ref="myVideo"
-        @play="onPlay"
-        @pause="onPause"
-      >
+      <video width="100%" height="100%" autoplay controls preload="none" ref="myVideo" @play="onPlay" @pause="onPause">
         <source :src="videoUrl" type="video/mp4" />
       </video>
       <div class="video_img" @click="videoplay" v-show="!video_img"></div>
@@ -450,8 +343,21 @@ export default {
     } else if (process.env.NODE_ENV == "development") {
       this.DealHook = "https://hkatest.myvipon.com";
     }
+
   },
   mounted() {
+    let _this = this;
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") {
+        console.log("页面在前台");
+        let randomNumber = Math.random();
+        store.commit("Index/setupdata", randomNumber);
+        _this.getcarList();
+      } else if (document.visibilityState === "hidden") {
+        console.log("页面在后台");
+      }
+    });
+
     if (localStorage.getItem("videoUrl") == "undefined") this.getContent();
     if (localStorage.getItem("videoUrl")) {
     } else {
@@ -597,7 +503,6 @@ export default {
           this.differentIndices = [];
           this.onEndarr = [];
           this.onStartarr = [];
-          // this.getcarList();
         });
       } else {
         let influencerIds1 = this.RequirementLists[itemindex]
@@ -730,7 +635,7 @@ export default {
           },
         ],
       };
-      carOperate(data).then((res) => {});
+      carOperate(data).then((res) => { });
     },
 
     //删除需求列表某一个
@@ -753,7 +658,7 @@ export default {
           },
         ],
       };
-      carOperate(data).then((res) => {});
+      carOperate(data).then((res) => { });
     },
 
     //提交需求
@@ -859,6 +764,7 @@ export default {
 .elmenuitembox {
   width: 293px;
   padding: 10px 0 20px;
+
   img {
     width: 183px;
     display: block;
@@ -877,52 +783,64 @@ export default {
 
 .requirementListul {
   width: 650px;
+
   .table {
     padding: 14px 17px 0 14px;
     height: 435px;
     overflow: auto;
     overflow-x: hidden;
+
     table {
       width: 100%;
+
       thead {
         height: 46px;
         background: #f6f6f6;
         border-radius: 4px;
+
         th {
           text-align: center;
           color: #333333;
         }
       }
     }
+
     tbody {
       tr {
         height: 130px;
         border-bottom: 1px solid #eee;
+
         td {
           text-align: center;
+
           i {
             cursor: pointer;
           }
+
           .draggableItem {
             float: left;
             width: 19%;
             margin-top: 30px;
             height: 88px;
-            cursor: pointer;
             position: relative;
+            cursor: default;
+
             img {
               width: 42px;
               height: 42px;
               border-radius: 50%;
               object-fit: cover;
             }
+
             .userp {
               color: #333333;
             }
+
             .pricep {
               font-size: 12px;
               color: #ff2c4c;
             }
+
             .el-icon-error {
               position: absolute;
               right: 20px;
@@ -931,6 +849,7 @@ export default {
               transition: all 0.3s;
               color: #ed4014;
             }
+
             .indextop {
               width: 16px;
               height: 14px;
@@ -946,22 +865,28 @@ export default {
               padding-left: 4px;
               box-sizing: border-box;
             }
+
             .indextop1 {
               opacity: 1;
             }
+
             .indextop2 {
               opacity: 0.8;
             }
+
             .indextop3 {
               opacity: 0.6;
             }
+
             .indextop4 {
               opacity: 0.4;
             }
+
             .indextop5 {
               opacity: 0.2;
             }
           }
+
           .draggableItem:hover .el-icon-error {
             opacity: 1;
           }
@@ -969,6 +894,7 @@ export default {
           .ghost {
             opacity: 0;
           }
+
           .chosen {
             background-color: rgba(255, 255, 255, 0.1);
           }
@@ -990,6 +916,7 @@ export default {
     height: 47px;
     text-align: center;
     position: relative;
+
     .el-icon-circle-plus {
       font-size: 25px;
       cursor: pointer;
@@ -999,6 +926,7 @@ export default {
       top: -10px;
       left: calc(50% + 4px);
     }
+
     .el-icon-circle-plus:hover {
       color: #d161f6;
     }
@@ -1007,6 +935,7 @@ export default {
       margin-top: 25px;
       display: flex;
       justify-content: center;
+
       span {
         color: #ff2c4c;
         font-size: 12px;
@@ -1019,6 +948,7 @@ export default {
       }
     }
   }
+
   .prompt:before {
     content: "";
     width: 32px;
@@ -1079,6 +1009,7 @@ export default {
   border-radius: 10px !important;
   padding: 0 !important;
 }
+
 .el-button--primary {
   background-color: #d161f6 !important;
   border-color: #d161f6 !important;
@@ -1087,12 +1018,10 @@ export default {
 
 <style lang="less">
 .menu_popover {
-  background: linear-gradient(
-    180deg,
-    #f2f0fe 0%,
-    #ffffff 43%,
-    #ffffff 100%
-  ) !important;
+  background: linear-gradient(180deg,
+      #f2f0fe 0%,
+      #ffffff 43%,
+      #ffffff 100%) !important;
   padding: 24px !important;
   margin-top: -6px !important;
 
@@ -1388,7 +1317,7 @@ export default {
   background: none !important;
 }
 
-.el-menu--horizontal > .el-menu-item.is-active {
+.el-menu--horizontal>.el-menu-item.is-active {
   border-bottom-color: #d161f6 !important;
 }
 
@@ -1398,7 +1327,7 @@ export default {
 
 .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
 .el-menu--horizontal .el-menu-item:not(.is-disabled):hover,
-.el-menu--horizontal > .el-menu-item.is-active {
+.el-menu--horizontal>.el-menu-item.is-active {
   color: #333333 !important;
   font-weight: bold;
   background: none !important;
@@ -1415,13 +1344,13 @@ export default {
   color: #ffffff !important;
 }
 
-.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
+.el-menu--horizontal>.el-submenu .el-submenu__title:hover {
   background: none !important;
 }
 
-.el-menu--horizontal > .el-submenu .el-submenu__title,
+.el-menu--horizontal>.el-submenu .el-submenu__title,
 .el-submenu.is-active .el-submenu__title,
-.el-menu--horizontal > .el-menu-item {
+.el-menu--horizontal>.el-menu-item {
   height: 55px !important;
   line-height: 64px !important;
 }
@@ -1467,7 +1396,7 @@ export default {
     }
   }
 
-  > ul {
+  >ul {
     //max-width: 1200px;
     margin: 0 10px;
     align-items: center;
@@ -1489,8 +1418,7 @@ export default {
 
       .login_btn {
         color: #ffffff;
-        background: #001238
-          linear-gradient(233deg, #ffa373 0%, #ea5ef7 48%, #776cf3 100%);
+        background: #001238 linear-gradient(233deg, #ffa373 0%, #ea5ef7 48%, #776cf3 100%);
         padding: 10px 28px;
         border: none;
       }
@@ -1509,18 +1437,18 @@ export default {
 }
 
 @media screen and (max-width: 600px) {
-  .header > ul {
+  .header>ul {
     margin: 10px;
     padding-bottom: 10px;
     margin-bottom: 0;
   }
 
-  .header > ul li {
+  .header>ul li {
     height: 40px !important;
     line-height: 40px !important;
   }
 
-  .header > ul a {
+  .header>ul a {
     height: 40px !important;
     line-height: 40px !important;
     padding: 0 10px !important;
@@ -1530,9 +1458,9 @@ export default {
     padding: 0 6px !important;
   }
 
-  .el-menu--horizontal > .el-submenu .el-submenu__title,
+  .el-menu--horizontal>.el-submenu .el-submenu__title,
   .el-submenu.is-active .el-submenu__title,
-  .el-menu--horizontal > .el-menu-item {
+  .el-menu--horizontal>.el-menu-item {
     height: 40px !important;
     line-height: 40px !important;
   }

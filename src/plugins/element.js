@@ -45,7 +45,8 @@ import {
     Avatar,
     Notification,
     InputNumber,
-    Progress
+    Progress,
+    Image
 } from 'element-ui';
 
 Vue.use(InputNumber);
@@ -91,6 +92,7 @@ Vue.use(Empty);
 Vue.use(Avatar);
 Vue.use(Loading.directive);
 Vue.use(Progress);
+Vue.use(Image);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;

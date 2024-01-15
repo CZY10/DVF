@@ -51,7 +51,7 @@ const routes = [
                         component: () => import('@/views/BuyershowManage/Buyershow.vue'),
                     },
                     {
-                        path: '/homepage:id',
+                        path: '/homepage',
                         name: 'homepage',
                         meta: { requiresAuth: false },
                         component: () => import('@/views/BuyershowManage/Homepage.vue'),

@@ -14,6 +14,16 @@
     src: url("../../assets/fonts/FetteMittelschrift-Regular.ttf") format('truetype');
 }
 
+/* 兼容火狐 */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #cecece #f1f1f1;
+}
+
+/* 兼容IE */
+* {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
 
 img[src=""],
 img:not([src]) {
@@ -129,10 +139,6 @@ html {
     visibility: hidden;
 }
 
-.clearfix {
-    *zoom: 1;
-}
-
 .el-dialog__wrapper {
     display: grid;
     align-items: center;
@@ -178,26 +184,26 @@ html {
     background: #CCCCCC !important;
 }
 
-/*table滚动条样式*/
-.el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar {
+/* 定义滚动条的宽度 */
+::-webkit-scrollbar {
     width: 6px;
 }
 
-/* 滚动槽 */
-.el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-track {
+/* 定义滚动条轨道的样式 */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* 定义滚动条滑块的样式 */
+::-webkit-scrollbar-thumb {
+    background: #cecece;
     border-radius: 10px;
 }
 
-/* 滚动条滑块 */
-.el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.1);
+/* 定义滚动条滑块在鼠标悬停时的样式 */
+::-webkit-scrollbar-thumb:hover {
+    background: #bdbdbd;
 }
-
-.el-table--scrollable-y .el-table__body-wrapper::-webkit-scrollbar-thumb:window-inactive {
-    background: #D8D8D8;
-}
-
 
 /*播放按钮*/
 .video-js {

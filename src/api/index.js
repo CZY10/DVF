@@ -507,3 +507,33 @@ export function homehighOpinion(data) {
     })
 
 }
+
+// 获取生活照列表
+export function getLifephotos(data) {
+    return request({
+        url: "/api/influencer/livePhoto",
+        method: "post",
+        data
+    })
+
+}
+
+//获取视频列表
+export function getInfluencerVideo(data) {
+    return request({
+        url: "/api/influencer/video",
+        method: "post",
+        data
+    })
+
+}
+
+//获取图片post列表
+export function getImagepostlist(data) {
+    return request({
+        url: "/api/influencer/postPhoto",
+        method: "post",
+        data
+    })
+
+}

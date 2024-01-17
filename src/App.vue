@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { determineDeal } from "@/api/index";
+import { determineDeal, influencerDetail } from "@/api/index";
 export default {
   name: "app",
   provide() {
@@ -26,6 +26,9 @@ export default {
         "",
       id: new URL(window.location.href).searchParams.get("id") || "",
     };
+  },
+  created() {
+    this.resetURL()
   },
   mounted() {
     // http://testai.blhltd.com/login?source=vipon_deal&action=dashboard/index
@@ -75,6 +78,21 @@ export default {
         this.isRouterAlive = true;
       });
     },
+
+    //http://localhost:8088/homepage:1
+    // 重定向url
+    async resetURL() {
+      var s = window.location.pathname;
+      if (s.includes("homepage:")) {
+        let id = window.location.href.substr(
+          window.location.href.lastIndexOf(":") + 1
+        );
+        const res = await influencerDetail({ id })
+        if (res.code == 1) {
+          window.location.href = window.location.origin + `/homepage?id=${res.data.id}&user-id=${id}`
+        }
+      }
+    }
   },
 };
 </script>

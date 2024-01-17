@@ -57,6 +57,12 @@ const routes = [
                         component: () => import('@/views/BuyershowManage/Homepage.vue'),
                     },
                     {
+                        path: '/homepage:id',
+                        name: 'homepageold',
+                        meta: { requiresAuth: false },
+                        component: () => import('@/views/BuyershowManage/Homepageold.vue'),
+                    },
+                    {
                         path: '/Requirement',
                         name: 'Requirement',
                         meta: { requiresAuth: true },
@@ -147,7 +153,7 @@ VueRouter.prototype.push = function push(location) {
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-    if (to.fullPath == "/Note" || to.fullPath == "/datalistdialog" || to.path == '/Invitationfilling' || to.path == '/datalistdialogIf') {
+    if (to.fullPath == "/Note" || to.fullPath == "/datalistdialog" || to.path == '/Invitationfilling' || to.path == '/datalistdialogIf' || to.name == 'homepageold') {
         store.commit('Index/setIsFalg', false)
     } else {
         store.commit('Index/setIsFalg', true)
@@ -155,7 +161,7 @@ router.beforeEach((to, from, next) => {
 
     if (to.query.source) localStorage.setItem('source', to.query.source)
     if (to.query.action) localStorage.setItem('action', to.query.action)
-    localStorage.setItem('loginFromPath', from.path)
+    localStorage.setItem('loginFromPath', from.fullPath)
     let token = localStorage.getItem('token');
     if (to.matched.some(ele => ele.meta.requiresAuth)) {
         if (token) {

@@ -175,7 +175,7 @@
         </el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
-            <div>
+            <div v-if="scope.row.is_close == 0">
               <div v-if="scope.row.status == 0" class="flex_center">
                 <el-button class="operation_btn payment_btn_style" size="small" @click="
                   orderId = scope.row.id;
@@ -263,6 +263,13 @@
                 orderId = scope.row.id;
                 " round>删除</el-button>
               </div>
+            </div>
+            <div v-else class="flex_center">
+              <div class="normal_style">/</div>
+              <el-button class="operation_btn payment_btn_style2" size="small" @click="
+                deleteOrderDialog = true;
+              orderId = scope.row.id;
+              " round>删除</el-button>
             </div>
           </template>
         </el-table-column>

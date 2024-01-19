@@ -158,11 +158,21 @@
               </div>
             </el-popover>
 
-            <div v-else>
-              <i
-                style="background: #999;width: 4px;height: 4px;border-radius: 50%;display: inline-block;margin-right: 6px;margin-bottom: 3px;"></i>
-              <span style="color: #999;">订单已关闭</span>
-            </div>
+
+            <el-popover placement="right" width="200" @hide="stepsList = []" @show="handleShowFn(scope.row)"
+              trigger="hover" style="position: relative" v-else>
+              <div solt="content" style="padding: 15px 15px 0 15px">
+                <el-steps direction="vertical" :active="stepsList.current">
+                  <el-step v-for="(item, index) in stepsList.items" icon="el-icon-success" :key="index" :title="item.name"
+                    :description="item.createtime"><span></span></el-step>
+                </el-steps>
+              </div>
+              <div slot="reference">
+                <i
+                  style="background: #999;width: 4px;height: 4px;border-radius: 50%;display: inline-block;margin-right: 6px;margin-bottom: 3px;"></i>
+                <span style="color: #999;">订单已关闭</span>
+              </div>
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column prop="hasMessage" label="红人沟通" width="150">
@@ -3448,8 +3458,6 @@ export default {
   border-radius: 3px;
   border: 1px solid #796cf3;
   font-size: 12px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
   color: #796cf3;
   text-align: center;
   position: absolute;

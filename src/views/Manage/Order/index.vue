@@ -1166,7 +1166,8 @@ export default {
         row.status == 3 ||
         row.status == 4 ||
         row.status == 5 ||
-        (row.status == 1 && row.influencer_id == null)
+        (row.status == 1 && row.influencer_id == null) ||
+        row.is_close == 1
       ) {
         return false;
       } else {

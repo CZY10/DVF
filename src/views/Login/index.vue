@@ -20,13 +20,13 @@
           </div>
         </el-col>
 
-        <el-col :span="12" class="right max_right">
+        <el-col :span="12" class="right max_right myElementOut" v-if="isone">
           <div class="tabs" v-if="!hasBindPhone">
             <h3>注册/登录</h3>
             <p class="description">未注册时，首次登录系统将自动为您注册</p>
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
               <el-tab-pane label="微信扫码" name="first">
-                <div class="qrcode">
+                <div class="qrcode" v-loading="loading" element-loading-custom-class="qrcodeloaging">
                   <span class="top"></span><span class="bottom"></span><span class="left"></span><span
                     class="right"></span>
                   <img :src="qrImg" alt="" />
@@ -47,7 +47,7 @@
               </el-tab-pane>
 
               <el-tab-pane label="手机验证码" name="second">
-                <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm">
+                <el-form :model="ruleForm" :rules="bindPhoneRules" class="demo-ruleForm">
                   <el-form-item prop="phone">
                     <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
                   </el-form-item>
@@ -70,11 +70,25 @@
               <el-tab-pane label="账号密码" name="accountpassword">
                 <el-form :model="accountPasswordForm" :rules="accountPasswordRules" class="demo-ruleForm">
                   <el-form-item prop="accountVal">
-                    <el-input v-model="accountPasswordForm.accountVal" placeholder="请输入手机号码"
+                    <el-input v-model="accountPasswordForm.accountVal" placeholder="请输入手机号/邮箱"
                       autocomplete="off"></el-input>
                   </el-form-item>
-
+                  <el-form-item prop="passwordVal" style="position: relative;margin-bottom: 10px;">
+                    <el-input placeholder="请输入密码" v-model="accountPasswordForm.passwordVal"
+                      :type="passwordflag ? 'text' : 'password'"></el-input>
+                    <div @click="passwordflag = !passwordflag"
+                      style="position: absolute;right: 15px;top: 5px;cursor: pointer;width: 20px;height:20px">
+                      <img src="@/assets/images/preview-open.svg" v-if="passwordflag" style="width: 100%;" />
+                      <img src="@/assets/images/preview-close.svg" v-else style="width: 100%;" />
+                    </div>
+                  </el-form-item>
                 </el-form>
+                <p style="text-align:right"><span style="font-size:12px;color:#999">还没有密码或已忘记？</span><span
+                    style='font-size:12px;color:#D161F6;cursor: pointer;' @click="triggerAnimation">去设置</span></p>
+
+                <el-button class="submit_btn" style="margin:30px 0 10px"
+                  :class="{ disabled_opacity: !accountpasswordDisabled1 || !accountpasswordDisabled2 }"
+                  :disabled="!accountpasswordDisabled1 || !accountpasswordDisabled2" round>确认</el-button>
               </el-tab-pane>
             </el-tabs>
 
@@ -103,13 +117,20 @@
             <p class="privacy_agreement">绑定后即可使用微信扫码登录，更便捷</p>
           </div>
         </el-col>
+        <el-row :span="12" class="right max_right myElementReturn" v-else>
+          <div class="tabs">
+            <button @click="triggerAnimationReturn">
+              回去
+            </button>
+          </div>
+        </el-row>
 
         <el-col :span="12" class="right min_right">
           <div class="tabs" v-if="!hasBindPhone">
             <h3>注册/登录</h3>
             <p class="description">未注册时，首次登录系统将自动为您注册</p>
             <div>
-              <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+              <el-form :model="ruleForm" :rules="bindPhoneRules" ref="ruleForm" class="demo-ruleForm">
                 <el-form-item prop="phone">
                   <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
                 </el-form-item>
@@ -209,6 +230,27 @@ export default {
         callback();
       }
     };
+    const validateEmaiPhone = (rule, value, callback) => {
+      const EamiregExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      const PhoneregExp = /^(0|86|17951)?(13[0-9]|14[0-9]|15[0-9]|166|17[0-9]|18[0-9]|19[0-9])[0-9]{8}$/;
+      if (PhoneregExp.test(value) || EamiregExp.test(value)) {
+        this.accountpasswordDisabled1 = true
+        callback()
+      } else {
+        this.accountpasswordDisabled1 = false
+        callback(new Error())
+      }
+    }
+    const validatePassword = (rule, value, callback) => {
+      const EamiregExp = /^.{4,10}$/
+      if (EamiregExp.test(value)) {
+        this.accountpasswordDisabled2 = true
+        callback()
+      } else {
+        this.accountpasswordDisabled2 = false
+        callback(new Error())
+      }
+    }
     return {
       source: "",
       action: "",
@@ -224,7 +266,6 @@ export default {
       isDisabled: true,
       isBindPhoneDisabled: false,
       verificationCodeText: "获取验证码",
-      logoImg: require("../../assets/images/logo.png"),
       disabledText: {
         color: "#999999",
       },
@@ -232,58 +273,48 @@ export default {
         phone: "",
         verificationCode: "",
       },
-      rules: {
-        phone: [
-          { required: true, message: "请输入手机号码！", trigger: "blur" },
-          { validator: validatePhone, trigger: ["blur", "change"] },
-        ],
-        verificationCode: [
-          { required: true, message: "请输入验证码", trigger: "blur" },
-          { validator: validateVerificationCode, trigger: ["blur", "change"] },
-        ],
-      },
       bindPhoneRules: {
         phone: [
-          { required: true, message: "请输入手机号码！", trigger: "blur" },
-          { validator: validatePhone, trigger: ["blur", "change"] },
+          { required: true, message: "请输入手机号码！", trigger: "change" },
+          { validator: validatePhone, trigger: ["change"] },
         ],
         verificationCode: [
-          { required: true, message: "请输入验证码", trigger: "blur" },
-          { validator: validateVerificationCode, trigger: ["blur", "change"] },
+          { required: true, message: "请输入验证码", trigger: "change" },
+          { validator: validateVerificationCode, trigger: ["change"] },
         ],
       },
       accountPasswordForm: {
-        accountVal: ""
+        accountVal: "",
+        passwordVal: ""
       },
       accountPasswordRules: {
         accountVal: [
-          { required: true, message: "请输入账号！", trigger: "blur" },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: "请输入账号！", trigger: "change" },
+          { validator: validateEmaiPhone, message: "请输入正确的手机号或邮箱", trigger: ['change'] }
+        ],
+        passwordVal: [
+          { required: true, message: "请输入密码", trigger: "change" },
+          { validator: validatePassword, message: '长度在 4 到 10 个字符', trigger: 'change' }
         ]
       },
       wechatToken: "",
       fromPath: localStorage.getItem("loginFromPath"),
       configData: {},
+      loading: true,
+      passwordflag: false,
+      accountpasswordDisabled1: false,
+      accountpasswordDisabled2: false,
+      isone: true
     };
   },
   created() { },
   mounted() {
     this.handlerGetQrcode();
     this.verifyToken();
-    if (localStorage.getItem("configObj")) {
-      this.configData = JSON.parse(localStorage.getItem("configObj"));
-    } else {
-      this.getContent();
-    }
-    if (localStorage.getItem("logo")) {
-      this.logoImg = localStorage.getItem("logo");
-    } else {
-      this.getContent();
-    }
-    this.source =
-      this.$route.query.source || localStorage.getItem("source") || "";
-    this.action =
-      this.$route.query.action || localStorage.getItem("action") || "";
+    localStorage.getItem("configObj") ? this.configData = JSON.parse(localStorage.getItem("configObj")) : this.getContent()
+    if (!localStorage.getItem("logo")) this.getContent()
+    this.source = this.$route.query.source || localStorage.getItem("source") || "";
+    this.action = this.$route.query.action || localStorage.getItem("action") || "";
   },
   methods: {
     ...mapMutations("login", [
@@ -293,12 +324,25 @@ export default {
       "setExpiretime",
     ]),
     ...mapMutations("login", ["setLogo"]),
+
+    //切换设置密码
+    triggerAnimation() {
+      var element = document.querySelector('.myElementOut');
+      element.style.animationPlayState = 'running';
+      setTimeout(() => {
+        this.isone = false
+      }, 700)
+    },
+    //切换登录
+    triggerAnimationReturn() {
+      this.isone = true
+    },
+
     //获取公共配置信息
     getContent() {
       getConfig()
         .then((res) => {
           if (res.code === 1) {
-            this.logoImg = res.data.logo;
             localStorage.setItem("logo", res.data.logo);
             localStorage.setItem("configObj", JSON.stringify(res.data));
             this.setLogo(res.data.logo);
@@ -315,6 +359,7 @@ export default {
       getQrcode()
         .then((res) => {
           if (res.code === 1) {
+            this.loading = false
             this.qrImg = res.data.qrcode_url;
             this.wechatToken = res.data.wechat_token;
             this.isRefresh = false;
@@ -514,13 +559,11 @@ export default {
                   ? (window.location.href = res.data.jump)
                   : this.$router.push(this.fromPath);
               } else if (res.code === 0 && res.data.status === 0) {
-                // this.$message.error(res.msg);
                 this.hasBindPhone = false;
               }
             })
             .catch((err) => {
               console.log(err);
-              // this.$message.error(err.msg);
             });
         } else {
           console.log("error submit!!");
@@ -549,11 +592,7 @@ export default {
     //已登录状态下不跳转至登录页
     verifyToken() {
       let tokenStr = login.state.token;
-      if (tokenStr) {
-        this.$router.push({ path: "/" });
-      } else {
-        // this.$message.error('请登录!')
-      }
+      if (tokenStr) this.$router.push({ path: "/" })
     },
   },
   beforeDestroy() {
@@ -634,7 +673,7 @@ export default {
       .tabs {
         width: 320px;
         background: white;
-        padding: 60px 86px;
+        padding: 60px 81px;
         box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.04);
         border-radius: 14px;
         text-align: center;
@@ -642,7 +681,6 @@ export default {
 
         h3 {
           font-size: 24px;
-          font-family: PingFangSC-Semibold, PingFang SC;
           font-weight: 600;
           color: #333333;
           line-height: 33px;
@@ -650,7 +688,6 @@ export default {
 
         .description {
           font-size: 12px;
-          font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #999999;
           line-height: 17px;
@@ -662,6 +699,7 @@ export default {
           border: 1px solid #eeeeee;
           padding: 8px;
           position: relative;
+          min-height: 266px;
 
           img {
             width: 100%;
@@ -736,15 +774,16 @@ export default {
 
         .demo-ruleForm {
           padding-top: 5px;
-
-          .submit_btn {
-            background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
-            border-radius: 5px;
-            width: 100%;
-            color: #fff;
-          }
         }
       }
+    }
+
+
+    .submit_btn {
+      background: linear-gradient(233deg, #EA5EF7 0%, #776CF3 100%);
+      border-radius: 5px;
+      width: 100%;
+      color: #fff;
     }
 
     .min_right {
@@ -841,5 +880,48 @@ export default {
   background: #fff;
   border: 1px solid #f3f3f3;
 
+}
+
+//设置图标颜色
+::v-deep(.qrcodeloaging) {
+  .el-loading-spinner {
+    .path {
+      stroke: #d161f6;
+    }
+  }
+}
+</style>
+
+<style scoped>
+@keyframes explode {
+  100% {
+    transform: translateX(-200px);
+    opacity: 0;
+  }
+}
+
+.myElementOut {
+  animation-name: explode;
+  animation-duration: .5s;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
+
+@keyframes explode2 {
+  0% {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.myElementReturn {
+  animation-name: explode2;
+  animation-duration: .5s;
+  animation-fill-mode: forwards;
+  width: 700px;
 }
 </style>

@@ -159,6 +159,8 @@
             </el-popover>
 
             <div v-else>
+              <i
+                style="background: #999;width: 4px;height: 4px;border-radius: 50%;display: inline-block;margin-right: 6px;margin-bottom: 3px;"></i>
               <span style="color: #999;">订单已关闭</span>
             </div>
           </template>
@@ -3452,7 +3454,7 @@ export default {
   text-align: center;
   position: absolute;
   top: 18px;
-  right: 70px;
+  right: 65px;
 }
 </style>
 <style lang="less" scoped>

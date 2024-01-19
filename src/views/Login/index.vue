@@ -1,21 +1,11 @@
 <template>
   <div>
     <div class="header">
-      <el-menu
-        :default-active="$route.path"
-        class="el-menu-demo"
-        router
-        mode="horizontal"
-        active-text-color="#ffffff"
-        text-color="#666666"
-      >
-        <el-menu-item index="/" style="width: 237px"
-          ><img src="@/assets/images/home/logo.webp" alt=""
-        /></el-menu-item>
+      <el-menu :default-active="$route.path" class="el-menu-demo" router mode="horizontal" active-text-color="#ffffff"
+        text-color="#666666">
+        <el-menu-item index="/" style="width: 237px"><img src="@/assets/images/home/logo.webp" alt="" /></el-menu-item>
 
-        <el-menu-item style="float: right" @click="dialogVisible = true"
-          >加群交流</el-menu-item
-        >
+        <el-menu-item style="float: right" @click="dialogVisible = true">加群交流</el-menu-item>
       </el-menu>
     </div>
     <div class="content">
@@ -37,22 +27,16 @@
             <el-tabs v-model="activeName" @tab-click="handleClick">
               <el-tab-pane label="微信扫码" name="first">
                 <div class="qrcode">
-                  <span class="top"></span><span class="bottom"></span
-                  ><span class="left"></span><span class="right"></span>
+                  <span class="top"></span><span class="bottom"></span><span class="left"></span><span
+                    class="right"></span>
                   <img :src="qrImg" alt="" />
-                  <div
-                    id="refreshQrcode"
-                    v-if="isRefresh"
-                    @click="handleRefresh"
-                  >
-                    <div
-                      style="
+                  <div id="refreshQrcode" v-if="isRefresh" @click="handleRefresh">
+                    <div style="
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         height: 100%;
-                      "
-                    >
+                      ">
                       <div>
                         <i class="el-icon-refresh-right"></i>
                         <span>点击刷新</span>
@@ -62,102 +46,51 @@
                 </div>
                 <p class="privacy_agreement">
                   登录平台即代表同意
-                  <router-link target="_blank" to="/tos"
-                    >《用户使用协议》</router-link
-                  >
+                  <router-link target="_blank" to="/tos">《用户使用协议》</router-link>
                 </p>
               </el-tab-pane>
 
               <el-tab-pane label="验证码" name="second">
-                <el-form
-                  :model="ruleForm"
-                  :rules="rules"
-                  ref="ruleForm"
-                  class="demo-ruleForm"
-                >
+                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                   <el-form-item prop="phone">
-                    <el-input
-                      v-model="ruleForm.phone"
-                      placeholder="请输入手机号码"
-                      autocomplete="off"
-                    ></el-input>
+                    <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
                   </el-form-item>
                   <el-form-item prop="verificationCode">
-                    <el-input
-                      v-model="ruleForm.verificationCode"
-                      placeholder="请输入验证码"
-                    >
-                      <el-button
-                        slot="append"
-                        @click="handlerSend('mobilelogin')"
-                        :style="{ color: isDisabled ? '#999999' : '#2489F3' }"
-                        :disabled="isDisabled"
-                        type="text"
-                      >
+                    <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                      <el-button slot="append" @click="handlerSend('mobilelogin')"
+                        :style="{ color: isDisabled ? '#999999' : '#2489F3' }" :disabled="isDisabled" type="text">
                         {{ verificationCodeText }}
                       </el-button>
                     </el-input>
                   </el-form-item>
                   <el-form-item>
-                    <el-button
-                      class="submit_btn"
-                      :class="{ disabled_opacity: phoneError || codeError }"
-                      :disabled="phoneError || codeError"
-                      @click="handleSubmitForm('ruleForm')"
-                      round
-                      >提交</el-button
-                    >
+                    <el-button class="submit_btn" :class="{ disabled_opacity: phoneError || codeError }"
+                      :disabled="phoneError || codeError" @click="handleSubmitForm('ruleForm')" round>提交</el-button>
                   </el-form-item>
                 </el-form>
                 <p class="privacy_agreement">
                   登录平台即代表同意
-                  <router-link target="_blank" to="/tos"
-                    >《用户使用协议》</router-link
-                  >
+                  <router-link target="_blank" to="/tos">《用户使用协议》</router-link>
                 </p>
               </el-tab-pane>
             </el-tabs>
           </div>
           <div class="tabs" v-else>
             <h3 style="padding-bottom: 17px">请绑定手机号</h3>
-            <el-form
-              :model="ruleForm"
-              :rules="bindPhoneRules"
-              ref="bindPhoneRuleForm"
-              class="demo-ruleForm"
-            >
+            <el-form :model="ruleForm" :rules="bindPhoneRules" ref="bindPhoneRuleForm" class="demo-ruleForm">
               <el-form-item prop="phone">
-                <el-input
-                  v-model="ruleForm.phone"
-                  placeholder="请输入手机号码"
-                  autocomplete="off"
-                ></el-input>
+                <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item prop="verificationCode">
-                <el-input
-                  v-model="ruleForm.verificationCode"
-                  placeholder="请输入验证码"
-                >
-                  <el-button
-                    slot="append"
-                    @click="handlerSend('mobilelogin')"
-                    :style="{ color: isDisabled ? '#999999' : '#2489F3' }"
-                    :disabled="isDisabled"
-                    type="text"
-                  >
-                    {{ verificationCodeText }}</el-button
-                  >
+                <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                  <el-button slot="append" @click="handlerSend('mobilelogin')"
+                    :style="{ color: isDisabled ? '#999999' : '#2489F3' }" :disabled="isDisabled" type="text">
+                    {{ verificationCodeText }}</el-button>
                 </el-input>
               </el-form-item>
               <el-form-item>
-                <el-button
-                  class="submit_btn"
-                  :class="{ disabled_opacity: phoneError || codeError }"
-                  :disabled="phoneError || codeError"
-                  @click="handleBindPhone('bindPhoneRuleForm')"
-                  round
-                  >提交</el-button
-                >
+                <el-button class="submit_btn" :class="{ disabled_opacity: phoneError || codeError }"
+                  :disabled="phoneError || codeError" @click="handleBindPhone('bindPhoneRuleForm')" round>提交</el-button>
               </el-form-item>
             </el-form>
             <p class="privacy_agreement">绑定后即可使用微信扫码登录，更便捷</p>
@@ -169,94 +102,45 @@
             <h3>注册/登录</h3>
             <p class="description">未注册时，首次登录系统将自动为您注册</p>
             <div>
-              <el-form
-                :model="ruleForm"
-                :rules="rules"
-                ref="ruleForm"
-                class="demo-ruleForm"
-              >
+              <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                 <el-form-item prop="phone">
-                  <el-input
-                    v-model="ruleForm.phone"
-                    placeholder="请输入手机号码"
-                    autocomplete="off"
-                  ></el-input>
+                  <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item prop="verificationCode">
-                  <el-input
-                    v-model="ruleForm.verificationCode"
-                    placeholder="请输入验证码"
-                  >
-                    <el-button
-                      slot="append"
-                      @click="handlerSend('mobilelogin')"
-                      :style="{ color: isDisabled ? '#999999' : '#2489F3' }"
-                      :disabled="isDisabled"
-                      type="text"
-                    >
+                  <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                    <el-button slot="append" @click="handlerSend('mobilelogin')"
+                      :style="{ color: isDisabled ? '#999999' : '#2489F3' }" :disabled="isDisabled" type="text">
                       {{ verificationCodeText }}
                     </el-button>
                   </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button
-                    class="submit_btn"
-                    :class="{ disabled_opacity: phoneError || codeError }"
-                    :disabled="phoneError || codeError"
-                    @click="handleSubmitForm('ruleForm')"
-                    round
-                    >提交</el-button
-                  >
+                  <el-button class="submit_btn" :class="{ disabled_opacity: phoneError || codeError }"
+                    :disabled="phoneError || codeError" @click="handleSubmitForm('ruleForm')" round>提交</el-button>
                 </el-form-item>
               </el-form>
               <p class="privacy_agreement">
                 登录平台即代表同意
-                <router-link target="_blank" to="/tos"
-                  >《用户使用协议》</router-link
-                >
+                <router-link target="_blank" to="/tos">《用户使用协议》</router-link>
               </p>
             </div>
           </div>
           <div class="tabs" v-else>
             <h3 style="padding-bottom: 17px">请绑定手机号</h3>
-            <el-form
-              :model="ruleForm"
-              :rules="bindPhoneRules"
-              ref="bindPhoneRuleForm"
-              class="demo-ruleForm"
-            >
+            <el-form :model="ruleForm" :rules="bindPhoneRules" ref="bindPhoneRuleForm" class="demo-ruleForm">
               <el-form-item prop="phone">
-                <el-input
-                  v-model="ruleForm.phone"
-                  placeholder="请输入手机号码"
-                  autocomplete="off"
-                ></el-input>
+                <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item prop="verificationCode">
-                <el-input
-                  v-model="ruleForm.verificationCode"
-                  placeholder="请输入验证码"
-                >
-                  <el-button
-                    slot="append"
-                    @click="handlerSend('mobilelogin')"
-                    :style="{ color: isDisabled ? '#999999' : '#2489F3' }"
-                    :disabled="isDisabled"
-                    type="text"
-                  >
-                    {{ verificationCodeText }}</el-button
-                  >
+                <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                  <el-button slot="append" @click="handlerSend('mobilelogin')"
+                    :style="{ color: isDisabled ? '#999999' : '#2489F3' }" :disabled="isDisabled" type="text">
+                    {{ verificationCodeText }}</el-button>
                 </el-input>
               </el-form-item>
               <el-form-item>
-                <el-button
-                  class="submit_btn"
-                  :class="{ disabled_opacity: phoneError || codeError }"
-                  :disabled="phoneError || codeError"
-                  @click="handleBindPhone('bindPhoneRuleForm')"
-                  round
-                  >提交</el-button
-                >
+                <el-button class="submit_btn" :class="{ disabled_opacity: phoneError || codeError }"
+                  :disabled="phoneError || codeError" @click="handleBindPhone('bindPhoneRuleForm')" round>提交</el-button>
               </el-form-item>
             </el-form>
             <p class="privacy_agreement">绑定后即可使用微信扫码登录，更便捷</p>
@@ -264,20 +148,14 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog
-      title="微信咨询"
-      :visible.sync="dialogVisible"
-      center
-      width="320px"
-    >
+    <el-dialog title="微信咨询" :visible.sync="dialogVisible" center width="320px">
       <div class="contact_us_box">
         <span></span><span></span><span></span><span></span>
         <img :src="configData.wechat" style="width: 260px" />
       </div>
       <div class="contact_us_foot">
         <p>
-          <i class="iconfont icon-phone-call"></i><span>电话：</span
-          >{{ configData.phone }}
+          <i class="iconfont icon-phone-call"></i><span>电话：</span>{{ configData.phone }}
         </p>
         <p>
           <i class="iconfont icon-mail"></i><span>邮箱：</span>ceo@viponltd.com
@@ -373,7 +251,7 @@ export default {
       configData: {},
     };
   },
-  created() {},
+  created() { },
   mounted() {
     this.handlerGetQrcode();
     this.verifyToken();
@@ -523,7 +401,7 @@ export default {
         mobile: this.ruleForm.phone,
         event: even,
       })
-        .then((res) => {})
+        .then((res) => { })
         .catch((err) => {
           this.$message.error(err.msg);
         });
@@ -673,12 +551,14 @@ export default {
 .disabled_opacity {
   opacity: 0.5;
 }
+
 .header {
-  > ul {
+  >ul {
     margin: auto;
     align-items: center;
     border-bottom: none;
     padding: 0 10px;
+
     a {
       color: #666666;
     }
@@ -692,6 +572,7 @@ export default {
   bottom: 0;
   right: 0;
   height: 100%;
+
   .content_bg {
     margin-top: 66px;
     position: absolute;
@@ -706,12 +587,10 @@ export default {
     }
 
     .right {
-      background: linear-gradient(
-        233deg,
-        #ffa373 0%,
-        #ea5ef7 48%,
-        #776cf3 100%
-      );
+      background: linear-gradient(233deg,
+          #ffa373 0%,
+          #ea5ef7 48%,
+          #776cf3 100%);
     }
   }
 
@@ -723,8 +602,10 @@ export default {
     align-items: center;
     height: 100%;
     padding-top: 66px;
+
     .left {
       display: block;
+
       .content_img {
         img {
           width: 100%;
@@ -770,7 +651,7 @@ export default {
             width: 100%;
           }
 
-          > span {
+          >span {
             position: absolute;
             width: 8px;
             height: 8px;
@@ -830,9 +711,11 @@ export default {
           font-weight: 400;
           color: #666666;
           line-height: 20px;
+
           a {
             color: #2489f3;
           }
+
           a:hover {
             text-decoration: none;
           }
@@ -852,9 +735,11 @@ export default {
         }
       }
     }
+
     .min_right {
       display: none;
     }
+
     .max_right {
       display: block;
     }
@@ -863,28 +748,34 @@ export default {
 
 @media screen and (max-width: 600px) {
   .header {
-    > ul {
+    >ul {
       display: flex;
     }
   }
+
   .content {
     .content_body {
       .left {
         display: none;
       }
+
       .right {
         width: 100%;
         margin: 0 40px;
+
         .tabs {
           padding: 30px 20px;
+
           h3 {
             font-size: 18px;
           }
         }
       }
+
       .min_right {
         display: block;
       }
+
       .max_right {
         display: none;
       }
@@ -907,9 +798,11 @@ export default {
   background: #333333;
   height: 3px;
 }
+
 .el-tabs__nav-wrap::after {
   height: 1px;
 }
+
 .el-tabs__item {
   color: #666666;
   font-size: 16px;

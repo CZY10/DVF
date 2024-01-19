@@ -114,7 +114,7 @@
               <span slot="reference" class="status_style" :style="{
                 color:
                   scope.row.status == 0
-                    ? '#FF000C'
+                    ? 'rgb(16 62 239)'
                     : scope.row.status == 1
                       ? '#FF000C'
                       : scope.row.status == 2
@@ -126,7 +126,7 @@
                 <i :style="{
                   background:
                     scope.row.status == 0
-                      ? '#FF000C'
+                      ? 'rgb(16 62 239)'
                       : scope.row.status == 1
                         ? '#FF000C'
                         : scope.row.status == 2
@@ -636,7 +636,6 @@
                       position: absolute;
                       bottom: 6px;
                       left: 0;
-                      font-family: PingFangSC-Regular, PingFang SC;
                       font-size: 12px;
                     ">
                     <span v-if="item.is_read == 1" style="color: #999999">已读</span>
@@ -1880,9 +1879,6 @@ export default {
       margin: auto;
       background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
       border-radius: 16px;
-      font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
       color: #ffffff;
       line-height: 20px;
       padding: 5px 41px;
@@ -1952,7 +1948,6 @@ export default {
 
   .el-alert__title {
     font-size: 12px !important;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400 !important;
     color: #666666 !important;
   }
@@ -2027,7 +2022,6 @@ export default {
           content: "点击上传（支持jpg、png，5M以内）";
           display: block;
           font-size: 12px;
-          font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #999999;
           line-height: 17px;
@@ -2047,7 +2041,6 @@ export default {
     .description {
       line-height: 20px;
       font-size: 12px;
-      font-family: PingFangSC-Regular, PingFang SC;
       color: #999999;
       padding-top: 10px;
 
@@ -2090,7 +2083,6 @@ export default {
       background: #cccccc linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
       border-radius: 16px;
       font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
       color: #ffffff;
       display: block;
       margin: auto;
@@ -2138,7 +2130,6 @@ export default {
     /*display: inline;*/
     background: #796cf3;
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #ffffff;
     line-height: 24px;
@@ -2152,7 +2143,6 @@ export default {
   .message-row-left .message-body {
     background: #f6f7f9;
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #666666;
     line-height: 24px;
@@ -2186,7 +2176,6 @@ export default {
 
   .message-content .name {
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #333333;
     line-height: 24px;
@@ -2201,7 +2190,6 @@ export default {
   .message-time {
     margin: 0 10px;
     font-size: 12px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #999999;
     line-height: 24px;
@@ -2302,7 +2290,6 @@ export default {
 
   .feedback_modal .title {
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     color: #666666;
     line-height: 20px;
     margin: 20px 0 10px 0;
@@ -2319,9 +2306,7 @@ export default {
 
   .feedback_modal .title span {
     font-size: 12px;
-    font-family: PingFangSC-Regular, PingFang SC;
     color: #999999;
-    font-family: PingFangSC-Regular, PingFang SC;
     line-height: 17px;
   }
 
@@ -2423,7 +2408,7 @@ export default {
 
     .el-tabs--border-card>.el-tabs__header .el-tabs__item {
       color: #999999;
-      font-family: PingFangSC-Semibold, PingFang SC;
+
       border: none;
       margin-bottom: 1px;
       transition: none;
@@ -2486,7 +2471,6 @@ export default {
 
     .el-alert__title {
       font-size: 12px !important;
-      font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400 !important;
       color: #666666 !important;
     }
@@ -2507,7 +2491,7 @@ export default {
 
 .el-radio--small.is-bordered .el-radio__label {
   font-size: 14px !important;
-  font-family: PingFangSC-Semibold, PingFang SC;
+
   font-weight: 600;
   color: #333333;
   line-height: 20px;
@@ -2519,7 +2503,6 @@ export default {
 
 .el-radio__label ul li {
   font-size: 12px;
-  font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #666666;
   line-height: 17px;
@@ -2568,7 +2551,7 @@ export default {
   font-size: 14px;
   font-weight: 600 !important;
   padding-bottom: 6px !important;
-  font-family: PingFangSC-Semibold, PingFang SC;
+
 }
 
 .el-step__head.is-finish {
@@ -2578,7 +2561,7 @@ export default {
 
 .el-step__title.is-finish {
   font-size: 14px;
-  font-family: PingFangSC-Semibold, PingFang SC;
+
   font-weight: 600;
   color: #333333 !important;
   line-height: 20px;
@@ -2590,7 +2573,6 @@ export default {
 
 .el-step__description.is-finish {
   font-size: 12px;
-  font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   line-height: 17px;
 }
@@ -2640,7 +2622,6 @@ export default {
 
 .el-table th.el-table__cell>.cell,
 .el-table td.el-table__cell div {
-  font-family: PingFangSC-Regular, PingFang SC;
   color: #333333;
 }
 
@@ -2661,7 +2642,6 @@ export default {
     border: none;
     margin-top: 24px;
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     color: #ffffff;
     cursor: pointer;
   }
@@ -2893,7 +2873,7 @@ export default {
   .payment_content {
     h4 {
       font-size: 22px;
-      font-family: PingFangSC-Semibold, PingFang SC;
+
       font-weight: 600;
       color: #ff2c4c;
       line-height: 30px;
@@ -2903,7 +2883,6 @@ export default {
 
     p {
       font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999;
       line-height: 20px;
@@ -2937,7 +2916,7 @@ export default {
 
         p {
           font-size: 14px;
-          font-family: PingFangSC-Semibold, PingFang SC;
+
           font-weight: 600;
           color: #333333;
           line-height: 20px;
@@ -2960,7 +2939,6 @@ export default {
   .return_deposit_dialog {
     p {
       font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #666666;
       line-height: 24px;
@@ -2986,7 +2964,6 @@ export default {
 
       .cancel_style {
         border: 1px solid #eeeeee;
-        font-family: PingFangSC-Regular, PingFang SC;
         color: #999999;
       }
 
@@ -2997,7 +2974,6 @@ export default {
       .confirm_style {
         border: none;
         background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
-        font-family: PingFangSC-Regular, PingFang SC;
         color: #ffffff;
       }
     }
@@ -3006,7 +2982,6 @@ export default {
   .to_comment_dialog {
     .description {
       font-size: 12px;
-      font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999;
       line-height: 17px;
@@ -3025,7 +3000,6 @@ export default {
     .form_item_title {
       height: 17px;
       font-size: 12px;
-      font-family: PingFangSC-Regular, PingFang SC;
       color: #999999;
       line-height: 17px;
       margin-bottom: 6px;
@@ -3098,7 +3072,6 @@ export default {
           background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
           border-radius: 100px 0px 0px 100px;
           font-size: 12px;
-          font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #ffffff;
           padding-left: 8px;
@@ -3183,8 +3156,6 @@ export default {
 
           p {
             font-size: 12px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
             color: #666666;
             line-height: 17px;
             text-align: center;
@@ -3194,8 +3165,6 @@ export default {
           span {
             display: block;
             font-size: 12px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
             color: #796cf3;
             line-height: 17px;
             text-align: center;
@@ -3227,9 +3196,6 @@ export default {
         width: 140px;
         background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
         border-radius: 16px;
-        font-size: 14px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
         color: #ffffff;
         padding: 8px 0;
       }
@@ -3239,7 +3205,6 @@ export default {
   .pay_deposit_dialog {
     h5 {
       font-size: 22px;
-      font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: 600;
       color: #ff2c4c;
       line-height: 30px;
@@ -3249,7 +3214,6 @@ export default {
 
     p {
       font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999;
       line-height: 20px;
@@ -3282,8 +3246,6 @@ export default {
         }
 
         p {
-          font-size: 14px;
-          font-family: PingFangSC-Semibold, PingFang SC;
           font-weight: 600;
           color: #333333;
           line-height: 20px;
@@ -3329,7 +3291,6 @@ export default {
   height: 66px;
   overflow-wrap: break-word;
   font-size: 0;
-  font-family: PingFangSC-Regular;
   font-weight: NaN;
   text-align: left;
   line-height: 20px;
@@ -3342,7 +3303,6 @@ export default {
   overflow-wrap: break-word;
   color: rgba(102, 102, 102, 1);
   font-size: 12px;
-  font-family: PingFangSC-Regular;
   font-weight: NaN;
   text-align: left;
   line-height: 20px;
@@ -3354,7 +3314,6 @@ export default {
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
   font-size: 12px;
-  font-family: PingFangSC-Semibold;
   font-weight: 600;
   text-align: left;
   line-height: 20px;
@@ -3366,7 +3325,6 @@ export default {
   overflow-wrap: break-word;
   color: rgba(102, 102, 102, 1);
   font-size: 12px;
-  font-family: PingFangSC-Regular;
   font-weight: NaN;
   text-align: left;
   line-height: 20px;
@@ -3375,9 +3333,6 @@ export default {
 <style lang="less" scoped>
 .pagination-span {
   height: 22px;
-  font-size: 14px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
   color: #999999;
   line-height: 20px;
   margin-right: 15px;
@@ -3393,9 +3348,6 @@ export default {
   .pagination-btn-span {
     width: 79px;
     height: 20px;
-    font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
     color: #ffffff;
     line-height: 20px;
     position: absolute;
@@ -3442,8 +3394,6 @@ export default {
   background: linear-gradient(233deg, #ea5ef7 0%, #776cf3 100%);
   border-radius: 16px;
   line-height: 0px;
-  font-size: 14px;
-  font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #ffffff;
 }

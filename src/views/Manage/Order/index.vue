@@ -104,7 +104,7 @@
         <el-table-column prop="status" label="订单状态" width="100">
           <template slot-scope="scope">
             <el-popover placement="right" width="200" @hide="stepsList = []" @show="handleShowFn(scope.row)"
-              trigger="hover" style="position: relative">
+              v-if="scope.row.is_close == 0" trigger="hover" style="position: relative">
               <div solt="content" style="padding: 15px 15px 0 15px">
                 <el-steps direction="vertical" :active="stepsList.current">
                   <el-step v-for="(item, index) in stepsList.items" icon="el-icon-success" :key="index" :title="item.name"
@@ -157,6 +157,10 @@
                 正在退还
               </div>
             </el-popover>
+
+            <div v-else>
+              <span style="color: #999;">订单已关闭</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="hasMessage" label="红人沟通" width="150">

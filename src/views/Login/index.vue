@@ -20,81 +20,83 @@
           </div>
         </el-col>
 
-        <el-col :span="12" class="right max_right myElementOut" v-if="isone">
+        <el-col :span="12" class="right max_right" v-if="isone">
           <div class="tabs" v-if="!hasBindPhone">
-            <h3>注册/登录</h3>
-            <p class="description">未注册时，首次登录系统将自动为您注册</p>
-            <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
-              <el-tab-pane label="微信扫码" name="first">
-                <div class="qrcode" v-loading="loading" element-loading-custom-class="qrcodeloaging">
-                  <span class="top"></span><span class="bottom"></span><span class="left"></span><span
-                    class="right"></span>
-                  <img :src="qrImg" alt="" />
-                  <div id="refreshQrcode" v-if="isRefresh" @click="handleRefresh">
-                    <div style="
+            <div class="myElementOut">
+              <h3>注册/登录</h3>
+              <p class="description">未注册时，首次登录系统将自动为您注册</p>
+              <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+                <el-tab-pane label="微信扫码" name="first">
+                  <div class="qrcode" v-loading="loading" element-loading-custom-class="qrcodeloaging">
+                    <span class="top"></span><span class="bottom"></span><span class="left"></span><span
+                      class="right"></span>
+                    <img :src="qrImg" alt="" />
+                    <div id="refreshQrcode" v-if="isRefresh" @click="handleRefresh">
+                      <div style="
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         height: 100%;
                       ">
-                      <div>
-                        <i class="el-icon-refresh-right"></i>
-                        <span>点击刷新</span>
+                        <div>
+                          <i class="el-icon-refresh-right"></i>
+                          <span>点击刷新</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </el-tab-pane>
+                </el-tab-pane>
 
-              <el-tab-pane label="手机验证码" name="second">
-                <el-form :model="ruleForm" :rules="bindPhoneRules" class="demo-ruleForm">
-                  <el-form-item prop="phone">
-                    <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item prop="verificationCode">
-                    <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
-                      <el-button slot="append" @click="handlerSend('mobilelogin')"
-                        :style="{ color: isDisabled ? '#999999' : '#D161F6' }" :disabled="isDisabled" type="text">
-                        {{ verificationCodeText }}
-                      </el-button>
-                    </el-input>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button class="submit_btn" :class="{ disabled_opacity: phoneError || codeError }"
-                      :disabled="phoneError || codeError" @click="handleSubmitForm('ruleForm')" round>确认</el-button>
-                  </el-form-item>
-                </el-form>
+                <el-tab-pane label="手机验证码" name="second">
+                  <el-form :model="ruleForm" :rules="bindPhoneRules" class="demo-ruleForm">
+                    <el-form-item prop="phone">
+                      <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="verificationCode">
+                      <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                        <el-button slot="append" @click="handlerSend('mobilelogin')"
+                          :style="{ color: isDisabled ? '#999999' : '#D161F6' }" :disabled="isDisabled" type="text">
+                          {{ verificationCodeText }}
+                        </el-button>
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button class="submit_btn" :class="{ disabled_opacity: phoneError || codeError }"
+                        :disabled="phoneError || codeError" @click="handleSubmitForm('ruleForm')" round>确认</el-button>
+                    </el-form-item>
+                  </el-form>
 
-              </el-tab-pane>
+                </el-tab-pane>
 
-              <el-tab-pane label="账号密码" name="accountpassword">
-                <el-form :model="accountPasswordForm" :rules="accountPasswordRules" class="demo-ruleForm">
-                  <el-form-item prop="accountVal">
-                    <el-input v-model="accountPasswordForm.accountVal" placeholder="请输入手机号/邮箱"
-                      autocomplete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item prop="passwordVal" style="position: relative;margin-bottom: 10px;">
-                    <el-input placeholder="请输入密码" v-model="accountPasswordForm.passwordVal"
-                      :type="passwordflag ? 'text' : 'password'"></el-input>
-                    <div @click="passwordflag = !passwordflag"
-                      style="position: absolute;right: 15px;top: 5px;cursor: pointer;width: 20px;height:20px">
-                      <img src="@/assets/images/preview-open.svg" v-if="passwordflag" style="width: 100%;" />
-                      <img src="@/assets/images/preview-close.svg" v-else style="width: 100%;" />
-                    </div>
-                  </el-form-item>
-                </el-form>
-                <p style="text-align:right"><span style="font-size:12px;color:#999">还没有密码或已忘记？</span><span
-                    style='font-size:12px;color:#D161F6;cursor: pointer;' @click="triggerAnimation">去设置</span></p>
+                <el-tab-pane label="账号密码" name="accountpassword">
+                  <el-form :model="accountPasswordForm" :rules="accountPasswordRules" class="demo-ruleForm">
+                    <el-form-item prop="accountVal">
+                      <el-input v-model="accountPasswordForm.accountVal" placeholder="请输入手机号/邮箱"
+                        autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="passwordVal" style="position: relative;margin-bottom: 10px;">
+                      <el-input placeholder="请输入密码" v-model="accountPasswordForm.passwordVal"
+                        :type="passwordflag ? 'text' : 'password'"></el-input>
+                      <div @click="passwordflag = !passwordflag"
+                        style="position: absolute;right: 15px;top: 5px;cursor: pointer;width: 20px;height:20px">
+                        <img src="@/assets/images/preview-open.svg" v-if="passwordflag" style="width: 100%;" />
+                        <img src="@/assets/images/preview-close.svg" v-else style="width: 100%;" />
+                      </div>
+                    </el-form-item>
+                  </el-form>
+                  <p style="text-align:right"><span style="font-size:12px;color:#999">还没有密码或已忘记？</span><span
+                      style='font-size:12px;color:#D161F6;cursor: pointer;' @click="triggerAnimation">去设置</span></p>
 
-                <el-button class="submit_btn" style="margin:30px 0 10px"
-                  :class="{ disabled_opacity: !accountpasswordDisabled1 || !accountpasswordDisabled2 }"
-                  :disabled="!accountpasswordDisabled1 || !accountpasswordDisabled2" round>确认</el-button>
-              </el-tab-pane>
-            </el-tabs>
+                  <el-button class="submit_btn" style="margin:30px 0 10px" @click="accountlogin"
+                    :class="{ disabled_opacity: !accountpasswordDisabled1 || !accountpasswordDisabled2 }"
+                    :disabled="!accountpasswordDisabled1 || !accountpasswordDisabled2" round>确认</el-button>
+                </el-tab-pane>
+              </el-tabs>
 
-            <p class="privacy_agreement">
-              登录平台即代表同意<router-link target="_blank" to="/tos"><span>服务条款</span>及<span>用户隐私协议</span></router-link>
-            </p>
+              <p class="privacy_agreement">
+                登录平台即代表同意<router-link target="_blank" to="/tos"><span>服务条款</span>及<span>用户隐私协议</span></router-link>
+              </p>
+            </div>
           </div>
           <div class="tabs" v-else>
             <h3 style="padding-bottom: 17px">请绑定手机号</h3>
@@ -117,11 +119,9 @@
             <p class="privacy_agreement">绑定后即可使用微信扫码登录，更便捷</p>
           </div>
         </el-col>
-        <el-row :span="12" class="right max_right myElementReturn" v-else>
+        <el-row :span="12" class="right max_right" v-else>
           <div class="tabs">
-            <button @click="triggerAnimationReturn">
-              回去
-            </button>
+            <registercomp :isone="isone" @getisoneMsg="getisoneMsg"></registercomp>
           </div>
         </el-row>
 
@@ -194,6 +194,7 @@
 
 <script>
 import { mapMutations } from "vuex";
+import registercomp from './registercomp.vue'
 import {
   getQrcode,
   smsSend,
@@ -201,6 +202,7 @@ import {
   bindPhone,
   checkQr,
   getConfig,
+  accountLogin
 } from "@/api/index";
 import login from "@/store/modules/login";
 import router from "@/router";
@@ -324,6 +326,9 @@ export default {
       "setExpiretime",
     ]),
     ...mapMutations("login", ["setLogo"]),
+    getisoneMsg(msg) {
+      this.isone = msg
+    },
 
     //切换设置密码
     triggerAnimation() {
@@ -331,11 +336,7 @@ export default {
       element.style.animationPlayState = 'running';
       setTimeout(() => {
         this.isone = false
-      }, 700)
-    },
-    //切换登录
-    triggerAnimationReturn() {
-      this.isone = true
+      }, 500)
     },
 
     //获取公共配置信息
@@ -406,31 +407,7 @@ export default {
             //清除定时脚本
             clearInterval(_this.checkQrCode);
           } else if (res.code === 1 && res.data.status === 2) {
-            //登录成功,即将跳转
-            clearInterval(_this.checkQrCode);
-            localStorage.setItem("userInfo", JSON.stringify(res.data.userinfo));
-            localStorage.setItem("token", res.data.userinfo.token);
-            localStorage.setItem("avatar", res.data.userinfo.avatar);
-            localStorage.setItem("expiretime", res.data.userinfo.expiretime);
-            this.setExpiretime(res.data.userinfo.expiretime);
-            this.setUserInfo(JSON.stringify(res.data.userinfo));
-            this.setToken(res.data.userinfo.token);
-            this.setAvatar(res.data.userinfo.avatar);
-            if (res.data.jump) {
-              await new Promise((resolve) => {
-                this.openUrl(res.data.jump);
-
-                setTimeout(() => {
-                  router.push("/");
-                  console.log("gohome");
-                  resolve();
-                }, 1000);
-              });
-            } else {
-              router.push(this.fromPath);
-            }
-            localStorage.removeItem("source");
-            localStorage.removeItem("active");
+            this.setData(res.data)
           }
         } catch (err) {
           this.$message.error(err.msg);
@@ -458,7 +435,7 @@ export default {
     //发送验证码
     handlerSend(even) {
       smsSend({
-        mobile: this.ruleForm.phone,
+        account: this.ruleForm.phone,
         event: even,
       })
         .then((res) => { })
@@ -497,28 +474,7 @@ export default {
             if (res.data.type == "register") {
               this.$message.success(res.msg);
             }
-            clearInterval(this.checkQrCode);
-            localStorage.setItem("userInfo", JSON.stringify(res.data.userinfo));
-            localStorage.setItem("token", res.data.userinfo.token);
-            localStorage.setItem("avatar", res.data.userinfo.avatar);
-            localStorage.setItem("expiretime", res.data.userinfo.expiretime);
-            this.setExpiretime(res.data.userinfo.expiretime);
-            this.setUserInfo(JSON.stringify(res.data.userinfo));
-            this.setToken(res.data.userinfo.token);
-            this.setAvatar(res.data.userinfo.avatar);
-            if (res.data.jump) {
-              await new Promise((resolve) => {
-                window.open(res.data.jump, "_blank");
-                setTimeout(() => {
-                  router.push("/");
-                  resolve();
-                }, 1000);
-              });
-            } else {
-              router.push(this.fromPath);
-            }
-            localStorage.removeItem("source");
-            localStorage.removeItem("active");
+            this.setData(res.data)
           }
         } else {
           console.log("error submit!!");
@@ -594,10 +550,55 @@ export default {
       let tokenStr = login.state.token;
       if (tokenStr) this.$router.push({ path: "/" })
     },
+
+    //账号密码登录
+    async accountlogin() {
+      let data = {
+        account: this.accountPasswordForm.accountVal,
+        password: this.accountPasswordForm.passwordVal,
+        id: this.$route.query.id || "",
+      }
+      const res = await accountLogin(data)
+      console.log(res)
+      if (res.code == 1) {
+        this.setData(res.data)
+      }
+    },
+
+    //登录成功要存的数据
+    async setData(data) {
+      console.log(data)
+      //登录成功,即将跳转
+      clearInterval(this.checkQrCode);
+      localStorage.setItem("userInfo", JSON.stringify(data.userinfo));
+      localStorage.setItem("token", data.userinfo.token);
+      localStorage.setItem("avatar", data.userinfo.avatar);
+      localStorage.setItem("expiretime", data.userinfo.expiretime);
+      this.setExpiretime(data.userinfo.expiretime);
+      this.setUserInfo(JSON.stringify(data.userinfo));
+      this.setToken(data.userinfo.token);
+      this.setAvatar(data.userinfo.avatar);
+      if (data.jump) {
+        await new Promise((resolve) => {
+          this.openUrl(data.jump);
+          setTimeout(() => {
+            router.push("/");
+            resolve();
+          }, 1000);
+        });
+      } else {
+        router.push(this.fromPath);
+      }
+      localStorage.removeItem("source");
+      localStorage.removeItem("active");
+    }
   },
   beforeDestroy() {
     clearInterval(this.checkQrCode);
   },
+  components: {
+    registercomp,
+  }
 };
 </script>
 
@@ -792,6 +793,7 @@ export default {
 
     .max_right {
       display: block;
+      width: 50%;
     }
   }
 }
@@ -902,26 +904,9 @@ export default {
 
 .myElementOut {
   animation-name: explode;
-  animation-duration: .5s;
+  animation-duration: .3s;
   animation-fill-mode: forwards;
   animation-play-state: paused;
-}
-
-@keyframes explode2 {
-  0% {
-    transform: translateX(200px);
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-.myElementReturn {
-  animation-name: explode2;
-  animation-duration: .5s;
-  animation-fill-mode: forwards;
-  width: 700px;
+  background: #fff;
 }
 </style>

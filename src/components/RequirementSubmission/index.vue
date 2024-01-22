@@ -1357,7 +1357,7 @@ export default {
             "div",
             {
               style:
-                "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 12px;color: white;",
+                "width: 18px;height: 18px;background: #EDBB32;border-radius: 50%;text-align: center;line-height: 18px;color: white;",
             },
             "¡"
           ),

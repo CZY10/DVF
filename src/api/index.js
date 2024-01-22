@@ -537,3 +537,23 @@ export function getImagepostlist(data) {
     })
 
 }
+
+//账号密码登录
+export function accountLogin(data) {
+    return request({
+        url: "/api/user/passwordLogin",
+        method: "post",
+        data
+    })
+
+}
+
+//修改密码/新增密码
+export function passwordRegister(data) {
+    return request({
+        url: "/api/user/passwordRegister",
+        method: "post",
+        data
+    })
+
+}

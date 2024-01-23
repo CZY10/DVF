@@ -1,22 +1,6 @@
 //请求方法
 import request from "@/utils/request";
 
-//post请求
-// export function login(data){
-//     return request({
-//         url:'v1/login',
-//         method: 'post',
-//         data
-//     })
-// }
-// //get请求
-// export function deleteAddress(params){
-//     return request({
-//         url:'v1/deleteAddress',
-//         method: 'get',
-//         params
-//     })
-// }
 //生成微信二维码
 export function getQrcode(data) {
     return request({
@@ -172,10 +156,10 @@ export function getUserInfo(data) {
         data
     })
 }
-//修改手机号
-export function updateMobile(data) {
+//修改账号
+export function updateAccount(data) {
     return request({
-        url: '/api/user/changemobile',
+        url: '/api/user/changeAccount',
         method: 'post',
         data
     })

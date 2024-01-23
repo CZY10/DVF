@@ -323,12 +323,13 @@
           <span style="margin-left: 30px">免费领取：价值99元<span style="color: #ff9c17">《产品推广诊断建议》</span>+买家秀首单<span
               style="color: #ff9c17">50元优惠</span></span>
         </h5>
-        <el-button round @click="isShowDialog = true">立即获取</el-button>
+        <el-button round @click="() => {
+          if (this.ifShowTag && this.isShowTag) {
+            this.isShowDialog = true
+          }
+        }">立即获取</el-button>
       </div>
-      <i class="el-icon-close close_btn" @click="() => {
-        ifShowTag = false;
-      }
-        "></i>
+      <i class="el-icon-close close_btn" @click="ifShowTag = false"></i>
     </div>
     <!--footer-->
     <Footer></Footer>

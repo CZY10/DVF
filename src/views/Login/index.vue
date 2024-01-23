@@ -53,7 +53,8 @@
                       <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item prop="verificationCode">
-                      <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码">
+                      <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码"
+                        @keyup.enter.native="handleSubmitForm('ruleForm')">
                         <el-button slot="append" @click="handlerSend('mobilelogin')"
                           :style="{ color: isDisabled ? '#999999' : '#D161F6' }" :disabled="isDisabled" type="text">
                           {{ verificationCodeText }}
@@ -76,7 +77,7 @@
                     </el-form-item>
                     <el-form-item prop="passwordVal" style="position: relative;margin-bottom: 10px;">
                       <el-input placeholder="请输入密码" v-model="accountPasswordForm.passwordVal"
-                        :type="passwordflag ? 'text' : 'password'"></el-input>
+                        :type="passwordflag ? 'text' : 'password'" @keyup.enter.native="accountlogin"></el-input>
                       <div @click="passwordflag = !passwordflag"
                         style="position: absolute;right: 15px;top: 5px;cursor: pointer;width: 20px;height:20px">
                         <img src="@/assets/images/preview-open.svg" v-if="passwordflag" style="width: 100%;" />
@@ -206,6 +207,7 @@ import {
 } from "@/api/index";
 import login from "@/store/modules/login";
 import router from "@/router";
+import { setCookie, getCookie, deleteCookie } from '@/utils/Encapsulationfunction'
 export default {
   name: "login",
   data() {
@@ -306,7 +308,7 @@ export default {
       passwordflag: false,
       accountpasswordDisabled1: false,
       accountpasswordDisabled2: false,
-      isone: true
+      isone: true,
     };
   },
   created() { },
@@ -426,11 +428,7 @@ export default {
     },
 
     handleClick(tab) {
-      if (tab.index == 0) {
-        this.handleCheckQr();
-      } else {
-        clearInterval(this.checkQrCode);
-      }
+      tab.index == 0 ? this.handleCheckQr() : clearInterval(this.checkQrCode)
     },
     //发送验证码
     handlerSend(even) {
@@ -460,6 +458,10 @@ export default {
 
     //短信登录注册
     async handleSubmitForm(formName) {
+      if (getCookie('errors5') * 1 > 5) {
+        return this.$message.error('您密码多次错误，请明日再试吧~');
+      }
+
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           const res = await mobileLogin({
@@ -475,6 +477,9 @@ export default {
               this.$message.success(res.msg);
             }
             this.setData(res.data)
+          } else {
+            let errors = getCookie('errors5') || 0;
+            setCookie('errors5', Number(errors) + 1, 1);
           }
         } else {
           console.log("error submit!!");
@@ -553,21 +558,35 @@ export default {
 
     //账号密码登录
     async accountlogin() {
-      let data = {
+      if (getCookie('errors5') * 1 > 5) {
+        return this.$message.error('您密码多次错误，请明日再试吧~');
+      }
+
+      const data = {
         account: this.accountPasswordForm.accountVal,
         password: this.accountPasswordForm.passwordVal,
         id: this.$route.query.id || "",
+        source: this.source,
+        action: this.action,
+      };
+
+      const res = await accountLogin(data);
+      if (res.code !== 1) {
+        let now = new Date();
+        let tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        let diff = tomorrow - now; // difference in milliseconds
+        let diffInDays = diff / (1000 * 60 * 60 * 24); // convert to days
+
+        let errors = getCookie('errors5') || 0;
+        setCookie('errors5', Number(errors) + 1, diffInDays);
+        return;
       }
-      const res = await accountLogin(data)
-      console.log(res)
-      if (res.code == 1) {
-        this.setData(res.data)
-      }
+
+      this.setData(res.data);
     },
 
     //登录成功要存的数据
     async setData(data) {
-      console.log(data)
       //登录成功,即将跳转
       clearInterval(this.checkQrCode);
       localStorage.setItem("userInfo", JSON.stringify(data.userinfo));
@@ -591,7 +610,9 @@ export default {
       }
       localStorage.removeItem("source");
       localStorage.removeItem("active");
-    }
+
+      deleteCookie('errors5')
+    },
   },
   beforeDestroy() {
     clearInterval(this.checkQrCode);

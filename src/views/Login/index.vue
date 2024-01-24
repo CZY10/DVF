@@ -311,14 +311,15 @@ export default {
       isone: true,
     };
   },
-  created() { },
   mounted() {
     this.handlerGetQrcode();
-    this.verifyToken();
     localStorage.getItem("configObj") ? this.configData = JSON.parse(localStorage.getItem("configObj")) : this.getContent()
     if (!localStorage.getItem("logo")) this.getContent()
     this.source = this.$route.query.source || localStorage.getItem("source") || "";
     this.action = this.$route.query.action || localStorage.getItem("action") || "";
+
+    //已登录状态下不跳转至登录页
+    if (login.state.token) this.$router.push({ path: "/" })
   },
   methods: {
     ...mapMutations("login", [
@@ -501,24 +502,7 @@ export default {
           })
             .then((res) => {
               if (res.code === 1) {
-                clearInterval(this.checkQrCode);
-                localStorage.setItem(
-                  "userInfo",
-                  JSON.stringify(res.data.userinfo)
-                );
-                localStorage.setItem("token", res.data.userinfo.token);
-                localStorage.setItem("avatar", res.data.userinfo.avatar);
-                localStorage.setItem(
-                  "expiretime",
-                  res.data.userinfo.expiretime
-                );
-                this.setExpiretime(res.data.userinfo.expiretime);
-                this.setUserInfo(JSON.stringify(res.data.userinfo));
-                this.setToken(res.data.userinfo.token);
-                this.setAvatar(res.data.userinfo.avatar);
-                res.data.jump
-                  ? (window.location.href = res.data.jump)
-                  : this.$router.push(this.fromPath);
+                this.setData(res.data);
               } else if (res.code === 0 && res.data.status === 0) {
                 this.hasBindPhone = false;
               }
@@ -549,11 +533,6 @@ export default {
           clearInterval(intervalId);
         }
       }, 3000);
-    },
-    //已登录状态下不跳转至登录页
-    verifyToken() {
-      let tokenStr = login.state.token;
-      if (tokenStr) this.$router.push({ path: "/" })
     },
 
     //账号密码登录

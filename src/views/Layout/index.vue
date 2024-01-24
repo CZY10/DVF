@@ -38,13 +38,8 @@ export default {
     ...mapMutations("Index", ["setIsFalg"]),
     handleScroll() {
       if (this.$route.fullPath == "/" && this.flags) {
-        let scrollTop =
-          document.documentElement.scrollTop || document.body.scrollTop; //滑动的距离
-        if (scrollTop <= 300) {
-          document.querySelector(".remreru").style.opacity = "0";
-        } else {
-          document.querySelector(".remreru").style.opacity = "1";
-        }
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop; //滑动的距离
+        scrollTop <= 300 ? document.querySelector(".remreru").style.opacity = "0" : document.querySelector(".remreru").style.opacity = "1"
       }
     },
   },

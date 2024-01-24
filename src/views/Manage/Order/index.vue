@@ -1344,23 +1344,24 @@ export default {
     },
     //支付定金/尾款
     handlePaymentOrder(type) {
+      this.handleWechatAlipayPayPaymentOrder(type, "wechat");
+      this.handleWechatAlipayPayPaymentOrder(type, "alipay");
+    },
+    handleWechatAlipayPayPaymentOrder(type, paymentType) {
       this.orderIdFlex = false;
-
       type === 0
         ? (this.payDepositDialogVisible = true)
         : (this.paymentDialog = true);
-
       this.paymentType = type;
-      //微信
       payOrder({
         order_id: this.orderId,
-        payment: "wechat",
+        payment: paymentType,
       })
         .then((res) => {
           if (res.code === 1) {
             this.orderData = res.data.order;
-            if (this.$refs.wechatQrCodeUrl) {
-              new QRCode(this.$refs.wechatQrCodeUrl, {
+            if (this.$refs[`${paymentType}QrCodeUrl`]) {
+              new QRCode(this.$refs[`${paymentType}QrCodeUrl`], {
                 text: res.data.qrcode,
                 width: 130,
                 height: 130,
@@ -1369,44 +1370,23 @@ export default {
                 correctLevel: QRCode.CorrectLevel.H,
               });
             }
-            this.handlerCheckWechatPayment(res.data.order.out_trade_no);
-          }
-        })
-        .catch((err) => {
-          this.$message.error(err.msg);
-        });
-      //支付宝
-      payOrder({
-        order_id: this.orderId,
-        payment: "alipay",
-      })
-        .then((res) => {
-          if (res.code === 1) {
-            this.orderData = res.data.order;
-            if (this.$refs.alipayQrCodeUrl) {
-              new QRCode(this.$refs.alipayQrCodeUrl, {
-                text: res.data.qrcode,
-                width: 130,
-                height: 130,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H,
-              });
-            }
-            this.handlerCheckAlipayPayment(res.data.order.out_trade_no);
+            this.handlerCheckPayment(res.data.order.out_trade_no, paymentType);
           }
         })
         .catch((err) => {
           this.$message.error(err.msg);
         });
     },
-    //微信检测是否支付成功
-    handlerCheckWechatPayment(order) {
+
+    //检测是不支付成功 支付宝 微信
+    handlerCheckPayment(order, paymentType) {
       let _this = this;
-      _this.checkWechatPaymentVal = setInterval(function () {
+      let intervalName = `check${paymentType.charAt(0).toUpperCase() + paymentType.slice(1)}PaymentVal`;
+
+      _this[intervalName] = setInterval(function () {
         checkPayment({
           out_trade_no: order,
-          payment: "wechat",
+          payment: paymentType,
         })
           .then((res) => {
             if (res.code === 1) {
@@ -1428,41 +1408,6 @@ export default {
 
                 clearInterval(_this.checkWechatPaymentVal);
                 clearInterval(_this.checkAlipayPaymentVal);
-              }
-            }
-          })
-          .catch((err) => {
-            this.$message.error(err.message);
-          });
-      }, 3000);
-    },
-    //支付宝检测是否支付成功
-    handlerCheckAlipayPayment(order) {
-      let _this = this;
-      _this.checkAlipayPaymentVal = setInterval(function () {
-        checkPayment({
-          out_trade_no: order,
-          payment: "alipay",
-        })
-          .then((res) => {
-            if (res.code === 1) {
-              if (res.data.status === "success") {
-                _this.payDepositDialogVisible = false;
-                _this.paymentDialog = false;
-
-                if (_this.allSatisfy1) {
-                  _this.paymentType = 0;
-                  _this.paymentCompletedDialogVisible = true;
-                } else if (_this.allSatisfy2) {
-                  _this.paymentType = 1;
-                  _this.paymentCompletedDialogVisible = true;
-                } else if (_this.paymentType == 2) {
-                  _this.MergepaymentslogVisible = true;
-                } else {
-                  _this.paymentCompletedDialogVisible = true;
-                }
-                clearInterval(_this.checkAlipayPaymentVal);
-                clearInterval(_this.checkWechatPaymentVal);
               }
             }
           })
@@ -2483,68 +2428,8 @@ export default {
 }
 
 /*单选框*/
-.el-radio--small.is-bordered {
-  height: 191px !important;
-  padding: 20px 14px !important;
-  width: 208px;
-  border-radius: 10px !important;
-}
-
-.el-radio--small.is-bordered .el-radio__label {
-  font-size: 14px !important;
-
-  font-weight: 600;
-  color: #333333;
-  line-height: 20px;
-}
-
-.el-radio__label ul {
-  padding-top: 10px;
-}
-
-.el-radio__label ul li {
-  font-size: 12px;
-  font-weight: 400;
-  color: #666666;
-  line-height: 17px;
-  padding: 4px 0 4px 12px;
-  position: relative;
-}
-
-.el-radio__label ul li:before {
-  display: inline-block;
-  content: "";
-  width: 4px;
-  height: 4px;
-  background: #666666;
-  border-radius: 50%;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  margin-top: -2px;
-}
-
 .el-radio__input.is-checked+.el-radio__label {
   color: #333333 !important;
-}
-
-.radio_style2 .el-radio__input.is-checked .el-radio__inner {
-  border: 1px solid #00d9ad !important;
-  background: #00d9ad !important;
-}
-
-.radio_style2.is-bordered.is-checked {
-  border: 2px solid #00d9ad !important;
-}
-
-.radio_style1 .el-radio__input.is-checked .el-radio__inner {
-  border: 1px solid rgba(121, 108, 243, 1) !important;
-  background: rgba(121, 108, 243, 1) !important;
-  background-image: url("../../../assets/images/radio_style1_bg.png");
-}
-
-.radio_style1.is-bordered.is-checked {
-  border: 2px solid rgba(121, 108, 243, 1) !important;
 }
 
 /*步骤条样式*/
@@ -3416,11 +3301,6 @@ export default {
   right: 65px;
 }
 </style>
-<style lang="less" scoped>
-#order .video_dialog .video_ruleForm {
-  height: auto;
-}
-</style>
 <style>
 .el-table__row>td>.cell {
   padding-right: 0px;
@@ -3433,6 +3313,10 @@ export default {
 }
 </style>
 <style lang="less" scoped>
+#order .video_dialog .video_ruleForm {
+  height: auto;
+}
+
 ::v-deep .el-form-item--small .el-form-item__label {
   line-height: 22px;
 }

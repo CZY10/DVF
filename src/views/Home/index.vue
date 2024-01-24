@@ -182,7 +182,8 @@
               </li>
             </ul>
             <div class="button_box">
-              <a style="color: #ffffff"><el-button class="btn_type" @click="goVipon">发布促销</el-button></a>
+              <a style="color: #ffffff"><el-button class="btn_type"
+                  @click="goAction('promotion/index', 'https://seller.vipona.com/promotion/index', 'https://hkatest.myvipon.com/promotion/index')">发布促销</el-button></a>
               <a target="_blank" href="https://www.myvipon.cn/" style="color: #333333"><el-button
                   class="btn_plain">了解Vipon</el-button></a>
             </div>
@@ -214,7 +215,8 @@
             justify-content: flex-start;
           ">
           <!-- href="https://seller.vipona.com/account/login" -->
-          <a target="_blank" v-for="(item, ind) in i.productList" :key="ind" class="fbItem" @click="godetailsFb(item)">
+          <a target="_blank" v-for="(item, ind) in i.productList" :key="ind" class="fbItem"
+            @click="goDetails('fb-detail', item)">
             <div class="user_info flex_style">
               <div class="header_img"><img :src="item.logo" alt="" /></div>
               <div class="info_des">
@@ -241,7 +243,8 @@
         </div>
         <div class="flex_between button_box">
           <!-- href="https://seller.vipona.com/account/login" -->
-          <a target="_blank" style="color: #ffffff"><el-button round @click="goFB">查看全部</el-button></a>
+          <a target="_blank" style="color: #ffffff"><el-button round
+              @click="goAction('hot/fb', 'https://seller.vipona.com/hot/fb', 'https://hkatest.myvipon.com/hot/fb')">查看全部</el-button></a>
         </div>
       </div>
     </div>
@@ -260,7 +263,8 @@
             min-height: 665px;
           ">
           <!-- href="https://seller.vipona.com/account/login" -->
-          <a target="_blank" v-for="(item, index) in dealList" :key="index" class="dealItem" @click="godetailsDeal(item)">
+          <a target="_blank" v-for="(item, index) in dealList" :key="index" class="dealItem"
+            @click="goDetails('deal-detail', item)">
             <div>
               <div class="deal_head">
                 <img :src="item.logo" alt="" />
@@ -286,7 +290,8 @@
           </a>
         </div>
         <div class="flex_between button_box">
-          <a target="_blank" style="color: #ffffff"><el-button round @click="goDeal">查看全部</el-button></a>
+          <a target="_blank" style="color: #ffffff"><el-button round
+              @click="goAction('hot/deal', 'https://seller.vipona.com/hot/deal', 'https://hkatest.myvipon.com/hot/deal')">查看全部</el-button></a>
         </div>
       </div>
     </div>
@@ -300,7 +305,7 @@
 
         <ul ref="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 300 }'>
           <li v-for="(item, index) in Opiniondata" :key="index" class="grid-item">
-            <img :src="item.image" @load="handleLoad" />
+            <img :src="item.image" @load="imgsnum++" />
           </li>
 
           <div class="masking-out"></div>
@@ -363,14 +368,10 @@ export default {
       fbList: [],
       isShowTag: false,
       ifShowTag: true,
-      token: "",
+      token: localStorage.getItem("token"),
       influenceList: {},
       formData: {},
       isShowDialog: false,
-      fbbaseURLC: `https://hkatest.myvipon.com/hot/fb-detail?id=`,
-      ViponSrc: "",
-      DealSrc: "",
-      FbSrc: "",
       items: [
         {
           title: "上市企业",
@@ -422,84 +423,41 @@ export default {
   },
 
   mounted() {
-    this.token = localStorage.getItem("token");
     if (this.token) this.isdisplay = 'none'
-
     this.handleTakePlanList();
     this.getFBData();
     this.getDealData();
-    if (localStorage.getItem("configObj")) {
-      this.formData = JSON.parse(localStorage.getItem("configObj"));
-    } else {
-      this.getContent();
-    }
-
-    if (!localStorage.getItem("token"))
-      window.addEventListener("scroll", this.handleScroll, true);
-
+    localStorage.getItem("configObj") ? this.formData = JSON.parse(localStorage.getItem("configObj")) : this.getContent()
+    if (!localStorage.getItem("token")) window.addEventListener("scroll", this.handleScroll, true);
     this.gethomehighOpinion(8);
   },
   methods: {
-    handleLoad() {
-      this.imgsnum++
-    },
     handleScroll() {
       var scrollTop = window.scrollY || window.pageYOffset;
       scrollTop >= 2000 && this.ifShowTag
         ? (this.isShowTag = true)
         : (this.isShowTag = false);
     },
-    //   vipon自助发帖跳转
-    goVipon() {
-      if (window.localStorage.getItem("token")) {
-        if (process.env.NODE_ENV == "production") {
-          this.ViponSrc = "https://seller.vipona.com/promotion/index";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.ViponSrc, "_black");
-        } else if (process.env.NODE_ENV == "development") {
-          this.ViponSrc = "https://hkatest.myvipon.com/promotion/index";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.ViponSrc, "_black");
-        }
-      } else {
-        this.$router.push("/login?source=vipon_deal&action=promotion/index");
-      }
-    },
 
-    goFB() {
+    //跳转站外
+    goAction(action, productionUrl, developmentUrl) {
       if (window.localStorage.getItem("token")) {
-        if (process.env.NODE_ENV == "production") {
-          this.FbSrc = "https://seller.vipona.com/hot/fb";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.FbSrc, "_black");
-        } else if (process.env.NODE_ENV == "test") {
-          this.FbSrc = "https://hkatest.myvipon.com/hot/fb";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.FbSrc, "_black");
+        let url;
+        switch (process.env.NODE_ENV) {
+          case "production":
+            url = productionUrl;
+            break;
+          case "development":
+            url = developmentUrl;
+            break;
+          default:
+            break;
         }
+        localStorage.removeItem("source");
+        localStorage.removeItem("active");
+        window.open(url, "_black");
       } else {
-        this.$router.push("/login?source=vipon_deal&action=hot/fb");
-      }
-    },
-    goDeal() {
-      if (window.localStorage.getItem("token")) {
-        if (process.env.NODE_ENV == "production") {
-          this.DealSrc = "https://seller.vipona.com/hot/deal";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.DealSrc, "_black");
-        } else if (process.env.NODE_ENV == "development") {
-          this.DealSrc = "https://hkatest.myvipon.com/hot/deal";
-          localStorage.removeItem("source");
-          localStorage.removeItem("active");
-          window.open(this.DealSrc, "_black");
-        }
-      } else {
-        this.$router.push("/login?source=vipon_deal&action=hot/deal");
+        this.$router.push(`/login?source=vipon_deal&action=${action}`);
       }
     },
     //获取公共配置信息
@@ -585,48 +543,25 @@ export default {
         ? window.open("https://seller.vipona.com/hot/fb")
         : window.open("https://hkatest.myvipon.com/hot/fb");
     },
-
-    //fb详情页
-    godetailsFb(item) {
+    //跳转详情页
+    goDetails(action, item) {
       let loginHref = `http://testai.blhltd.com`;
+      let baseURLC;
       if (process.env.NODE_ENV == "production") {
-        this.fbbaseURLC = `https://seller.vipona.com`;
+        baseURLC = `https://seller.vipona.com`;
         loginHref = `https://www.viponm.com`;
       } else if (process.env.NODE_ENV == "development") {
-        this.fbbaseURLC = `https://hkatest.myvipon.com`;
+        baseURLC = `https://hkatest.myvipon.com`;
         loginHref = `http://testai.blhltd.com`;
       }
 
       if (localStorage.getItem("token")) {
-        window.open(this.fbbaseURLC + `/hot/fb-detail?id=${item.id}`, "_black");
-        this.fbbaseURLC = `${this.fbbaseURLC} + /hot/fb-detail?id=`;
+        window.open(baseURLC + `/hot/${action}?id=${item.id}`, "_black");
+        baseURLC = `${baseURLC} + /hot/${action}?id=`;
       } else {
         window.location.href =
           loginHref +
-          `/login?source=vipon_deal&action=hot/fb-detail&id=${item.id}`;
-      }
-    },
-    //Deal详情页
-    godetailsDeal(item) {
-      let loginHref = `http://testai.blhltd.com`;
-      if (process.env.NODE_ENV == "production") {
-        this.fbbaseURLC = `https://seller.vipona.com`;
-        loginHref = `https://www.viponm.com`;
-      } else if (process.env.NODE_ENV == "development") {
-        this.fbbaseURLC = `https://hkatest.myvipon.com`;
-        loginHref = `http://testai.blhltd.com`;
-      }
-
-      if (localStorage.getItem("token")) {
-        window.open(
-          this.fbbaseURLC + `/hot/deal-detail?id=${item.id}`,
-          "_black"
-        );
-        this.fbbaseURLC = `${this.fbbaseURLC} + /hot/deal-detail?id=`;
-      } else {
-        window.location.href =
-          loginHref +
-          `/login?source=vipon_deal&action=hot/deal-detail&id=${item.id}`;
+          `/login?source=vipon_deal&action=hot/${action}&id=${item.id}`;
       }
     },
   },

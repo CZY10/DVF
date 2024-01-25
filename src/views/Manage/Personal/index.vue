@@ -20,8 +20,7 @@
           <p>账号信息</p>
           <ul>
             <li>
-              <label>账号</label>{{ userInfo.mobile
-              }}<span @click="editPhoneDialog = true">修改</span>
+              <label>账号</label>{{ userInfo.mobile || userInfo.email }}<span @click="editPhoneDialog = true">修改</span>
             </li>
             <li v-if="userInfo.isbind === 1">
               <label>微信</label>已绑定<span @click="unbindWeChatDialog = true">解绑</span>
@@ -393,6 +392,8 @@ export default {
                   clearInterval(timeStop);
                 }
               }, 1000);
+            } else {
+              this.verificationCodeText = "获取验证码";
             }
           })
           .catch((err) => {

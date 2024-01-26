@@ -202,7 +202,7 @@
 </template>
 
 <script>
-import { getCategory, getSearchList, needsSelectInfluencer } from "@/api";
+import { getCategory, getSearchList, needsSelectInfluencer, inviteSelectInfluencer } from "@/api";
 import router from "@/router";
 import store from "@/store";
 export default {
@@ -243,6 +243,7 @@ export default {
     this.handlerGetCategory("influencer");
     this.handlerGetCategory("theme_area");
     this.RenderingData();
+
   },
   created() {
     const that = this;
@@ -250,7 +251,15 @@ export default {
       if (!that.checkFull()) {
         // 退出全屏后要执行的动作
         store.commit("Index/setExitFullScreen", true);
-        router.push("/Requirement");
+
+
+        let url = new URL(window.location.href).search;
+        if (!url) {
+          router.push("/Requirement");
+        } else {
+          router.push("Invitationfilling" + url);
+        }
+
         console.log("退出全屏");
       } else {
         console.log("全屏");
@@ -279,7 +288,13 @@ export default {
         priceval: "",
       });
       this.currentPage = 1;
-      router.push("/Requirement");
+
+      let url = new URL(window.location.href).search;
+      if (!url) {
+        router.push("/Requirement");
+      } else {
+        router.push("Invitationfilling" + url);
+      }
     },
     //退出全屏
     outcheckFull() {
@@ -334,9 +349,7 @@ export default {
     handlerSearchList(type, value) {
       this.currentPage = 1;
 
-      if (localStorage.getItem("token")) {
-        this.isloading = true;
-      }
+      this.isloading = true;
       switch (type) {
         case "genderdata":
           this.genderValue = value;
@@ -374,28 +387,15 @@ export default {
       this.isvideoslist = [];
       this.categoryidarr = [];
 
-      if (
-        (!localStorage.getItem("token") && this.searchforval != "") ||
-        (!localStorage.getItem("token") && this.categoryValue != "") ||
-        (!localStorage.getItem("token") && this.themeValue != "") ||
-        (!localStorage.getItem("token") && this.genderValue != "") ||
-        (!localStorage.getItem("token") && this.priceval != "")
-      ) {
-        this.genderValue = "";
-        this.themeValue = "";
-        this.categoryValue = "";
-        this.priceval = "";
-      } else {
-        this.getdata(
-          this.currentPage,
-          this.pageSize,
-          this.genderValue,
-          this.categoryValue,
-          this.themeValue,
-          this.priceval,
-          this.searchforval
-        );
-      }
+      this.getdata(
+        this.currentPage,
+        this.pageSize,
+        this.genderValue,
+        this.categoryValue,
+        this.themeValue,
+        this.priceval,
+        this.searchforval
+      );
     },
 
     //获取数据
@@ -602,19 +602,34 @@ export default {
     },
   },
   async beforeDestroy() {
-    let result = this.influencersList
-      .flat()
-      .map((item) => item.user_id)
-      .join(",");
+
+    let key = this.$route.path == '/Requirement' ? 'user_id' : 'id';
+    let result = this.influencersList.flat().map(item => item[key]).join(",");
+
     if (result != "" && store.state.Index.ExitFullScreen == false) {
-      await needsSelectInfluencer({
-        id: this.influencersListid,
-        influencer_ids: result,
-      }).then((res) => {
-        if (res.code == 1) {
-          this.$emit("getlist", true);
-        }
-      });
+      if (this.$route.path == '/Requirement') {
+        await needsSelectInfluencer({
+          id: this.influencersListid,
+          influencer_ids: result,
+        }).then((res) => {
+          if (res.code == 1) {
+            this.$emit("getlist", true);
+          }
+        });
+      } else {
+        let url = new URL(window.location.href);
+        let needs = url.searchParams.get("needs");
+        await inviteSelectInfluencer({
+          id: this.influencersListid,
+          influencer_ids: result,
+          url_mark: needs,
+          auth: localStorage.getItem("said"),
+        }).then((res) => {
+          if (res.code == 1) {
+            this.$emit("getlist", true);
+          }
+        });
+      }
     }
   },
 };

@@ -30,8 +30,7 @@ Vue.directive("screenfull", {
                 router.push("datalistdialog")
             } else if (window.location.pathname == '/Invitationfilling') {
                 let url = new URL(window.location.href).search;
-                console.log(url)
-                router.push("datalistdialogIf" + url)
+                router.push("datalistdialog" + url)
             }
             screenfull.toggle();
         });

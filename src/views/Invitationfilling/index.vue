@@ -405,7 +405,7 @@ import {
 import draggable from "vuedraggable";
 import FillingRequirementsdialog from "./dialog/FillingRequirementsdialog.vue";
 import Tipsdialog from "./dialog/Tipsdialog.vue";
-import ListOfInfluencersdialog from "./dialog/ListOfInfluencersdialog.vue";
+import ListOfInfluencersdialog from "@/components/RequirementSubmission/dialog/ListOfInfluencersdialog.vue";
 import Notedialog from "@/components/RequirementSubmission/dialog/notedialog.vue";
 import dialogVisibleTips1 from "@/components/RequirementSubmission/dialog/dialogVisibleTips1.vue";
 import Successfullyejectedialog from "./dialog/Successfullyejectedialog.vue";

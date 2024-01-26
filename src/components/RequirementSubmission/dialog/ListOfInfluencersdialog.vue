@@ -209,7 +209,7 @@
 </template>
 
 <script>
-import { getCategory, getSearchList, needsSelectInfluencer } from "@/api";
+import { getCategory, getSearchList, needsSelectInfluencer, inviteSelectInfluencer } from "@/api";
 import store from "@/store";
 export default {
   props: ["datalistdialogVisible", "influencersList", "influencersListid"], //通过props接收父组件传递的值
@@ -281,9 +281,7 @@ export default {
     //搜索列表
     handlerSearchList(type, value) {
       this.currentPage = 1;
-      if (localStorage.getItem("token")) {
-        this.isloading = true;
-      }
+      this.isloading = true;
       switch (type) {
         case "genderdata":
           this.genderValue = value;
@@ -332,28 +330,15 @@ export default {
       this.isvideoslist = [];
       this.categoryidarr = [];
 
-      if (
-        (!localStorage.getItem("token") && this.searchforval != "") ||
-        (!localStorage.getItem("token") && this.categoryValue != "") ||
-        (!localStorage.getItem("token") && this.themeValue != "") ||
-        (!localStorage.getItem("token") && this.genderValue != "") ||
-        (!localStorage.getItem("token") && this.priceval != "")
-      ) {
-        this.genderValue = "";
-        this.themeValue = "";
-        this.categoryValue = "";
-        this.priceval = "";
-      } else {
-        this.getdata(
-          this.currentPage,
-          this.pageSize,
-          this.genderValue,
-          this.categoryValue,
-          this.themeValue,
-          this.priceval,
-          this.searchforval
-        );
-      }
+      this.getdata(
+        this.currentPage,
+        this.pageSize,
+        this.genderValue,
+        this.categoryValue,
+        this.themeValue,
+        this.priceval,
+        this.searchforval
+      );
     },
 
     //获取数据
@@ -572,23 +557,39 @@ export default {
         });
         this.RenderingData();
       } else {
-        let result = this.influencersList
-          .flat()
-          .map((item) => item.user_id)
-          .join(",");
+        let key = this.$route.path == '/Requirement' ? 'user_id' : 'id';
+        let result = this.influencersList.flat().map(item => item[key]).join(",");
+
         if (result != "") {
           if (this.influencersListid == 0) {
             let num = localStorage.getItem("addnum") - 1;
             localStorage.setItem("addnum", num);
           }
-          await needsSelectInfluencer({
-            id: this.influencersListid,
-            influencer_ids: result,
-          }).then((res) => {
-            if (res.code == 1) {
-              this.$emit("getlist", true);
-            }
-          });
+
+          if (this.$route.path == '/Requirement') {
+            await needsSelectInfluencer({
+              id: this.influencersListid,
+              influencer_ids: result,
+            }).then((res) => {
+              if (res.code == 1) {
+                this.$emit("getlist", true);
+              }
+            })
+          } else {
+            let url = new URL(window.location.href);
+            let needs = url.searchParams.get("needs");
+            await inviteSelectInfluencer({
+              id: this.influencersListid,
+              influencer_ids: result,
+              url_mark: needs,
+              auth: localStorage.getItem("said"),
+            }).then((res) => {
+              if (res.code == 1) {
+                this.$emit("getlist", true);
+              }
+            })
+          }
+
         }
         this.searchforval = "";
         store.commit("Index/setcurrentPage", 1);

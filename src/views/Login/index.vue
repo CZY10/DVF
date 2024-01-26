@@ -95,7 +95,7 @@
               </el-tabs>
 
               <p class="privacy_agreement">
-                登录平台即代表同意<router-link target="_blank" to="/tos"><span>服务条款</span>及<span>用户隐私协议</span></router-link>
+                登录平台即代表同意<router-link target="_blank" to="/tos"><span>服务条款及用户隐私协议</span></router-link>
               </p>
             </div>
           </div>

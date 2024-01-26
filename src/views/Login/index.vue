@@ -53,7 +53,7 @@
                       <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item prop="verificationCode">
-                      <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码"
+                      <el-input v-model="ruleForm.verificationCode" placeholder="请输入验证码" class="noborder"
                         @keyup.enter.native="handleSubmitForm('ruleForm')">
                         <el-button slot="append" @click="handlerSend('mobilelogin')"
                           :style="{ color: isDisabled ? '#999999' : '#D161F6' }" :disabled="isDisabled" type="text">
@@ -86,8 +86,7 @@
                     </el-form-item>
                   </el-form>
                   <p style="text-align:right"><span style="font-size:12px;color:#999">还没有密码或已忘记？</span><span
-                      style='font-size:12px;color:#D161F6;cursor: pointer;' @click="triggerAnimation">去设置</span></p>
-
+                      style='font-size:12px;color:#D161F6;cursor: pointer;' @click="isone = false">去设置</span></p>
                   <el-button class="submit_btn" style="margin:30px 0 10px" @click="accountlogin"
                     :class="{ disabled_opacity: !accountpasswordDisabled1 || !accountpasswordDisabled2 }"
                     :disabled="!accountpasswordDisabled1 || !accountpasswordDisabled2" round>确认</el-button>
@@ -207,7 +206,6 @@ import {
 } from "@/api/index";
 import login from "@/store/modules/login";
 import router from "@/router";
-import { setCookie, getCookie, deleteCookie } from '@/utils/Encapsulationfunction'
 export default {
   name: "login",
   data() {
@@ -327,15 +325,6 @@ export default {
       this.isone = msg
     },
 
-    //切换设置密码
-    triggerAnimation() {
-      var element = document.querySelector('.myElementOut');
-      element.style.animationPlayState = 'running';
-      setTimeout(() => {
-        this.isone = false
-      }, 500)
-    },
-
     //获取公共配置信息
     getContent() {
       getConfig()
@@ -453,10 +442,6 @@ export default {
 
     //短信登录注册
     async handleSubmitForm(formName) {
-      if (getCookie('errors5') * 1 > 5) {
-        return this.$message.error('您密码多次错误，请明日再试吧~');
-      }
-
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           const res = await mobileLogin({
@@ -472,9 +457,6 @@ export default {
               this.$message.success(res.msg);
             }
             this.setData(res.data)
-          } else {
-            let errors = getCookie('errors5') || 0;
-            setCookie('errors5', Number(errors) + 1, 1);
           }
         } else {
           console.log("error submit!!");
@@ -531,9 +513,6 @@ export default {
 
     //账号密码登录
     async accountlogin() {
-      if (getCookie('errors5') * 1 > 5) {
-        return this.$message.error('您密码多次错误，请明日再试吧~');
-      }
 
       const data = {
         account: this.accountPasswordForm.accountVal,
@@ -544,18 +523,7 @@ export default {
       };
 
       const res = await accountLogin(data);
-      if (res.code !== 1) {
-        let now = new Date();
-        let tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-        let diff = tomorrow - now; // difference in milliseconds
-        let diffInDays = diff / (1000 * 60 * 60 * 24); // convert to days
-
-        let errors = getCookie('errors5') || 0;
-        setCookie('errors5', Number(errors) + 1, diffInDays);
-        return;
-      }
-
-      this.setData(res.data);
+      if (res.code == 1) this.setData(res.data)
     },
 
     //登录成功要存的数据
@@ -583,8 +551,6 @@ export default {
       }
       localStorage.removeItem("source");
       localStorage.removeItem("active");
-
-      deleteCookie('errors5')
     },
   },
   beforeDestroy() {
@@ -597,6 +563,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep(.el-button) {
+  border: none;
+}
+
+.noborder {
+  ::v-deep(.el-input__inner) {
+    border-right: none;
+  }
+}
+
 .disabled_opacity {
   opacity: 0.5;
 }
@@ -885,22 +861,5 @@ export default {
       stroke: #d161f6;
     }
   }
-}
-</style>
-
-<style scoped>
-@keyframes explode {
-  100% {
-    transform: translateX(-200px);
-    opacity: 0;
-  }
-}
-
-.myElementOut {
-  animation-name: explode;
-  animation-duration: .3s;
-  animation-fill-mode: forwards;
-  animation-play-state: paused;
-  background: #fff;
 }
 </style>

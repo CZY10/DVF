@@ -3,12 +3,12 @@
         <h1>添加/重置密码</h1>
         <p class="title1">通过以下步骤为账号设置新密码</p>
 
-        <el-form :model="resetPasswordForm" :rules="resetPasswordRules" class="demo-ruleForm">
+        <el-form :model="resetPasswordForm" :rules="resetPasswordRules" class="demo-ruleForm" ref="errpasswordValtow">
             <el-form-item prop="accountVal">
                 <el-input v-model="resetPasswordForm.accountVal" placeholder="请输入注册手机号/邮箱" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item prop="verificationCode">
-                <el-input v-model="resetPasswordForm.verificationCode" placeholder="请输入验证码">
+                <el-input v-model="resetPasswordForm.verificationCode" placeholder="请输入验证码" class="noborder">
                     <el-button slot="append" @click="handlerSend('resetpwd')"
                         :style="{ color: accountpasswordDisabled1 ? '#D161F6' : '#999' }"
                         :disabled="!accountpasswordDisabled1" type="text">
@@ -42,7 +42,7 @@
             round>确认</el-button>
 
         <p class="bark">
-            <span @click="triggerAnimationReturn">返回登录</span>
+            <span @click="beforeClose">返回登录</span>
         </p>
 
     </div>
@@ -71,6 +71,13 @@ export default {
             } else {
                 this.accountpasswordDisabled2 = false
                 callback(new Error())
+            }
+
+            if (this.resetPasswordForm.passwordVal == this.resetPasswordForm.passwordValtow) {
+                this.$refs.errpasswordValtow.fields[3].validateState = "";
+            } else if (this.resetPasswordForm.passwordValtow != '') {
+                this.$refs.errpasswordValtow.fields[3].validateState = "error";
+                this.$refs.errpasswordValtow.fields[3].validateMessage = "密码不一致";
             }
         }
         const validatePasswordtow = (rule, value, callback) => {
@@ -115,15 +122,6 @@ export default {
     methods: {
         beforeClose() {
             this.$emit("getisoneMsg", true);
-        },
-        //切换登录
-        triggerAnimationReturn() {
-
-            let element = document.querySelector(".registercomp")
-            element.style.animationPlayState = 'running';
-            setTimeout(() => {
-                this.beforeClose()
-            }, 500)
         },
         //发送验证码
         async handlerSend(even) {
@@ -199,9 +197,7 @@ export default {
                     customClass: "customClasssuccess",
                 });
 
-                setTimeout(() => {
-                    this.triggerAnimationReturn()
-                }, 1000)
+                this.beforeClose()
             }
 
         }
@@ -215,22 +211,8 @@ export default {
     opacity: 0.5;
 }
 
-@keyframes explode2 {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        transform: translateX(200px);
-        opacity: 0;
-    }
-}
-
 .registercomp {
-    animation-name: explode2;
-    animation-duration: .3s;
-    animation-fill-mode: forwards;
-    animation-play-state: paused;
+
     background: #fff;
 
     h1 {
@@ -271,5 +253,15 @@ export default {
 <style lang="less" scoped>
 ::v-deep(.el-form-item) {
     margin-bottom: 20px;
+}
+
+::v-deep(.el-button) {
+    border: none;
+}
+
+.noborder {
+    ::v-deep(.el-input__inner) {
+        border-right: none;
+    }
 }
 </style>

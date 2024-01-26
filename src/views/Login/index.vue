@@ -245,16 +245,6 @@ export default {
         callback(new Error())
       }
     }
-    const validatePassword = (rule, value, callback) => {
-      const EamiregExp = /^.{4,10}$/
-      if (EamiregExp.test(value)) {
-        this.accountpasswordDisabled2 = true
-        callback()
-      } else {
-        this.accountpasswordDisabled2 = false
-        callback(new Error())
-      }
-    }
     return {
       source: "",
       action: "",
@@ -298,7 +288,6 @@ export default {
         ],
         passwordVal: [
           { required: true, message: "请输入密码", trigger: "change" },
-          { validator: validatePassword, message: '长度在 4 到 10 个字符', trigger: 'change' }
         ]
       },
       wechatToken: "",
@@ -310,6 +299,11 @@ export default {
       accountpasswordDisabled2: false,
       isone: true,
     };
+  },
+  watch: {
+    'accountPasswordForm.passwordVal': function (newVal, oldVal) {
+      newVal ? this.accountpasswordDisabled2 = true : this.accountpasswordDisabled2 = false
+    }
   },
   mounted() {
     this.handlerGetQrcode();

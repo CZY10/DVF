@@ -64,7 +64,7 @@ export default {
             }
         }
         const validatePassword = (rule, value, callback) => {
-            const EamiregExp = /^.{4,10}$/
+            const EamiregExp = /^(?:(?=.*[A-Z])(?=.*[0-9])|(?=.*[A-Z])(?=.*[^A-Z0-9])|(?=.*[0-9])(?=.*[^A-Z0-9])|(?=.*[a-z])(?=.*[0-9])|(?=.*[a-z])(?=.*[^a-z0-9])|(?=.*[0-9])(?=.*[^a-z0-9])).{6,}$/
             if (EamiregExp.test(value)) {
                 this.accountpasswordDisabled2 = true
                 callback()
@@ -103,11 +103,11 @@ export default {
                 ],
                 passwordVal: [
                     { required: true, message: "请输入密码", trigger: "change" },
-                    { validator: validatePassword, message: '长度在 4 到 10 个字符', trigger: 'change' }
+                    { validator: validatePassword, message: '不少于6位，包含数字、字母及符号任意两种及以上组合', trigger: 'change' }
                 ],
                 passwordValtow: [
                     { required: true, message: "请输入密码", trigger: "change" },
-                    { validator: validatePasswordtow, message: '俩次密码不一致', trigger: 'change' }
+                    { validator: validatePasswordtow, message: '密码不一致', trigger: 'change' }
                 ]
             },
         }

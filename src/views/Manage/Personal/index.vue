@@ -516,10 +516,13 @@ export default {
   .el-input-group__append {
     background: none;
     padding: 0 30px;
-  }
-
-  .el-input-group--append .el-input__inner {
-    border-right: none;
+    width: 29px;
+    height: 30px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: 30px;
+    border: none;
   }
 }
 </style>
@@ -530,7 +533,6 @@ export default {
 
   .title {
     font-size: 14px;
-    font-family: PingFangSC-Semibold, PingFang SC;
     font-weight: 600;
     color: #333333;
     line-height: 20px;
@@ -799,5 +801,11 @@ export default {
       }
     }
   }
+}
+
+
+::v-deep(.el-input-group--append .el-input__inner) {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 </style>

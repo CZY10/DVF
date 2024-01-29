@@ -516,13 +516,14 @@ export default {
   .el-input-group__append {
     background: none;
     padding: 0 30px;
-    width: 29px;
+    width: 45px;
     height: 30px;
     position: absolute;
     right: 0;
     top: 0;
     line-height: 31px;
     border: none;
+    text-align: right;
   }
 }
 </style>

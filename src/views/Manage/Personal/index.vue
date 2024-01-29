@@ -521,7 +521,7 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
-    line-height: 30px;
+    line-height: 31px;
     border: none;
   }
 }

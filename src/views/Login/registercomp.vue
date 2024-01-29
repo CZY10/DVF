@@ -75,7 +75,9 @@ export default {
 
             if (this.resetPasswordForm.passwordVal == this.resetPasswordForm.passwordValtow) {
                 this.$refs.errpasswordValtow.fields[3].validateState = "";
+                this.accountpasswordDisabled3 = true
             } else if (this.resetPasswordForm.passwordValtow != '') {
+                this.accountpasswordDisabled3 = false
                 this.$refs.errpasswordValtow.fields[3].validateState = "error";
                 this.$refs.errpasswordValtow.fields[3].validateMessage = "密码不一致";
             }

@@ -5,13 +5,8 @@
       <Mycontent />
     </el-col>
 
-    <div
-      v-if="flags"
-      @mouseover="remreruKb = true"
-      @mouseout="remreruKb = false"
-      @click="isShowComDialog = true"
-      class="remreru"
-    >
+    <div v-if="flags" @mouseover="remreruKb = true" @mouseout="remreruKb = false" @click="isShowComDialog = true"
+      class="remreru">
       <p>领福利</p>
       <div v-show="remreruKb" @click="flags = false">x</div>
     </div>
@@ -43,33 +38,18 @@ export default {
     ...mapMutations("Index", ["setIsFalg"]),
     handleScroll() {
       if (this.$route.fullPath == "/" && this.flags) {
-        let scrollTop =
-          document.documentElement.scrollTop || document.body.scrollTop; //滑动的距离
-        if (scrollTop <= 300) {
-          document.querySelector(".remreru").style.opacity = "0";
-        } else {
-          document.querySelector(".remreru").style.opacity = "1";
-        }
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop; //滑动的距离
+        scrollTop <= 300 ? document.querySelector(".remreru").style.opacity = "0" : document.querySelector(".remreru").style.opacity = "1"
       }
     },
   },
   mounted() {
-    if (
-      (this.$route.fullPath != "/videohome" && this.flags) ||
-      (to.fullPath != "/buyershow" && this.flags)
-    ) {
-      document.querySelector(".remreru").style.opacity = "0";
-    }
     window.addEventListener("scroll", this.handleScroll, true);
   },
   watch: {
     $route: function (to, from) {
       // 处理路径变化的逻辑
-      if (to.fullPath == "/videohome" || to.fullPath == "/buyershow") {
-        document.querySelector(".remreru").style.opacity = "1";
-      } else {
-        document.querySelector(".remreru").style.opacity = "0";
-      }
+      to.fullPath == "/videohome" || to.fullPath == "/buyershow" ? this.flags = true : this.flags = false
     },
   },
 };
@@ -87,12 +67,12 @@ export default {
   transition: all 0.3s;
 }
 
-.remreru > p {
+.remreru>p {
   text-align: center;
   margin-top: 52px;
 }
 
-.remreru > div {
+.remreru>div {
   position: relative;
   top: -80px;
   left: 65px;

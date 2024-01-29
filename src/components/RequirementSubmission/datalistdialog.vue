@@ -12,7 +12,17 @@
         <div class="loading" v-if="isloading"></div>
         <!-- 搜索 -->
         <div class="searchfor">
-          <el-input v-model="searchforval" placeholder="输入产品名称/品类/红人编号" class="inp"
+          <div class="module">
+            <ul>
+              <li :class="{ Selectedscreen: screenIndex == 0 }" @click="screenIndex = 0">综合</li>
+              <li :class="{ Selectedscreen: screenIndex == 1 }" @click="screenIndex = 1">红人</li>
+              <li :class="{ Selectedscreen: screenIndex == 2 }" @click="screenIndex = 2">品类</li>
+              <li :class="{ Selectedscreen: screenIndex == 3 }" @click="screenIndex = 3">案例</li>
+            </ul>
+            <div class="segmentation"></div>
+          </div>
+
+          <el-input v-model="searchforval" :placeholder="searchhint" class="inp"
             @keyup.enter.native="getRenderingData"></el-input>
           <el-button class="searchforbtn" @click="getRenderingData">搜索</el-button>
         </div>
@@ -55,11 +65,31 @@
         <!-- 查找 -->
         <div class="seek">
           <div class="seek_div">
-            <div class="seek_div_span">找到 {{ total }} 个</div>
-            <div class="seek_divd">
-              <span>价格 ≤</span>
-              <el-input v-model="priceval" class="priceinp" @change="getRenderingData"></el-input>
-              <span>元</span>
+            <div class="seek_div_left">
+              <div class="seek_div_span">找到 {{ total }} 个</div>
+            </div>
+
+            <div class="seek_div_rigth">
+              <div class="seek_sort" @click="SwitchSorting('number')">
+                <span>编号</span>
+                <div class="seek_icon">
+                  <i class="el-icon-caret-top" :class="{ Selected: SelectedNumber == 1 }"></i>
+                  <i class="el-icon-caret-bottom" :class="{ Selected: SelectedNumber == 2 }"></i>
+                </div>
+              </div>
+              <div class="seek_sort" @click="SwitchSorting('price')">
+                <span>价格</span>
+                <div class="seek_icon">
+                  <i class="el-icon-caret-top" :class="{ Selected: SelectedPrice == 1 }"></i>
+                  <i class="el-icon-caret-bottom" :class="{ Selected: SelectedPrice == 2 }"></i>
+                </div>
+              </div>
+
+              <div class="seek_divd">
+                <span>价格 ≤</span>
+                <el-input v-model="priceval" class="priceinp" @change="getRenderingData"></el-input>
+                <span>元</span>
+              </div>
             </div>
           </div>
         </div>
@@ -229,6 +259,10 @@ export default {
       categoryidarr: [],
       isvideoslist: [],
       isloading: false,
+      screenIndex: 0,
+      SelectedNumber: 0,
+      SelectedPrice: 0,
+      searchhint: '请输入产品名称/品类/红人编号'
     };
   },
   mounted() {
@@ -322,6 +356,23 @@ export default {
       }
       return isFull;
     },
+    SwitchSorting(str) {
+      this.isloading = true;
+      switch (str) {
+        case 'number':
+          this.SelectedNumber++
+          if (this.SelectedNumber > 2) this.SelectedNumber = 0
+          break;
+        case 'price':
+          this.SelectedPrice++
+          if (this.SelectedPrice > 2) this.SelectedPrice = 0
+          break;
+
+        default:
+          break;
+      }
+      this.RenderingData()
+    },
 
     //获取搜索分类
     handlerGetCategory(type) {
@@ -387,6 +438,20 @@ export default {
       this.isvideoslist = [];
       this.categoryidarr = [];
 
+
+      if (this.screenIndex == 0) this.screenIndex = ''
+
+      let order = [this.SelectedNumber, this.SelectedPrice]
+      order[0] !== 0 ? order[0] = 'user_id' : order[0] = ''
+      order[1] !== 0 ? order[1] = 'highest_price' : order[1] = ''
+
+      let orderType = [this.SelectedNumber, this.SelectedPrice]
+      for (let index = 0; index < orderType.length; index++) {
+        if (orderType[index] == 0) orderType[index] = ''
+        if (orderType[index] == 1) orderType[index] = 'asc'
+        if (orderType[index] == 2) orderType[index] = 'desc'
+      }
+
       this.getdata(
         this.currentPage,
         this.pageSize,
@@ -394,7 +459,10 @@ export default {
         this.categoryValue,
         this.themeValue,
         this.priceval,
-        this.searchforval
+        this.searchforval,
+        this.screenIndex,
+        order,
+        orderType
       );
     },
 
@@ -406,7 +474,10 @@ export default {
       categoryValue,
       theme_id,
       price,
-      keyword
+      keyword,
+      keyword_type,
+      order,
+      orderType
     ) {
       let data = {
         keyword: keyword,
@@ -416,9 +487,10 @@ export default {
         category_id: categoryValue,
         page: page,
         pageSize: pageSize,
-        order: "",
-        orderType: "",
+        order: order,
+        orderType: orderType,
         theme_id: theme_id,
+        keyword_type: keyword_type
       };
       getSearchList(data)
         .then((res) => {
@@ -632,6 +704,25 @@ export default {
       }
     }
   },
+  screenIndex(newval) {
+    switch (newval) {
+      case 0:
+        this.searchhint = '请输入产品名称/品类/红人编号'
+        break;
+      case 1:
+        this.searchhint = '请输入红人编号'
+        break;
+      case 2:
+        this.searchhint = '请输入品类名称'
+        break;
+      case 3:
+        this.searchhint = '请输入产品名称'
+        break;
+
+      default:
+        break;
+    }
+  }
 };
 </script>
 
@@ -667,6 +758,49 @@ export default {
       border-radius: 6px;
       margin-top: 20px;
       display: flex;
+
+      .module {
+        width: 212px;
+        display: flex;
+        align-items: center;
+
+        ul {
+          width: 192px;
+          height: 34px;
+          background: #F8F8F8;
+          border-radius: 6px;
+          margin: 0 14px 0 6px;
+          display: flex;
+          color: #333333;
+
+          li {
+            width: 25%;
+            text-align: center;
+            line-height: 34px;
+            cursor: pointer;
+            background: #F8F8F8;
+            transition: all .3s;
+            border: 1px solid #F8F8F8;
+          }
+
+          .Selectedscreen {
+            background: #FAEFFE;
+            border-radius: 6px;
+            border: 1px solid rgba(209, 97, 246, 0.5);
+          }
+        }
+
+        .segmentation {
+          width: 1px;
+          height: 20px;
+          background: #CCCCCC;
+          border-radius: 6px 0px 0px 6px;
+        }
+      }
+
+      .inp {
+        width: 847px;
+      }
 
       .searchforbtn {
         width: 140px;
@@ -722,29 +856,53 @@ export default {
         align-items: center;
         height: 100%;
 
-        .seek_div_span {
-          font-size: 14px;
-          font-family: PingFangSC-Semibold, PingFang SC;
-          font-weight: 600;
-          color: #333333;
+        .seek_div_left {
+          .seek_div_span {
+            font-weight: 600;
+            color: #333333;
+          }
         }
 
-        .seek_divd {
+        .seek_div_rigth {
           display: flex;
           align-items: center;
 
-          span {
-            white-space: nowrap;
-            font-size: 14px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
-            color: #666666;
+          .seek_sort {
+            display: flex;
+            align-items: center;
+            margin-right: 40px;
+            cursor: pointer;
+
+            .seek_icon {
+              display: flex;
+              flex-direction: column;
+              padding-top: 2px;
+
+              .Selected {
+                color: #D161F6 !important;
+              }
+
+              i {
+                line-height: 0.4;
+                color: #ccc;
+              }
+            }
           }
 
-          .priceinp {
-            margin: 0 10px;
-            height: 30px !important;
-            width: 80px;
+          .seek_divd {
+            display: flex;
+            align-items: center;
+
+            span {
+              white-space: nowrap;
+              color: #666666;
+            }
+
+            .priceinp {
+              margin: 0 10px;
+              height: 30px !important;
+              width: 80px;
+            }
           }
         }
       }
@@ -805,15 +963,12 @@ export default {
 
                 .product_list_no {
                   font-size: 16px;
-                  font-family: PingFangSC-Semibold, PingFang SC;
                   font-weight: 600;
                   color: #333333;
                   margin-right: 5px;
                 }
 
                 .product_list_typelv {
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
                   color: #00d9ad;
                   border: 1px solid #00d9ad;
                   padding: 0 5px;
@@ -822,8 +977,6 @@ export default {
                 }
 
                 .product_list_typeho {
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
                   color: #f44eff;
                   border: 1px solid #f44eff;
                   padding: 0 5px;
@@ -832,8 +985,6 @@ export default {
                 }
 
                 .product_list_typelan {
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
                   color: #00b2ff;
                   border: 1px solid #00b2ff;
                   padding: 0 5px;
@@ -842,8 +993,6 @@ export default {
                 }
 
                 .product_list_typechen {
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
                   color: #f56422;
                   border: 1px solid #f56422;
                   padding: 0 5px;
@@ -854,7 +1003,6 @@ export default {
 
               .product_list_rigth {
                 font-size: 15px;
-                font-family: PingFangSC-Regular, PingFang SC;
                 font-weight: 600;
                 color: #ff2c4c;
               }
@@ -867,8 +1015,6 @@ export default {
 
               li {
                 font-size: 12px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
                 color: #666666;
                 padding-right: 5px;
                 border-right: 2px solid #c5c5c5;
@@ -1128,7 +1274,6 @@ export default {
 
       .rigthlist_p {
         padding: 9px 0 0;
-        font-family: PingFangSC-Semibold, PingFang SC;
         font-weight: 600;
         font-size: 15px;
         color: #333333;
@@ -1189,7 +1334,6 @@ export default {
 ::v-deep(.el-radio-button__orig-radio:checked + .el-radio-button__inner) {
   background: rgba(209, 97, 246, 0.1);
   font-size: 14px;
-  font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #d161f6;
   border: none;

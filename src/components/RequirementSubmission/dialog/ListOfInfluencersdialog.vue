@@ -291,6 +291,7 @@ export default {
       this.$emit("setdatalistdialogVisible", false);
     },
     SwitchSorting(str) {
+      this.currentPage = 1;
       this.isloading = true;
       switch (str) {
         case 'number':
@@ -386,7 +387,7 @@ export default {
 
       let order = [this.SelectedNumber, this.SelectedPrice]
       order[0] !== 0 ? order[0] = 'user_id' : order[0] = ''
-      order[1] !== 0 ? order[1] = 'highest_price' : order[1] = ''
+      order[1] !== 0 ? order[1] = 'price' : order[1] = ''
 
       let orderType = [this.SelectedNumber, this.SelectedPrice]
       for (let index = 0; index < orderType.length; index++) {

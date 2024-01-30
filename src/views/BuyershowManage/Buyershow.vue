@@ -868,6 +868,7 @@ export default {
               display: flex;
               flex-direction: column;
               padding-top: 2px;
+              zoom: 0.8;
 
               .Selected {
                 color: #D161F6 !important;

@@ -235,6 +235,7 @@
 import { getCategory, getSearchList, needsSelectInfluencer, inviteSelectInfluencer } from "@/api";
 import router from "@/router";
 import store from "@/store";
+import { debounce } from "@/utils/Encapsulationfunction";
 export default {
   data() {
     return {
@@ -434,11 +435,10 @@ export default {
     },
 
     //渲染数据
-    RenderingData() {
+    RenderingData: debounce(function () {
       this.datalist = [];
       this.isvideoslist = [];
       this.categoryidarr = [];
-
 
       if (this.screenIndex == 0) this.screenIndex = ''
 
@@ -465,7 +465,7 @@ export default {
         order,
         orderType
       );
-    },
+    }, 500),
 
     //获取数据
     getdata(

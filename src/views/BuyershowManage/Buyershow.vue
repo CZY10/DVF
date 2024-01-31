@@ -261,6 +261,7 @@ import { getCategory, getSearchList, carOperate, carList } from "@/api";
 import store from "@/store";
 import router from "@/router";
 import { mapState } from "vuex";
+import { debounce } from "@/utils/Encapsulationfunction";
 
 export default {
   name: "buyershow",
@@ -397,7 +398,7 @@ export default {
     },
 
     //渲染数据
-    RenderingData() {
+    RenderingData: debounce(function () {
       this.datalist = [];
       this.isvideoslist = [];
       this.categoryidarr = [];
@@ -442,7 +443,8 @@ export default {
         order,
         orderType
       );
-    },
+    }, 500),
+
 
     //获取数据
     getdata(

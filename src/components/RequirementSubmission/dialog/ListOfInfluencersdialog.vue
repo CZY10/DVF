@@ -241,6 +241,7 @@
 <script>
 import { getCategory, getSearchList, needsSelectInfluencer, inviteSelectInfluencer } from "@/api";
 import store from "@/store";
+import { debounce } from "@/utils/Encapsulationfunction";
 export default {
   props: ["datalistdialogVisible", "influencersList", "influencersListid"], //通过props接收父组件传递的值
   data() {
@@ -377,7 +378,7 @@ export default {
     },
 
     //渲染数据
-    RenderingData() {
+    RenderingData: debounce(function () {
       this.datalist = [];
       this.isvideoslist = [];
       this.categoryidarr = [];
@@ -409,7 +410,7 @@ export default {
         order,
         orderType
       );
-    },
+    }, 500),
 
     //获取数据
     getdata(

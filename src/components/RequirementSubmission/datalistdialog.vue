@@ -16,7 +16,6 @@
             <ul>
               <li :class="{ Selectedscreen: screenIndex == 0 }" @click="screenIndex = 0">综合</li>
               <li :class="{ Selectedscreen: screenIndex == 1 }" @click="screenIndex = 1">红人</li>
-              <li :class="{ Selectedscreen: screenIndex == 2 }" @click="screenIndex = 2">品类</li>
               <li :class="{ Selectedscreen: screenIndex == 3 }" @click="screenIndex = 3">案例</li>
             </ul>
             <div class="segmentation"></div>
@@ -263,7 +262,7 @@ export default {
       screenIndex: 0,
       SelectedNumber: 0,
       SelectedPrice: 0,
-      searchhint: '请输入产品名称/品类/红人编号'
+      searchhint: '请输入产品名称/品类/红人编号请输入产品名称/品类/红人编号/红人类型/社媒名称等信息'
     };
   },
   mounted() {
@@ -673,6 +672,23 @@ export default {
         this.videoslistindex = -1;
       }
     },
+    screenIndex(newval) {
+      switch (newval) {
+        case 0:
+          this.searchhint = '请输入产品名称/品类/红人编号/红人类型/社媒名称等信息'
+          break;
+        case 1:
+          this.searchhint = '请输入红人编号'
+          break;
+        case 3:
+          this.searchhint = '请输入产品名称'
+          break;
+
+        default:
+          break;
+      }
+      if (this.searchforval != '') this.getRenderingData()
+    }
   },
   async beforeDestroy() {
 
@@ -705,25 +721,6 @@ export default {
       }
     }
   },
-  screenIndex(newval) {
-    switch (newval) {
-      case 0:
-        this.searchhint = '请输入产品名称/品类/红人编号'
-        break;
-      case 1:
-        this.searchhint = '请输入红人编号'
-        break;
-      case 2:
-        this.searchhint = '请输入品类名称'
-        break;
-      case 3:
-        this.searchhint = '请输入产品名称'
-        break;
-
-      default:
-        break;
-    }
-  }
 };
 </script>
 
@@ -761,12 +758,15 @@ export default {
       display: flex;
 
       .module {
-        width: 212px;
+        width: 180px;
         display: flex;
         align-items: center;
+        position: absolute;
+        z-index: 100;
+        height: 46px;
 
         ul {
-          width: 192px;
+          width: 100%;
           height: 34px;
           background: #F8F8F8;
           border-radius: 6px;
@@ -775,7 +775,7 @@ export default {
           color: #333333;
 
           li {
-            width: 25%;
+            width: 33%;
             text-align: center;
             line-height: 34px;
             cursor: pointer;
@@ -801,6 +801,11 @@ export default {
 
       .inp {
         width: 847px;
+        flex: 1;
+
+        ::v-deep(.el-input__inner) {
+          padding-left: 200px;
+        }
       }
 
       .searchforbtn {

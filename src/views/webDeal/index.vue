@@ -93,7 +93,7 @@
               <span>对中国卖家极为友好</span>
             </li>
           </ul>
-          <button @click="goLogin">点击了解更多</button>
+          <button @click="goToPage('/dashboard/index')">点击了解更多</button>
         </div>
       </div>
 
@@ -101,21 +101,12 @@
 
       <div id="carousel">
         <ul class="carousel-ul">
-          <li
-            v-for="(item, index) in carouselUl"
-            :key="index"
-            ref="carouselUl"
-            @click="carouselUlClick(index)"
-            @mouseover="handleMouseOver(index)"
-          >
+          <li v-for="(item, index) in carouselUl" :key="index" ref="carouselUl" @click="carouselUlClick(index)"
+            @mouseover="handleMouseOver(index)">
             {{ item }}
           </li>
         </ul>
-        <ul
-          id="imgList"
-          @mouseover="handleMouseOverStro()"
-          @mouseout="handleMouseOverOut()"
-        >
+        <ul id="imgList" @mouseover="handleMouseOverStro()" @mouseout="handleMouseOverOut()">
           <div ref="imglistDom" class="imgList-div">
             <li>
               <div class="Techbargains1">
@@ -142,7 +133,7 @@
                   </p>
                 </div>
 
-                <button @click="goVipon">点击了解更多</button>
+                <button @click="goToPage('/hot/deal')">点击了解更多</button>
               </div>
               <div class="Techbargains2">
                 <img src="./img/panel4.webp" alt="" />
@@ -175,7 +166,7 @@
                   </p>
                 </div>
 
-                <button @click="goVipon">点击了解更多</button>
+                <button @click="goToPage('/hot/deal')">点击了解更多</button>
               </div>
             </li>
             <li>
@@ -201,7 +192,7 @@
                   </p>
                 </div>
 
-                <button @click="goVipon">点击了解更多</button>
+                <button @click="goToPage('/hot/deal')">点击了解更多</button>
               </div>
               <div class="Techbargains2">
                 <img src="./img/panel7.webp" alt="" />
@@ -242,7 +233,7 @@
                   </p>
                 </div>
 
-                <button @click="goVipon">点击了解更多</button>
+                <button @click="goToPage('/hot/deal')">点击了解更多</button>
               </div>
             </li>
             <li>
@@ -268,7 +259,7 @@
                   </p>
                 </div>
 
-                <button @click="goVipon">点击了解更多</button>
+                <button @click="goToPage('/hot/deal')">点击了解更多</button>
               </div>
               <div class="Techbargains2">
                 <img src="./img/panel5.webp" alt="" />
@@ -300,7 +291,7 @@
                   </p>
                 </div>
 
-                <button @click="goVipon">点击了解更多</button>
+                <button @click="goToPage('/hot/deal')">点击了解更多</button>
               </div>
               <div class="Techbargains2">
                 <img src="./img/panel6.webp" alt="" />
@@ -325,18 +316,12 @@
               <div></div>
             </div>
             <div>
-              <img
-                src="./img/promotion.gif"
-                style="width: 100%; height: 100%"
-              />
+              <img src="./img/promotion.gif" style="width: 100%; height: 100%" />
             </div>
           </div>
           <div class="Dealtop2Dev-right">
             <div class="Dealtop2DevRight-div">
-              <img
-                src="./img/形状.png"
-                style="width: 42px; height: 28px; margin: 27px 0 0 230px"
-              />
+              <img src="./img/形状.png" style="width: 42px; height: 28px; margin: 27px 0 0 230px" />
             </div>
             <ul>
               <li>
@@ -361,12 +346,9 @@
               </li>
               <div>...</div>
             </ul>
-            <button @click="goVipon">点击了解更多</button>
+            <button @click="goToPage('/hot/deal')">点击了解更多</button>
             <div class="Dealtop2Dev-img">
-              <img
-                src="./img/矩形备份 9.png"
-                style="width: 100%; height: 100%"
-              />
+              <img src="./img/矩形备份 9.png" style="width: 100%; height: 100%" />
             </div>
           </div>
         </div>
@@ -734,27 +716,18 @@
       <img src="./img/fixed_icon.png" alt="" />
     </div>
     <div class="boxs" v-show="Vshow">
-      <img
-        src="./img/wx.webp"
-        style="width: 100x; height: 100px; margin: 10px auto; display: block"
-      />
+      <img src="./img/wx.webp" style="width: 100x; height: 100px; margin: 10px auto; display: block" />
       <p>扫码添加客服</p>
     </div>
     <el-dialog :visible.sync="dialogVisible" width="280px">
-      <img
-        src="./img/wx.webp"
-        style="width: 180x; height: 180px; margin: 0 auto; display: block"
-      />
-      <p
-        style="
+      <img src="./img/wx.webp" style="width: 180x; height: 180px; margin: 0 auto; display: block" />
+      <p style="
           font-size: 16px;
-          font-family: PingFangSC-Semibold, PingFang SC;
           font-weight: 600;
           color: #333333;
           text-align: center;
           margin-top: 10px;
-        "
-      >
+        ">
         扫描二维码联系我们
       </p>
     </el-dialog>
@@ -880,12 +853,11 @@ export default {
     goVIPON() {
       window.location.href = "";
     },
-    goLogin() {
-      if (process.env.NODE_ENV == "production") {
-        this.ViponSrc = "https://seller.vipona.com/dashboard/index";
-      } else if (process.env.NODE_ENV == "development") {
-        this.ViponSrc = "https://hkatest.myvipon.com/dashboard/index";
-      }
+
+    goToPage(path) {
+      const baseUrl = process.env.NODE_ENV == "production" ? "https://seller.vipona.com" : "https://hkatest.myvipon.com";
+      this.ViponSrc = `${baseUrl}${path}`;
+
       if (window.localStorage.getItem("token")) {
         localStorage.removeItem("source");
         localStorage.removeItem("active");
@@ -893,25 +865,6 @@ export default {
       } else {
         window.location.href = this.ViponSrc;
       }
-    },
-    goVipon() {
-      if (process.env.NODE_ENV == "production") {
-        this.ViponSrc = "https://seller.vipona.com/hot/deal";
-      } else if (process.env.NODE_ENV == "development") {
-        this.ViponSrc = "https://hkatest.myvipon.com/hot/deal";
-      }
-      if (window.localStorage.getItem("token")) {
-        localStorage.removeItem("source");
-        localStorage.removeItem("active");
-        window.open(this.ViponSrc, "_blank");
-      } else {
-        window.location.href = this.ViponSrc;
-      }
-    },
-  },
-  watch: {
-    index(newIndex) {
-      // console.log(newIndex);
     },
   },
 };
@@ -919,26 +872,32 @@ export default {
 <style lang="less" scoped>
 .Deal {
   width: 100%;
+
   .Deal-hearder {
     overflow: hidden;
     position: relative;
+
     img {
       display: block;
       width: 100%;
       transition: transform 0.3s ease-in-out;
     }
+
     img:hover {
       transform: scale(1.03);
     }
+
     div {
       position: absolute;
       bottom: 0px;
       width: 100%;
+
       ul {
         width: 1200px;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
+
         .Deal-li {
           width: 285px;
           height: 108px;
@@ -946,6 +905,7 @@ export default {
           background-size: 100% 100%;
           border-radius: 10px;
           box-shadow: 0px 2px 20px 0px rgba(133, 133, 133, 0.07);
+
           .div1 {
             width: 58px;
             height: 58px;
@@ -956,25 +916,25 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
+
             img {
               width: 32px;
               height: 32px;
             }
           }
+
           .div2 {
             width: 160px;
             margin: 0 0 27px 117px;
+
             p:nth-child(1) {
               font-size: 20px;
-              font-family: PingFangSC-Semibold, PingFang SC;
               font-weight: 600;
               color: #333333;
               margin-bottom: 4px;
             }
+
             p:nth-child(2) {
-              font-size: 14px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
               color: #999999;
             }
           }
@@ -982,12 +942,13 @@ export default {
       }
     }
   }
+
   .DealBanxin {
     width: 1200px;
     margin: 40px auto 0;
+
     .DealWZ1 {
       font-size: 32px;
-      font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: 600;
       color: #333333;
       text-align: center;
@@ -999,40 +960,40 @@ export default {
       margin-top: 80px;
       margin-bottom: 100px;
       display: flex;
+
       div:nth-child(1) {
         height: 350px;
       }
+
       div:nth-child(2) {
         margin-left: 27px;
+
         .p1 {
           font-size: 28px;
-          font-family: PingFangSC-Semibold, PingFang SC;
           font-weight: 600;
           color: #333333;
           margin: 17px 0 12px;
         }
+
         .p2 {
           font-size: 16px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
           color: #666666;
           margin-bottom: 34px;
         }
+
         .ul1 {
           display: flex;
           width: 565px;
           justify-content: space-between;
+
           li {
             p:nth-child(1) {
               font-size: 36px;
-              font-family: FetteMittelschrift-Regular, FetteMittelschrift;
-              font-weight: 400;
               color: #333333;
             }
+
             p:nth-child(2) {
               font-size: 16px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
               color: #666666;
               margin-top: 5px;
             }
@@ -1042,19 +1003,19 @@ export default {
         .ul2 {
           display: flex;
           margin-top: 30px;
+
           li {
             margin-right: 20px;
             display: flex;
             align-items: center;
+
             span {
-              font-size: 14px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
               color: #666666;
               margin-left: 1px;
             }
           }
         }
+
         button {
           width: 177px;
           height: 36px;
@@ -1062,18 +1023,18 @@ export default {
           border-radius: 4px;
           border: 0;
           font-size: 14px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
           color: #ffffff;
           cursor: pointer;
           margin-top: 20px;
         }
       }
     }
+
     #carousel {
       height: 566px;
       width: 100%;
       margin-top: 70px;
+
       .carousel-ul {
         height: 46px;
         width: 100%;
@@ -1081,9 +1042,9 @@ export default {
         justify-content: space-evenly;
         align-content: center;
         border-bottom: 1px solid #eeeeee;
+
         li {
           font-size: 20px;
-          font-family: PingFangSC-Semibold, PingFang SC;
           font-weight: 600;
           color: #333333;
           cursor: pointer;
@@ -1096,6 +1057,7 @@ export default {
         overflow: hidden;
         position: relative;
         margin-top: 60px;
+
         .imgList-div {
           width: 7200px;
           height: 100%;
@@ -1107,22 +1069,25 @@ export default {
           li {
             height: 460px;
             width: 100%;
+
             .Techbargains1 {
               width: 624px;
               height: 100%;
               float: left;
               padding: 40px 74px 0 24px;
               box-sizing: border-box;
+
               .p1 {
                 font-size: 28px;
-                font-family: PingFangSC-Semibold, PingFang SC;
                 font-weight: 600;
                 color: #333333;
               }
+
               .Techbargains1-div {
                 display: flex;
                 align-items: center;
                 margin-top: 30px;
+
                 .Techbargains1-div1 {
                   width: 10px;
                   height: 10px;
@@ -1133,6 +1098,7 @@ export default {
                   align-items: center;
                   border-radius: 50%;
                   margin-right: 10px;
+
                   .Techbargains1-div2 {
                     width: 4px;
                     height: 4px;
@@ -1140,33 +1106,31 @@ export default {
                     border-radius: 50%;
                   }
                 }
+
                 p {
-                  font-size: 14px;
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
                   color: #666666;
                   width: 500px;
                 }
               }
+
               button {
                 width: 177px;
                 height: 36px;
                 background: linear-gradient(180deg, #ffa03f 0%, #ff3000 100%);
                 border-radius: 4px;
                 border: none;
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
                 color: #ffffff;
                 cursor: pointer;
                 margin-top: 30px;
               }
             }
+
             .Techbargains2 {
               width: 576px;
               height: 368px;
               float: right;
             }
+
             .BensBargains2 {
               width: 576px;
               height: 368px;
@@ -1180,16 +1144,18 @@ export default {
               padding: 40px 0 0 30px;
               box-sizing: border-box;
               margin-left: 20px;
+
               .p1 {
                 font-size: 28px;
-                font-family: PingFangSC-Semibold, PingFang SC;
                 font-weight: 600;
                 color: #333333;
               }
+
               .BensBargains1-div {
                 display: flex;
                 align-items: center;
                 margin-top: 30px;
+
                 .BensBargains1-div1 {
                   width: 10px;
                   height: 10px;
@@ -1200,6 +1166,7 @@ export default {
                   align-items: center;
                   border-radius: 50%;
                   margin-right: 10px;
+
                   .BensBargains1-div2 {
                     width: 4px;
                     height: 4px;
@@ -1207,23 +1174,19 @@ export default {
                     border-radius: 50%;
                   }
                 }
+
                 p {
-                  font-size: 14px;
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
                   color: #666666;
                   width: 500px;
                 }
               }
+
               button {
                 width: 177px;
                 height: 36px;
                 background: linear-gradient(180deg, #ffa03f 0%, #ff3000 100%);
                 border-radius: 4px;
                 border: none;
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
                 color: #ffffff;
                 cursor: pointer;
                 margin-top: 30px;
@@ -1234,35 +1197,37 @@ export default {
       }
     }
   }
+
   .Deal-top2 {
     height: 801px;
     width: 100%;
     background-image: url(./img/矩形.png);
     background-repeat: no-repeat;
     background-size: cover;
+
     .DealTop2Banxin {
       width: 1200px;
       margin: 0 auto;
       overflow: hidden;
+
       .DealWZ1 {
         font-size: 32px;
-        font-family: PingFangSC-Semibold, PingFang SC;
         font-weight: 600;
         color: #333333;
         text-align: center;
         margin-top: 80px;
         margin-bottom: 24px;
       }
+
       .p1 {
-        font-size: 14px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
         color: #999999;
         text-align: center;
       }
+
       .Dealtop2-dev {
         margin-top: 43px;
         display: flex;
+
         .Dealtop2Dev-left {
           div:nth-child(1) {
             width: 900px;
@@ -1271,6 +1236,7 @@ export default {
             border-radius: 13px 13px 0px 0px;
             display: flex;
             align-items: center;
+
             div:nth-child(1) {
               width: 7px;
               height: 7px;
@@ -1278,6 +1244,7 @@ export default {
               border-radius: 50%;
               margin-left: 16px;
             }
+
             div:nth-child(2) {
               width: 7px;
               height: 7px;
@@ -1285,6 +1252,7 @@ export default {
               border-radius: 50%;
               margin-left: 14px;
             }
+
             div:nth-child(3) {
               width: 7px;
               height: 7px;
@@ -1293,59 +1261,64 @@ export default {
               margin-left: 14px;
             }
           }
+
           div:nth-child(2) {
             width: 900px;
             height: 470px;
           }
         }
+
         .Dealtop2Dev-right {
           width: 299px;
           height: 413px;
           background: #3370ff;
           border-radius: 0px 20px 0px 0px;
           margin-top: 65px;
+
           .Dealtop2DevRight-div {
             height: 28px;
           }
+
           ul {
             margin-top: 35px;
+
             li {
               display: flex;
               align-items: center;
               margin-bottom: 23px;
+
               span {
                 font-size: 16px;
-                font-family: PingFangSC-Semibold, PingFang SC;
                 font-weight: 600;
                 color: #ffffff;
               }
+
               img {
                 margin: 0 19px 0 68px;
               }
             }
+
             div {
               text-align: center;
               font-size: 16px;
-              font-family: PingFangSC-Semibold, PingFang SC;
               font-weight: 600;
               color: #ffffff;
             }
           }
+
           button {
             width: 177px;
             height: 36px;
             background: linear-gradient(180deg, #ffa03f 0%, #ff3000 100%);
             border-radius: 4px;
             border: 0;
-            font-size: 14px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
             color: #ffffff;
             cursor: pointer;
             margin-top: 35px;
             margin-left: 60px;
           }
         }
+
         .Dealtop2Dev-img {
           width: 299px;
           height: 24px;
@@ -1354,6 +1327,7 @@ export default {
       }
     }
   }
+
   .Deal-top3 {
     height: 520px;
     background: #3370ff;
@@ -1361,26 +1335,30 @@ export default {
     background: url(./img/advantage_list_bg.png);
     background-repeat: no-repeat;
     background-size: cover;
+
     .DealTop3Banxin {
       width: 1200px;
       margin: 0 auto;
       overflow: hidden;
+
       p {
         font-size: 32px;
-        font-family: PingFangSC-Semibold, PingFang SC;
         font-weight: 600;
         color: #ffffff;
         margin-top: 80px;
         margin-bottom: 60px;
         text-align: center;
       }
+
       ul {
         display: flex;
+
         li {
           width: calc(25%);
           display: flex;
           flex-direction: column;
           align-items: center;
+
           div:nth-child(1) {
             width: 100px;
             height: 100px;
@@ -1388,6 +1366,7 @@ export default {
             box-shadow: 0px 25px 25px 0px #3370ff;
             border-radius: 50%;
             position: relative;
+
             img {
               position: absolute;
               top: 0;
@@ -1396,6 +1375,7 @@ export default {
               right: 0;
               margin: auto;
             }
+
             div {
               width: 23px;
               height: 23px;
@@ -1406,28 +1386,25 @@ export default {
               right: 0;
             }
           }
+
           div:nth-child(2) {
             font-size: 20px;
-            font-family: PingFangSC-Semibold, PingFang SC;
             font-weight: 600;
             color: #ffffff;
             margin: 26px 0 15px;
           }
+
           div:nth-child(3) {
             width: 40px;
             height: 3px;
-            background: linear-gradient(
-              270deg,
-              #ffffff 0%,
-              rgba(255, 255, 255, 0) 100%
-            );
+            background: linear-gradient(270deg,
+                #ffffff 0%,
+                rgba(255, 255, 255, 0) 100%);
             opacity: 0.39;
           }
+
           div:nth-child(4) {
             width: 216px;
-            font-size: 14px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
             color: #ffffff;
             text-align: center;
             margin-top: 15px;
@@ -1436,24 +1413,28 @@ export default {
       }
     }
   }
+
   .Deal-top4 {
     width: 100%;
+
     .DealWZ1 {
       font-size: 32px;
-      font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: 600;
       color: #333333;
       text-align: center;
       margin: 80px 0 33px;
     }
+
     .DealTop4Banxin {
       width: 1200px;
       margin: 0 auto;
+
       .DealTop4Banxin-TOP {
         width: 100%;
         display: flex;
         justify-content: space-between;
         margin-bottom: 30px;
+
         .DealTop4BanxinTOP-div {
           width: 585px;
           height: 284px;
@@ -1463,61 +1444,58 @@ export default {
           padding: 32px 32px 30px 32px;
           box-sizing: border-box;
           display: flex;
+
           div:nth-child(1) {
             width: 68px;
+
             p {
               font-size: 16px;
-              font-family: PingFangSC-Semibold, PingFang SC;
               font-weight: 600;
               color: #333333;
               text-align: center;
               margin-top: 10px;
             }
           }
+
           div:nth-child(2) {
             margin-left: 30px;
+
             p:nth-child(1) {
               font-size: 20px;
-              font-family: PingFangSC-Semibold, PingFang SC;
               font-weight: 600;
               color: #333333;
               margin-top: 10px;
             }
+
             p:nth-child(2) {
               background: #fafafa;
               border-radius: 10px;
-              font-size: 14px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
               color: #666666;
               line-height: 24px;
               padding: 20px;
               margin: 16px 0 12px 0;
             }
+
             p:nth-child(3) {
-              font-size: 14px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
               color: #333333;
             }
           }
         }
       }
+
       button {
         width: 177px;
         height: 36px;
         background: linear-gradient(180deg, #ffa03f 0%, #ff3000 100%);
         border-radius: 4px;
         border: none;
-        font-size: 14px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
         color: #ffffff;
         cursor: pointer;
         margin-left: 510px;
       }
     }
   }
+
   .Deal-top5 {
     width: 100%;
     height: 481px;
@@ -1529,30 +1507,31 @@ export default {
     .DealTop5Banxin {
       width: 1200px;
       margin: 0 auto;
+
       .DealTop5-rigthg {
         float: right;
       }
+
       .DealTop5-left {
         float: left;
+
         p:nth-child(1) {
           font-size: 32px;
-          font-family: PingFangSC-Semibold, PingFang SC;
           font-weight: 600;
           color: #333333;
           margin-top: 17px;
           margin-bottom: 8.5px;
         }
+
         p:nth-child(2) {
           width: 40px;
           height: 4px;
           background: #ff7a5a;
         }
+
         p:nth-child(3) {
           width: 600px;
           height: 144px;
-          font-size: 14px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
           color: #666666;
           line-height: 24px;
           margin-top: 60px;
@@ -1560,41 +1539,44 @@ export default {
       }
     }
   }
+
   .Deal-top6 {
     background: linear-gradient(180deg, #fdffff 0%, #eaf7ff 100%);
+
     .DealWZ1 {
       font-size: 32px;
-      font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: 600;
       color: #333333;
       text-align: center;
       margin-top: 80px;
       margin-bottom: 24px;
     }
+
     .p1 {
       width: 626px;
-      font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
       color: #999999;
       margin: 0 auto;
       text-align: center;
     }
   }
+
   .Deal-top7 {
     height: 380px;
     background: #eaf7ff;
+
     .DealTop7-div {
       width: 100%;
       overflow: hidden;
       height: 300px;
       position: relative;
+
       ul:nth-child(1) {
         width: 7200px;
         display: flex;
         position: absolute;
         top: 0;
         left: 0;
+
         li {
           height: 120px;
           width: 240px;
@@ -1608,12 +1590,14 @@ export default {
           align-items: center;
         }
       }
+
       ul:nth-child(2) {
         width: 7200px;
         display: flex;
         position: absolute;
         top: 140px;
         left: -80px;
+
         li {
           height: 120px;
           width: 205px;
@@ -1629,21 +1613,24 @@ export default {
       }
     }
   }
+
   .Deal-top8 {
     width: 100%;
     height: 210px;
     background: #1f2430;
     overflow: hidden;
+
     ul {
       display: flex;
       justify-content: center;
       color: white;
       margin-top: 60px;
+
       li {
         display: flex;
         align-items: center;
-        font-size: 14px;
         cursor: pointer;
+
         div {
           width: 7px;
           height: 7px;
@@ -1651,30 +1638,31 @@ export default {
           background: white;
           margin-left: 20px;
         }
+
         span {
           margin-left: 15px;
         }
+
         span:hover {
           color: rgb(98, 98, 226);
           border-bottom: 1px solid rgb(98, 98, 226);
         }
       }
     }
+
     .p1 {
       font-size: 12px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
       color: #999999;
       text-align: center;
       margin-top: 30px;
     }
+
     .p2 {
       font-size: 12px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
       color: #999999;
       text-align: center;
       margin-top: 10px;
+
       span:hover {
         color: rgb(98, 98, 226);
         border-bottom: 1px solid rgb(98, 98, 226);
@@ -1705,9 +1693,9 @@ export default {
     border-radius: 6px;
     right: 65px;
     bottom: 100px;
+
     p {
       font-size: 12px;
-      font-family: PingFangSC-Semibold, PingFang SC;
       color: white;
       text-align: center;
     }

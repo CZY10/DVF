@@ -782,6 +782,7 @@ export default {
             background: #F8F8F8;
             transition: all .3s;
             border: 1px solid #F8F8F8;
+            border-radius: 6px;
           }
 
           .Selectedscreen {
@@ -815,6 +816,7 @@ export default {
         border-radius: 0px 6px 6px 0px;
         color: white;
         border: 1px solid #d161f6;
+        font-size: 18px;
       }
 
       .searchforbtn:hover {

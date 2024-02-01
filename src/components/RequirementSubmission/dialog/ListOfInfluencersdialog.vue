@@ -731,6 +731,7 @@ export default {
         position: absolute;
         z-index: 100;
         height: 46px;
+        border-radius: 6px;
 
         ul {
           width: 192px;
@@ -782,6 +783,7 @@ export default {
         border-radius: 0px 6px 6px 0px;
         color: white;
         border: 1px solid #d161f6;
+        font-size: 18px;
       }
 
       .searchforbtn:hover {

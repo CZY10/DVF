@@ -795,7 +795,7 @@ export default {
         .segmentation {
           width: 1px;
           height: 20px;
-          background: #CCCCCC;
+          background: #f1f1f1;
           border-radius: 6px 0px 0px 6px;
         }
       }

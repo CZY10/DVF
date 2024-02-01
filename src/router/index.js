@@ -71,7 +71,7 @@ const routes = [
                     {
                         path: '/datalistdialog',
                         name: 'datalistdialog',
-                        meta: { requiresAuth: true },
+                        meta: { requiresAuth: false },
                         component: () => import('@/components/RequirementSubmission/datalistdialog.vue')
                     },
                     {
@@ -85,13 +85,7 @@ const routes = [
                         name: 'Invitationfilling',
                         meta: { requiresAuth: false },
                         component: () => import('@/views/Invitationfilling/index.vue')
-                    },
-                    {
-                        path: '/datalistdialogIf',
-                        name: 'datalistdialogIf',
-                        meta: { requiresAuth: false },
-                        component: () => import('@/views/Invitationfilling/datalistdialog.vue')
-                    },
+                    }
                 ]
             },
 
@@ -153,7 +147,7 @@ VueRouter.prototype.push = function push(location) {
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-    if (to.fullPath == "/Note" || to.fullPath == "/datalistdialog" || to.path == '/Invitationfilling' || to.path == '/datalistdialogIf' || to.name == 'homepageold') {
+    if (to.path == "/Note" || to.path == "/datalistdialog" || to.path == '/Invitationfilling' || to.name == 'homepageold') {
         store.commit('Index/setIsFalg', false)
     } else {
         store.commit('Index/setIsFalg', true)

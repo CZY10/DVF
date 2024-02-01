@@ -49,7 +49,10 @@ export default {
   watch: {
     $route: function (to, from) {
       // 处理路径变化的逻辑
-      to.fullPath == "/videohome" || to.fullPath == "/buyershow" ? this.flags = true : this.flags = false
+
+      if (this.flags) {
+        to.fullPath == "/videohome" || to.fullPath == "/buyershow" ? this.flags = true : this.flags = false
+      }
     },
   },
 };

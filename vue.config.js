@@ -9,7 +9,7 @@ function resolve(dir) {
 
 module.exports = defineConfig({
   transpileDependencies: false,
-  publicPath: '/',
+  publicPath: '/[DVF]/',
   outputDir: process.env.VUE_APP_BASE_URL === 'http://testaiapi.blhltd.com' ? 'test' : 'dist',
   assetsDir: 'static',
   lintOnSave: false,
